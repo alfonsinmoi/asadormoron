@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.QuienView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*">
+            <Label
+                Grid.Column="0"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Contacto"
+                TextColor="{DynamicResource Blanco}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0',Android='0,60,0,0',UWP='0,0,0,0'}">
+            <ScrollView  VerticalOptions="FillAndExpand">
+                <StackLayout Margin="20" VerticalOptions="FillAndExpand">
+                    <Image
+                    Aspect="AspectFit"
+                    HeightRequest="120"
+                    Source="logo_morado.png" />
+                    <Label
+                    FontFamily="Nunito"
+                    FontSize="18"
+                    HorizontalTextAlignment="Center"
+                    Text="Si tiene algún problema con su pedido, con la app o necesita cualquier tipo de información."
+                    TextColor="{DynamicResource Negro}" />
+                    <Label
+                    FontAttributes="Bold"
+                    FontFamily="Nunito"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Text="Llámanos o escríbemos"
+                    TextColor="{DynamicResource Negro}" />
+                    <Label
+                    Margin="0,30,0,30"
+                    FontAttributes="Bold"
+                    FontFamily="Nunito"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Text="Nos pondreos en contacto contigo a la mayor brevedad posible"
+                    TextColor="{DynamicResource Negro}" />
+                    <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                        <Image HeightRequest="30" Source="telefono.png" />
+                        <Label
+                        FontAttributes="Bold"
+                        FontFamily="Nunito"
+                        FontSize="30"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding NumTelefono}"
+                        TextColor="{DynamicResource Negro}"
+                        TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Telefono}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </StackLayout>
+                    <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                        <Image HeightRequest="30" Source="whatsapp.png" />
+                        <Label
+                        FontAttributes="Bold"
+                        FontFamily="Nunito"
+                        FontSize="30"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding NumWhatsApp}"
+                        TextColor="{DynamicResource Negro}"
+                        TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding WhatsApp}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </StackLayout>
+                    <StackLayout
+                    Margin="0,10,0,10"
+                    HorizontalOptions="FillAndExpand"                   
+                    Orientation="Vertical">
+                        <Editor
+                        BackgroundColor="LightGray"
+                        FontFamily="Nunito"
+                        HeightRequest="100"
+                        Text="{Binding Cuerpo}"
+                        TextColor="{DynamicResource Negro}" />
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+
+            <Button
+            Margin="20,10"
+            BackgroundColor="{DynamicResource Rojo}"
+            Command="{Binding cmdEmail}"
+            CornerRadius="10"
+            FontFamily="Nunito"
+            HeightRequest="60"
+            Text="Enviar Correo"
+            TextColor="{DynamicResource Blanco}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

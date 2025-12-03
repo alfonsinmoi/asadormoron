@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.RecoveryView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="{DynamicResource Rojo}"
+    NavigationPage.IconColor="White">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="miLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Android=12, iOS=14, UWP=14}" />
+                <Setter Property="TextColor" Value="{DynamicResource Blanco}" />
+                <Setter Property="FontFamily" Value="Nunito" />
+            </Style>
+            <Style x:Key="miEntry" TargetType="Entry">
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="PlaceholderColor" Value="Gray" />
+                <Setter Property="FontFamily" Value="Nunito" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="Margin" Value="0,0,0,10" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid
+        Margin="{OnPlatform iOS='20,90,10,30',
+                            Android='10,50,10,30',
+                            UWP='0,0,0,0'}"
+        ColumnDefinitions="*, *"
+        RowDefinitions="AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO"
+        RowSpacing="0"
+        VerticalOptions="FillAndExpand">
+        <Image
+            Grid.ColumnSpan="2"
+            Margin="15,0,15,20"
+            HorizontalOptions="Start"
+            InputTransparent="True"
+            Source="logoqoorder.png" />
+        <Label
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,20"
+            FontAttributes="Bold"
+            FontSize="30"
+            HorizontalTextAlignment="Center"
+            Style="{StaticResource miLabel}"
+            Text="Cambiar contraseña"
+            TextColor="{DynamicResource Blanco}" />
+        <Label
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource miLabel}"
+            Text="Email" />
+        <Entry
+            Grid.Row="3"
+            Grid.ColumnSpan="2"
+            Keyboard="Email"
+            Placeholder="Email"
+            Style="{StaticResource miEntry}"
+            Text="{Binding Email}" />
+
+        <Label
+            Grid.Row="4"
+            Grid.Column="0"
+            Style="{StaticResource miLabel}"
+            Text="Nueva contraseña" />
+        <Label
+            Grid.Row="4"
+            Grid.Column="1"
+            Style="{StaticResource miLabel}"
+            Text="Repite Contraseña" />
+        <Entry
+            Grid.Row="5"
+            Grid.Column="0"
+            IsPassword="true"
+            Placeholder="Contraseña"
+            Style="{StaticResource miEntry}"
+            Text="{Binding Pass}" />
+        <Entry
+            Grid.Row="5"
+            Grid.Column="1"
+            IsPassword="true"
+            Placeholder="Repite Contraseña"
+            Style="{StaticResource miEntry}"
+            Text="{Binding RePass}" />
+
+        <Button
+            Grid.Row="6"
+            Grid.Column="0"
+            Margin="0,20,5,0"
+            BackgroundColor="{DynamicResource Amarillo}"
+            Command="{Binding CommandGuardar}"
+            CornerRadius="10"
+            FontFamily="Nunito"
+            HeightRequest="40"
+            Text="Solicitar"
+            TextColor="{DynamicResource Negro}" />
+        <Button
+            Grid.Row="6"
+            Grid.Column="1"
+            Margin="5,20,0,0"
+            BackgroundColor="{DynamicResource Blanco}"
+            Command="{Binding CommandCancelar}"
+            CornerRadius="10"
+            FontFamily="Nunito"
+            HeightRequest="40"
+            Text="Cancelar"
+            TextColor="{DynamicResource Negro}" />
+    </Grid>
+</ContentPage>

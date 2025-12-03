@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.TarjetasView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="viewTarjetas"
+    Title="Tarjetas"
+    BackgroundColor="{StaticResource Rojo}"
+    IconImageSource="menu.png">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Zonas"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding NavigateToAddCreditCardPageCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="nuevo.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout
+            BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                WinUI='0'}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <CollectionView
+                Margin="15,10"
+                BackgroundColor="Transparent"
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding ListadoTarjetas}"
+                SelectedItem="{Binding TarjetaSeleccionada, Mode=TwoWay}"
+                VerticalOptions="FillAndExpand">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="35,0,44,35"
+                            Padding="0"
+                            BackgroundColor="{StaticResource Blanco}"
+                            StrokeShape="RoundRectangle 15"
+                            HeightRequest="180">
+                            <Grid
+                                ColumnDefinitions="*, Auto"
+                                RowDefinitions="Auto, *, Auto"
+                                RowSpacing="0">
+                                <Image
+                                    Grid.RowSpan="3"
+                                    Grid.ColumnSpan="2"
+                                    Aspect="AspectFill"
+                                    HorizontalOptions="FillAndExpand"
+                                    Source="{Binding fondo}"
+                                    VerticalOptions="FillAndExpand" />
+                                <Image
+                                    Grid.Row="0"
+                                    Grid.ColumnSpan="2"
+                                    Margin="15,10,0,0"
+                                    BackgroundColor="Transparent"
+                                    HeightRequest="40"
+                                    HorizontalOptions="Start"
+                                    Source="logoqoorder.png"
+                                    VerticalOptions="Start" />
+                                <ImageButton
+                                    Grid.Row="0"
+                                    Grid.ColumnSpan="2"
+                                    Margin="0,10,15,0"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding Path=BindingContext.cmdEliminarTarjeta, Source={x:Reference Name=viewTarjetas}}"
+                                    CommandParameter="{Binding id}"
+                                    HeightRequest="40"
+                                    HorizontalOptions="End"
+                                    Source="btnmenos.png"
+                                    VerticalOptions="Start" />
+                                <StackLayout
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Margin="{OnPlatform Android='15,0,0,34',
+                                                        iOS='15,0,0,38',
+                                                        Default='15,0,0,38'}"
+                                    Padding="5"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="End">
+                                    <Label
+                                        FontFamily="Nunito"
+                                        FontSize="16"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding nombre}"
+                                        TextColor="{StaticResource Blanco}" />
+                                    <Label
+                                        FontFamily="Nunito"
+                                        FontSize="{OnPlatform Android='17',
+                                                              iOS='20',
+                                                              Default='20'}"
+                                        Text="{Binding numeroEncrypt}"
+                                        TextColor="{StaticResource Blanco}" />
+                                </StackLayout>
+
+                                <Label
+                                    Grid.Row="2"
+                                    Grid.ColumnSpan="2"
+                                    Margin="15,0,0,5"
+                                    FontFamily="Nunito"
+                                    LineBreakMode="TailTruncation"
+                                    VerticalOptions="Center">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="Nunito"
+                                                FontSize="14"
+                                                Text="{Binding mes}"
+                                                TextColor="{DynamicResource Blanco}" />
+                                            <Span
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="Nunito"
+                                                FontSize="14"
+                                                Text="/"
+                                                TextColor="{DynamicResource Blanco}" />
+                                            <Span
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="Nunito"
+                                                FontSize="14"
+                                                Text="{Binding anyo}"
+                                                TextColor="{DynamicResource Blanco}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Image
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Margin="0,0,15,10"
+                                    Aspect="AspectFit"
+                                    HeightRequest="36"
+                                    Source="{Binding imagen}"
+                                    WidthRequest="48" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

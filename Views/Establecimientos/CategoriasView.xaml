@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Establecimientos.CategoriasView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Carta"
+    BackgroundColor="{StaticResource Rojo}"
+    IconImageSource="menu.png">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Categorías"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding NuevaCategoriaCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="insertar.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout
+           BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <CollectionView
+                Margin="10"
+                BackgroundColor="Transparent"
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding ListadoCategorias}"
+                SelectedItem="{Binding CategoriaSeleccionada, Mode=TwoWay}"
+                SelectionMode="Single"
+                VerticalOptions="FillAndExpand">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout
+                            Margin="0,0,0,10"
+                            Padding="0,5,0,0"
+                            Orientation="Vertical">
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="Syne"
+                                FontSize="Medium"
+                                HorizontalOptions="StartAndExpand"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding nombre}"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Start" />
+                            <Label
+                                BackgroundColor="Transparent"
+                                FontFamily="Syne"
+                                FontSize="Small"
+                                HorizontalOptions="StartAndExpand"
+                                LineBreakMode="TailTruncation"
+                                Text="{Binding tipo}"
+                                TextColor="{DynamicResource Rojo}"
+                                VerticalTextAlignment="Start" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

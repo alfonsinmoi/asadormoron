@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Administrador.DetalleRepartidorView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:ffTransformations="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Nombre}"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding CommandGuardar}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout
+            BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            Orientation="Vertical"
+            VerticalOptions="FillAndExpand">
+            <!--  EDITING  -->
+            <Grid
+                Margin="{OnPlatform iOS='20,10',Default='20,5,20,0'}"
+                ColumnDefinitions="AUTO, *"
+                RowDefinitions="AUTO, AUTO, AUTO,Auto,Auto"
+                RowSpacing="{OnPlatform iOS=20,Default=10}">
+                <ff:CachedImage
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Aspect="AspectFill"
+                    ErrorPlaceholder="logocuadrado.png"
+                    HeightRequest="120"
+                    HorizontalOptions="CenterAndExpand"
+                    Source="{Binding Foto}"
+                    WidthRequest="120">
+                    <ff:CachedImage.Transformations>
+                        <!-- Transformation removed -->
+                    </ff:CachedImage.Transformations>
+                    <ff:CachedImage.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CmdCambiaImagen}" />
+                    </ff:CachedImage.GestureRecognizers>
+                </ff:CachedImage>
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalTextAlignment="Start"
+                    Text="Nombre"
+                    TextColor="{DynamicResource Negro}"
+                    VerticalTextAlignment="Center" />
+                <Entry
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="12"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Start"
+                    Text="{Binding Nombre}"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalTextAlignment="Start"
+                    Text="Teléfono"
+                    TextColor="{DynamicResource Negro}"
+                    VerticalTextAlignment="Center" />
+                <Entry
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="12"
+                    Keyboard="Telephone"
+                    HorizontalOptions="FillAndExpand"
+                    HorizontalTextAlignment="Start"
+                    Text="{Binding Telefono}"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Center"
+                    Text="Estado"
+                    TextColor="{DynamicResource Negro}"
+                    VerticalTextAlignment="Center" />
+                <Switch
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    IsToggled="{Binding Activo}" />
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

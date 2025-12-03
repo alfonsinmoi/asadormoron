@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Establecimientos.HorariosEstablecimientoView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Configuración"
+    BackgroundColor="{StaticResource Rojo}"
+    xmlns:templates="clr-namespace:AsadorMoron.Views.Templates"
+    xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+    NavigationPage.HasNavigationBar="True">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Ajustes"
+                TextColor="{DynamicResource Negro}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding GuardarConfiguracionEstablecimientoCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}">
+                <Grid
+                    Margin="10"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
+                    <templates:ConfEstHorarioTemplateView/>
+                </Grid>
+            </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

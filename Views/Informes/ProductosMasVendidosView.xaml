@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Informes.ProductosMasVendidosView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:yummy="http://schemas.microsoft.com/dotnet/2021/maui"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Más Vendidos"
+                TextColor="{DynamicResource Negro}"
+                VerticalOptions="Center" />
+            <ImageButton
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding cmdExport}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="export_excel.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ExpanderTitleTextStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="Nunito" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+
+            <Style x:Key="CollpasedColorSytle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+            <Style x:Key="miLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Android=10, iOS=12, UWP=14}" />
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="FontFamily" Value="Nunito" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid BackgroundColor="{DynamicResource Rojo}"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="Auto,Auto,*"
+            VerticalOptions="FillAndExpand">
+            <CollectionView
+                Grid.Row="2"
+                BackgroundColor="White"
+                ItemsSource="{Binding Listado}"
+                SelectionMode="Single">
+                <CollectionView.EmptyView>
+                    <StackLayout>
+                        <Label
+                            Margin="15"
+                            FontFamily="Syne"
+                            FontSize="30"
+                            HorizontalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="No existen datos para el filtro seleccionado"
+                            TextColor="{StaticResource Rojo}"
+                            VerticalOptions="CenterAndExpand"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Grid
+                            Margin="0,2"
+                            BackgroundColor="White"
+                            ColumnDefinitions="80, *"
+                            ColumnSpacing="0"
+                            RowDefinitions="Auto, Auto,Auto"
+                            RowSpacing="0">
+                            <Border
+                                Grid.RowSpan="3"
+                                Grid.Column="0"
+                                Margin="-60,0,0,0"
+                                Padding="10,25,15,25"
+                                BackgroundColor="{DynamicResource Negro}"
+                                StrokeShape="RoundRectangle 0,40,30,40">
+                                <Label
+                                    FontFamily="Syne"
+                                    FontSize="20"
+                                    HorizontalOptions="End"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding cantidad}"
+                                    TextColor="White" />
+                            </Border>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="10,0"
+                                HorizontalOptions="StartAndExpand"
+                                LineBreakMode="TailTruncation"
+                                VerticalTextAlignment="Start">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            BackgroundColor="Transparent"
+                                            FontAttributes="Bold"
+                                            FontFamily="Nunito"
+                                            FontSize="16"
+                                            Text="{Binding producto}"
+                                            TextColor="{DynamicResource Negro}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

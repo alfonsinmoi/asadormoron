@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.AddCreditCardPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:AsadorMoron.ViewModels.Clientes"
+    x:DataType="viewmodels:AddCreditCardPageViewModel"
+    xmlns:controls="clr-namespace:AsadorMoron.Controls"
+    mc:Ignorable="d">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="colorGray">Gray</Color>
+            <Style x:Key="btnCancel" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="TextColor" Value="{DynamicResource Rojo}" />
+            </Style>
+            <Style x:Key="btnConfirm" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource Rojo}" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Border
+        x:Name="pancake"
+        Margin="20,0,20,0"
+        BackgroundColor="White"
+        StrokeShape="RoundRectangle 25"
+        HeightRequest="470"
+        HorizontalOptions="Fill"
+        VerticalOptions="Center">
+        <controls:CustomWebView x:Name="webView" HorizontalOptions="Fill" VerticalOptions="Fill"/>
+    </Border>
+</ContentPage>

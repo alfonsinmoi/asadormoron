@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Establecimientos.DetalleIngredienteView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Amarillo}"
+                TextColor="{DynamicResource Negro}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding CommandGuardar}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <!--  CONTAINER  -->
+        <Grid BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" RowDefinitions="*">
+            <ScrollView Grid.Row="0">
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Orientation="Vertical"
+                    VerticalOptions="FillAndExpand">
+                    <Grid
+                        Margin="20,10"
+                        ColumnDefinitions="AUTO, *, 70"
+                        RowDefinitions="AUTO, AUTO, AUTO, AUTO, AUTO,Auto,Auto,Auto"
+                        RowSpacing="20">
+
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalTextAlignment="Center"
+                            Text="Nombre"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="2"
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="12"
+                            HorizontalTextAlignment="Start"
+                            Text="{Binding Nombre}"
+                            TextColor="{DynamicResource Negro}" />
+
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="Precio"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="12"
+                            HorizontalTextAlignment="Start"
+                            Keyboard="Numeric"
+                            Text="{Binding Precio}"
+                            TextColor="{DynamicResource Negro}" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="Estado"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Switch
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            IsToggled="{Binding Estado}" />
+                        <Label
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="Puntos"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="12"
+                            MaxLength="5"
+                            HorizontalTextAlignment="Start"
+                            Keyboard="Numeric"
+                            Text="{Binding Puntos}"
+                            TextColor="{DynamicResource Negro}" />
+                    </Grid>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

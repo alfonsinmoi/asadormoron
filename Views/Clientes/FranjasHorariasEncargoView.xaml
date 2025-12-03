@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.FranjasHorariasEncargoView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Calendar;assembly=Syncfusion.Maui.Calendar"
+    BackgroundColor="{StaticResource Rojo}">
+    <ContentPage.Resources>
+        <Style TargetType="Grid">
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal" />
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*">
+            <Label
+                Grid.Column="0"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Por encargo"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,50,0,0',
+                                UWP='0'}"
+            RowDefinitions="Auto,Auto,*,Auto"
+            VerticalOptions="FillAndExpand">
+            <Label
+                Grid.Row="0"
+                Margin="15,20,15,0"
+                HorizontalTextAlignment="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span
+                            BackgroundColor="Transparent"
+                            FontFamily="Syne"
+                            FontSize="22"
+
+                            Text="{Binding Texto}"
+                            TextColor="{DynamicResource Amarillo}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <syncfusion:SfCalendar Grid.Row="1"
+                               x:Name="calendar"
+                               View="Month"
+                               EnablePastDates="False"
+                               SelectedDate="{Binding FechaSeleccionada}"
+                               MinimumDate="{Binding MinDate}"
+                               SelectableDayPredicate="{Binding SelectableDayPredicate}"
+                               HeightRequest="300">
+                <syncfusion:SfCalendar.MonthView>
+                    <syncfusion:CalendarMonthView
+                        TodayTextStyle="{syncfusion:CalendarTextStyle TextColor={DynamicResource Blanco}}"
+                        TextStyle="{syncfusion:CalendarTextStyle FontFamily=Nunito}" />
+                </syncfusion:SfCalendar.MonthView>
+            </syncfusion:SfCalendar>
+            <CollectionView
+                Grid.Row="2"
+                Margin="15,10"
+                BackgroundColor="Transparent"
+                ItemsSource="{Binding Listado}"
+                SelectedItem="{Binding FranjaSeleccionada}"
+                SelectionMode="Single">
+                <CollectionView.EmptyView>
+                    <StackLayout>
+                        <Label
+                            Margin="15"
+                            FontFamily="Syne"
+                            FontSize="30"
+                            HorizontalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="No existen horas para realizar su pedido"
+                            TextColor="{StaticResource Rojo}"
+                            VerticalOptions="CenterAndExpand"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="{OnIdiom Phone=2, Tablet=4, Desktop=4, Default=2}" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout BackgroundColor="Transparent">
+                            <Frame
+                                Margin="0,15"
+                                Padding="40,15"
+                                BackgroundColor="{Binding Color}"
+                                CornerRadius="20"
+                                HorizontalOptions="CenterAndExpand">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="Syne"
+                                    FontSize="22"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding horaInicio}"
+                                    TextColor="Black">
+                                    <Label.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding Color}"
+                                            TargetType="Label"
+                                            Value="#fef400">
+                                            <Setter Property="TextColor" Value="White" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Frame>
+                            
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup Name="CommonStates">
+                        <VisualState Name="Normal" />
+                        <VisualState Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+            </CollectionView>
+            <Button
+                Grid.Row="3"
+                Margin="10,0,10,20"
+                BackgroundColor="{DynamicResource Amarillo}"
+                Command="{Binding EnviarPedidoCommand}"
+                CornerRadius="10"
+                FontFamily="Nunito"
+                FontSize="18"
+                HeightRequest="60"
+                HorizontalOptions="FillAndExpand"
+                Text="Enviar Pedido"
+                TextColor="White"
+                VerticalOptions="EndAndExpand" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

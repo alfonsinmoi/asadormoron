@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Administrador.CuponesView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="{StaticResource Rojo}"
+    >
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Cupones"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding NuevoCuponCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="btnmas.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout
+            BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <CollectionView
+                Margin="15,10"
+                BackgroundColor="Transparent"
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding ListadoCupones}"
+                SelectedItem="{Binding CuponSeleccionado, Mode=TwoWay}"
+                SelectionMode="Single"
+                VerticalOptions="FillAndExpand">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                            <Grid
+                                Margin="0,0,0,10"
+                                Padding="0,5,0,0"
+                                ColumnDefinitions="Auto,*"
+                                RowDefinitions="Auto,Auto,Auto">
+                                <Frame HeightRequest="30" WidthRequest="30" Padding="0"
+                                       HasShadow="False" BackgroundColor="{DynamicResource Rojo}"
+                                       CornerRadius="15" Grid.RowSpan="2" VerticalOptions="Start">
+                                    <Frame.Triggers>
+                                        <DataTrigger
+                                            Binding="{Binding estado}"
+                                            TargetType="Frame"
+                                            Value="False">
+                                            <Setter Property="BackgroundColor" Value="Red" />
+                                        </DataTrigger>
+                                    </Frame.Triggers>
+                                </Frame>
+                                    <Label
+                                        Grid.Column="1"
+                                        BackgroundColor="Transparent"
+                                        FontAttributes="Bold"
+                                        FontFamily="Syne"
+                                        FontSize="Medium"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding codigoCupon}"
+                                        TextColor="{DynamicResource Rojo}"
+                                        VerticalTextAlignment="Start" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Grid.Row="1"
+                                        BackgroundColor="Transparent"
+                                        FontFamily="Nunito_bold"
+                                        FontSize="Small"
+                                        HorizontalOptions="StartAndExpand"
+                                        LineBreakMode="TailTruncation"
+                                        TextColor="{DynamicResource Rojo}"
+                                        VerticalTextAlignment="Start">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="{Binding fechaDesde,StringFormat='{0:dd/MM/yyyy HH:mm}'}"></Span>
+                                                    <Span Text=" - "/>
+                                                    <Span Text="{Binding fechaHasta,StringFormat='{0:dd/MM/yyyy HH:mm}'}"/>
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+
+                                        <StackLayout Grid.Column="1"
+                                            Grid.Row="2" Orientation="Horizontal">
+                                            <Label
+                                                BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="Nunito"
+                                                FontSize="Small"
+                                                HorizontalOptions="Start"
+                                                LineBreakMode="TailTruncation"
+                                                Text="{Binding valor}"
+                                                TextColor="{DynamicResource Rojo}"
+                                                VerticalTextAlignment="Start">
+                                                <Label.Triggers>
+                                                    <DataTrigger
+                                                        Binding="{Binding tipoOferta}"
+                                                        TargetType="Label"
+                                                        Value="1">
+                                                        <Setter Property="Text" Value="{Binding valor,StringFormat='-{0}%'}" />
+                                                    </DataTrigger>
+                                                    <DataTrigger
+                                                        Binding="{Binding tipoOferta}"
+                                                        TargetType="Label"
+                                                        Value="0">
+                                                        <Setter Property="Text" Value="{Binding valor,StringFormat='-{0}€'}" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                            <Label
+                                                    BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="Nunito"
+                                                FontSize="Small"
+                                                HorizontalOptions="StartAndExpand"
+                                                LineBreakMode="TailTruncation"
+                                                IsVisible="{Binding gastos}"
+                                                TextColor="{DynamicResource Rojo}"
+                                                Text=" en Gastos de Envío"
+                                                VerticalTextAlignment="Start"/>
+                                            <Label
+                                                    BackgroundColor="Transparent"
+                                                FontAttributes="Bold"
+                                                FontFamily="Nunito"
+                                                FontSize="Small"
+                                                HorizontalOptions="StartAndExpand"
+                                                LineBreakMode="TailTruncation"
+                                                IsVisible="{Binding gastos, Converter={StaticResource InverseBoolConverter}}"
+                                                TextColor="{DynamicResource Rojo}"
+                                                Text=" en el precio"
+                                                VerticalTextAlignment="Start"/>
+                                        </StackLayout>
+                            </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

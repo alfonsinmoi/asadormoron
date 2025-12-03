@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.DetalleEstablecimientoParaClienteView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:ffTransformations="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    BackgroundColor="White">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout
+                HorizontalOptions="FillAndExpand"
+                Orientation="Vertical"
+                VerticalOptions="FillAndExpand">
+                <Grid
+                    ColumnSpacing="0"
+                    RowDefinitions="200, *"
+                    RowSpacing="0">
+                    <ffimageloading:CachedImage
+                        Grid.Row="0"
+                        Aspect="AspectFill"
+                        Source="{Binding Imagen}"/>
+                    <ffimageloading:CachedImage
+                        Grid.Row="1"
+                        Margin="0,-50,0,0"
+                        Aspect="AspectFill"
+                        BackgroundColor="Transparent"
+                        HeightRequest="100"
+                        HorizontalOptions="Center"
+                        Source="{Binding Logo}"
+                        VerticalOptions="End"
+                        WidthRequest="100">
+                        <ffimageloading:CachedImage.Transformations>
+                            <!-- Transformation removed -->
+                        </ffimageloading:CachedImage.Transformations>
+
+                    </ffimageloading:CachedImage>
+                </Grid>
+                <BoxView
+                    Margin="20,0,20,0"
+                    BackgroundColor="{DynamicResource Amarillo}"
+                    HeightRequest="1" />
+
+                <Grid
+                    Margin="20,0,20,0"
+                    ColumnDefinitions="AUTO, *"
+                    RowDefinitions="AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO"
+                    RowSpacing="10">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Dirección"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="End"
+                        LineBreakMode="WordWrap"
+                        Text="{Binding Direccion}"
+                        TextColor="{DynamicResource Amarillo}" />
+
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneTelefono}"
+                        Text="Teléfono"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="End"
+                        IsVisible="{Binding TieneTelefono}"
+                        LineBreakMode="WordWrap"
+                        Text="{Binding Telefono}"
+                        TextColor="{DynamicResource Amarillo}"
+                        TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LlamaTelefono}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneTelefono2}"
+                        Text="Teléfono"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="End"
+                        IsVisible="{Binding TieneTelefono2}"
+                        LineBreakMode="WordWrap"
+                        Text="{Binding Telefono2}"
+                        TextColor="{DynamicResource Amarillo}"
+                        TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LlamaTelefono2}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneWhatsApp}"
+                        Text="WhatsApp"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="End"
+                        IsVisible="{Binding TieneWhatsApp}"
+                        LineBreakMode="WordWrap"
+                        Text="{Binding WhatsApp}"
+                        TextColor="{DynamicResource Amarillo}"
+                        TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LlamaWhatsApp}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneWeb}"
+                        Text="Web"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="End"
+                        IsVisible="{Binding TieneWeb}"
+                        LineBreakMode="TailTruncation"
+                        Text="{Binding Web}"
+                        TextColor="{DynamicResource Amarillo}"
+                        TextDecorations="Underline">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LlamaWeb}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneEmail}"
+                        Text="Email"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="End"
+                        IsVisible="{Binding TieneEmail}"
+                        LineBreakMode="WordWrap"
+                        Text="{Binding Email}"
+                        TextColor="{DynamicResource Amarillo}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LlamaEmail}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <Label
+                        Grid.Row="6"
+                        Grid.ColumnSpan="2"
+                        FontFamily="Syne"
+                        FontSize="20"
+                        IsVisible="{Binding SistemaPuntos}"
+                        HorizontalTextAlignment="Center"
+                        LineBreakMode="WordWrap"
+                        Text="Sistema de puntos"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="7"
+                        Grid.ColumnSpan="2"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="Start"
+                        IsVisible="{Binding SistemaPuntos}"
+                        LineBreakMode="WordWrap"
+                        Text="{Binding TextoPuntos}"
+                        TextColor="{DynamicResource Amarillo}">
+                    </Label>
+
+                    <Label
+                        Grid.Row="8"
+                        Margin="0,30,0,0"
+                        Grid.ColumnSpan="2"
+                        FontFamily="Syne"
+                        FontSize="20"
+                        HorizontalTextAlignment="Center"
+                        LineBreakMode="WordWrap"
+                        Text="{Binding TextoDetalle}"
+                        TextColor="{DynamicResource Negro}" />
+
+
+
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

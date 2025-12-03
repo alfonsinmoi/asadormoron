@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:AsadorMoron.Converters"
+    x:Class="AsadorMoron.Views.Administrador.ClientesView"
+    x:Name="viewClientes"
+    BackgroundColor="{StaticResource Rojo}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StringEmptyToBooleanConverter x:Key="StringEmptyToBooleanConverter" />
+            <converters:EstadoToColorConverter x:Key="EstadoToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Clientes"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <ContentPage.Content>
+        <StackLayout
+            BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+
+            <!-- Buscador -->
+            <Grid ColumnDefinitions="*,Auto"
+                  Margin="{OnPlatform iOS='15,10,15,0', Default='15,10,15,0'}">
+                <Entry Grid.Column="0"
+                       Placeholder="Buscar por nombre, email o teléfono..."
+                       PlaceholderColor="#999999"
+                       Text="{Binding TextoBusqueda}"
+                       TextColor="{DynamicResource Negro}"
+                       FontFamily="Nunito"
+                       FontSize="14"
+                       BackgroundColor="White"/>
+                <ImageButton Grid.Column="1"
+                             Source="cerrar.png"
+                             WidthRequest="30"
+                             HeightRequest="30"
+                             Margin="5,0,0,0"
+                             BackgroundColor="Transparent"
+                             IsVisible="{Binding TextoBusqueda, Converter={StaticResource StringEmptyToBooleanConverter}}"
+                             Command="{Binding LimpiarBusquedaCommand}"/>
+            </Grid>
+
+            <!-- Lista de clientes -->
+            <ListView
+                Margin="{OnPlatform iOS=15, Default=0}"
+                BackgroundColor="Transparent"
+                HasUnevenRows="True"
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding ListadoClientes}"
+                SelectedItem="{Binding ClienteSeleccionado, Mode=TwoWay}"
+                SeparatorVisibility="Default"
+                SeparatorColor="#E0E0E0"
+                VerticalOptions="FillAndExpand">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid ColumnDefinitions="Auto,*,Auto"
+                                  Padding="{OnPlatform iOS='10,8', Default='15,8'}"
+                                  ColumnSpacing="10">
+
+                                <!-- Icono usuario -->
+                                <Image Grid.Column="0"
+                                       Source="perfil.png"
+                                       WidthRequest="40"
+                                       HeightRequest="40"
+                                       VerticalOptions="Center"/>
+
+                                <!-- Info del cliente -->
+                                <StackLayout Grid.Column="1"
+                                             VerticalOptions="Center"
+                                             Spacing="2">
+                                    <Label FontFamily="Nunito"
+                                           FontAttributes="Bold"
+                                           FontSize="15"
+                                           TextColor="{DynamicResource Negro}"
+                                           LineBreakMode="TailTruncation">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}">
+                                                <Binding Path="nombre"/>
+                                                <Binding Path="apellidos"/>
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                    <Label Text="{Binding email}"
+                                           FontFamily="Nunito"
+                                           FontSize="12"
+                                           TextColor="#666666"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Label Text="{Binding telefono}"
+                                           FontFamily="Nunito"
+                                           FontSize="12"
+                                           TextColor="#666666"
+                                           IsVisible="{Binding telefono, Converter={StaticResource StringEmptyToBooleanConverter}}"/>
+                                </StackLayout>
+
+                                <!-- Indicador estado -->
+                                <Frame Grid.Column="2"
+                                       WidthRequest="12"
+                                       HeightRequest="12"
+                                       CornerRadius="6"
+                                       Padding="0"
+                                       HasShadow="False"
+                                       VerticalOptions="Center"
+                                       BackgroundColor="{Binding estado, Converter={StaticResource EstadoToColorConverter}}"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

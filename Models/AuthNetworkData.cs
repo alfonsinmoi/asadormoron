@@ -1,0 +1,21 @@
+﻿namespace AsadorMoron.Models
+{
+    public class AuthNetworkData
+    {
+        public string Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Logo { get; set; }
+
+        public string Picture { get; set; }
+
+        public string Background { get; set; }
+
+        public string Foreground { get; set; }
+
+        public string Email { get; set; }
+        public string Nombre { get; set; }
+        public string Apellidos { get; set; }
+    }
+}

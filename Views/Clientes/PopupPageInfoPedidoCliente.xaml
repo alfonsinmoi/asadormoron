@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:popup="clr-namespace:Mopups.Pages;assembly=Mopups"
+             x:Class="AsadorMoron.Views.Clientes.PopupPageInfoPedidoCliente">
+    <popup:PopupPage.Content>
+        <Frame
+            Margin="20,0"
+            Padding="10"
+            BackgroundColor="{StaticResource Rojo}"
+            HeightRequest="440"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <StackLayout>
+                <Label
+                    FontAttributes="Bold"
+                    FontFamily="Syne"
+                    FontSize="Title"
+                    HorizontalOptions="CenterAndExpand"
+                    HorizontalTextAlignment="Center"
+                    Text="Datos Pedido"
+                    TextTransform="Uppercase"
+                    TextColor="White"
+                    VerticalTextAlignment="Center" />
+                <BoxView
+                    Margin="10,10"
+                    BackgroundColor="{DynamicResource Blanco}"
+                    HeightRequest="1" />
+                <StackLayout Margin="10,0" x:Name="EstablecimientoStack" Orientation="Horizontal" >
+                    <Label TextColor="White" HorizontalOptions="FillAndExpand">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Establecimiento" TextTransform="Uppercase"/>
+                                <Span Text=": "/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label x:Name="Establecimiento" TextColor="White" HorizontalOptions="End"/>
+                </StackLayout>
+                <StackLayout Margin="10,0" x:Name="CodigoPedidoStack" Orientation="Horizontal" >
+                    <Label TextColor="White" HorizontalOptions="FillAndExpand">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Código de pedido" TextTransform="Uppercase"/>
+                                <Span Text=": "/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label x:Name="CodigoPedido" TextColor="White" HorizontalOptions="End"/>
+                </StackLayout>
+                <StackLayout Margin="10,0" x:Name="DireccionStack" Orientation="Horizontal" >
+                    <Label TextColor="White" HorizontalOptions="FillAndExpand">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Dirección" TextTransform="Uppercase"/>
+                                <Span Text=": "/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label x:Name="Direccion" TextColor="White" HorizontalOptions="End"/>
+                </StackLayout>
+                <StackLayout Margin="10,0" x:Name="ZonaStack" Orientation="Horizontal" >
+                    <Label TextTransform="Uppercase" TextColor="White" HorizontalOptions="FillAndExpand">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Zona"/>
+                                <Span Text=": "/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label x:Name="Zona" TextColor="White" HorizontalOptions="End"/>
+                </StackLayout>
+                <StackLayout Margin="10,0" x:Name="TipoPagoStack" Orientation="Horizontal" >
+                    <Label TextColor="White" HorizontalOptions="FillAndExpand">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Pago" TextTransform="Uppercase"/>
+                                <Span Text=": "/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label x:Name="TipoPago" TextColor="White" HorizontalOptions="End"/>
+                </StackLayout>
+                <BoxView
+                    Margin="10,10"
+                    BackgroundColor="{DynamicResource Blanco}"
+                    HeightRequest="1" />
+                <ListView
+                    x:Name="lista"
+                    BackgroundColor="Transparent"
+                    HasUnevenRows="True"
+                    SeparatorVisibility="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid
+                                    Margin="0,3"
+                                    ColumnDefinitions="30,*,Auto"
+                                    RowDefinitions="*">
+                                    <Label
+                                        Grid.Column="0"
+                                        Margin="10,0"
+                                        FontFamily="Nunito"
+                                        FontSize="15"
+                                        Text="{Binding cantidad}"
+                                        TextColor="White" />
+                                    <Label
+                                        Grid.Column="1"
+                                        FontFamily="Nunito"
+                                        FontSize="15"
+                                        LineBreakMode="WordWrap"
+                                        Text="{Binding nombreProducto}"
+                                        TextColor="White" />
+                                    <Label
+                                        Grid.Column="2"
+                                        Margin="10,0"
+                                        FontFamily="Nunito"
+                                        FontSize="15"
+                                        HorizontalTextAlignment="End"
+                                        Text="{Binding importe, StringFormat='{0:N2} €'}"
+                                        TextColor="White" />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <BoxView
+                    Margin="10,10"
+                    BackgroundColor="{DynamicResource Blanco}"
+                    HeightRequest="1" />
+
+                <Grid x:Name="ComentarioStack" ColumnDefinitions="Auto,Auto" Margin="10,0" MinimumHeightRequest="50">
+                    <Label Grid.Column="0" TextColor="White">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Observaciones"/>
+                                <Span Text=": "/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <ScrollView  Grid.Column="1" >
+                        <Label x:Name="Comentario" TextColor="White" />
+                    </ScrollView>
+                </Grid>
+                
+                <StackLayout Margin="10,10,10,5" x:Name="TotalStack" Orientation="Horizontal" >
+                    <Label TextColor="White" HorizontalOptions="FillAndExpand">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span
+                                    Text="Total"
+                                    TextTransform="Uppercase"/>
+                                <Span
+                                    Text=": "/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    <Label x:Name="Total" TextColor="White" HorizontalOptions="End" />
+                </StackLayout>
+            </StackLayout>
+        </Frame>
+    </popup:PopupPage.Content>
+</popup:PopupPage>

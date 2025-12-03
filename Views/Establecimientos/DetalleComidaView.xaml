@@ -1,0 +1,672 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Establecimientos.DetalleComidaView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffTransformations="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+    x:Name="ComidaDetalleView"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto" >
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,40,0"
+                FontFamily="Syne"
+                FontSize="25"
+                MaxLines="2"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Nombre}"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding CommandGuardar}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                VerticalOptions="CenterAndExpand"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" >
+        <Grid  RowDefinitions="*,Auto" >
+            <StackLayout
+                Grid.Row="0"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Orientation="Vertical">
+                <!--  CONTAINER  -->
+                <ffimageloading:CachedImage
+                    Aspect="AspectFit"
+                    Margin="0,10,0,0"
+                    HeightRequest="{OnPlatform iOS=240, Android=180,  UWP=200}"
+                    HorizontalOptions="FillAndExpand"
+                    Source="{Binding Imagen}"
+                    VerticalOptions="FillAndExpand">
+                    <ffimageloading:CachedImage.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CmdCambiaImagen}" />
+                    </ffimageloading:CachedImage.GestureRecognizers>
+                    <ffimageloading:CachedImage.Transformations>
+                        <!-- Transformation removed -->
+                    </ffimageloading:CachedImage.Transformations>
+                </ffimageloading:CachedImage>
+                <!--  INFO  -->
+                <Grid
+                    Margin="15,10,15,15"
+                    ColumnDefinitions="AUTO, *"
+                    RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+                    RowSpacing="5">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Nombre"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    
+                    <tabView:SfTabView
+                        Grid.Row="0"
+                        Grid.Column="1"
+                                    TabBarPlacement="Top"
+                                    TabBarHeight="40"
+                                    IndicatorBackground="{DynamicResource Negro}"
+                                    IndicatorPlacement="Bottom">
+                                    <tabView:SfTabItem ImageSource="spain.png">
+                                        <tabView:SfTabItem.Content>
+                                            <Entry
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding Nombre}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem ImageSource="english.png">
+                                        <tabView:SfTabItem.Content>
+                                                <Entry
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding Nombre_eng}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                        <tabView:SfTabItem ImageSource="germany.png">
+                                        <tabView:SfTabItem.Content>
+                                                <Entry
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding Nombre_ger}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem ImageSource="france.png">
+                                        <tabView:SfTabItem.Content>
+                                                <Entry
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        HorizontalTextAlignment="Start"
+                        Text="{Binding Nombre_fr}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                </tabView:SfTabView>
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Categoría"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Title="Seleccione una categoría"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        ItemDisplayBinding="{Binding nombre}"
+                        ItemsSource="{Binding ListadoCategorias}"
+                        SelectedItem="{Binding CategoriaSeleccionada}"
+                        TextColor="{DynamicResource Negro}"
+                        TitleColor="{DynamicResource Negro}" />
+
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Precio"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Entry
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        HorizontalTextAlignment="Start"
+                        Keyboard="Numeric"
+                        Text="{Binding Precio}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneLocal}"
+                        Text="Precio en local"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Entry
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        HorizontalTextAlignment="Start"
+                        IsVisible="{Binding TieneLocal}"
+                        Keyboard="Numeric"
+                        Text="{Binding PrecioLocal}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Descipción"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+
+                    
+                        <tabView:SfTabView
+                        Grid.Row="4"
+                        Grid.Column="1"
+                                    TabBarPlacement="Top"
+                                    TabBarHeight="40"
+                                    IndicatorBackground="{DynamicResource Negro}"
+                                    IndicatorPlacement="Bottom">
+                                    <tabView:SfTabItem ImageSource="spain.png">
+                                        <tabView:SfTabItem.Content>
+                                            <Editor
+                        BackgroundColor="LightGray"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        HeightRequest="80"
+                        Text="{Binding Descripcion}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem ImageSource="english.png">
+                                        <tabView:SfTabItem.Content>
+                                                <Editor
+                        BackgroundColor="LightGray"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        HeightRequest="80"
+                        Text="{Binding Descripcion_eng}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                        <tabView:SfTabItem ImageSource="germany.png">
+                                        <tabView:SfTabItem.Content>
+                                                <Editor
+                        BackgroundColor="LightGray"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        HeightRequest="80"
+                        Text="{Binding Descripcion_ger}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                    <tabView:SfTabItem ImageSource="france.png">
+                                        <tabView:SfTabItem.Content>
+                                                <Editor
+                        BackgroundColor="LightGray"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        HeightRequest="80"
+                        Text="{Binding Descripcion_fr}"
+                        TextColor="{DynamicResource Negro}" />
+                                        </tabView:SfTabItem.Content>
+                                    </tabView:SfTabItem>
+                                </tabView:SfTabView>
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneLocal}"
+                        Text="Visible para fuera"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Switch
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        IsToggled="{Binding VistaEnvios}"
+                        IsVisible="{Binding TieneLocal}" />
+                    <Label
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneLocal}"
+                        Text="Visible para local"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Switch
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        IsToggled="{Binding VistaLocal}"
+                        IsVisible="{Binding TieneLocal}" />
+                    <Label
+                        Grid.Row="7"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Estado"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Switch
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        IsToggled="{Binding Estado}" />
+                    <Label
+                        Grid.Row="8"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Nº Ingredientes"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Entry
+                        Grid.Row="8"
+                        Grid.Column="1"
+                        Margin="3"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        MaxLength="3"
+                        HorizontalTextAlignment="Start"
+                        Keyboard="Numeric"
+                        Text="{Binding NumeroIngredientes}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Ing. obligat."
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Switch
+                        Grid.Row="9"
+                        Grid.Column="1"
+                        IsToggled="{Binding FuerzaIngredientes}" />
+                    <Label
+                        Grid.Row="10"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding TieneEncargos}"
+                        Text="Por encargo"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Switch
+                        Grid.Row="10"
+                        Grid.Column="1"
+                        IsVisible="{Binding TieneEncargos}"
+                        IsToggled="{Binding PorEncargo}" />
+                    <Label
+                        Grid.Row="11"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding SistemaPuntos}"
+                        Text="Puntos"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Entry
+                        Grid.Row="11"
+                        Grid.Column="1"
+                        Margin="3"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        IsVisible="{Binding SistemaPuntos}"
+                        HorizontalTextAlignment="Start"
+                        Keyboard="Numeric"
+                        Text="{Binding Puntos}"
+                        TextColor="{DynamicResource Negro}" />
+                </Grid>
+                <!--  OPCIONES  -->
+                <Grid
+                    Margin="15,0,15,15"
+                    ColumnDefinitions="*, Auto"
+                    ColumnSpacing="0"
+                    RowDefinitions="Auto, 1, Auto, Auto"
+                    RowSpacing="5">
+                    <Label
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding EsComida}"
+                        Text="Opciones"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalOptions="Center" />
+                    <ImageButton
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="0,5"
+                        BackgroundColor="Transparent"
+                        Command="{Binding CmdNuevaOpcion}"
+                        HorizontalOptions="End"
+                        Source="btnmas.png"
+                        VerticalOptions="Center"
+                        WidthRequest="{OnPlatform Default=20,iOS=40, WinUI=55}"
+                        HeightRequest="{OnPlatform Default=20,iOS=40, WinUI=50}"/>
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.ColumnSpan="2"
+                        BackgroundColor="{DynamicResource Negro}" />
+                    <StackLayout
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal">
+                        <Label
+                            FontSize="10"
+                            HorizontalOptions="FillAndExpand"
+                            Text="Opción"
+                            TextColor="{DynamicResource Negro}" />
+                        <Label
+                            FontSize="{OnPlatform Android=9,
+                                                    iOS=10,
+                                                    UWP=12}"
+                            HorizontalOptions="End"
+                            Text="Precio"
+                            TextColor="{DynamicResource Negro}"
+                            WidthRequest="70" />
+                        <Label
+                            FontSize="{OnPlatform Android=9,
+                                                    iOS=10,
+                                                    UWP=12}"
+                            HorizontalOptions="End"
+                            Text="Puntos"
+                            IsVisible="{Binding SistemaPuntos}"
+                            TextColor="{DynamicResource Negro}"
+                            WidthRequest="70" />
+                    </StackLayout>
+                    <ListView
+                        x:Name="listViewOpciones"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="2"
+                        BackgroundColor="Transparent"
+                        HasUnevenRows="True"
+                        HeightRequest="{Binding SetHeightListView}"
+                        HorizontalOptions="FillAndExpand"
+                        ItemsSource="{Binding ListadoOpciones}"
+                        RowHeight="50"
+                        SeparatorVisibility="None"
+                        VerticalOptions="FillAndExpand">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout
+                                        Margin="0,0,0,10"
+                                        Padding="0,5,0,0"
+                                        HorizontalOptions="FillAndExpand"
+                                        Orientation="Horizontal">
+                                        <Entry
+                                            BackgroundColor="White"
+                                            FontSize="12"
+                                            HorizontalOptions="FillAndExpand"
+                                            HorizontalTextAlignment="Start"
+                                            Text="{Binding opcion, Mode=TwoWay}"
+                                            TextColor="{DynamicResource Negro}"
+                                            WidthRequest="200" />
+                                        <Entry
+                                            BackgroundColor="White"
+                                            FontSize="12"
+                                            HorizontalOptions="End"
+                                            HorizontalTextAlignment="Start"
+                                            Keyboard="Numeric"
+                                            Text="{Binding precio, StringFormat='{0:N2}', Mode=TwoWay}"
+                                            TextColor="{DynamicResource Negro}"
+                                            WidthRequest="70" />
+                                        <Entry
+                                            BackgroundColor="White"
+                                            FontSize="12"
+                                            HorizontalOptions="End"
+                                            HorizontalTextAlignment="Start"
+                                            Keyboard="Numeric"
+                                            IsVisible="{Binding Path=BindingContext.SistemaPuntos, Source={x:Reference Name=ComidaDetalleView}, Mode=TwoWay}"
+                                            Text="{Binding puntos}"
+                                            TextColor="{DynamicResource Negro}"
+                                            WidthRequest="70" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+                <!--  ALLERGENS  -->
+                <Grid
+                    Margin="15,0,15,5"
+                    ColumnDefinitions="*"
+                    RowDefinitions="AUTO, AUTO, Auto">
+                    <!--  ROW 0  -->
+                    <Label
+                        Grid.Row="0"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding EsComida}"
+                        Text="Alérgenos"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalOptions="StartAndExpand" />
+                    <!--  ROW 1  -->
+                    <BoxView
+                        Grid.Row="1"
+                        BackgroundColor="{DynamicResource Negro}"
+                        HeightRequest="1"
+                        IsVisible="{Binding EsComida}" />
+                    <!--  ROW 2  -->
+                    <Grid
+                        Grid.Row="2"
+                        BackgroundColor="Transparent"
+                        ColumnDefinitions="*, *, *, *, *"
+                        HorizontalOptions="FillAndExpand"
+                        IsVisible="{Binding EsComida}"
+                        RowDefinitions="50, 50, 50"
+                        VerticalOptions="FillAndExpand">
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Source="{Binding Altramuces}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaAltramuces}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Source="{Binding Apio}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaApio}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Source="{Binding Cacahuetes}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaCacahuetes}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Source="{Binding Crustaceos}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaCrustaceos}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            Source="{Binding FrutosSecos}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaFrutosSecos}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Source="{Binding Gluten}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaGluten}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Source="{Binding Huevos}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaHuevos}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            Source="{Binding Lacteos}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaLacteos}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="1"
+                            Grid.Column="3"
+                            Source="{Binding Moluscos}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaMoluscos}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="1"
+                            Grid.Column="4"
+                            Source="{Binding Mostaza}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaMostaza}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Source="{Binding Pescado}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaPescado}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Source="{Binding Sesamo}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaSesamo}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            Source="{Binding Soja}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaSoja}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Image
+                            Grid.Row="2"
+                            Grid.Column="3"
+                            Source="{Binding Sulfitos}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaSulfitos}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                    </Grid>
+                </Grid>
+                <!--  INGREDIENTS  -->
+                <StackLayout
+                Margin="15,0,15,5"
+                Grid.Row="1" 
+                IsVisible="{Binding EsComida}"
+                Orientation="Vertical"
+                VerticalOptions="Start">
+                <Label
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalTextAlignment="Center"
+                    Text="Ingredientes"
+                    TextColor="{DynamicResource Negro}"
+                    VerticalOptions="Center" />
+                <BoxView
+                    BackgroundColor="{DynamicResource Negro}"
+                    HeightRequest="1" />
+                <StackLayout
+                    BackgroundColor="Transparent"
+                    BindableLayout.ItemsSource="{Binding ListadoIngredientes}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Margin="20,0" Orientation="Horizontal">
+                                <CheckBox
+                                    IsChecked="{Binding seleccionado}"
+                                    Color="{DynamicResource Rojo}" />
+                                <Label
+                                    FontFamily="Nunito"
+                                    FontSize="12"
+                                    HorizontalTextAlignment="Start"
+                                    HorizontalOptions="FillAndExpand"
+                                    Text="{Binding nombre}"
+                                    TextColor="{DynamicResource Negro}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center" />
+                                <Entry
+                                    BackgroundColor="White"
+                                    FontFamily="Nunito"
+                                    FontSize="12"
+                                    HorizontalTextAlignment="End"
+                                    Keyboard="Numeric"
+                                    WidthRequest="80"
+                                    Text="{Binding precio}"
+                                    TextColor="Black" />
+                                <Label
+                                    FontFamily="Nunito"
+                                    FontSize="12"
+                                    HorizontalTextAlignment="Start"
+                                    HorizontalOptions="End"
+                                    Text="€"
+                                    TextColor="{DynamicResource Negro}"
+                                    VerticalOptions="Center"
+                                    VerticalTextAlignment="Center" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+            </StackLayout>
+            </StackLayout>
+            
+        </Grid>
+    </ScrollView>
+</ContentPage>

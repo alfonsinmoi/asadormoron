@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Repartidores.GastoView"
+    BackgroundColor="{DynamicResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Nota"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding CommandGuardar}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <!--  CONTAINER  -->
+        <Grid BackgroundColor="{DynamicResource Fondo}" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" RowDefinitions="*, AUTO">
+            <ScrollView Grid.Row="0">
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Orientation="Vertical"
+                    VerticalOptions="FillAndExpand">
+                    <Grid
+                        Margin="{OnPlatform iOS='20,10',Default='15,10,10,5'}"
+                        RowDefinitions="AUTO, AUTO,Auto,Auto" ColumnDefinitions="*,*" >
+
+                        <Label
+                                FontFamily="Syne"
+                                FontSize="14"
+                                HorizontalOptions="FillAndExpand"
+                                HorizontalTextAlignment="Start"
+                                VerticalOptions="CenterAndExpand"
+                                Text="Importe"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        <StackLayout Orientation="Horizontal" Grid.Row="1">
+                            <Entry
+                                BackgroundColor="White"
+                                FontFamily="Nunito"
+                                FontSize="14"
+                                VerticalOptions="CenterAndExpand"
+                                MinimumWidthRequest="50"
+                                WidthRequest="{OnPlatform Default=150,UWP=180}"
+                                HorizontalTextAlignment="End"
+                                Keyboard="Numeric"
+                                Text="{Binding Precio}"
+                                TextColor="{DynamicResource Rojo}" />
+                            <Label
+                                FontFamily="Syne"
+                                FontSize="14"
+                                HorizontalOptions="Start"
+                                HorizontalTextAlignment="Start"
+                                VerticalOptions="CenterAndExpand"
+                                Margin="0,0,5,0"
+                                Text="€"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
+                        <Label
+                            Grid.Column="1"
+                                FontFamily="Syne"
+                                FontSize="14"
+                                HorizontalOptions="FillAndExpand"
+                                HorizontalTextAlignment="Start"
+                                VerticalOptions="CenterAndExpand"
+                                Text="Tipo"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        <Picker Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Tipo}"
+                                SelectedItem="{Binding TipoSeleccionado,Mode=TwoWay}"
+                                BackgroundColor="White" TextColor="Black"/>
+
+                            <Label Grid.Row="2"
+                                FontFamily="Syne"
+                                   Margin="0,20,0,0"
+                                FontSize="14"
+                                HorizontalOptions="FillAndExpand"
+                                HorizontalTextAlignment="Start"
+                                VerticalOptions="CenterAndExpand"
+                                Text="Concepto"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                            <Editor Grid.Row="3"
+                                    Grid.ColumnSpan="2"
+                                BackgroundColor="White"
+                                FontFamily="Nunito"
+                                FontSize="14"
+                                VerticalOptions="CenterAndExpand"
+                                HeightRequest="150"
+                                Text="{Binding Concepto}"
+                                TextColor="{DynamicResource Rojo}" />
+                    </Grid>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

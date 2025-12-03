@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.CartaProductosNavidadView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:badge="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    x:Name="CartaProductos"
+    BackgroundColor="{DynamicResource Rojo}"
+    IconImageSource="menu.png">
+    <NavigationPage.TitleView>
+         <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+                <Image
+                    Grid.Column="0"
+                    Aspect="AspectFit"
+                    HeightRequest="35"
+                    Source="logoqoorder"
+                    HorizontalOptions="CenterAndExpand"
+                    VerticalOptions="StartAndExpand" />
+            <ImageButton
+                 IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}"
+                BackgroundColor="Transparent"
+                Command="{Binding IrDetallePedidoCommand}"
+                HeightRequest="40"
+                Grid.Column="2"
+                Margin="0,0,20,0"
+                Source="carrito.png"
+                WidthRequest="40" />
+             <Frame Padding="0" BackgroundColor="{DynamicResource Amarillo}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
+                   VerticalOptions="Start" HorizontalOptions="End" Grid.Column="2" HasShadow="False"
+                    IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
+                <Label Text="{Binding Cantidad, Mode=TwoWay}"
+                       FontSize="15" TextColor="Black" FontAttributes="Bold"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
+                </Frame.GestureRecognizers>
+             </Frame>
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,50,0,0',
+                                UWP='0'}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="Auto,*"
+            RowSpacing="0"
+            VerticalOptions="FillAndExpand">
+            <Grid Grid.Row="0" Margin="{OnPlatform Android='20,0,20,10', Default='20,5'}">
+                <Entry
+                    x:Name="TextoBusqueda"
+                    BackgroundColor="White"
+                    FontFamily="Syne_Regular"
+                    FontSize="{OnPlatform Default=12, Android=12}"
+                    Keyboard="Plain"
+                    Placeholder="Buscar..."
+                    PlaceholderColor="Gray"
+                    Text="{Binding TextoBusqueda}"
+                    TextColor="{DynamicResource Rojo}" />
+                <ImageButton
+                    Padding="7"
+                    BackgroundColor="{DynamicResource Amarillo}"
+                    Command="{Binding btnFiltrar}"
+                    HeightRequest="20"
+                    HorizontalOptions="End"
+                    Source="lupa.png"
+                    WidthRequest="40" />
+            </Grid>
+            <Grid Margin="0,0,0,0" Grid.Row="1" RowDefinitions="Auto,*">
+                <Grid.Triggers>
+                    <DataTrigger TargetType="Grid" Binding="{Binding Logado}" Value="False">
+                        <Setter Property="Margin" Value="0,0,0,100"/>
+                    </DataTrigger>
+                </Grid.Triggers>
+                <StackLayout Margin="-20,0" IsVisible="{Binding SistemaPuntos}" Grid.Row="0" BackgroundColor="{DynamicResource Amarillo}" HorizontalOptions="FillAndExpand">
+                    <Label Text="{Binding Puntos,StringFormat='Tienes {0} puntos'}" HorizontalTextAlignment="Center"
+                           TextColor="{DynamicResource Negro}" FontFamily="Nunito_bold" FontSize="20"/>
+                </StackLayout>
+                <CollectionView
+                BackgroundColor="{DynamicResource Fondo}"
+                Grid.Row="1"
+                ItemSizingStrategy="MeasureAllItems"
+                ItemsSource="{Binding Comidas}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="100,*">
+                            <BoxView HeightRequest="0.8" Margin="0,0,0,10" BackgroundColor="{DynamicResource Negro}" Grid.ColumnSpan="2" VerticalOptions="End"/>
+                            <ff:CachedImage
+                                Margin="0,0,0,15"
+                                Aspect="AspectFit"
+                                Source="https://qoorder.com/pa_ws/images/categorias/ea7820bf-f82f-4079-9032-7063314dd59e.jpg"
+                                VerticalOptions="Start"
+                                HorizontalOptions="FillAndExpand">
+                                <ff:CachedImage.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.ArticuloSeleccionado, Source={x:Reference Name=CartaProductos}}" CommandParameter="{Binding .}" />
+                                </ff:CachedImage.GestureRecognizers>
+                            </ff:CachedImage>
+                        <Grid Grid.Column="1"  Margin="0,0,15,15"
+                            RowSpacing="0"
+                            ColumnDefinitions="*,Auto"
+                            VerticalOptions="FillAndExpand">
+                            <Label
+                                Margin="{OnPlatform Android='5,0'}"
+                                FontFamily="Nunito_bold"
+                                FontSize="20"
+                                VerticalOptions="Center"
+                                HorizontalOptions="FillAndExpand"
+                                LineBreakMode="WordWrap"
+                                Text="{Binding articulo.nombre}"
+                                TextColor="{DynamicResource Negro}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.ArticuloSeleccionado, Source={x:Reference Name=CartaProductos}}" CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                                <Label.Triggers>
+                                    <DataTrigger
+                                        Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=CartaProductos}}"
+                                        TargetType="Label"
+                                        Value="EN">
+                                        <Setter Property="Text" Value="{Binding articulo.nombre_eng}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=CartaProductos}}"
+                                        TargetType="Label"
+                                        Value="DE">
+                                        <Setter Property="Text" Value="{Binding articulo.nombre_ger}" />
+                                    </DataTrigger>
+                                    <DataTrigger
+                                        Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=CartaProductos}}"
+                                        TargetType="Label"
+                                        Value="FR">
+                                        <Setter Property="Text" Value="{Binding articulo.nombre_fr}" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Image Source="next" Grid.Column="1"/>
+                            </Grid>
+                             <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Path=BindingContext.ArticuloSeleccionado, Source={x:Reference Name=CartaProductos}}" CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            </Grid>
+            <!-- Login banner -->
+            <Border Grid.Row="1"
+                    VerticalOptions="End"
+                    Margin="16,0,16,20"
+                    Stroke="{DynamicResource Amarillo}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 20"
+                    IsVisible="{Binding Logado, Converter={StaticResource InverseBoolConverter}}"
+                    Padding="0">
+                <Border.Shadow>
+                    <Shadow Brush="{DynamicResource Rojo}" Offset="0,4" Radius="12" Opacity="0.5"/>
+                </Border.Shadow>
+                <Grid>
+                    <!-- Fondo degradado -->
+                    <Border StrokeShape="RoundRectangle 18" Stroke="Transparent">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{DynamicResource Rojo}" Offset="0.0"/>
+                                <GradientStop Color="#CC0000" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,16">
+                        <!-- Icono usuario -->
+                        <Frame Grid.Column="0"
+                               BackgroundColor="White"
+                               CornerRadius="20"
+                               Padding="8"
+                               HasShadow="False"
+                               WidthRequest="40"
+                               HeightRequest="40"
+                               VerticalOptions="Center">
+                            <Image Source="user.png"
+                                   WidthRequest="24"
+                                   HeightRequest="24"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <!-- Texto -->
+                        <StackLayout Grid.Column="1"
+                                     VerticalOptions="Center"
+                                     Spacing="2"
+                                     Margin="12,0">
+                            <Label Text="Inicia sesion"
+                                   TextColor="White"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="16"/>
+                            <Label Text="para realizar tu pedido"
+                                   TextColor="#FFCCCC"
+                                   FontFamily="Nunito"
+                                   FontSize="13"/>
+                        </StackLayout>
+
+                        <!-- Boton entrar -->
+                        <Border Grid.Column="2"
+                                Stroke="Transparent"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="{DynamicResource Amarillo}"
+                                Padding="20,12"
+                                VerticalOptions="Center">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.3"/>
+                            </Border.Shadow>
+                            <Label Text="ENTRAR"
+                                   TextColor="{DynamicResource Negro}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="14"/>
+                        </Border>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding loginCommand}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

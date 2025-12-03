@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage
+    x:Class="AsadorMoron.Views.Establecimientos.PopupPageInfoUsuario"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:popup="clr-namespace:Mopups.Pages;assembly=Mopups">
+    <popup:PopupPage.Content>
+        <Frame
+            Margin="20,0"
+            Padding="10"
+            BackgroundColor="{StaticResource Rojo}"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <StackLayout>
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto">
+                    <Label
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        Margin="0,0,0,10"
+                        FontAttributes="Bold"
+                        FontFamily="Syne"
+                        FontSize="Title"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="Datos usuario"
+                        TextColor="White"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        FontAttributes="Bold"
+                        FontFamily="Syne"
+                        Text="Nombre"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        x:Name="txtNombre"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        FontFamily="Nunito"
+                        HorizontalTextAlignment="End"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        FontAttributes="Bold"
+                        FontFamily="Syne"
+                        Text="Dirección"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        x:Name="txtDireccion"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        FontFamily="Nunito"
+                        HorizontalTextAlignment="End"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        FontAttributes="Bold"
+                        FontFamily="Syne"
+                        Text="Teléfono"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        x:Name="txtTelefono"
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        FontFamily="Nunito"
+                        HorizontalTextAlignment="End"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        FontAttributes="Bold"
+                        FontFamily="Syne"
+                        Text="Email"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        x:Name="txtEmail"
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        FontFamily="Nunito"
+                        HorizontalTextAlignment="End"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        FontAttributes="Bold"
+                        FontFamily="Syne"
+                        Text="Zona"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Label
+                        x:Name="txtZona"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        FontFamily="Nunito"
+                        HorizontalTextAlignment="End"
+                        TextColor="{DynamicResource Blanco}" />
+                </Grid>
+            </StackLayout>
+        </Frame>
+    </popup:PopupPage.Content>
+</popup:PopupPage>

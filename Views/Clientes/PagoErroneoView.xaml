@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.PagoErroneoView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{StaticResource Rojo}">
+    <StackLayout
+        Margin="15,0"
+        Orientation="Vertical"
+        VerticalOptions="CenterAndExpand">
+        <Image
+            Aspect="AspectFit"
+            HeightRequest="150"
+            HorizontalOptions="Center"
+            Source="logo_morado.png"
+            VerticalOptions="End" />
+        <Label
+            FontFamily="Nunito"
+            FontSize="20"
+            HorizontalTextAlignment="Center"
+            Text="Se ha producido un error en el pago"
+            TextColor="{DynamicResource Blanco}" />
+        <Label
+            Margin="0,15,0,0"
+            FontFamily="Nunito"
+            FontSize="18"
+            HorizontalTextAlignment="Center"
+            Text="{Binding Texto}"
+            TextColor="{DynamicResource Blanco}" />
+        <Button
+            Margin="20,10,20,0"
+            BackgroundColor="{DynamicResource Amarillo}"
+            Command="{Binding VolverCommand}"
+            CornerRadius="20"
+            FontFamily="Nunito_bold"
+            HeightRequest="60"
+            Text="Aceptar"
+            TextColor="Black"
+            VerticalOptions="End" />
+    </StackLayout>
+</ContentPage>

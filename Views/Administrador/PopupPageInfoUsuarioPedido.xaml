@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<popup:PopupPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AsadorMoron.Views.Administrador.PopupPageInfoUsuarioPedido"
+             xmlns:popup="clr-namespace:Mopups.Pages;assembly=Mopups"
+             BackgroundColor="Transparent">
+    <popup:PopupPage.Content>
+        <Frame
+            Margin="20,0"
+            Padding="10"
+            BackgroundColor="{StaticResource Rojo}"
+            HeightRequest="{OnPlatform Default=450,UWP=550}"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand">
+
+            <StackLayout Orientation="Vertical" HorizontalOptions="Center" >
+                <StackLayout HorizontalOptions="Center"  Margin="15,0,15,0">
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" HorizontalOptions="CenterAndExpand">
+                        <Label
+                            Grid.Row="0"
+                            Grid.ColumnSpan="2"
+                            Margin="0,0,0,10"
+                            FontAttributes="Bold"
+                            FontFamily="Syne"
+                            FontSize="Title"
+                            HorizontalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="Usuario"
+                            TextTransform="Uppercase"
+                            TextColor="White"
+                            VerticalTextAlignment="Center" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            FontAttributes="Bold"
+                            FontFamily="Syne"
+                            Text="Nombre"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            x:Name="txtNombre"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            FontFamily="Nunito"
+                            HorizontalTextAlignment="End"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            FontAttributes="Bold"
+                            FontFamily="Syne"
+                            Text="Dirección"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            x:Name="txtDireccion"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            FontFamily="Nunito"
+                            HorizontalTextAlignment="End"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            FontAttributes="Bold"
+                            FontFamily="Syne"
+                            Text="Teléfono"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            x:Name="txtTelefono"
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            FontFamily="Nunito"
+                            HorizontalTextAlignment="End"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            FontAttributes="Bold"
+                            FontFamily="Syne"
+                            Text="Pago"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            x:Name="txtPago"
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            FontFamily="Nunito"
+                            HorizontalTextAlignment="End"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            Grid.Row="6"
+                            Grid.Column="0"
+                            FontAttributes="Bold"
+                            FontFamily="Syne"
+                            Text="Email"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            x:Name="txtEmail"
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            FontFamily="Nunito"
+                            HorizontalTextAlignment="End"
+                            TextColor="{DynamicResource Blanco}" />
+                        <Label
+                            x:Name="lblZona"
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            FontAttributes="Bold"
+                            FontFamily="Syne"
+                            Text="Zona"
+                            TextColor="{DynamicResource Blanco}"/>
+                        <Label
+                            x:Name="txtZona"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            FontFamily="Nunito"
+                            HorizontalTextAlignment="End"
+                            TextColor="{DynamicResource Blanco}" />
+                    </Grid>
+                </StackLayout>
+                <BoxView
+                    HorizontalOptions="FillAndExpand"
+                    BackgroundColor="{DynamicResource Blanco}"
+                    HeightRequest="0.5" 
+                    Margin="15,10,15,10"/>
+                <StackLayout >
+                    <Label
+                        FontAttributes="Bold"
+                        FontFamily="Syne"
+                        FontSize="Title"
+                        HorizontalOptions="CenterAndExpand"
+                        HorizontalTextAlignment="Center"
+                        Text="Datos Pedido"
+                        TextTransform="Uppercase"
+                        TextColor="White"
+                        VerticalTextAlignment="Center" />
+                    <ListView
+                        x:Name="lista"
+                        BackgroundColor="Transparent"
+                        HasUnevenRows="True"
+                        SeparatorVisibility="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid
+                                        RowSpacing="0"
+                                        Margin="15,3"
+                                        ColumnDefinitions="20,*,Auto"
+                                        RowDefinitions="Auto,Auto">
+                                        <Label
+                                            Grid.Column="0"
+                                            FontFamily="Nunito"
+                                            FontSize="15"
+                                            Text="{Binding cantidad}"
+                                            TextColor="White" />
+                                        <Label
+                                            Grid.Column="1"
+                                            FontFamily="Nunito"
+                                            FontSize="15"
+                                            LineBreakMode="WordWrap"
+                                            Text="{Binding nombreProducto}"
+                                            TextColor="White" />
+                                        <Label
+                                            Grid.Column="2"
+                                            FontFamily="Nunito"
+                                            FontSize="15"
+                                            HorizontalTextAlignment="End"
+                                            Text="{Binding importe, StringFormat='{0:N2} €'}"
+                                            TextColor="White" />
+                                        <Label
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Grid.ColumnSpan="2"
+                                            Margin="10,0,0,0"
+                                            FontFamily="Nunito"
+                                            FontSize="13"
+                                            LineBreakMode="WordWrap"
+                                            Text="{Binding comentario}"
+                                            TextColor="{DynamicResource Negro}" />
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </StackLayout>
+
+        </Frame>
+    </popup:PopupPage.Content>
+</popup:PopupPage>

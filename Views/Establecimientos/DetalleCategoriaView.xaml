@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Establecimientos.DetalleCategoriaView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Nombre}"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding CommandGuardar}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                VerticalOptions="CenterAndExpand"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+        <!--  CONTAINER  -->
+        <Grid BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP=0}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="AUTO" />
+            </Grid.RowDefinitions>
+            <ScrollView Grid.Row="0">
+                <StackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Orientation="Vertical"
+                    VerticalOptions="FillAndExpand">
+                    <Grid ColumnSpacing="0" RowSpacing="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="{OnIdiom Desktop=200, Phone=210, Tablet=350}" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <ffimageloading:CachedImage
+                            Aspect="AspectFill"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="FillAndExpand"
+                            CacheType="None"
+                            Source="{Binding Imagen}"
+                            VerticalOptions="FillAndExpand">
+                            <ffimageloading:CachedImage.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaImagen}" />
+                            </ffimageloading:CachedImage.GestureRecognizers>
+                        </ffimageloading:CachedImage>
+
+                    </Grid>
+                    <Grid
+                        Margin="0,20,0,10"
+                        ColumnDefinitions="*"
+                        ColumnSpacing="0"
+                        RowSpacing="0">
+
+                        <StackLayout>
+                            <StackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding VerProductos}" />
+                            </StackLayout.GestureRecognizers>
+                            <Label
+                                FontFamily="Nunito"
+                                FontSize="30"
+                                HorizontalTextAlignment="Center"
+                                Text="{Binding Productos}"
+                                TextColor="{DynamicResource Negro}" />
+                            <Label
+                                FontFamily="Nunito"
+                                FontSize="14"
+                                HorizontalTextAlignment="Center"
+                                Text="Productos"
+                                TextColor="{DynamicResource Negro}" />
+                        </StackLayout>
+                    </Grid>
+
+                    <BoxView
+                        Margin="20,10"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        HeightRequest="1" />
+                    <Grid
+                        Margin="20,10"
+                        ColumnDefinitions="AUTO, *"
+                        RowDefinitions="AUTO, AUTO, AUTO, AUTO"
+                        RowSpacing="20">
+
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            Text="Nombre"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="12"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="{Binding Nombre}"
+                            TextColor="{DynamicResource Negro}" />
+
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="Tipo"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Picker
+                            x:Name="pickerTipos"
+                            Title="Seleccione el tipo"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="12"
+                            HorizontalOptions="FillAndExpand"
+                            ItemDisplayBinding="{Binding Nombre}"
+                            ItemsSource="{Binding ListadoTipos}"
+                            SelectedItem="{Binding TipoSeleccionado}"
+                            TextColor="{DynamicResource Negro}"
+                            TitleColor="{DynamicResource Negro}" />
+
+                        <Label
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="Estado"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Switch
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalOptions="Start"
+                            IsToggled="{Binding ValorEstado}" />
+
+                        <Label
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalTextAlignment="Center"
+                            Text="Orden"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="12"
+                            Keyboard="Numeric"
+                            MaxLength="3"
+                            HorizontalOptions="FillAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="{Binding Orden}"
+                            TextColor="{DynamicResource Negro}" />
+                    </Grid>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+</ContentPage>

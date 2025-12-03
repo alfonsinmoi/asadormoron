@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Establecimientos.DatosFiscalesEstablecimientosView"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    Title="Datos Fiscales"
+    BackgroundColor="{StaticResource Rojo}"
+    NavigationPage.HasNavigationBar="True">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Datos Fiscales"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding GuardarConfiguracionEstablecimientoCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}">
+            <Grid
+                Margin="10"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                <Label
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    Text="Razón Social"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center" />
+                <Entry
+                    Grid.Row="1"
+                    BackgroundColor="White"
+                    FontSize="14"
+                    Margin="0,0,0,10"
+                    MinimumWidthRequest="30"
+                    Text="{Binding RazonSocial}"
+                    TextColor="Black"
+                    VerticalTextAlignment="Center" />
+                <Label
+                    Grid.Row="2"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    Text="Dirección"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center" />
+                <Entry
+                    Grid.Row="3"
+                    BackgroundColor="White"
+                    FontSize="14"
+                    Margin="0,0,0,10"
+                    MinimumWidthRequest="30"
+                    Text="{Binding Direccion}"
+                    TextColor="Black"
+                    VerticalTextAlignment="Center" />
+                <Label
+                    Grid.Row="4"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center"
+                    Text="Provincia" />
+                <Picker
+                    Title="Selecciona Provincia"
+                    Grid.Row="5"
+                    Margin="0,0,0,10"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    ItemsSource="{Binding Provincias}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding Provincia}"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="6"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center"
+                    Text="Población" />
+                <Picker
+                    Title="Selecciona Población"
+                    Grid.Row="7"
+                    Margin="0,0,0,10"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    ItemsSource="{Binding Pueblos}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding Poblacion}"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="8"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center"
+                    Text="Cód. Postal" />
+                <Picker
+                    Title="Selecciona Cód. Postal."
+                    Grid.Row="9"
+                    Margin="0,0,0,10"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    ItemsSource="{Binding CodPostales}"
+                    SelectedIndex="1"
+                    ItemDisplayBinding="{Binding codPostal}"
+                    SelectedItem="{Binding CP}"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="10"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    Text="Teléfono"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center" />
+                <Entry
+                    Grid.Row="11"
+                    BackgroundColor="White"
+                    FontSize="14"
+                    Margin="0,0,0,10"
+                    MinimumWidthRequest="30"
+                    Text="{Binding Telefono}"
+                    TextColor="Black"
+                    VerticalTextAlignment="Center" />
+                 <Label
+                    Grid.Row="12"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    Text="CIF"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center" />
+                <Entry
+                    Grid.Row="13"
+                    BackgroundColor="White"
+                    FontSize="14"
+                    Margin="0,0,0,10"
+                    MinimumWidthRequest="30"
+                    Text="{Binding CIF}"
+                    TextColor="Black"
+                    VerticalTextAlignment="Center" />
+                 <Label
+                    Grid.Row="14"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    Text="IBAN"
+                    TextColor="{DynamicResource Amarillo}"
+                    VerticalTextAlignment="Center" />
+                <Entry
+                    Grid.Row="15"
+                    BackgroundColor="White"
+                    FontSize="14"
+                    Margin="0,0,0,10"
+                    MinimumWidthRequest="30"
+                    Text="{Binding IBAN}"
+                    TextColor="Black"
+                    Keyboard="Numeric"
+                    Placeholder="ESXX-XXXX-XXXX-XXXX-XXXX-XXXX"
+                    VerticalTextAlignment="Center">
+                     <Entry.Behaviors>
+                        <mct:MaskedBehavior 
+                            Mask="ESXX-XXXX-XXXX-XXXX-XXXX-XXXX" 
+                        />
+                    </Entry.Behaviors>
+                    </Entry>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

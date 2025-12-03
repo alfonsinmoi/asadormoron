@@ -1,0 +1,616 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Templates.ConfEstHorarioTemplateView">
+    <ContentView.Content>   
+        <Grid
+            BindingContext="{Binding}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+            
+            <Label
+                Grid.Row="0"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                FontFamily="Syne"
+                FontSize="14"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Lunes"
+                TextColor="{DynamicResource Negro}"
+                VerticalTextAlignment="Center" />
+            <BoxView
+                Grid.Row="1"
+                Grid.ColumnSpan="4"
+                BackgroundColor="{DynamicResource Negro}"
+                HeightRequest="0.5" />
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Mañana"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="3"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Tarde"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <TimePicker
+                Grid.Row="2"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoLunes}"
+                Time="{Binding InicioLunes, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="3"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoLunesTarde}"
+                Time="{Binding InicioLunesTarde, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="2"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoLunes}"
+                TextColor="Black"
+                Time="{Binding FinLunes, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="3"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoLunesTarde}"
+                TextColor="Black"
+                Time="{Binding FinLunesTarde, Mode=TwoWay}" />
+            <Switch
+                Grid.Row="2"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoLunes}" />
+            <Switch
+                Grid.Row="3"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoLunesTarde}" />
+            <Label
+                Grid.Row="4"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                FontFamily="Syne"
+                FontSize="14"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Martes"
+                TextColor="{DynamicResource Negro}"
+                VerticalTextAlignment="Center" />
+            <BoxView
+                Grid.Row="5"
+                Grid.ColumnSpan="4"
+                BackgroundColor="{DynamicResource Negro}"
+                HeightRequest="0.5" />
+            <Label
+                Grid.Row="6"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Mañana"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="7"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Tarde"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <TimePicker
+                Grid.Row="6"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMartes}"
+                Time="{Binding InicioMartes, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="7"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMartesTarde}"
+                Time="{Binding InicioMartesTarde, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="6"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMartes}"
+                TextColor="Black"
+                Time="{Binding FinMartes, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="7"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMartesTarde}"
+                TextColor="Black"
+                Time="{Binding FinMartesTarde, Mode=TwoWay}" />
+            <Switch
+                Grid.Row="6"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoMartes}" />
+            <Switch
+                Grid.Row="7"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoMartesTarde}" />
+            <Label
+                Grid.Row="8"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                FontFamily="Syne"
+                FontSize="14"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Miércoles"
+                TextColor="{DynamicResource Negro}"
+                VerticalTextAlignment="Center" />
+            <BoxView
+                Grid.Row="9"
+                Grid.ColumnSpan="4"
+                BackgroundColor="{DynamicResource Negro}"
+                HeightRequest="0.5" />
+            <Label
+                Grid.Row="10"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Mañana"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="11"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Tarde"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <TimePicker
+                Grid.Row="10"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMiercoles}"
+                Time="{Binding InicioMiercoles, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="11"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMiercolesTarde}"
+                Time="{Binding InicioMiercolesTarde, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="10"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMiercoles}"
+                TextColor="Black"
+                Time="{Binding FinMiercoles, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="11"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoMiercolesTarde}"
+                TextColor="Black"
+                Time="{Binding FinMiercolesTarde, Mode=TwoWay}" />
+            <Switch
+                Grid.Row="10"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoMiercoles}" />
+            <Switch
+                Grid.Row="11"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoMiercolesTarde}" />
+            <Label
+                Grid.Row="12"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                FontFamily="Syne"
+                FontSize="14"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Jueves"
+                TextColor="{DynamicResource Negro}"
+                VerticalTextAlignment="Center" />
+            <BoxView
+                Grid.Row="13"
+                Grid.ColumnSpan="4"
+                BackgroundColor="{DynamicResource Negro}"
+                HeightRequest="0.5" />
+            <Label
+                Grid.Row="14"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Mañana"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="15"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Tarde"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <TimePicker
+                Grid.Row="14"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoJueves}"
+                Time="{Binding InicioJueves, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="15"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoJuevesTarde}"
+                Time="{Binding InicioJuevesTarde, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="14"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoJueves}"
+                TextColor="Black"
+                Time="{Binding FinJueves, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="15"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoJuevesTarde}"
+                TextColor="Black"
+                Time="{Binding FinJuevesTarde, Mode=TwoWay}" />
+            <Switch
+                Grid.Row="14"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoJueves}" />
+            <Switch
+                Grid.Row="15"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoJuevesTarde}" />
+            <Label
+                Grid.Row="16"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                FontFamily="Syne"
+                FontSize="14"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Viernes"
+                TextColor="{DynamicResource Negro}"
+                VerticalTextAlignment="Center" />
+            <BoxView
+                Grid.Row="17"
+                Grid.ColumnSpan="4"
+                BackgroundColor="{DynamicResource Negro}"
+                HeightRequest="0.5" />
+            <Label
+                Grid.Row="18"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Mañana"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="19"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Tarde"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <TimePicker
+                Grid.Row="18"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoViernes}"
+                Time="{Binding InicioViernes, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="19"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoViernesTarde}"
+                Time="{Binding InicioViernesTarde, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="18"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoViernes}"
+                TextColor="Black"
+                Time="{Binding FinViernes, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="19"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoViernesTarde}"
+                TextColor="Black"
+                Time="{Binding FinViernesTarde, Mode=TwoWay}" />
+            <Switch
+                Grid.Row="18"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoViernes}" />
+            <Switch
+                Grid.Row="19"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoViernesTarde}" />
+            <Label
+                Grid.Row="20"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                FontFamily="Syne"
+                FontSize="14"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Sábado"
+                TextColor="{DynamicResource Negro}"
+                VerticalTextAlignment="Center" />
+            <BoxView
+                Grid.Row="21"
+                Grid.ColumnSpan="4"
+                BackgroundColor="{DynamicResource Negro}"
+                HeightRequest="0.5" />
+            <Label
+                Grid.Row="22"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Mañana"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="23"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Tarde"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <TimePicker
+                Grid.Row="22"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoSabado}"
+                Time="{Binding InicioSabado, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="23"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoSabadoTarde}"
+                Time="{Binding InicioSabadoTarde, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="22"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoSabado}"
+                TextColor="Black"
+                Time="{Binding FinSabado, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="23"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoSabadoTarde}"
+                TextColor="Black"
+                Time="{Binding FinSabadoTarde, Mode=TwoWay}" />
+            <Switch
+                Grid.Row="22"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoSabado}" />
+            <Switch
+                Grid.Row="23"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoSabadoTarde}" />
+            <Label
+                Grid.Row="24"
+                Grid.ColumnSpan="4"
+                Margin="0,10,0,0"
+                FontFamily="Syne"
+                FontSize="14"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Domingo"
+                TextColor="{DynamicResource Negro}"
+                VerticalTextAlignment="Center" />
+            <BoxView
+                Grid.Row="25"
+                Grid.ColumnSpan="4"
+                BackgroundColor="{DynamicResource Negro}"
+                HeightRequest="0.5" />
+            <Label
+                Grid.Row="26"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Mañana"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="27"
+                Grid.Column="0"
+                FontFamily="Nunito"
+                FontSize="11"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
+                Text="Tarde"
+                TextColor="Black"
+                VerticalTextAlignment="Center" />
+            <TimePicker
+                Grid.Row="26"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoDomingo}"
+                Time="{Binding InicioDomingo, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="27"
+                Grid.Column="1"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoDomingoTarde}"
+                Time="{Binding InicioDomingoTarde, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="26"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoDomingo}"
+                TextColor="Black"
+                Time="{Binding FinDomingo, Mode=TwoWay}" />
+            <TimePicker
+                Grid.Row="27"
+                Grid.Column="2"
+                BackgroundColor="White"
+                FontSize="12"
+                Format="HH:mm"
+                HorizontalOptions="Center"
+                IsEnabled="{Binding ActivoDomingoTarde}"
+                TextColor="Black"
+                Time="{Binding FinDomingoTarde, Mode=TwoWay}" />
+            <Switch
+                Grid.Row="26"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoDomingo}" />
+            <Switch
+                Grid.Row="27"
+                Grid.Column="3"
+                HorizontalOptions="End"
+                IsEnabled="{Binding ServicioActivo}"
+                IsToggled="{Binding ActivoDomingoTarde}" />
+        </Grid>
+    </ContentView.Content>
+</ContentView>

@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Administrador.HistoricoPedidosAnuladosViewAdmin"
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:behaviors="http://xamarin.com/schemas/2020/toolkit"
+    x:Name="HistoricoPedidosAdmin"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Anulados"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding cmdExport}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="export_excel.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ExpanderTitleTextStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="Syne" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+
+            <Style x:Key="CollpasedColorSytle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+            <Style x:Key="miLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Android=10, iOS=12, UWP=14}" />
+                <Setter Property="TextColor" Value="{DynamicResource Blanco}" />
+                <Setter Property="FontFamily" Value="Syne_Bold" />
+            </Style>
+            <Style x:Key="ExpandeLayoutStyle" TargetType="Grid">
+                <Setter Property="HeightRequest" Value="{OnPlatform Default=230}" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid
+            Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="Auto,Auto,*,Auto"
+            RowSpacing="0"
+            VerticalOptions="FillAndExpand">
+            <!-- Expander replaced with StackLayout -->
+            <StackLayout Grid.Row="0">
+                    <Image Source="down.png" Margin="0,0,0,3">
+                        <Image.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsDetailVisible}"
+                                TargetType="Image"
+                                Value="True">
+                                <Setter Property="Source" Value="up.png" />
+                            </DataTrigger>
+                        </Image.Triggers>
+                    </Image>
+
+                <Grid ColumnSpacing="0" IsVisible="{Binding IsDetailVisible}"
+                    x:Name="Filtro"
+                    BackgroundColor="{DynamicResource Rojo}"
+                    Margin="10,0,10,5"
+                    ColumnDefinitions="Auto,*,Auto,*"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                    RowSpacing="0"
+                    Style="{StaticResource ExpandeLayoutStyle}">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalOptions="FillAndExpand"
+                        Style="{StaticResource miLabel}"
+                        Text="Desde"
+                        VerticalOptions="CenterAndExpand"
+                        VerticalTextAlignment="Center" />
+                    <DatePicker
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="10,5,10,0"
+                        BackgroundColor="White"
+                        Date="{Binding Desde}"
+                        FontFamily="Nunito"
+                        HeightRequest="35"
+                        FontSize="12"
+                        HorizontalOptions="FillAndExpand"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        HorizontalOptions="FillAndExpand"
+                        Style="{StaticResource miLabel}"
+                        Text="Hasta"
+                        VerticalOptions="CenterAndExpand"
+                        VerticalTextAlignment="Center" />
+                    <DatePicker
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        Margin="10,5,10,0"
+                        HeightRequest="35"
+                        BackgroundColor="White"
+                        Date="{Binding Hasta}"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        HorizontalOptions="FillAndExpand"
+                        TextColor="{DynamicResource Negro}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Style="{StaticResource miLabel}"
+                        Text="Repartidor"
+                        VerticalOptions="CenterAndExpand"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="3"
+                        Margin="10,5,10,0"
+                        HeightRequest="35"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        ItemDisplayBinding="{Binding nombre}"
+                        ItemsSource="{Binding Repartidores}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding RepartidorSeleccionado}"
+                        TextColor="Black" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Style="{StaticResource miLabel}"
+                        Text="Zonas"
+                        VerticalOptions="CenterAndExpand"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="10,5,10,0"
+                        HeightRequest="35"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        ItemDisplayBinding="{Binding nombre}"
+                        ItemsSource="{Binding Zonas}"
+                        SelectedItem="{Binding ZonaSeleccionada}"
+                        TextColor="Black" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Style="{StaticResource miLabel}"
+                        Text="Tipo"
+                        VerticalOptions="CenterAndExpand"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Margin="10,5,10,0"
+                        HeightRequest="35"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        ItemsSource="{Binding Tipos}"
+                        SelectedItem="{Binding TipoSeleccionado}"
+                        TextColor="Black" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Style="{StaticResource miLabel}"
+                        Text="Tipo Pago"
+                        VerticalOptions="CenterAndExpand"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Margin="10,5,10,0"
+                        HeightRequest="35"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        ItemsSource="{Binding TiposPago}"
+                        SelectedItem="{Binding TipoPago}"
+                        TextColor="Black" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Style="{StaticResource miLabel}"
+                        Text="Horario"
+                        VerticalOptions="CenterAndExpand"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="3"
+                        Grid.Column="3"
+                        Margin="10,5,10,0"
+                        HeightRequest="35"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                        ItemsSource="{Binding Tiempos}"
+                        SelectedItem="{Binding TiempoSeleccionado}"
+                        TextColor="Black" />
+                    <StackLayout Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="4" Margin="0,10">
+                        <Button
+                            HorizontalOptions="FillAndExpand"
+                        BackgroundColor="{DynamicResource Amarillo}"
+                        TextColor="Black"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                            Command="{Binding cmdMas}"
+                            Text="Ver Más"/>
+                    <Button 
+                        BackgroundColor="{DynamicResource Amarillo}"
+                        HorizontalOptions="FillAndExpand"
+                        TextColor="Black"
+                        FontFamily="Nunito"
+                        FontSize="12"
+                            Command="{Binding cmdMas}"
+                            Text="Ver Todo"/>
+                    </StackLayout>
+                    
+                </Grid>
+            </StackLayout>
+            <BoxView
+                Grid.Row="1"
+                BackgroundColor="LightGray"
+                HeightRequest="1"
+                HorizontalOptions="FillAndExpand" />
+            <CollectionView
+                Grid.Row="2"
+                BackgroundColor="{DynamicResource Blanco}"
+                ItemSizingStrategy="MeasureAllItems"
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding Listado}"
+                VerticalOptions="FillAndExpand"
+                SelectionMode="Single">
+                <CollectionView.EmptyView>
+                    <StackLayout>
+                        <Label
+                            Margin="15"
+                            FontFamily="Syne"
+                            FontSize="30"
+                            HorizontalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="No existen datos para el filtro seleccionado"
+                            TextColor="{StaticResource Negro}"
+                            VerticalOptions="CenterAndExpand"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            Margin="0,0"
+                            BackgroundColor="White"
+                            ColumnDefinitions="70, 25,*,Auto,20,60,40"
+                            ColumnSpacing="0"
+                            RowDefinitions="Auto, Auto,Auto,Auto"
+                            RowSpacing="0">
+                            <ff:CachedImage
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Margin="5"
+                                HeightRequest="32"
+                                HorizontalOptions="Center"
+                                IsVisible="{Binding repartidor}"
+                                Source="{Binding FotoRepartidor}">
+                            </ff:CachedImage>
+                            <Image
+                                Grid.RowSpan="2"
+                                Grid.Column="0"
+                                Margin="{OnPlatform  Default=5 ,iOS=0}"
+                                Aspect="AspectFit"
+                                HorizontalOptions="End"
+                                Source="pedidonuevo.png">
+                                <Image.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding idEstadoPedido}"
+                                    TargetType="Image"
+                                    Value="1">
+                                    <Setter Property="Source" Value="pedidonuevo.png" />
+                                </DataTrigger>
+                                    <DataTrigger
+                                    Binding="{Binding idEstadoPedido}"
+                                    TargetType="Image"
+                                    Value="2">
+                                    <Setter Property="Source" Value="pedidovisto.png" />
+                                </DataTrigger>
+                                    <DataTrigger
+                                    Binding="{Binding idEstadoPedido}"
+                                    TargetType="Image"
+                                    Value="3">
+                                    <Setter Property="Source" Value="pedidoporrecoger.png" />
+                                </DataTrigger>
+                                    <DataTrigger
+                                    Binding="{Binding idEstadoPedido}"
+                                    TargetType="Image"
+                                    Value="4">
+                                    <Setter Property="Source" Value="pedidorecogido.png" />
+                                </DataTrigger>
+                                    <DataTrigger
+                                    Binding="{Binding idEstadoPedido}"
+                                    TargetType="Image"
+                                    Value="5">
+                                    <Setter Property="Source" Value="pedidoentregado.png" />
+                                </DataTrigger>
+                            </Image.Triggers>
+                            </Image>
+                            
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="5"
+                                Margin="5,5,0,0"
+                                LineBreakMode="TailTruncation"
+                                Style="{StaticResource ExpanderTitleTextStyle}"
+                                Text="{Binding nombreUsuario}"
+                                TextColor="{StaticResource Negro}" />
+                            <StackLayout Grid.Row="1"
+                                Grid.Column="1"
+                                Grid.ColumnSpan="2"
+                                Orientation="Vertical"
+                                Margin="5,0"
+                                Spacing="2">
+                                <Label
+                                    FontFamily="Nunito"
+                                    FontSize="14"
+                                    Text="{Binding horaEntrega, StringFormat='{}{0:MM/dd/yyyy a\\t h:mm tt}'}"
+                                    TextColor="{StaticResource Negro}" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label
+                                    FontFamily="Syne"
+                                    FontSize="13"
+                                    WidthRequest="20"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding tipoPago, Converter={StaticResource SubstringConverter}, ConverterParameter='0,1'}"
+                                    HorizontalOptions="Start"
+                                    BackgroundColor="Black"
+                                    TextColor="{DynamicResource Blanco}"
+                                    VerticalOptions="End" />
+                                <Label
+                                    FontFamily="Syne"
+                                    FontSize="13"
+                                    WidthRequest="80"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding tipoVenta}"
+                                    HorizontalOptions="Start"
+                                    BackgroundColor="{StaticResource Rojo}"
+                                    TextColor="{DynamicResource Blanco}"
+                                    VerticalOptions="End" />
+                                </StackLayout>
+                                
+                            </StackLayout>
+                            <StackLayout 
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                Grid.ColumnSpan="3"
+                                Margin="0,0,10,0"
+                                Orientation="Vertical"
+                                Spacing="0">
+                                <Label
+                                    BackgroundColor="Transparent"
+                                    FontFamily="Nunito"
+                                    FontSize="14"
+                                    HorizontalTextAlignment="Start"
+                                    Text="{Binding codigoPedido}"
+                                    TextColor="{StaticResource Negro}" />
+                                <Label
+                                    BackgroundColor="Transparent"
+                                    FontFamily="Nunito_bold"
+                                    FontSize="16"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center"
+                                    Text="{Binding precioTotalPedido, StringFormat='{0:N2}€'}"
+                                    TextColor="{StaticResource Rojo}" />
+                            </StackLayout>
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="7"
+                                Margin="5,0,10,5"
+                                FontFamily="Nunito"
+                                FontSize="15"
+                                IsVisible="{Binding comentario, Converter={StaticResource StringEmptyToBooleanConverter}}"
+                                TextColor="Black" >
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Observaciones"></Span>
+                                        <Span Text=": "/>
+                                        <Span Text="{Binding comentario}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <BoxView
+                                Grid.Row="4"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="7"
+                                Margin="0,4,0,0"
+                                BackgroundColor="LightGray"
+                                HeightRequest="0.5"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="End" />
+                            <ImageButton
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="6"
+                                Margin="0,0,10,0"
+                                BackgroundColor="Transparent"
+                                Command="{Binding Path=BindingContext.PrintCommand, Source={x:Reference Name=HistoricoPedidosAdmin}}"
+                                CommandParameter="{Binding codigoPedido}"
+                                Source="printer.png"
+                                IsVisible="{OnPlatform UWP=true,Default=false}"
+                                HeightRequest="26"
+                                VerticalOptions="Center" />
+                            <Grid.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding tipo}"
+                                    TargetType="Grid"
+                                    Value="2">
+                                    <Setter Property="BackgroundColor" Value="Gray" />
+                                </DataTrigger>
+                            </Grid.Triggers>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Path=BindingContext.InfoUsuarioPedidoCommand, Source={x:Reference Name=HistoricoPedidosAdmin}}"
+                                CommandParameter="{Binding codigoPedido}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto" Grid.Row="3" Padding="{OnPlatform Default='15,10,15,20',Android='10'}" BackgroundColor="{DynamicResource Negro}" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                <StackLayout Grid.Column="0" Orientation="Horizontal" >
+                    <Label FontFamily="Nunito_bold" BackgroundColor="Transparent" FontSize="{OnPlatform Default=20, Android=14}" TextColor="{DynamicResource Blanco}">
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Pedidos" TextTransform="Uppercase"/>
+                                <Span Text=": "/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label BackgroundColor="Transparent" TextColor="White" FontFamily="Nunito" FontSize="{OnPlatform Default=20, Android=14}" Text="{Binding TotalPedidos}"/>
+                </StackLayout>
+                <StackLayout Grid.Column="1" Orientation="Horizontal" HorizontalOptions="End">
+                    <Label FontSize="{OnPlatform Default=20, Android=14}" BackgroundColor="Transparent" FontFamily="Nunito_bold" TextColor="{DynamicResource Blanco}" HorizontalTextAlignment="End" >
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span
+                                    Text="Total"
+                                    TextTransform="Uppercase"/>
+                                <Span
+                                    Text=": "/>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    <Label FontSize="{OnPlatform Default=20, Android=14}" BackgroundColor="Transparent" FontFamily="Nunito" TextColor="White" Text="{Binding Total, StringFormat='{0:N2}€'}" />
+                </StackLayout>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

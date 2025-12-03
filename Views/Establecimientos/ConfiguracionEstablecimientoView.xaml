@@ -1,0 +1,592 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Establecimientos.ConfiguracionEstablecimientoView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Configuración"
+    BackgroundColor="{StaticResource Rojo}"
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:templates="clr-namespace:AsadorMoron.Views.Templates"
+    xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+    NavigationPage.HasNavigationBar="True">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Ajustes"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding GuardarConfiguracionEstablecimientoCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}">
+            <Grid
+                Margin="10"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <Grid
+                    BindingContext="{Binding}"
+                    HorizontalOptions="FillAndExpand"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                    RowSpacing="0"
+                    ColumnSpacing="0">
+                    <StackLayout Grid.Row="1" Grid.ColumnSpan="4">
+                        <StackLayout Margin="0,0,0,10" Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Servicio Activo"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Switch
+                            HorizontalOptions="End"
+                            IsToggled="{Binding ServicioActivo, Mode=TwoWay}"
+                            VerticalOptions="Center" />
+                        
+                    </StackLayout>
+                        <Label Margin="0,0,0,10"
+                            FontFamily="Syne"
+                            IsVisible="{Binding ServicioActivo, Converter={StaticResource InverseBoolConverter}}"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Texto Cerrado"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                    <Editor Margin="0,0,0,10"
+                        IsVisible="{Binding  ServicioActivo, Converter={StaticResource InverseBoolConverter}}"
+                            BackgroundColor="White"
+                            FontSize="14"
+                            MinimumWidthRequest="30"
+                            Text="{Binding TextoCerrado}"
+                            TextColor="Black"
+                            HorizontalOptions="FillAndExpand"
+                            HeightRequest="100" />
+
+                    </StackLayout>
+                    
+                    
+                    <StackLayout
+                         Margin="0,0,0,10"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Tiempo de Entrega"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            Keyboard="Numeric"
+                            MaxLength="2"
+                            FontFamily="Nunito"
+                            Margin="0,0,10,0"
+                            MinimumWidthRequest="30"
+                            Text="{Binding TiempoEntrega}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="T. Extras"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            FontFamily="Nunito"
+                            Margin="0,0,10,0"
+                            HorizontalOptions="FillAndExpand"
+                            Text="{Binding TextoIngredientes}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="Impresora 1"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            MinimumWidthRequest="30"
+                            FontFamily="Nunito"
+                            Text="{Binding NombreImpresora}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="Impresora 2"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            MinimumWidthRequest="30"
+                            FontFamily="Nunito"
+                            Text="{Binding NombreImpresora2}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="Impresora 3"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            MinimumWidthRequest="30"
+                            FontFamily="Nunito"
+                            Text="{Binding NombreImpresora3}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="7"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="Impresora 4"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            MinimumWidthRequest="30"
+                            FontFamily="Nunito"
+                            Text="{Binding NombreImpresora4}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10" Grid.Row="9" Grid.ColumnSpan="4" Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Sistema de puntos"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Switch
+                            HorizontalOptions="End"
+                            IsToggled="{Binding SistemaPuntos, Mode=TwoWay}"
+                            VerticalOptions="Center" />
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="10"
+                        Grid.ColumnSpan="4"
+                        IsVisible="{Binding SistemaPuntos}"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Puntos por pedido"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="End"
+                            Keyboard="Numeric"
+                            MaxLength="3"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding PuntosPorPedido}"
+                            TextColor="Black"
+                            WidthRequest="80"
+                            VerticalTextAlignment="Center" />
+                                
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="11"
+                        Grid.ColumnSpan="4"
+                        IsVisible="{Binding SistemaPuntos}"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Puntos por euro"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="End"
+                            Keyboard="Numeric"
+                            MaxLength="3"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding PuntosPorEuro}"
+                            TextColor="Black"
+                            WidthRequest="80"
+                            VerticalTextAlignment="Center" />
+                                
+                    </StackLayout>
+                    <Label Margin="0,0,0,10"
+                            Grid.Row="12"
+                        Grid.ColumnSpan="4"
+                            FontFamily="Syne"
+                        IsVisible="{Binding SistemaPuntos}"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Texto puntos"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                    <Editor Margin="0,0,0,10"
+                            Grid.Row="13"
+                        Grid.ColumnSpan="4"
+                        IsVisible="{Binding SistemaPuntos}"
+                            BackgroundColor="White"
+                            FontSize="14"
+                            MinimumWidthRequest="30"
+                            Text="{Binding TextoPuntos}"
+                            TextColor="Black"
+                            HorizontalOptions="FillAndExpand"
+                            HeightRequest="100" />
+                    <StackLayout Margin="0,0,0,10" Grid.Row="15" Grid.ColumnSpan="4" Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Tamaño Ticket"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="End"
+                            Keyboard="Numeric"
+                            MaxLength="3"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding TicketSize}"
+                            TextColor="Black"
+                            WidthRequest="80"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10" Grid.Row="16" Grid.ColumnSpan="4" Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Precio Bolsa"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            Keyboard="Numeric"
+                            FontFamily="Nunito"
+                            Margin="0,0,10,0"
+                            MinimumWidthRequest="30"
+                            Text="{Binding PrecioBolsa}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10" Grid.Row="17" Grid.ColumnSpan="4" Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Una bolsa cada"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            Keyboard="Numeric"
+                            FontFamily="Nunito"
+                            Margin="0,0,10,0"
+                            MinimumWidthRequest="30"
+                            Text="{Binding RangoBolsa}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+
+                    </StackLayout>
+                    <StackLayout
+                         Margin="0,0,0,10"
+                        Grid.Row="19"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Gastos de Envio"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            Keyboard="Numeric"
+                            FontFamily="Nunito"
+                            Margin="0,0,10,0"
+                            MaxLength="5"
+                            WidthRequest="60"
+                            MinimumWidthRequest="60"
+                            Text="{Binding GastosEnvio}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="20"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Pagos Efect."
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Switch
+                        BackgroundColor="White"
+                        HorizontalOptions="End"
+                        IsToggled="{Binding Efectivo}"
+                        VerticalOptions="Center" />
+                                
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="21"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Pagos Datafono"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Switch
+                        BackgroundColor="White"
+                        HorizontalOptions="End"
+                        IsToggled="{Binding Datafono}"
+                        VerticalOptions="Center" />
+                                
+                    </StackLayout>
+                    
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="22"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="Pagos Tarjeta"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Switch
+                        BackgroundColor="White"
+                        HorizontalOptions="End"
+                        IsToggled="{Binding Tarjeta}"
+                        VerticalOptions="Center" />
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="23"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="Nombre ticket"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding NombreTicket}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="24"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="CIF ticket"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding CIFTicket}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="25"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="Direc. ticket"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding DireccionTicket}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="26"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="Start"
+                            HorizontalTextAlignment="Start"
+                            Text="Teléf. ticket"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding TelefonoTicket}"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                    <StackLayout Margin="0,0,0,10"
+                        Grid.Row="27"
+                        Grid.ColumnSpan="4"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalOptions="StartAndExpand"
+                            HorizontalTextAlignment="Start"
+                            Text="IBAN"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontSize="14"
+                            HorizontalOptions="FillAndExpand"
+                            FontFamily="Nunito"
+                            MinimumWidthRequest="30"
+                            Text="{Binding IBAN}"
+                            TextColor="Black"
+                            Keyboard="Numeric"
+                            Placeholder="ESXX-XXXX-XXXX-XXXX-XXXX-XXXX"
+                            VerticalTextAlignment="Center">
+                             <Entry.Behaviors>
+                                <mct:MaskedBehavior 
+                                    Mask="ESXX-XXXX-XXXX-XXXX-XXXX-XXXX" 
+                                />
+                        </Entry.Behaviors>
+                    </Entry>
+                    </StackLayout>
+                </Grid>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

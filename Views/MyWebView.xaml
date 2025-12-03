@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:AsadorMoron.Controls"
+    x:Class="AsadorMoron.Views.MyWebView"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="{DynamicResource Rojo}">
+    <ContentPage.Content>
+        <controls:CustomWebView x:Name="webView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="{OnPlatform Android='0,50,0,0'}"/>    
+    </ContentPage.Content>
+</ContentPage>

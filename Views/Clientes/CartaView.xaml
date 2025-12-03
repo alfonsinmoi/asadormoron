@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.CartaView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:badge="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:tabView="clr-namespace:Syncfusion.Maui.TabView;assembly=Syncfusion.Maui.TabView"
+    x:Name="Carta"
+    BackgroundColor="{DynamicResource Rojo}"
+    IconImageSource="menu.png">
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Image
+                Grid.Column="0"
+                Aspect="AspectFit"
+                HeightRequest="35"
+                Source="logoqoorder"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="StartAndExpand" />
+             <ImageButton
+                 IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}"
+                BackgroundColor="Transparent"
+                Command="{Binding IrDetallePedidoCommand}"
+                HeightRequest="40"
+                Grid.Column="2"
+                Margin="0,0,20,0"
+                Source="carrito.png"
+                WidthRequest="40" />
+             <Frame Padding="0" BackgroundColor="{DynamicResource Amarillo}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
+                   VerticalOptions="Start" HorizontalOptions="End" Grid.Column="2" HasShadow="False"
+                    IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
+                <Label Text="{Binding Cantidad, Mode=TwoWay}"
+                       FontSize="15" TextColor="Black" FontAttributes="Bold"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
+                </Frame.GestureRecognizers>
+             </Frame>
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <ContentPage.Content>
+        <Grid
+            Margin="{OnPlatform iOS='0,90,0,0', Android='0,50,0,0', UWP='0'}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="*"
+            RowSpacing="0"
+            VerticalOptions="FillAndExpand">
+
+            <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="White">
+
+                <!-- Buscador -->
+                <Border Grid.Row="0"
+                        Margin="16,16,16,8"
+                        Stroke="#E0E0E0"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="#F5F5F5"
+                        Padding="12,8">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Image Source="lupa.png"
+                               WidthRequest="20"
+                               HeightRequest="20"
+                               Margin="0,0,8,0"
+                               VerticalOptions="Center"/>
+                        <Entry Grid.Column="1"
+                               Placeholder="Buscar productos..."
+                               PlaceholderColor="#999999"
+                               Text="{Binding TextoBusqueda}"
+                               TextColor="{DynamicResource Negro}"
+                               FontFamily="Nunito"
+                               FontSize="15"
+                               BackgroundColor="Transparent"
+                               VerticalOptions="Center"/>
+                        <ImageButton Grid.Column="2"
+                                     Source="cerrar.png"
+                                     WidthRequest="20"
+                                     HeightRequest="20"
+                                     BackgroundColor="Transparent"
+                                     IsVisible="{Binding TextoBusqueda, Converter={StaticResource StringEmptyToBooleanConverter}}"
+                                     Command="{Binding LimpiarBusquedaCommand}"
+                                     VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <!-- Puntos -->
+                <Border Grid.Row="1"
+                        IsVisible="{Binding SistemaPuntos}"
+                        Stroke="Transparent"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{DynamicResource Amarillo}"
+                        Margin="16,0,16,8"
+                        Padding="16,10"
+                        HorizontalOptions="FillAndExpand">
+                    <Label Text="{Binding Puntos, StringFormat='Tienes {0} puntos'}"
+                           TextColor="{DynamicResource Negro}"
+                           FontFamily="Nunito_bold"
+                           FontSize="16"
+                           HorizontalTextAlignment="Center"/>
+                </Border>
+
+                <!-- Categorias (visible cuando no hay búsqueda) -->
+                <CollectionView
+                    Grid.Row="2"
+                    IsVisible="{Binding MostrandoResultados, Converter={StaticResource InverseBoolConverter}}"
+                    BackgroundColor="Transparent"
+                    Margin="12,8,12,12"
+                    SelectedItem="{Binding CategoriaSeleccionada}"
+                    ItemsSource="{Binding Categorias}"
+                    SelectionMode="Single">
+                    <CollectionView.Triggers>
+                        <DataTrigger TargetType="CollectionView" Binding="{Binding Logado}" Value="False">
+                            <Setter Property="Margin" Value="12,8,12,100"/>
+                        </DataTrigger>
+                    </CollectionView.Triggers>
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="{OnIdiom Phone=2, Tablet=3, Desktop=4, Default=2}"
+                                         VerticalItemSpacing="12"
+                                         HorizontalItemSpacing="12"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Stroke="Transparent"
+                                    StrokeShape="RoundRectangle 16"
+                                    HeightRequest="180">
+                                <Grid>
+                                    <!-- Imagen de fondo -->
+                                    <ff:CachedImage Source="{Binding imagen}"
+                                                    Aspect="AspectFill"
+                                                    HorizontalOptions="FillAndExpand"
+                                                    VerticalOptions="FillAndExpand"/>
+
+                                    <!-- Overlay oscuro para legibilidad -->
+                                    <BoxView Color="#000000" Opacity="0.5"/>
+
+                                    <!-- Nombre centrado con sombra -->
+                                    <Label Text="{Binding nombre}"
+                                           TextColor="White"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="20"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           HorizontalTextAlignment="Center"
+                                           LineBreakMode="WordWrap"
+                                           MaxLines="2"
+                                           Margin="10">
+                                        <Label.Shadow>
+                                            <Shadow Brush="Black" Offset="1,1" Radius="3" Opacity="0.8"/>
+                                        </Label.Shadow>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Resultados de búsqueda (visible cuando hay búsqueda) -->
+                <CollectionView
+                    Grid.Row="2"
+                    IsVisible="{Binding MostrandoResultados}"
+                    BackgroundColor="{DynamicResource Fondo}"
+                    ItemSizingStrategy="MeasureAllItems"
+                    ItemsSource="{Binding ResultadosBusqueda}"
+                    SelectionMode="None">
+                    <CollectionView.Triggers>
+                        <DataTrigger TargetType="CollectionView" Binding="{Binding Logado}" Value="False">
+                            <Setter Property="Margin" Value="0,0,0,100"/>
+                        </DataTrigger>
+                    </CollectionView.Triggers>
+                    <CollectionView.EmptyView>
+                        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="20">
+                            <Label Text="No se encontraron productos"
+                                   TextColor="#888888"
+                                   FontFamily="Nunito"
+                                   FontSize="16"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Intenta con otra búsqueda"
+                                   TextColor="#AAAAAA"
+                                   FontFamily="Nunito"
+                                   FontSize="14"
+                                   HorizontalTextAlignment="Center"
+                                   Margin="0,5,0,0"/>
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="100,*">
+                                <BoxView HeightRequest="0.8" Margin="0,0,0,10" BackgroundColor="{DynamicResource Negro}" Grid.ColumnSpan="2" VerticalOptions="End"/>
+                                <ff:CachedImage
+                                    Margin="0,0,0,15"
+                                    Aspect="AspectFit"
+                                    Source="{Binding articulo.imagen}"
+                                    VerticalOptions="Start"
+                                    HorizontalOptions="FillAndExpand">
+                                    <ff:CachedImage.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.ProductoSeleccionadoCommand, Source={x:Reference Name=Carta}}" CommandParameter="{Binding .}" />
+                                    </ff:CachedImage.GestureRecognizers>
+                                </ff:CachedImage>
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="Nunito_bold"
+                                    Padding="10,2"
+                                    FontSize="12"
+                                    Margin="0,0,0,15"
+                                    VerticalOptions="End"
+                                    HorizontalTextAlignment="Center"
+                                    VerticalTextAlignment="Center"
+                                    IsVisible="{Binding articulo.porEncargo}"
+                                    LineBreakMode="WordWrap"
+                                    BackgroundColor="{DynamicResource Rojo}"
+                                    TextTransform="Uppercase"
+                                    Text="Por encargo"
+                                    TextColor="{DynamicResource Negro}"/>
+                                <Grid Grid.Column="1" Margin="0,0,15,15"
+                                    RowSpacing="0"
+                                    ColumnDefinitions="*,Auto"
+                                    RowDefinitions="*,Auto,Auto,Auto"
+                                    VerticalOptions="FillAndExpand">
+                                    <Label
+                                        Margin="{OnPlatform Android='5,0'}"
+                                        FontFamily="Nunito_bold"
+                                        FontSize="15"
+                                        VerticalOptions="Start"
+                                        HorizontalOptions="FillAndExpand"
+                                        LineBreakMode="WordWrap"
+                                        Text="{Binding articulo.nombre}"
+                                        TextColor="{DynamicResource Negro}">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.ProductoSeleccionadoCommand, Source={x:Reference Name=Carta}}" CommandParameter="{Binding .}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    <Label
+                                        Grid.Row="1"
+                                        Margin="{OnPlatform Android='5,0'}"
+                                        FontFamily="Nunito"
+                                        FontSize="12"
+                                        VerticalOptions="Start"
+                                        HorizontalOptions="FillAndExpand"
+                                        LineBreakMode="TailTruncation"
+                                        MaxLines="3"
+                                        Text="{Binding articulo.descripcion}"
+                                        TextColor="{DynamicResource Negro}"/>
+                                    <Label
+                                        Grid.Column="1"
+                                        Margin="{OnPlatform Android='5,0,5,5'}"
+                                        FontAttributes="Bold"
+                                        FontFamily="Nunito_bold"
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        LineBreakMode="TailTruncation"
+                                        Text="{Binding articulo.precio, StringFormat='{0:N2}€'}"
+                                        TextColor="{DynamicResource Rojo}"
+                                        VerticalOptions="End"/>
+                                    <Entry Placeholder="Comentario" Grid.Row="2" Grid.ColumnSpan="2"
+                                           IsVisible="{Binding noTieneOpciones}" Text="{Binding articulo.comentario}"/>
+                                    <Grid Grid.Row="3" Margin="0,10,0,0" Grid.ColumnSpan="2" IsVisible="{Binding Path=BindingContext.ModoTienda, Source={x:Reference Name=Carta}, Converter={StaticResource InverseBoolConverter}}">
+                                        <Grid
+                                            ColumnDefinitions="25*,50*,25*"
+                                            ColumnSpacing="0"
+                                            IsVisible="{Binding noTieneOpciones}"
+                                            RowDefinitions="40">
+                                            <ImageButton
+                                                Grid.Column="0"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                Command="{Binding Path=BindingContext.ClickMenosCommand, Source={x:Reference Name=Carta}}"
+                                                CommandParameter="{Binding articulo}"
+                                                IsVisible="{Binding Path=BindingContext.Logado, Source={x:Reference Name=Carta}}"
+                                                Source="btnmenos.png"/>
+                                            <Label
+                                                Grid.Column="1"
+                                                FontFamily="Nunito_bold"
+                                                FontSize="28"
+                                                VerticalOptions="Center"
+                                                Text="{Binding articulo.Cantidad, Mode=TwoWay}"
+                                                TextColor="Black"
+                                                VerticalTextAlignment="Center"
+                                                HorizontalTextAlignment="Center"/>
+                                            <ImageButton
+                                                Grid.Column="2"
+                                                BackgroundColor="Transparent"
+                                                BorderColor="Transparent"
+                                                Command="{Binding Path=BindingContext.ClickMasCommand, Source={x:Reference Name=Carta}}"
+                                                CommandParameter="{Binding articulo}"
+                                                IsVisible="{Binding Path=BindingContext.Logado, Source={x:Reference Name=Carta}}"
+                                                Source="nuevo.png"/>
+                                        </Grid>
+                                        <Button
+                                            BackgroundColor="{StaticResource Rojo}"
+                                            Command="{Binding Path=BindingContext.ProductoSeleccionadoCommand, Source={x:Reference Name=Carta}}"
+                                            CommandParameter="{Binding .}"
+                                            FontFamily="Syne"
+                                            FontSize="15"
+                                            HeightRequest="40"
+                                            HorizontalOptions="FillAndExpand"
+                                            IsVisible="{Binding noTieneOpciones, Converter={StaticResource InverseBoolConverter}}"
+                                            Text="Ver Opciones"
+                                            TextColor="{DynamicResource Blanco}"
+                                            VerticalOptions="Center"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
+            <!-- Login banner -->
+            <Border VerticalOptions="End"
+                    Margin="16,0,16,20"
+                    Stroke="{DynamicResource Amarillo}"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 20"
+                    IsVisible="{Binding Logado, Converter={StaticResource InverseBoolConverter}}"
+                    Padding="0">
+                <Border.Shadow>
+                    <Shadow Brush="{DynamicResource Rojo}" Offset="0,4" Radius="12" Opacity="0.5"/>
+                </Border.Shadow>
+                <Grid>
+                    <!-- Fondo degradado -->
+                    <Border StrokeShape="RoundRectangle 18" Stroke="Transparent">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{DynamicResource Rojo}" Offset="0.0"/>
+                                <GradientStop Color="#CC0000" Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,16">
+                        <!-- Icono usuario -->
+                        <Frame Grid.Column="0"
+                               BackgroundColor="White"
+                               CornerRadius="20"
+                               Padding="8"
+                               HasShadow="False"
+                               WidthRequest="40"
+                               HeightRequest="40"
+                               VerticalOptions="Center">
+                            <Image Source="user.png"
+                                   WidthRequest="24"
+                                   HeightRequest="24"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <!-- Texto -->
+                        <StackLayout Grid.Column="1"
+                                     VerticalOptions="Center"
+                                     Spacing="2"
+                                     Margin="12,0">
+                            <Label Text="Inicia sesion"
+                                   TextColor="White"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="16"/>
+                            <Label Text="para realizar tu pedido"
+                                   TextColor="#FFCCCC"
+                                   FontFamily="Nunito"
+                                   FontSize="13"/>
+                        </StackLayout>
+
+                        <!-- Boton entrar -->
+                        <Border Grid.Column="2"
+                                Stroke="Transparent"
+                                StrokeShape="RoundRectangle 14"
+                                BackgroundColor="{DynamicResource Amarillo}"
+                                Padding="20,12"
+                                VerticalOptions="Center">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.3"/>
+                            </Border.Shadow>
+                            <Label Text="ENTRAR"
+                                   TextColor="{DynamicResource Negro}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="14"/>
+                        </Border>
+
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding loginCommand}"/>
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- Botón Kiosko -->
+            <Border VerticalOptions="End"
+                    HorizontalOptions="End"
+                    Margin="0,0,20,90"
+                    Stroke="Transparent"
+                    StrokeShape="RoundRectangle 28"
+                    BackgroundColor="{DynamicResource Amarillo}"
+                    WidthRequest="56"
+                    HeightRequest="56"
+                    IsVisible="{Binding Kiosko}"
+                    Padding="0">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Radius="8" Opacity="0.3"/>
+                </Border.Shadow>
+                <Image Source="nuevo.png"
+                       WidthRequest="28"
+                       HeightRequest="28"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding AbrirPopupKioskoCommand}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+            <!-- Popup Kiosko -->
+            <Grid IsVisible="{Binding MostrarPopupKiosko}" BackgroundColor="#80000000">
+                <Border Stroke="{DynamicResource Rojo}"
+                        StrokeThickness="2"
+                        StrokeShape="RoundRectangle 20"
+                        BackgroundColor="White"
+                        Margin="30"
+                        Padding="20"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        WidthRequest="320">
+                    <StackLayout Spacing="15">
+                        <Label Text="Añadir producto"
+                               TextColor="{DynamicResource Negro}"
+                               FontFamily="Nunito_bold"
+                               FontSize="20"
+                               HorizontalTextAlignment="Center"/>
+
+                        <Entry Placeholder="Nombre del producto"
+                               PlaceholderColor="#999999"
+                               Text="{Binding NombreProductoKiosko}"
+                               TextColor="{DynamicResource Negro}"
+                               FontFamily="Nunito"
+                               FontSize="15"
+                               BackgroundColor="#F5F5F5"/>
+
+                        <Entry Placeholder="Precio (puede ser negativo)"
+                               PlaceholderColor="#999999"
+                               Text="{Binding PrecioProductoKiosko}"
+                               TextColor="{DynamicResource Negro}"
+                               FontFamily="Nunito"
+                               FontSize="15"
+                               Keyboard="Numeric"
+                               BackgroundColor="#F5F5F5"/>
+
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Grid.Column="0"
+                                    Text="Cancelar"
+                                    BackgroundColor="#CCCCCC"
+                                    TextColor="{DynamicResource Negro}"
+                                    FontFamily="Nunito_bold"
+                                    HeightRequest="45"
+                                    Command="{Binding CerrarPopupKioskoCommand}"/>
+                            <Button Grid.Column="1"
+                                    Text="Añadir"
+                                    BackgroundColor="{DynamicResource Rojo}"
+                                    TextColor="White"
+                                    FontFamily="Nunito_bold"
+                                    HeightRequest="45"
+                                    Command="{Binding AnadirProductoKioskoCommand}"/>
+                        </Grid>
+                    </StackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Cerrado -->
+            <Grid IsVisible="{Binding Cerrado}" BackgroundColor="Black">
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="25">
+                    <Image Source="logoqoorder.png" HeightRequest="100" HorizontalOptions="Center"/>
+                    <Label Text="Cerrado" TextColor="White" FontFamily="Nunito_bold" FontSize="28" HorizontalOptions="Center"/>
+                    <Label Text="{Binding TextoCerrado}" TextColor="#888888" FontFamily="Nunito" FontSize="15" HorizontalOptions="Center" HorizontalTextAlignment="Center" Margin="30,0"/>
+                </StackLayout>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Establecimientos.IngredientesView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Carta"
+    Title="Ingredientes"
+    BackgroundColor="{StaticResource Negro}"
+    >
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Ingredientes"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding NuevoIngredienteCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="insertar.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout
+            BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            
+            <ListView
+                Margin="15,10"
+                BackgroundColor="Transparent"
+                HasUnevenRows="True"
+                HorizontalOptions="FillAndExpand"
+                ItemsSource="{Binding ListadoIngredientes}"
+                SelectedItem="{Binding IngredienteSeleccioando, Mode=TwoWay}"
+                SeparatorVisibility="None"
+                VerticalOptions="FillAndExpand">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid
+                                Margin="0,0,0,10"
+                                Padding="0,5,0,0"
+                                ColumnDefinitions="*,Auto"
+                                RowDefinitions="Auto,Auto">
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    BackgroundColor="Transparent"
+                                    FontAttributes="Bold"
+                                    FontFamily="Nunito"
+                                    FontSize="Medium"
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding nombre}"
+                                    TextColor="{DynamicResource Negro}"
+                                    VerticalTextAlignment="Start" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    BackgroundColor="Transparent"
+                                    FontAttributes="Bold"
+                                    FontFamily="Nunito"
+                                    FontSize="11"
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding precio, StringFormat='{0:N2}€'}"
+                                    TextColor="{DynamicResource Negro}"
+                                    VerticalTextAlignment="Start" />
+                                <Switch
+                                    Grid.RowSpan="2"
+                                    Grid.Column="1"
+                                    IsEnabled="False"
+                                    IsToggled="{Binding estado}" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

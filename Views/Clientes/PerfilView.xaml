@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.PerfilView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:ffTransformations="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid
+            Margin="-50,0,0,5"
+            HeightRequest="40"
+            HorizontalOptions="FillAndExpand">
+            <Image
+                Aspect="AspectFit"
+                HeightRequest="35"
+                Source="logomorado.png"
+                VerticalOptions="StartAndExpand" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="miLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Android=11, iOS=13, UWP=14}" />
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="FontFamily" Value="Syne" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+            <Style x:Key="miEntry" TargetType="Entry">
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="PlaceholderColor" Value="Gray" />
+                <Setter Property="FontFamily" Value="Nunito" />
+                <Setter Property="BackgroundColor" Value="White" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="Margin" Value="0,0,0,10" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+        <Grid RowDefinitions="Auto,Auto,*" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" VerticalOptions="FillAndExpand">
+            <ff:CachedImage
+                Aspect="AspectFill"
+                HeightRequest="130"
+                HorizontalOptions="Center"
+                Source="{Binding Imagen}"
+                VerticalOptions="Start"
+                WidthRequest="130">
+                <ff:CachedImage.Transformations>
+                    <!-- Transformation removed -->
+                </ff:CachedImage.Transformations>
+                <ff:CachedImage.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding CmdCambiaImagen}" />
+                </ff:CachedImage.GestureRecognizers>
+            </ff:CachedImage>
+            <StackLayout Grid.Row="1" Margin="{OnPlatform iOS='0,20,0,0', Android='0,0,0,0', UWP='0,0,0,0'}" HorizontalOptions="Center">
+                <Label
+                    FontFamily="Nunito"
+                    FontSize="30"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding Nombre}"
+                    TextColor="{DynamicResource Blanco}" />
+                <Label
+                    Margin="0,-5"
+                    FontFamily="Nunito"
+                    FontSize="18"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding Apellidos}"
+                    TextColor="{DynamicResource Blanco}" />
+            </StackLayout>
+            <ScrollView  VerticalOptions="FillAndExpand"  Grid.Row="2" 
+                BackgroundColor="White">
+            <Grid
+                Padding="20"
+                Margin="0,10,0,0"
+                ColumnDefinitions="*, *"
+                RowDefinitions="AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, *,Auto"
+                RowSpacing="3">
+                <Label
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource miLabel}"
+                    Text="Provincia" />
+                <Picker
+                    Title="Selecciona Provincia"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,10"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    ItemsSource="{Binding Provincias}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding Provincia}"
+                    TextColor="{DynamicResource Negro}" />
+                <Grid
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    ColumnDefinitions="60*,40*"
+                    RowDefinitions="Auto,Auto">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Style="{StaticResource miLabel}"
+                        Text="Población" />
+                    <Picker
+                        Title="Selecciona Población"
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="0,0,0,10"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        ItemsSource="{Binding Pueblos}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding Poblacion}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Style="{StaticResource miLabel}"
+                        Text="Cód. Postal" />
+                    <Picker
+                        Title="Selecciona Cód. Postal."
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,0,10"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        ItemDisplayBinding="{Binding codPostal}"
+                        ItemsSource="{Binding CodPostales}"
+                        SelectedIndex="0"
+                        SelectedItem="{Binding CodPostal}"
+                        TextColor="{DynamicResource Negro}" />
+                </Grid>
+
+                <Label
+                    Grid.Row="3"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource miLabel}"
+                    Text="Dirección" />
+                <Entry
+                    Grid.Row="4"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource miEntry}"
+                    Text="{Binding Direccion}" />
+                <Label
+                    Grid.Row="5"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource miLabel}"
+                    Text="Zona" />
+                <Picker
+                    Title="Selecciona Zona"
+                    Grid.Row="6"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,10"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    ItemDisplayBinding="{Binding nombre}"
+                    ItemsSource="{Binding Zonas}"
+                    SelectedIndex="0"
+                    SelectedItem="{Binding Zona}"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Style="{StaticResource miLabel}"
+                    Text="Alta en PolloAndaluz" />
+                <Label
+                    Grid.Row="8"
+                    Grid.Column="0"
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    
+                    HorizontalTextAlignment="Start"
+                    LineBreakMode="WordWrap"
+                    Margin="0,10,0,0"
+                    VerticalOptions="Start"
+                    Text="{Binding FechaAlta, StringFormat='{0:dd/MM/yyyy}'}"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Style="{StaticResource miLabel}"
+                    Text="Teléfono" />
+                <Entry
+                    Grid.Row="8"
+                    Grid.Column="1"
+                    Margin="0"
+                    Keyboard="Telephone"
+                    Style="{StaticResource miEntry}"
+                    Text="{Binding Telefono}" />
+                <Label
+                    Grid.Row="9"
+                    Grid.ColumnSpan="2"
+                    Margin="0,10,0,0"
+                    Style="{StaticResource miLabel}"
+                    Text="Email" />
+                <Label
+                    Grid.Row="10"
+                    Grid.ColumnSpan="2"
+                    Margin="0,0,0,20"
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    HorizontalTextAlignment="Start"
+                    LineBreakMode="WordWrap"
+                    Text="{Binding Email}"
+                    TextColor="{DynamicResource Negro}" />
+                <Button
+                    Grid.Row="12"
+                    Grid.Column="0"
+                    BackgroundColor="{DynamicResource Rojo}"
+                    Command="{Binding CommandGuardar}"
+                    CornerRadius="20"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HeightRequest="60"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Actualizar"
+                    TextColor="{DynamicResource Blanco}" />
+                <Button
+                    Grid.Row="12"
+                    Grid.Column="1"
+                    BackgroundColor="{DynamicResource Negro}"
+                    Command="{Binding CommandCancelar}"
+                    CornerRadius="20"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HeightRequest="60"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Cancelar"
+                    TextColor="{DynamicResource Blanco}" />
+                <Button
+                    Grid.Row="13"
+                    Grid.ColumnSpan="2"
+                    BackgroundColor="Red"
+                    Command="{Binding CommandEliminar}"
+                    CornerRadius="20"
+                    FontFamily="Syne"
+                    FontSize="14"
+                    HeightRequest="60"
+                    HorizontalOptions="FillAndExpand"
+                    Text="Eliminar Cuenta"
+                    TextColor="White" />
+            </Grid>
+                </ScrollView>
+
+        </Grid>
+    
+
+
+</ContentPage>

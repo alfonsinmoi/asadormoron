@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.PinView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Verifica PIN"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,50,0,0', UWP='0,0,0,0'}">
+            <StackLayout Margin="20" VerticalOptions="FillAndExpand">
+                <Image
+                    Aspect="AspectFit"
+                    HorizontalOptions="CenterAndExpand"
+                    Source="logo_morado.png" />
+                <Label
+                    FontAttributes="Bold"
+                    FontFamily="Nunito"
+                    FontSize="19"
+                    HorizontalTextAlignment="Center"
+                    Text="Ha recibido un correo electrónico con un código de 4 cifras. Puede ser que el correo esté en la bandeja de correo no deseado o spam."
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Margin="0,20,0,0"
+                    FontAttributes="Bold"
+                    FontFamily="Nunito"
+                    FontSize="17"
+                    HorizontalTextAlignment="Center"
+                    Text="Introduzca el PIN de verificación"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    FontFamily="Nunito"
+                    FontSize="14"
+                    HorizontalTextAlignment="Center"
+                    Text="Verifique su email, compruebe la carperta de spam o correo no deseado"
+                    TextColor="{DynamicResource Negro}" />
+                <Entry
+                    Margin="0,30,0,30"
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    FontSize="20"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    Placeholder="PIN"
+                    Text="{Binding PIN}"
+                    TextColor="{DynamicResource Negro}"
+                    WidthRequest="120" />
+                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                    <Button
+                        Margin="20,0,0,0"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        Command="{Binding CommandGuardar}"
+                        CornerRadius="0"
+                        FontFamily="Nunito"
+                        HeightRequest="40"
+                        HorizontalOptions="FillAndExpand"
+                        Text="Guardar"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Button
+                        Margin="0,0,20,0"
+                        BackgroundColor="{DynamicResource Amarillo}"
+                        Command="{Binding CommandCancelar}"
+                        CornerRadius="0"
+                        FontFamily="Nunito"
+                        HeightRequest="40"
+                        HorizontalOptions="FillAndExpand"
+                        Text="Cancelar"
+                        TextColor="{DynamicResource Negro}" />
+
+
+                </StackLayout>
+                <StackLayout>
+                    <Button
+                        Margin="20,0"
+                        BackgroundColor="{DynamicResource Negro}"
+                        Command="{Binding CommandGenerarNuevoPIN}"
+                        CornerRadius="0"
+                        FontAttributes="Italic"
+                        FontFamily="Nunito"
+                        HeightRequest="40"
+                        HorizontalOptions="FillAndExpand"
+                        Text="Generar nuevo PIN"
+                        TextColor="{DynamicResource Blanco}" />
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

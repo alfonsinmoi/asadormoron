@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FlyoutPage
+    x:Class="AsadorMoron.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:AsadorMoron.Views"
+    FlyoutLayoutBehavior="Popover"
+    IsPresented="True">
+    <FlyoutPage.Flyout>
+        <local:MenuLateral
+            x:Name="MenuLateral"
+            BindingContext="{Binding MenuViewModel}"
+            NavigationPage.HasBackButton="True"
+            NavigationPage.HasNavigationBar="True" />
+    </FlyoutPage.Flyout>
+    <FlyoutPage.Detail>
+        <ContentPage  />
+    </FlyoutPage.Detail>
+</FlyoutPage>

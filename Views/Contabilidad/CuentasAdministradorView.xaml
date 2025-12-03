@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Contabilidad.CuentasAdministradorView"
+    Title="Facturas"
+    BackgroundColor="{StaticResource Rojo}"
+    x:Name="factAdminView"
+    NavigationPage.HasNavigationBar="True">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Facturas"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*,Auto"  Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,50,0,0',
+                                UWP='0'}" BackgroundColor="White"
+               VerticalOptions="FillAndExpand"
+              Padding="20">
+            <Label FontFamily="Nunito_bold" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Text="Número Factura"/>
+            <Entry FontFamily="Nunito" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Grid.Row="1" Text="{Binding NumeroFactura}" Keyboard="Numeric"/>
+            <Label FontFamily="Nunito_bold" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Grid.Column="1" Text="Año"/>
+            <Picker FontFamily="Nunito" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Grid.Row="1" Grid.Column="1" SelectedItem="{Binding AnyoSeleccionado}" ItemsSource="{Binding Anyos}"/>
+            <Label FontFamily="Nunito_bold" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Grid.Row="2" Text="Fecha Desde"/>
+            <DatePicker FontFamily="Nunito" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Grid.Row="3" Date="{Binding FDesde}"/>
+            <Label FontFamily="Nunito_bold" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Grid.Row="2" Grid.Column="1" Text="Fecha Hasta"/>
+            <DatePicker FontFamily="Nunito" BackgroundColor="White" TextColor="{DynamicResource Rojo}" Grid.Row="3" Grid.Column="1" Date="{Binding FHasta}"/>
+            <Button BackgroundColor="{DynamicResource Amarillo}" TextColor="White" FontFamily="Nunito" Grid.Row="5" Grid.ColumnSpan="2" Text="Generar Facturas" Command="{Binding cmdGenerar}"/>
+            <CollectionView Grid.Row="6" Grid.ColumnSpan="2" ItemsSource="{Binding Facturas}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout
+                            Margin="0,0,0,10"
+                            Padding="0,5,0,0"
+                            Orientation="Vertical">
+                            <Grid ColumnDefinitions="*,40" RowDefinitions="Auto,Auto">
+                                <Label
+                                    BackgroundColor="Transparent"
+                                    FontFamily="Syne"
+                                    FontSize="13"
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding nombreAdmnistrador}"
+                                    TextColor="{DynamicResource Rojo}"
+                                    VerticalTextAlignment="Start" />
+                                 <Label
+                                    BackgroundColor="Transparent" Grid.Row="1"
+                                    FontSize="11"
+                                    HorizontalOptions="StartAndExpand"
+                                    LineBreakMode="TailTruncation"
+                                    VerticalTextAlignment="Start">
+                                     <Label.FormattedText>
+                                         <FormattedString>
+                                             <Span  Text="{Binding numero}" TextColor="{DynamicResource Rojo}"
+                                                    FontFamily="Nunito"/>
+                                             <Span  Text="  -  " TextColor="{DynamicResource Rojo}"
+                                                    FontFamily="Nunito"/>
+                                             <Span  Text="{Binding total,StringFormat='{0:C2}'}" TextColor="{DynamicResource Rojo}"
+                                                    FontFamily="Nunito_bold"/>
+                                         </FormattedString>
+                                     </Label.FormattedText>
+                                </Label>
+                                <!--<ImageButton Padding="6" CommandParameter="{Binding .}" Command="{Binding Path=BindingContext.cmdRechazar, Source={x:Reference Name=factAdminView}}" Source="rechazar.png" BackgroundColor="Red" Grid.Column="1" Grid.RowSpan="2" HeightRequest="40" VerticalOptions="Center"/>
+                                <ImageButton Padding="6" CommandParameter="{Binding .}" Command="{Binding Path=BindingContext.cmdAceptar, Source={x:Reference Name=factAdminView}}" Source="hecho.png" BackgroundColor="{DynamicResource Rojo}" Grid.Column="2" Grid.RowSpan="2" HeightRequest="40" VerticalOptions="Center"/>-->
+                                <ImageButton Padding="6"  CommandParameter="{Binding .}" Command="{Binding Path=BindingContext.cmdVer, Source={x:Reference Name=factAdminView}}" Source="document.png" BackgroundColor="{DynamicResource Amarillo}" Grid.Column="1" Grid.RowSpan="2" HeightRequest="40" VerticalOptions="Center"/>
+                            </Grid>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button BackgroundColor="{DynamicResource Rojo}" IsVisible="{Binding VisibleBoton}" TextColor="{DynamicResource Rojo}" FontFamily="Nunito" Grid.Row="7" Grid.ColumnSpan="2" Text="Guardar" Command="{Binding cmdAceptar}"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

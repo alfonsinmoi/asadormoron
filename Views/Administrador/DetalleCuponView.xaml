@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Administrador.DetalleCuponView"
+    BackgroundColor="{DynamicResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="{Binding CodigoCupon}"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding CommandGuardar}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView Padding="20" BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0'}">
+        <StackLayout Margin="{OnPlatform UWP='10,0,10,0'}">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Código cupón" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" VerticalOptions="End"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center"/>
+                <CheckBox HeightRequest="{OnPlatform Default=24,Android=22,UWP=30}" IsChecked="{Binding Estado}" Color="{DynamicResource Amarillo}" HorizontalOptions="End"/>
+                <Label Text="Estado" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" HorizontalOptions="End"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <Entry  Text="{Binding CodigoCupon}" BackgroundColor="Transparent" FontFamily="Nunito"
+                    FontSize="{OnPlatform Default=14,Android=12}" TextColor="{DynamicResource Negro}"
+                    Placeholder="Código Cupón"/>
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" Margin="0,10,0,0">
+                <Label Text="Fecha Desde" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}"/>
+                <DatePicker Grid.Row="1"  Date="{Binding FechaDesde}" BackgroundColor="Transparent" FontFamily="Nunito"
+                    FontSize="{OnPlatform Default=14,Android=12}" TextColor="{DynamicResource Negro}"/>
+                <Label Text="Fecha Hasta" Grid.Column="1" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}"/>
+                <DatePicker Grid.Row="1"  Date="{Binding FechaHasta}" Grid.Column="1" BackgroundColor="Transparent" FontFamily="Nunito"
+                    FontSize="{OnPlatform Default=14,Android=12}" TextColor="{DynamicResource Negro}"/>
+            </Grid>
+            <Label Text="Días" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" Margin="0,10,0,0"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}"/>
+            <Grid ColumnDefinitions="*,*,*,*,*,*,*" RowDefinitions="Auto,Auto">
+                <Label Text="L" Grid.Column="0" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="14" HorizontalTextAlignment="Center"/>
+                <Label Text="M" Grid.Column="1" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="14" HorizontalTextAlignment="Center"/>
+                <Label Text="X" Grid.Column="2" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="14" HorizontalTextAlignment="Center"/>
+                <Label Text="J" Grid.Column="3" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="14" HorizontalTextAlignment="Center"/>
+                <Label Text="V" Grid.Column="4" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="14" HorizontalTextAlignment="Center"/>
+                <Label Text="S" Grid.Column="5" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="14" HorizontalTextAlignment="Center"/>
+                <Label Text="D" Grid.Column="6" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="14" HorizontalTextAlignment="Center"/>
+                <CheckBox Grid.Row="1" IsChecked="{Binding Lunes}" Grid.Column="0" Color="{DynamicResource Amarillo}" HorizontalOptions="CenterAndExpand" Margin="8,0,0,0"/>
+                <CheckBox Grid.Row="1" IsChecked="{Binding Martes}" Grid.Column="1" Color="{DynamicResource Amarillo}" HorizontalOptions="CenterAndExpand" Margin="8,0,0,0"/>
+                <CheckBox Grid.Row="1" IsChecked="{Binding Miercoles}" Grid.Column="2" Color="{DynamicResource Amarillo}" HorizontalOptions="CenterAndExpand" Margin="8,0,0,0"/>
+                <CheckBox Grid.Row="1" IsChecked="{Binding Jueves}" Grid.Column="3" Color="{DynamicResource Amarillo}" HorizontalOptions="CenterAndExpand" Margin="8,0,0,0"/>
+                <CheckBox Grid.Row="1" IsChecked="{Binding Viernes}" Grid.Column="4" Color="{DynamicResource Amarillo}" HorizontalOptions="CenterAndExpand" Margin="8,0,0,0"/>
+                <CheckBox Grid.Row="1" IsChecked="{Binding Sabado}" Grid.Column="5" Color="{DynamicResource Amarillo}" HorizontalOptions="CenterAndExpand" Margin="8,0,0,0"/>
+                <CheckBox Grid.Row="1" IsChecked="{Binding Domingo}" Grid.Column="6" Color="{DynamicResource Amarillo}" HorizontalOptions="CenterAndExpand" Margin="8,0,0,0"/>
+            </Grid>
+            
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                <Label Text="Valor" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}"/>
+                <Entry Grid.Row="1"  Text="{Binding Valor}" BackgroundColor="Transparent" FontFamily="Nunito"
+                    FontSize="{OnPlatform Default=14,Android=12}" TextColor="{DynamicResource Negro}"
+                    WidthRequest="80" Keyboard="Numeric"/>
+                <Label Text="Tipo descuento" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" Grid.Column="1"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}"/>
+                <Picker ItemsSource="{Binding TiposOferta}" SelectedIndex="{Binding TipoSeleccionado}" Grid.Row="1"
+                      Grid.Column="1" BackgroundColor="Transparent" TextColor="{DynamicResource Negro}"
+                        FontFamily="Nunito" FontSize="{OnPlatform Default=14,Android=12}"/>
+            </Grid>
+            <StackLayout Orientation="Horizontal" BackgroundColor="Transparent" Padding="0">
+                <CheckBox VerticalOptions="Center" IsChecked="{Binding Limitado}" Color="{DynamicResource Amarillo}" WidthRequest="30"/>
+                <Label Text="Limimitado" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                       VerticalOptions="Center"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand"/>
+                <Entry  Text="{Binding Cantidad}" BackgroundColor="Transparent" FontFamily="Nunito"
+                    FontSize="{OnPlatform Default=14,Android=12}" TextColor="{DynamicResource Negro}" HorizontalTextAlignment="End"
+                        WidthRequest="80" Keyboard="Numeric"
+                        IsVisible="{Binding Limitado}" HorizontalOptions="Center"
+                        VerticalOptions="CenterAndExpand"
+                        Placeholder="Cant."/>
+            </StackLayout>
+            <Grid ColumnDefinitions="{OnPlatform Default='*,Auto,Auto',UWP='Auto,Auto,Auto'}">
+                <Label Text="{OnPlatform Default='Afecta a',UWP='Afecta   a'}" TextColor="{DynamicResource Amarillo}" FontFamily="Syne"
+                VerticalOptions="Center" BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" VerticalTextAlignment="Center" HorizontalOptions="StartAndExpand"/>
+                <StackLayout Orientation="Horizontal" Grid.Column="1" Margin="{OnPlatform Default='0,0,20,0',UWP='15,0,20,0'}">
+                    <CheckBox IsChecked="{Binding Gastos}" Color="{DynamicResource Amarillo}" WidthRequest="30"/>
+                    <Label Text="Envío" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" VerticalTextAlignment="Center"/>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Grid.Column="2" HorizontalOptions="End">
+                    <CheckBox IsChecked="{Binding Precio}" Color="{DynamicResource Amarillo}" WidthRequest="30"/>
+                    <Label Text="Precio" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" VerticalTextAlignment="Center"/>
+                </StackLayout>
+            </Grid>
+
+            <StackLayout Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding Pueblo}" Color="{DynamicResource Amarillo}" WidthRequest="30"/>
+            <Label Text="Pueblos" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" HorizontalOptions="StartAndExpand"
+                BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" VerticalTextAlignment="Center"/>
+                    <ImageButton Source="next.png" HeightRequest="32" WidthRequest="32" HorizontalOptions="End"
+                            BackgroundColor="Transparent" Command="{Binding cmdVerPueblos}"
+                            IsVisible="{Binding Pueblo}" />
+                </StackLayout>
+            <Label Text="{Binding PueblosCupon}" IsVisible="{Binding Pueblo}" BackgroundColor="Transparent" FontFamily="Nunito"
+                    FontSize="{OnPlatform Default=14,Android=12}" TextColor="{DynamicResource Negro}" Margin="50,0,0,0"/>
+            <StackLayout Orientation="Horizontal">
+                <CheckBox IsChecked="{Binding Establecimiento}" Color="{DynamicResource Amarillo}" WidthRequest="30"/>
+                <Label Text="Establecimientos" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" HorizontalOptions="StartAndExpand"
+                   BackgroundColor="Transparent" FontSize="{OnPlatform Default=14,Android=12}" VerticalTextAlignment="Center"/>
+                <ImageButton Source="next.png" HeightRequest="32" WidthRequest="32" HorizontalOptions="End"
+                             BackgroundColor="Transparent" Command="{Binding cmdVerEstablecimientos}" IsVisible="{Binding Establecimiento}"/>
+            </StackLayout>
+            <Label Text="{Binding EstablecimientosCupon}" IsVisible="{Binding Establecimiento}" BackgroundColor="Transparent" FontFamily="Nunito"
+                    FontSize="{OnPlatform Default=14,Android=12}" TextColor="{DynamicResource Negro}" Margin="50,0,0,0"/>
+        </StackLayout>
+            </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
+

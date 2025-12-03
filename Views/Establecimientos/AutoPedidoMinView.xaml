@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Establecimientos.AutoPedidoMinView"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*">
+            <Label
+                Grid.Column="0"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Auto pedido"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid RowDefinitions="*,Auto" BackgroundColor="White"  Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}">
+            <ScrollView
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="FillAndExpand"
+                             VerticalOptions="FillAndExpand" Margin="20">
+                    <Label Text="Establecimientos" FontFamily="Syne" FontSize="14"
+                            HorizontalTextAlignment="Start" IsVisible="{Binding VisibleEstablecimiento}" 
+                            TextColor="{DynamicResource Amarillo}"/>
+                    <Picker ItemsSource="{Binding MisEstablecimientos}" SelectedItem="{Binding MiEstablecimiento}"
+                            ItemDisplayBinding="{Binding nombre}"  BackgroundColor="White"
+                            FontSize="14"
+                            IsVisible="{Binding VisibleEstablecimiento}" 
+                            FontFamily="Nunito"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+                    <Label Text="Importe" FontFamily="Syne"
+                           FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            TextColor="{DynamicResource Amarillo}"/>
+                    <Entry Text="{Binding Importe}"  BackgroundColor="White"
+                            FontSize="14"
+                           x:Name="txtMiPrecio"
+                           Keyboard="Numeric"
+                           MaxLength="5"
+                            FontFamily="Nunito"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center"/>
+                    <Label
+                        FontFamily="Syne"
+                           FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            TextColor="{DynamicResource Amarillo}"
+                        Text="Tipo Pago"/>
+                    <Picker
+                        HeightRequest="35"
+                         BackgroundColor="White"
+                            FontSize="14"
+                        ItemsSource="{Binding TiposPago}"
+                        SelectedItem="{Binding TipoPago}"
+                        TextColor="Black" />
+                    <Label
+                        IsVisible="{Binding VisibleFuera}"
+                        FontFamily="Syne"
+                           FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            TextColor="{DynamicResource Amarillo}"
+                        Text="Poblacion"/>
+                    <Picker
+                        IsVisible="{Binding VisibleFuera}"
+                        HeightRequest="35"
+                         BackgroundColor="White"
+                            FontSize="14"
+                        ItemDisplayBinding="{Binding nombre}"
+                        ItemsSource="{Binding Pueblos}"
+                        SelectedItem="{Binding PuebloSeleccionado}"
+                        TextColor="Black" />
+                    <Button Text="Hacer Pedido"
+                            Command="{Binding cmdGenerar}"
+                            BackgroundColor="{DynamicResource Amarillo}"
+                            CornerRadius="15"
+                            FontSize="14"
+                            HeightRequest="50"
+                            HorizontalOptions="Center"
+                            TextColor="{DynamicResource Blanco}"
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="180"/>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

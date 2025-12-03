@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.HistoricoPedidosView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:ffTransformations="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:yummy="http://schemas.microsoft.com/dotnet/2021/maui"
+    x:Name="HistoricoPedidosUsuario"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*">
+            <Label
+                Grid.Column="0"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Histórico"
+                TextColor="{DynamicResource Negro}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="ExpanderTitleTextStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="FontSize" Value="Medium" />
+                <Setter Property="FontFamily" Value="Syne" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+
+            <Style x:Key="CollpasedColorSytle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+            <Style x:Key="miLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Android=10, iOS=12, UWP=14}" />
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="FontFamily" Value="Syne" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,50,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="Auto,Auto,*,Auto"
+            VerticalOptions="FillAndExpand"
+            RowSpacing="0">
+            <Grid
+                Grid.Row="0"
+                Margin="10,5,10,5"
+                ColumnDefinitions="Auto,*,Auto,*"
+                RowSpacing="0">
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Style="{StaticResource miLabel}"
+                    Text="Desde"
+                    VerticalTextAlignment="Center"
+                    VerticalOptions="CenterAndExpand"/>
+                <DatePicker
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    BackgroundColor="White"
+                    Date="{Binding Desde}"
+                    FontFamily="Nunito"
+                    FontSize="12"
+                    TextColor="{DynamicResource Negro}"
+                    HorizontalOptions="FillAndExpand"/>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Style="{StaticResource miLabel}"
+                    Text="Hasta"
+                    VerticalTextAlignment="Center"
+                    VerticalOptions="CenterAndExpand"/>
+                <DatePicker
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    BackgroundColor="White"
+                    Date="{Binding Hasta}"
+                    FontFamily="Nunito"
+                    FontSize="12"
+                    TextColor="{DynamicResource Negro}" 
+                    HorizontalOptions="FillAndExpand"/>
+            </Grid>
+            <BoxView Grid.Row="1" HeightRequest="1" HorizontalOptions="FillAndExpand" BackgroundColor="LightGray"/>
+            <ListView
+                Grid.Row="2"
+                BackgroundColor="White"
+                ItemsSource="{Binding Listado}"
+                SeparatorColor="{DynamicResource Negro}"
+                HasUnevenRows="True"
+                SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                        <Grid
+                            Margin="0"
+                            BackgroundColor="White"
+                            ColumnDefinitions="Auto,Auto,*,Auto"
+                            ColumnSpacing="0"
+                            RowDefinitions=" Auto,Auto,Auto"
+                            RowSpacing="0">
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Margin="15,0,0,0"
+                                FontFamily="Nunito_bold"
+                                FontSize="16"
+                                Text="{Binding horaPedido, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                TextColor="{StaticResource Negro}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Margin="15,0,0,0"
+                                BackgroundColor="Transparent"
+                                FontFamily="Nunito_bold"
+                                FontSize="16"
+                                Text="{Binding precioTotalPedido, StringFormat='{0:N2}€'}"
+                                TextColor="{StaticResource Rojo}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="15,0,0,0"
+                                FontFamily="Nunito_bold"
+                                FontSize="14"
+                                Padding="10,2"
+                                BackgroundColor="{DynamicResource Rojo}"
+                                Text="{Binding estadoPedido}"
+                                TextColor="{StaticResource Blanco}">
+                                </Label>
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="4"
+                                Margin="15,0,5,0"
+                                FontFamily="Nunito"
+                                FontSize="15"
+                                IsVisible="{Binding comentario, Converter={StaticResource StringEmptyToBooleanConverter}}"
+                                TextColor="Black" >
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Observaciones"></Span>
+                                        <Span Text=": "/>
+                                        <Span Text="{Binding comentario}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <StackLayout 
+                                Grid.Row="0"
+                                Grid.RowSpan="4"
+                                Grid.Column="3" Margin="5" WidthRequest="70">
+                                <Image HeightRequest="30" Source="repetir.png" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontFamily="Syne"
+                                    FontSize="13"
+                                    HorizontalOptions="Center"
+                                    Text="Repetir"
+                                    TextColor="{DynamicResource Negro}" />
+                                <StackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer  Command="{Binding Path=BindingContext.RepetirPedidoCommand, Source={x:Reference Name=HistoricoPedidosUsuario}}"
+                                        CommandParameter="{Binding idPedido}"/>
+                                </StackLayout.GestureRecognizers>
+                            </StackLayout>
+                           <Grid.GestureRecognizers>
+                                <TapGestureRecognizer  Command="{Binding Path=BindingContext.InfoPedidoCommand, Source={x:Reference Name=HistoricoPedidosUsuario}}"
+                                        CommandParameter="{Binding codigoPedido}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                            </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackLayout
+                Grid.Row="3"
+                Padding="15,10,15,20"
+                BackgroundColor="{DynamicResource Rojo}"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Horizontal"
+                VerticalOptions="Center">
+                <Label
+                    FontFamily="Nunito_bold"
+                    HorizontalOptions="StartAndExpand"
+                    HorizontalTextAlignment="Start"
+                    TextColor="{StaticResource Negro}" >
+                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            BackgroundColor="Transparent"
+                                            FontFamily="Nunito_bold"
+                                            Text="Pedidos"
+                                            TextTransform="Uppercase"
+                                            FontSize="20"
+                                            TextColor="{DynamicResource Negro}" />
+                                        <Span BackgroundColor="Transparent"
+                                            FontFamily="Nunito_bold"
+                                            FontSize="20"
+                                            TextColor="{DynamicResource Negro}"
+                                             Text=": "/>
+                                        <Span
+                                            BackgroundColor="Transparent"
+                                            FontFamily="Nunito"
+                                            FontSize="20"
+                                            TextColor="{DynamicResource Negro}"
+                                            Text="{Binding TotalPedidos}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                    </Label>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

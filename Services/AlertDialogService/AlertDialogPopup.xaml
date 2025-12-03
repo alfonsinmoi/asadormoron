@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rx:PopupPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+              xmlns:rx="clr-namespace:Mopups.Pages;assembly=Mopups"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                x:Class="AsadorMoron.Services.AlertDialogService.AlertDialogPopup">
+
+    <Frame x:Name="FrContent" Grid.ColumnSpan="2" Grid.RowSpan="3"
+           BackgroundColor="{DynamicResource Blanco}"
+           BorderColor="Black"
+           CornerRadius="10"
+           Margin="20"
+           HorizontalOptions="FillAndExpand" VerticalOptions="Center" 
+           Opacity="0">
+        <Grid x:Name="GrContent" RowDefinitions="50, Auto, 50"
+              ColumnDefinitions="*, *"
+              RowSpacing="10"
+              ColumnSpacing="5"
+              Padding="0"
+              Margin="0"
+              HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+
+
+            <Label x:Name="LbTitle" Grid.ColumnSpan="2"
+                   FontFamily="Syne"
+                   FontSize="Large"
+                   TextColor="{DynamicResource Negro}"
+                   Margin="0,0,20,0"
+                   MaxLines="1"
+                   LineBreakMode="TailTruncation"
+                   HorizontalTextAlignment="Start" VerticalTextAlignment="Center"
+                   HorizontalOptions="FillAndExpand" VerticalOptions="Center" />
+
+            <Label x:Name="LbMessage" Grid.Row="1" Grid.ColumnSpan="2"
+                   FontSize="Body" TextColor="{DynamicResource Negro}" FontFamily="Nunito"
+                   HorizontalOptions="FillAndExpand" VerticalOptions="Start" />
+
+            <Button x:Name="BtCancel" Grid.Row="2" Grid.Column="0"
+                    BackgroundColor="{DynamicResource Negro}"
+                    TextColor="{DynamicResource Blanco}"
+                    HeightRequest="48"
+                    FontFamily="Nunito"
+                    CornerRadius="24"
+                    Padding="5"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="End" 
+                    Clicked="BtCancel_Clicked"/>
+
+            <Button x:Name="BtOk" Grid.Row="2" Grid.Column="1"
+                    BackgroundColor="{DynamicResource Amarillo}"
+                    TextColor="{DynamicResource Negro}"
+                    HeightRequest="48"
+                    FontFamily="Nunito"
+                    CornerRadius="24"
+                    Padding="5"
+                    HorizontalOptions="FillAndExpand" VerticalOptions="End" 
+                    Clicked="BtOk_Clicked"/>
+        </Grid>
+    </Frame>
+</rx:PopupPage>

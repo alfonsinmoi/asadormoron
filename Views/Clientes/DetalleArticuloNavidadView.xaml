@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.DetalleArticuloNavidadView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:badge="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    xmlns:templates="clr-namespace:AsadorMoron.Views.Templates"
+    x:Name="ViewDetalleArticulosNavidad"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Grid
+                Grid.Column="0"
+                 Grid.ColumnSpan="2"
+                Margin="0,0,0,5"
+                HeightRequest="40"
+                HorizontalOptions="FillAndExpand">
+                <Image
+                    Margin="0,0,50,0"
+                    Aspect="AspectFit"
+                    HeightRequest="35"
+                    Source="logomorado.png"
+                    VerticalOptions="StartAndExpand" />
+            </Grid>
+           <ImageButton
+                 IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}"
+                BackgroundColor="Transparent"
+                Command="{Binding IrDetallePedidoCommand}"
+                HeightRequest="40"
+                Grid.Column="2"
+                Margin="0,0,20,0"
+                Source="carrito.png"
+                WidthRequest="40" />
+             <Frame Padding="0" BackgroundColor="{DynamicResource Amarillo}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
+                   VerticalOptions="Start" HorizontalOptions="End" Grid.Column="2" HasShadow="False"
+                    IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
+                <Label Text="{Binding Cantidad, Mode=TwoWay}"
+                       FontSize="15" TextColor="Black" FontAttributes="Bold"
+                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
+                </Frame.GestureRecognizers>
+             </Frame>
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid Margin="{OnPlatform iOS='0,90,0,0',
+                                    Android='0,60,0,0',
+                                    UWP='0,0,0,0'}"
+              RowDefinitions="*,Auto">
+        <StackLayout  VerticalOptions="FillAndExpand">
+            <ScrollView BackgroundColor="White" VerticalOptions="FillAndExpand">
+            <Grid RowDefinitions="*,Auto,Auto">
+                <Grid
+                    VerticalOptions="FillAndExpand"
+                    Margin="10,10"
+                    ColumnDefinitions="*"
+                    RowDefinitions="Auto,Auto, *">
+                    <Label
+                    FontFamily="Syne"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding Articulo.nombre}"
+                    TextColor="{DynamicResource Negro}" >
+                        <Label.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                TargetType="Label"
+                                Value="EN">
+                                <Setter Property="Text" Value="{Binding Articulo.nombre_eng}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                TargetType="Label"
+                                Value="DE">
+                                <Setter Property="Text" Value="{Binding Articulo.nombre_ger}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                TargetType="Label"
+                                Value="FR">
+                                <Setter Property="Text" Value="{Binding Articulo.nombre_fr}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label
+                    Grid.Row="1"
+                    FontFamily="Syne_Medium"
+                    FontSize="14"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding Articulo.descripcion}"
+                    TextColor="{DynamicResource Negro}" >
+                        <Label.Triggers>
+                            <DataTrigger
+                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                TargetType="Label"
+                                Value="EN">
+                                <Setter Property="Text" Value="{Binding Articulo.descripcion_eng}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                TargetType="Label"
+                                Value="DE">
+                                <Setter Property="Text" Value="{Binding Articulo.descripcion_ger}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                TargetType="Label"
+                                Value="FR">
+                                <Setter Property="Text" Value="{Binding Articulo.descripcion_fr}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <ffimageloading:CachedImage
+                        Margin="0"
+                        Grid.Row="2"
+                        Aspect="AspectFit"
+                        HorizontalOptions="FillAndExpand"
+                        Source="{Binding Articulo.imagen}"
+                        VerticalOptions="FillAndExpand" />
+                </Grid>
+            </Grid>
+        </ScrollView>
+        </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

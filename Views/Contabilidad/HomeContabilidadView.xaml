@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+    x:Class="AsadorMoron.Views.Contabilidad.HomeContabilidadView"
+    BackgroundColor="White">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <x:Array x:Key="Colors" Type="{x:Type Brush}">
+                <SolidColorBrush Color="#fef400"/>
+                <SolidColorBrush Color="#000000"/>
+                <SolidColorBrush Color="#000000"/>
+                <SolidColorBrush Color="#000000"/>
+                <SolidColorBrush Color="#888888"/>
+                <SolidColorBrush Color="#f0f0f0"/>
+            </x:Array>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,50,0,0',
+                                WinUI='0'}" RowDefinitions="350,350,350" ColumnDefinitions="*">
+            <chart:SfCircularChart>
+                <chart:SfCircularChart.Title>
+                    <Label Text="Facturas a establecimientos" FontFamily="Nunito_bold" FontSize="16" TextColor="{DynamicResource Amarillo}" />
+                </chart:SfCircularChart.Title>
+                <chart:PieSeries
+                    EnableAnimation="True"
+                    ExplodeOnTouch="True"
+                    ItemsSource="{Binding Facturas}"
+                    XBindingPath="poblacion"
+                    YBindingPath="total"
+                    PaletteBrushes="{StaticResource Colors}"
+                    ShowDataLabels="True">
+                    <chart:PieSeries.DataLabelSettings>
+                        <chart:CircularDataLabelSettings LabelPlacement="Center" />
+                    </chart:PieSeries.DataLabelSettings>
+                </chart:PieSeries>
+            </chart:SfCircularChart>
+            <chart:SfCircularChart Grid.Row="1">
+                <chart:SfCircularChart.Title>
+                    <Label Text="Facturas a establecimientos" FontFamily="Nunito_bold" FontSize="16" TextColor="{DynamicResource Amarillo}" />
+                </chart:SfCircularChart.Title>
+                <chart:PieSeries
+                    EnableAnimation="True"
+                    ExplodeOnTouch="True"
+                    ItemsSource="{Binding Facturas}"
+                    XBindingPath="poblacion"
+                    YBindingPath="total"
+                    PaletteBrushes="{StaticResource Colors}"
+                    ShowDataLabels="True">
+                    <chart:PieSeries.DataLabelSettings>
+                        <chart:CircularDataLabelSettings LabelPlacement="Outer" />
+                    </chart:PieSeries.DataLabelSettings>
+                </chart:PieSeries>
+            </chart:SfCircularChart>
+            <chart:SfCircularChart Grid.Row="2">
+                <chart:SfCircularChart.Title>
+                    <Label Text="Facturas a establecimientos" FontFamily="Nunito_bold" FontSize="16" TextColor="{DynamicResource Amarillo}" />
+                </chart:SfCircularChart.Title>
+                <chart:PieSeries
+                    EnableAnimation="True"
+                    ExplodeOnTouch="True"
+                    ItemsSource="{Binding Facturas}"
+                    XBindingPath="poblacion"
+                    YBindingPath="total"
+                    PaletteBrushes="{StaticResource Colors}"
+                    ShowDataLabels="True">
+                    <chart:PieSeries.DataLabelSettings>
+                        <chart:CircularDataLabelSettings LabelPlacement="Outer" />
+                    </chart:PieSeries.DataLabelSettings>
+                </chart:PieSeries>
+            </chart:SfCircularChart>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

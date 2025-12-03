@@ -1,0 +1,1655 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string" />
+                            <xsd:attribute name="type" type="xsd:string" />
+                            <xsd:attribute name="mimetype" type="xsd:string" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string" />
+                            <xsd:attribute name="name" type="xsd:string" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+
+    <data name="Acceder" xml:space="preserve">
+        <value>Acceder</value>
+    </data>
+    <data name="Acceso" xml:space="preserve">
+        <value>Acceso</value>
+    </data>
+    <data name="Aceptar" xml:space="preserve">
+        <value>Aceptar</value>
+    </data>
+    <data name="Activo" xml:space="preserve">
+        <value>Activo</value>
+    </data>
+    <data name="Administrador" xml:space="preserve">
+        <value>Administrador</value>
+    </data>
+    <data name="Alergenos" xml:space="preserve">
+        <value>Alérgenos</value>
+    </data>
+    <data name="Alta" xml:space="preserve">
+        <value>Alta en PolloAndaluz</value>
+    </data>
+    <data name="Apellidos" xml:space="preserve">
+        <value>Apellidos</value>
+    </data>
+    <data name="AñadirCarrito" xml:space="preserve">
+        <value>Añadir al carrito</value>
+    </data>
+    <data name="Base" xml:space="preserve">
+        <value>Base</value>
+    </data>
+    <data name="Bebida" xml:space="preserve">
+        <value>Bebida</value>
+    </data>
+    <data name="Bebidas" xml:space="preserve">
+        <value>Bebidas</value>
+    </data>
+    <data name="BeneficioDiario" xml:space="preserve">
+        <value>Beneficio Diario</value>
+    </data>
+    <data name="BeneficioMensual" xml:space="preserve">
+        <value>Beneficio Mensual</value>
+    </data>
+    <data name="BeneficioSemanal" xml:space="preserve">
+        <value>Beneficio Semanal</value>
+    </data>
+    <data name="Beneficios" xml:space="preserve">
+        <value>Beneficios</value>
+    </data>
+    <data name="BotonBuscar" xml:space="preserve">
+        <value>Buscar</value>
+    </data>
+    <data name="BotonParar" xml:space="preserve">
+        <value>Parar</value>
+    </data>
+    <data name="Buscar" xml:space="preserve">
+        <value>Buscar...</value>
+    </data>
+    <data name="BuscarPorNombre" xml:space="preserve">
+        <value>Buscar por nombre o población...</value>
+    </data>
+    <data name="Camara" xml:space="preserve">
+        <value>Cámara</value>
+    </data>
+    <data name="Camarero" xml:space="preserve">
+        <value>Camarero</value>
+    </data>
+    <data name="CamposObligatorios" xml:space="preserve">
+        <value>Debe rellenar los campos obligatorios.</value>
+    </data>
+    <data name="Cancelar" xml:space="preserve">
+        <value>Cancelar</value>
+    </data>
+    <data name="Cantidad" xml:space="preserve">
+        <value>Cantidad</value>
+    </data>
+    <data name="Categoria" xml:space="preserve">
+        <value>Categoría</value>
+    </data>
+    <data name="CategoriaOK" xml:space="preserve">
+        <value>La Categoría se ha añadido correctamente</value>
+    </data>
+    <data name="Categorias" xml:space="preserve">
+        <value>Categorías</value>
+    </data>
+    <data name="Cargando" xml:space="preserve">
+        <value>Cargando...</value>
+    </data>
+    <data name="Cerrar" xml:space="preserve">
+        <value>Cerrar</value>
+    </data>
+    <data name="Cliente" xml:space="preserve">
+        <value>Cliente</value>
+    </data>
+    <data name="ClientesInactivos" xml:space="preserve">
+        <value>Clientes Inactivos</value>
+    </data>
+    <data name="Codigo" xml:space="preserve">
+        <value>Código</value>
+    </data>
+    <data name="CodPostal" xml:space="preserve">
+        <value>Cód. Postal</value>
+    </data>
+    <data name="Comida" xml:space="preserve">
+        <value>Comida</value>
+    </data>
+    <data name="Comidas" xml:space="preserve">
+        <value>Comidas</value>
+    </data>
+    <data name="ComprobandoPIN" xml:space="preserve">
+        <value>Comprobando PIN...</value>
+    </data>
+    <data name="ConsultQR" xml:space="preserve">
+        <value>Consultando QR...</value>
+    </data>
+    <data name="ConsumirLocal" xml:space="preserve">
+        <value>Consumir en local</value>
+    </data>
+    <data name="Conectado" xml:space="preserve">
+        <value>Conectado</value>
+    </data>
+    <data name="Configuracion" xml:space="preserve">
+        <value>Configuración</value>
+    </data>
+    <data name="CerrarCuenta" xml:space="preserve">
+        <value>Cerrar Cuenta</value>
+    </data>
+    <data name="Contiene" xml:space="preserve">
+        <value>Contiene</value>
+    </data>
+    <data name="Cuenta" xml:space="preserve">
+        <value>Cuenta</value>
+    </data>
+    <data name="CuentaKO" xml:space="preserve">
+        <value>Se ha producido un error al pedir la cuenta</value>
+    </data>
+    <data name="CuentaOK" xml:space="preserve">
+        <value>Se ha pedido la cuenta, en breve vendrá el camarero a traerla</value>
+    </data>
+    <data name="CuentasAbiertas" xml:space="preserve">
+        <value>Cuentas Abiertas</value>
+    </data>
+    <data name="DatosAcceso" xml:space="preserve">
+        <value>Datos de acceso</value>
+    </data>
+    <data name="DatosFiscales" xml:space="preserve">
+        <value>Datos Fiscales</value>
+    </data>
+    <data name="DatosPersonales" xml:space="preserve">
+        <value>Datos Personales</value>
+    </data>
+    <data name="Desde" xml:space="preserve">
+        <value>Desde</value>
+    </data>
+    <data name="AñadirCarritoPuntos" xml:space="preserve">
+        <value>Añadir con puntos </value>
+    </data>
+    <data name="DeseaCuenta" xml:space="preserve">
+        <value>¿Desea pedir la cuenta?</value>
+    </data>
+    <data name="DeseaReserva" xml:space="preserve">
+        <value>¿Desea solicitar la reserva?</value>
+    </data>
+    <data name="Direccion" xml:space="preserve">
+        <value>Dirección</value>
+    </data>
+    <data name="ElegirFoto" xml:space="preserve">
+        <value>Elegir Foto</value>
+    </data>
+    <data name="ElProximoLunes" xml:space="preserve">
+        <value>El Próximo Lunes de %1 a %2</value>
+    </data>
+    <data name="Email" xml:space="preserve">
+        <value>Email</value>
+    </data>
+    <data name="EmailContacto" xml:space="preserve">
+        <value>Email Contacto</value>
+    </data>
+    <data name="EmpiezaPor" xml:space="preserve">
+        <value>Empieza Por</value>
+    </data>
+    <data name="Entrar" xml:space="preserve">
+        <value>Entrar</value>
+    </data>
+    <data name="Enviar" xml:space="preserve">
+        <value>Enviar</value>
+    </data>
+    <data name="EnviarCorreo" xml:space="preserve">
+        <value>Enviar Correo</value>
+    </data>
+    <data name="EnvioDomicilio" xml:space="preserve">
+        <value>Envío a domicilio</value>
+    </data>
+     <data name="Error" xml:space="preserve">
+        <value>Se ha producido un error, por favor inténtelo más tarde</value>
+    </data>
+    <data name="ErrorComensales" xml:space="preserve">
+        <value>ERROR: Comensales erroneos</value>
+    </data>
+    <data name="ErrorFecha" xml:space="preserve">
+        <value>ERROR: La fecha es incorrecta</value>
+    </data>
+    <data name="ErrorImagen" xml:space="preserve">
+        <value>Se ha producido un error al generar la imagen.</value>
+    </data>
+    <data name="ErrorEnvioEmail" xml:space="preserve">
+        <value>Se ha producido un error al enviar el email.</value>
+    </data>
+    <data name="ErrorEstSeleccionado" xml:space="preserve">
+        <value>Este código no corresponde con el establecimiento seleccionado</value>
+    </data>
+    <data name="EscaneeQR" xml:space="preserve">
+        <value>Escanee el QR de la mesa</value>
+    </data>
+    <data name="Establecimiento" xml:space="preserve">
+        <value>Establecimiento</value>
+    </data>
+    <data name="EstablecimientoOK" xml:space="preserve">
+        <value>El Establecimiento se ha añadido correctamente</value>
+    </data>
+    <data name="Establecimientos" xml:space="preserve">
+        <value>Establecimientos</value>
+    </data>
+    <data name="Estado" xml:space="preserve">
+        <value>Estado</value>
+    </data>
+    <data name="Fecha" xml:space="preserve">
+        <value>Fecha</value>
+    </data>
+    <data name="FechaNacimiento" xml:space="preserve">
+        <value>Fecha Nacimiento</value>
+    </data>
+    <data name="Galeria" xml:space="preserve">
+        <value>Galería</value>
+    </data>
+    <data name="GastosEnvio" xml:space="preserve">
+        <value>Gastos de Envío</value>
+    </data>
+    <data name="Gracias" xml:space="preserve">
+        <value>Gracias por utilizar PolloAndaluz!!!</value>
+    </data>
+    <data name="Guardando" xml:space="preserve">
+        <value>Guardando...</value>
+    </data>
+    <data name="Guardar" xml:space="preserve">
+        <value>Guardar</value>
+    </data>
+    <data name="HacerPedido" xml:space="preserve">
+        <value>Hacer Pedido</value>
+    </data>
+    <data name="Hasta" xml:space="preserve">
+        <value>Hasta</value>
+    </data>
+    <data name="Hora" xml:space="preserve">
+        <value>Hora </value>
+    </data>
+    <data name="HoyDe" xml:space="preserve">
+        <value>Hoy de %1 a %2</value>
+    </data>
+    <data name="Igual" xml:space="preserve">
+        <value>Igual</value>
+    </data>
+    <data name="ImagenOK" xml:space="preserve">
+        <value>Imagen Generada Correctamente.</value>
+    </data>
+    <data name="Importe" xml:space="preserve">
+        <value>Importe</value>
+    </data>
+    <data name="Inactivo" xml:space="preserve">
+        <value>Inactivo</value>
+    </data>
+    <data name="InfoPolloAndaluz" xml:space="preserve">
+        <value>Información PolloAndaluz</value>
+    </data>
+    <data name="Informes" xml:space="preserve">
+        <value>Informes</value>
+    </data>
+    <data name="Inicio" xml:space="preserve">
+        <value>Inicio</value>
+    </data>
+    <data name="IntroduzcaPin" xml:space="preserve">
+        <value>Introduzca el PIN de verificación</value>
+    </data>
+    <data name="IntroNumero" xml:space="preserve">
+        <value>Introduzca número</value>
+    </data>
+    <data name="IntroZona" xml:space="preserve">
+        <value>Introduzca zona</value>
+    </data>
+    <data name="IntroZonaMesa" xml:space="preserve">
+        <value>Introduzca Zona y Nº de Mesa</value>
+    </data>
+    <data name="Invitado" xml:space="preserve">
+        <value>Invitado</value>
+    </data>
+    <data name="Iva" xml:space="preserve">
+        <value>IVA</value>
+    </data>
+    <data name="LoginIncorrecto" xml:space="preserve">
+        <value>Acceso Incorrecto!!!</value>
+    </data>
+    <data name="MañanaDe" xml:space="preserve">
+        <value>Mañana de %1 a %2</value>
+    </data>
+    <data name="Marketing" xml:space="preserve">
+        <value>Marketing</value>
+    </data>
+    <data name="MasVendidos" xml:space="preserve">
+        <value>Más Vendidos</value>
+    </data>
+    <data name="mCategoriaOK" xml:space="preserve">
+        <value>La Categoría se ha modificado correctamente</value>
+    </data>
+    <data name="MejoresClientes" xml:space="preserve">
+        <value>Mejores Clientes</value>
+    </data>
+    <data name="Mesa" xml:space="preserve">
+        <value>Mesa</value>
+    </data>
+    <data name="Mesas" xml:space="preserve">
+        <value>Mesas</value>
+    </data>
+    <data name="mEstablecimientoOK" xml:space="preserve">
+        <value>El Establecimiento se ha modificado correctamente</value>
+    </data>
+    <data name="mProductoOK" xml:space="preserve">
+        <value>El Producto se ha modificado correctamente</value>
+    </data>
+    <data name="mZonaOK" xml:space="preserve">
+        <value>La Zona se ha modificado correctamente</value>
+    </data>
+    <data name="No" xml:space="preserve">
+        <value>No</value>
+    </data>
+    <data name="Nombre" xml:space="preserve">
+        <value>Nombre</value>
+    </data>
+    <data name="Notas" xml:space="preserve">
+        <value>Notas</value>
+    </data>
+    <data name="NuevaTarjeta" xml:space="preserve">
+        <value>Nueva Tarjeta</value>
+    </data>
+    <data name="NumMesa" xml:space="preserve">
+        <value>Nº Mesa</value>
+    </data>
+    <data name="Num" xml:space="preserve">
+        <value>Nº</value>
+    </data>
+    <data name="Observaciones" xml:space="preserve">
+        <value>Observaciones</value>
+    </data>
+    <data name="Opcion" xml:space="preserve">
+        <value>Opción</value>
+    </data>
+    <data name="Opciones" xml:space="preserve">
+        <value>Opciones</value>
+    </data>
+    <data name="Orden" xml:space="preserve">
+        <value>Orden</value>
+    </data>
+    <data name="OtrosDatos" xml:space="preserve">
+        <value>Otros datos</value>
+    </data>
+    <data name="Pagar" xml:space="preserve">
+        <value>Pagar</value>
+    </data>
+    <data name="PagarCuenta" xml:space="preserve">
+        <value>Pagar Cuenta</value>
+    </data>
+    <data name="Pago" xml:space="preserve">
+        <value>Pago</value>
+    </data>
+    <data name="PagoOK" xml:space="preserve">
+        <value>El Pago se ha realizado correctamente.</value>
+    </data>
+    <data name="PagoOKEn" xml:space="preserve">
+        <value>El Pago se ha realizado correctamente en </value>
+    </data>
+    <data name="PagoKO" xml:space="preserve">
+        <value>Por favor, compruebe los datos de su tarjeta e inténtelo de nuevo más tarde.</value>
+    </data>
+    <data name="PassNoCoincide" xml:space="preserve">
+        <value>La contraseñas no coinciden.</value>
+    </data>
+    <data name="PassNoSeguro" xml:space="preserve">
+        <value>La contraseña no es lo suficientemente segura.</value>
+    </data>
+    <data name="Password" xml:space="preserve">
+        <value>Contraseña</value>
+    </data>
+    <data name="Pedido" xml:space="preserve">
+        <value>Pedido</value>
+    </data>
+    <data name="PedidoKO" xml:space="preserve">
+        <value>El Pedido NO se ha realizado correctamente.</value>
+    </data>
+    <data name="PedidoOK" xml:space="preserve">
+        <value>El Pedido se ha realizado correctamente.</value>
+    </data>
+    <data name="Pedidos" xml:space="preserve">
+        <value>Pedidos</value>
+    </data>
+    <data name="PedidosEnMesa" xml:space="preserve">
+        <value>Pedidos En Mesa</value>
+    </data>
+    <data name="PedirCuenta" xml:space="preserve">
+        <value>Pedir Cuenta</value>
+    </data>
+    <data name="PermiteReserva" xml:space="preserve">
+        <value>Permitir Reservas</value>
+    </data>
+    <data name="PIN" xml:space="preserve">
+        <value>PIN</value>
+    </data>
+    <data name="PodraRecoger" xml:space="preserve">
+        <value>Podrá recoger su pedido, con código %1, sobre las </value>
+    </data>
+    <data name="Poblacion" xml:space="preserve">
+        <value>Población</value>
+    </data>
+    <data name="Precio" xml:space="preserve">
+        <value>Precio</value>
+    </data>
+    <data name="ProductoOK" xml:space="preserve">
+        <value>El Producto se ha añadido correctamente</value>
+    </data>
+    <data name="Productos" xml:space="preserve">
+        <value>Productos</value>
+    </data>
+    <data name="Producto" xml:space="preserve">
+        <value>Producto</value>
+    </data>
+    <data name="Provincia" xml:space="preserve">
+        <value>Provincia</value>
+    </data>
+    <data name="Quien1" xml:space="preserve">
+        <value>Si tiene algún problema con su pedido, con la app o necesita cualquier tipo de información.</value>
+    </data>
+    <data name="Quien2" xml:space="preserve">
+        <value>Llámanos o escríbemos</value>
+    </data>
+    <data name="Quien3" xml:space="preserve">
+        <value>Nos pondreos en contacto contigo a la mayor brevedad posible</value>
+    </data>
+    <data name="Recibira" xml:space="preserve">
+        <value>Recibirá su pedido, con código %1, sobre las </value>
+    </data>
+    <data name="ReclamoMesa" xml:space="preserve">
+        <value>La Mesa lo está reclamando</value>
+    </data>
+    <data name="RecogidaLocal" xml:space="preserve">
+        <value>Recogida en local</value>
+    </data>
+    <data name="Registrar" xml:space="preserve">
+        <value>Registrar</value>
+    </data>
+    <data name="RegistroOK" xml:space="preserve">
+        <value>Registro realizado correctamente.</value>
+    </data>
+    <data name="Repartidor" xml:space="preserve">
+        <value>Repartidor</value>
+    </data>
+    <data name="RePassword" xml:space="preserve">
+        <value>Repite Contraseña</value>
+    </data>
+    <data name="RepetirPedido" xml:space="preserve">
+        <value>Repetir Pedido</value>
+    </data>
+    <data name="ReservaKO" xml:space="preserve">
+        <value>Se ha producido un error al solicitar la reserva</value>
+    </data>
+    <data name="ReservaOK" xml:space="preserve">
+        <value>Su solicitud de reserva se ha enviado correctamente, en breve, el establecimiento contestará. GRACIAS POR UTILIZAR PolloAndaluz</value>
+    </data>
+     <data name="Seleccionar" xml:space="preserve">
+        <value>Seleccionar</value>
+    </data>
+    <data name="SeleccionHoraRecibir" xml:space="preserve">
+        <value>Selecciona la hora a la que deseas RECIBIR el pedido.</value>
+    </data>
+    <data name="SeleccionHoraRecoger" xml:space="preserve">
+        <value>Selecciona la hora a la que deseas RECOGER el pedido.</value>
+    </data>
+    <data name="SeleccionFechaRecibir" xml:space="preserve">
+        <value>Selecciona la fecha y hora a la que deseas RECIBIR el pedido.</value>
+    </data>
+    <data name="SeleccionFechaRecoger" xml:space="preserve">
+        <value>Selecciona la fecha y hora a la que deseas RECOGER el pedido.</value>
+    </data>
+     <data name="SeleccionCategoria" xml:space="preserve">
+        <value>Seleccione una categoría</value>
+    </data>
+    <data name="SeleccionEstablecimiento" xml:space="preserve">
+        <value>Seleccione Establecimiento</value>
+    </data>
+     <data name="SeleccionMesa" xml:space="preserve">
+        <value>Introduce el número de mesa y la zona</value>
+    </data>
+    <data name="SeleccionTarjeta" xml:space="preserve">
+        <value>Seleccione su tarjeta</value>
+    </data>
+    <data name="SeleccionTipo" xml:space="preserve">
+        <value>Seleccione el tipo</value>
+    </data>
+    <data name="SeleccionZona" xml:space="preserve">
+        <value>Seleccione la zona</value>
+    </data>
+    <data name="SeleccioneUna" xml:space="preserve">
+        <value>Seleccione una</value>
+    </data>
+    <data name="Si" xml:space="preserve">
+        <value>Si</value>
+    </data>
+    <data name="SinCuenta" xml:space="preserve">
+        <value>¿Aún no tienes cuenta? Regístrate</value>
+    </data>
+    <data name="SinDatos" xml:space="preserve">
+        <value>No existen datos para el filtro seleccionado</value>
+    </data>
+    <data name="SinInternet" xml:space="preserve">
+        <value>No tiene acceso a internet</value>
+    </data>
+    <data name="SuComentario" xml:space="preserve">
+        <value>Ingrese aquí su comentario</value>
+    </data>
+    <data name="SuCuenta" xml:space="preserve">
+        <value>Su Cuenta</value>
+    </data>
+    <data name="SuPedido" xml:space="preserve">
+        <value>Su Pedido </value>
+    </data>
+    <data name="Telefono" xml:space="preserve">
+        <value>Teléfono</value>
+    </data>
+    <data name="Telefono2" xml:space="preserve">
+        <value>Teléfono 2</value>
+    </data>
+    <data name="TerminaEn" xml:space="preserve">
+        <value>Termina En</value>
+    </data>
+    <data name="TicketMedio" xml:space="preserve">
+        <value>Ticket Medio</value>
+    </data>
+    <data name="Tipo" xml:space="preserve">
+        <value>Tipo</value>
+    </data>
+     <data name="Todas" xml:space="preserve">
+        <value>Todas</value>
+    </data>
+     <data name="Todos" xml:space="preserve">
+        <value>Todos</value>
+    </data>
+    <data name="Total" xml:space="preserve">
+        <value>Total</value>
+    </data>
+    <data name="UsuarioIncorrecto" xml:space="preserve">
+        <value>Usuario y contraseña son obligatorios!!!</value>
+    </data>
+    <data name="Usuario" xml:space="preserve">
+        <value>Usuario</value>
+    </data>
+    <data name="Usuarios" xml:space="preserve">
+        <value>Usuarios</value>
+    </data>
+    <data name="VerMas" xml:space="preserve">
+        <value>Ver más</value>
+    </data>
+    <data name="VerMenos" xml:space="preserve">
+        <value>Ver menos</value>
+    </data>
+    <data name="Version" xml:space="preserve">
+        <value>Versión</value>
+    </data>
+    <data name="VerOpciones" xml:space="preserve">
+        <value>Ver Opciones</value>
+    </data>
+    <data name="VerifiqueEmail" xml:space="preserve">
+        <value>Verifique su email, compruebe la carperta de spam o correo no deseado</value>
+    </data>
+    <data name="VerificaEmail" xml:space="preserve">
+        <value>Verifique su email</value>
+    </data>
+    <data name="Zona" xml:space="preserve">
+        <value>Zona</value>
+    </data>
+    <data name="Zonas" xml:space="preserve">
+        <value>Zonas</value>
+    </data>
+    <data name="ZonaOK" xml:space="preserve">
+        <value>La Zona se ha añadido correctamente</value>
+    </data>
+
+
+    <data name="IntroduzcaNombre" xml:space="preserve">
+        <value>Introduzca su nombre</value>
+    </data>
+    <data name="IntroduzcaNumeroTarjeta" xml:space="preserve">
+        <value>Introduzca su número de tarjeta</value>
+    </data>
+    <data name="IntroduzcaFechaExpiracion" xml:space="preserve">
+        <value>Introduzca la fecha de expiración</value>
+    </data>
+    <data name="IntroduzcaCCV" xml:space="preserve">
+        <value>Introduzca el código de seguridad</value>
+    </data>
+    <data name="NumeroTarjetaIncompleto" xml:space="preserve">
+        <value>Número de tarjeta incompleto</value>
+    </data>
+    <data name="NumeroTarjetaInvalido" xml:space="preserve">
+        <value>Número de tarjeta no válido</value>
+    </data>
+    <data name="Informacion" xml:space="preserve">
+        <value>Información</value>
+    </data>
+    <data name="OK" xml:space="preserve">
+        <value>OK</value>
+    </data>
+    <data name="App" xml:space="preserve">
+        <value>PolloAndaluz</value>
+    </data>
+    <data name="PreguntaAñadirTarjeta" xml:space="preserve">
+        <value>¿Quiere añadir la tarjeta?</value>
+    </data>
+    <data name="PreguntaActivarProductos" xml:space="preserve">
+        <value>¿Desea activar los productos seleccionados?</value>
+    </data>
+    <data name="PreguntaEliminarProductos" xml:space="preserve">
+        <value>¿Desea eliminar el producto?</value>
+    </data>
+    <data name="PreguntaDesactivarProductos" xml:space="preserve">
+        <value>¿Desea desactivar los productos seleccionados?</value>
+    </data>
+    <data name="PreguntaCerrarCuenta" xml:space="preserve">
+        <value>¿Quiere cerrar la cuenta?</value>
+    </data>
+    <data name="PreguntaAnularPedido" xml:space="preserve">
+        <value>¿Quiere anular el pedido?</value>
+    </data>
+    <data name="PreguntaCerrarPedido" xml:space="preserve">
+        <value>¿Quiere cerrar el pedido?</value>
+    </data>
+    <data name="PreguntaEliminarFila" xml:space="preserve">
+        <value>¿Desea eliminar esta fila?</value>
+    </data>
+    <data name="PreguntaRealizarPedido" xml:space="preserve">
+        <value>¿Desea realizar el pedido?</value>
+    </data>
+    <data name="PreguntaEliminarTarjeta" xml:space="preserve">
+        <value>¿Desea eliminar esta tarjeta?</value>
+    </data>
+    <data name="PreguntaSeleccionarTodo" xml:space="preserve">
+        <value>¿Desea seleccionar todo?</value>
+    </data>
+    <data name="PreguntaQuitarTodo" xml:space="preserve">
+        <value>¿Desea quitar todo?</value>
+    </data>
+    <data name="PreguntaEnvioNotificacion" xml:space="preserve">
+        <value>"Se enviará la notificación a %1, ¿Está de acuerdo?"</value>
+    </data>
+    <data name="PreguntaImpresoraNoConectada" xml:space="preserve">
+        <value>La impresora no está conectada, ¿desea conectarla?</value>
+    </data>
+    <data name="PreguntaMensajeVisto" xml:space="preserve">
+        <value>¿Quiere marcar el mensaje como visto?</value>
+    </data>
+    <data name="PreguntaPedidoEntregado" xml:space="preserve">
+        <value>¿Ha entregado el pedido %1 a la mesa %2 de la zona %3?</value>
+    </data>
+    <data name="PreguntaImprimirCuenta" xml:space="preserve">
+        <value>¿Quiere imprimir la cuenta?</value>
+    </data>
+    <data name="PreguntaEliminarCuenta" xml:space="preserve">
+        <value>¿Quiere eliminar la cuenta?</value>
+    </data>
+    <data name="PreguntaPedidoRecogido" xml:space="preserve">
+        <value>¿Ha recogido el pedido?</value>
+    </data>
+    <data name="PreguntaCambiaPoblacion" xml:space="preserve">
+        <value>¿Quiere cambiar la población actual por %1?</value>
+    </data>
+    <data name="PreguntaAsignarPedido" xml:space="preserve">
+        <value>¿Quiere asignar el Pedido %1 a %2?</value>
+    </data>
+    <data name="PreguntaValoracion" xml:space="preserve">
+        <value>¿Desea realizar la valoración de PolloAndaluz?</value>
+    </data>
+    <data name="PreguntaEliminarRepartidor" xml:space="preserve">
+        <value>¿Desea eliminar el repartidor?</value>
+    </data>
+    <data name="PreguntaSeleccionMesa" xml:space="preserve">
+        <value>¿Desea seleccionar la mesa Nº %1 de la zona %2?</value>
+    </data>
+    <data name="PreguntaModificarUsuario" xml:space="preserve">
+        <value>¿Desea modificar el usuario?</value>
+    </data>
+    
+    <data name="Efectivo" xml:space="preserve">
+        <value>Efectivo</value>
+    </data>
+    <data name="Tarjeta" xml:space="preserve">
+        <value>Tarjeta</value>
+    </data>
+    <data name="Bizum" xml:space="preserve">
+        <value>Bizum</value>
+    </data>
+    <data name="Cerrar" xml:space="preserve">
+        <value>Cerrar</value>
+    </data>
+    <data name="Grabando" xml:space="preserve">
+        <value>Grabando...</value>
+    </data>
+    <data name="TarjetaEnUso" xml:space="preserve">
+        <value>Tarjeta en uso</value>
+    </data>
+    <data name="EliminaProductoOK" xml:space="preserve">
+        <value>Producto eliminado correctamente</value>
+    </data>
+    <data name="EliminaProductoKO" xml:space="preserve">
+        <value>Se ha producido un error al eliminar el producto</value>
+    </data>
+    <data name="SoloError" xml:space="preserve">
+        <value>Error</value>
+    </data>
+    <data name="DatosModificadosKO" xml:space="preserve">
+        <value>Se ha producido un error al modificar los datos</value>
+    </data>
+    <data name="DatosModificadosOK" xml:space="preserve">
+        <value>Datos modificados correctamente</value>
+    </data>
+    <data name="EstablecimientoConPedidos" xml:space="preserve">
+        <value>Este establecimiento ya tiene pedidos realizados, no es posible la carga de productos.</value>
+    </data>
+    <data name="ImportacionCartaOK" xml:space="preserve">
+        <value>Proceso Terminado correctamente. Añadidas %1 categorías y %2 productos</value>
+    </data>
+    <data name="ArchivoIncorrecto" xml:space="preserve">
+        <value>Archivo incorrecto</value>
+    </data>
+    <data name="ErrorMensaje" xml:space="preserve">
+        <value>Se ha producido un error:  </value>
+    </data>
+    <data name="CamareroEnCamino" xml:space="preserve">
+        <value>En breve vendrá su camarero asignado</value>
+    </data>
+    <data name="MesaSinCamarero" xml:space="preserve">
+        <value>No existe ningún camarero asociado a su mesa</value>
+    </data>
+    <data name="CuentaSolicitada" xml:space="preserve">
+        <value>Se ha solicitado la cuenta</value>
+    </data>
+    <data name="SeleccioneOpcion" xml:space="preserve">
+        <value>Debe seleccionar una opción</value>
+    </data>
+    <data name="IndiqueCantidad" xml:space="preserve">
+        <value>Debe indicar la cantidad</value>
+    </data>
+    <data name="IndiqueNumeroIngredientes" xml:space="preserve">
+        <value>Debe seleccionar en número de ingredientes indicado</value>
+    </data>
+    <data name="NoPuedeSeleccionarMas" xml:space="preserve">
+        <value>No Puede seleccionar más </value>
+    </data>
+    <data name="NombreObligatorio" xml:space="preserve">
+        <value>El nombre es obligatorio</value>
+    </data>
+    <data name="ImagenObligatoria" xml:space="preserve">
+        <value>La imagen es obligatoria</value>
+    </data>
+    <data name="CamareroOK" xml:space="preserve">
+        <value>Camarero creado correctamente</value>
+    </data>
+    <data name="mCamareroOK" xml:space="preserve">
+        <value>Camarero modificado correctamente</value>
+    </data>
+    <data name="UsuarioEncontrado" xml:space="preserve">
+        <value>Usuario encontrado</value>
+    </data>
+    <data name="NingunUsuarioConMail" xml:space="preserve">
+        <value>No se ha encontrado ningún usuario con email </value>
+    </data>
+    <data name="UsuarioNoEncontrado" xml:space="preserve">
+        <value>No se ha encontrado ningún usuario</value>
+    </data>
+    <data name="IngredienteOK" xml:space="preserve">
+        <value>Ingrediente creado Correctamente</value>
+    </data>
+    <data name="mIngredienteOK" xml:space="preserve">
+        <value>Ingrediente modificado Correctamente</value>
+    </data>
+    <data name="EstablecimientoSinEnvio" xml:space="preserve">
+        <value>El establecimiento no tiene configurados métodos de envío o recogida.</value>
+    </data>
+    <data name="DireccionVacia" xml:space="preserve">
+        <value>La dirección está vacia</value>
+    </data>
+    <data name="CarritoVacio" xml:space="preserve">
+        <value>El carrito está vacio</value>
+    </data>
+    <data name="EstablecimientoCerrado" xml:space="preserve">
+        <value> no está disponible en estos momentos. Para continuar elimine los productos de este establecimiento del pedido.</value>
+    </data>
+    <data name="Perdon" xml:space="preserve">
+        <value>Disculpe las molestias</value>
+    </data>
+    <data name="PuebloOK" xml:space="preserve">
+        <value>Pueblo creado correctamente</value>
+    </data>
+    <data name="mPuebloOK" xml:space="preserve">
+        <value>Pueblo modificado correctamente</value>
+    </data>
+    <data name="RepartidorOK" xml:space="preserve">
+        <value>Repartidor creado correctamente</value>
+    </data>
+    <data name="mRepartidorOK" xml:space="preserve">
+        <value>Repartidor modificado correctamente</value>
+    </data>
+    <data name="ZonaOK" xml:space="preserve">
+        <value>Zona creada correctamente</value>
+    </data>
+    <data name="mZonaOK" xml:space="preserve">
+        <value>Zona modificada correctamente</value>
+    </data>
+    <data name="NotificacionOK" xml:space="preserve">
+        <value>Notificación enviada correctamente</value>
+    </data>
+    <data name="NotificacionKO" xml:space="preserve">
+        <value>Error al enviar la notificación</value>
+    </data>
+    <data name="SellecioneHoraEntrega" xml:space="preserve">
+        <value>Debe seleccionar una hora de entrega</value>
+    </data>
+    <data name="SellecioneHoraRecogida" xml:space="preserve">
+        <value>Debe seleccionar una hora de recogida</value>
+    </data>
+    <data name="SeleccioneMetodoPago" xml:space="preserve">
+        <value>Debe seleccionar un método de pago</value>
+    </data>
+    <data name="ImpresoraNoConfigurada" xml:space="preserve">
+        <value>No tiene ninguna impresora configurada</value>
+    </data>
+    <data name="ActivarLocalizacion" xml:space="preserve">
+        <value>Debe activar los servicios de localización para utilizar esta funcionalidad</value>
+    </data>
+    <data name="QRIncorrecto" xml:space="preserve">
+        <value>El QR leido es incorrecto</value>
+    </data>
+    <data name="CompleteCampos" xml:space="preserve">
+        <value>Debe completar los campos para utilizar PolloAndaluz</value>
+    </data>
+    <data name="DireccionObligatoria" xml:space="preserve">
+        <value>La dirección es obligatoria</value>
+    </data>
+    <data name="ZonaObligatoria" xml:space="preserve">
+        <value>La zona es obligatoria</value>
+    </data>
+    <data name="PoblacionObligatoria" xml:space="preserve">
+        <value>La población es obligatoria</value>
+    </data>
+    <data name="ProvinciaObligatoria" xml:space="preserve">
+        <value>La Provincia es obligatoria</value>
+    </data>
+    <data name="CPObligatorio" xml:space="preserve">
+        <value>El Código Postal es obligatorio</value>
+    </data>
+    <data name="PinEnviado" xml:space="preserve">
+        <value>PIN enviado correctamente</value>
+    </data>
+    <data name="ErrorEnvioSMS" xml:space="preserve">
+        <value>Se ha producido un error al enviar el SMS de confirmación. Por favor, revise su teléfono y vuelva a intentarlo.</value>
+    </data>
+    <data name="ErrorMensajeCorto" xml:space="preserve">
+        <value>El mensaje debe contener al menos 80 caracteres.</value>
+    </data>
+    <data name="EmailObligatorio" xml:space="preserve">
+        <value>El Correo Electrónico obligatorio</value>
+    </data>
+    <data name="SolicitudOK" xml:space="preserve">
+        <value>Solicitud Enviada</value>
+    </data>
+    <data name="NombreApObligatorio" xml:space="preserve">
+        <value>El nombre y apellidos son obligatorios</value>
+    </data>
+    <data name="FNObligatorio" xml:space="preserve">
+        <value>La Fecha de nacimiento es obligatoria</value>
+    </data>
+    <data name="TelefonoObligatorio" xml:space="preserve">
+        <value>El Teléfono es obligatorio</value>
+    </data>
+    <data name="RepartidorEliminadoOK" xml:space="preserve">
+        <value>Repartidor eliminado correctamente</value>
+    </data>
+    <data name="IntroduzcaMesa" xml:space="preserve">
+        <value>Introduzca el número de mesa</value>
+    </data>
+    <data name="MesaOcupada" xml:space="preserve">
+        <value>La mesa ya está ocupada, solicite el código de la mesa o elija otra.</value>
+    </data>
+    <data name="MesaAbierta" xml:space="preserve">
+        <value>La mesa ya está abierta por usted</value>
+    </data>
+    <data name="CodigoMesaIncorrecto" xml:space="preserve">
+        <value>El código de la mesa es incorrecto</value>
+    </data>
+    <data name="mUsuarioOK" xml:space="preserve">
+        <value>Usuario modificado correctamente</value>
+    </data>
+    <data name="GraciasValoracion" xml:space="preserve">
+        <value>Gracias por su valoración, es muy importante para nosotros</value>
+    </data>
+    <data name="ActionInforme" xml:space="preserve">
+        <value>¿Qué informe quiere sacar?</value>
+    </data>
+    <data name="PorEstablecimientos" xml:space="preserve">
+        <value>Por establecimientos</value>
+    </data>
+    <data name="PorZonas" xml:space="preserve">
+        <value>Por zonas</value>
+    </data>
+    <data name="Procesando" xml:space="preserve">
+        <value>Procesando...</value>
+    </data>
+    <data name="Cerrado" xml:space="preserve">
+        <value>Cerrado</value>
+    </data>
+    <data name="SuPedidoSeraEntregado" xml:space="preserve">
+        <value>Su pedido será entregado </value>
+    </data>
+    <data name="EliminandoTarjeta" xml:space="preserve">
+        <value>Eliminando Tarjeta...</value>
+    </data>
+    <data name="Permisos" xml:space="preserve">
+        <value>Permisos</value>
+    </data>
+    <data name="EnciendeBT" xml:space="preserve">
+        <value>Tiene que encender el bluetooth para conectar la impresora</value>
+    </data>
+    <data name="ImportandoProductos" xml:space="preserve">
+        <value>Importando Productos...</value>
+    </data>
+    <data name="GenerandoInforme" xml:space="preserve">
+        <value>Generando Informe...</value>
+    </data>
+    <data name="LeyendoQR" xml:space="preserve">
+        <value>Leyendo QR...</value>
+    </data>
+    <data name="ErrorEnciendeBT" xml:space="preserve">
+        <value>No se puede conectar el bluetooth</value>
+    </data>
+    <data name="CerrarSesion" xml:space="preserve">
+        <value>Cerrar sesión</value>
+    </data>
+    <data name="Actualizar" xml:space="preserve">
+        <value>Actualizar</value>
+    </data>
+    <data name="PedidoA" xml:space="preserve">
+        <value>Pedido a</value>
+    </data>
+    <data name="RestableciendoConexion" xml:space="preserve">
+        <value>Restableciendo conexión...</value>
+    </data>
+    <data name="PermisoBT" xml:space="preserve">
+        <value>Necesitas permiso de bluetooth para esta app</value>
+    </data>
+    <data name="NoSoportaLocalizacion" xml:space="preserve">
+        <value>Su dispositivo no soporta servicios de localización, esta opción no estará disponible</value>
+    </data>
+    <data name="NoActivadaLocalizacion" xml:space="preserve">
+        <value>Su dispositivo no tiene activados los servicios de localización, debe activar esta opción para utiliar esta funcionalidad</value>
+    </data>
+    <data name="NoPermisoLocalizacion" xml:space="preserve">
+        <value>No ha dado permisos de localización a PolloAndaluz, para poder utilizar esta funcionalidad debe habilitarlo</value>
+    </data>
+    <data name="DatosIncorrectos" xml:space="preserve">
+        <value>Datos incorrectos</value>
+    </data>
+    <data name="ErrorLogin" xml:space="preserve">
+        <value>Error: el login es incorrecto</value>
+    </data>
+    <data name="HacerPagoKO" xml:space="preserve">
+        <value>Se ha producido un error en el pago</value>
+    </data>
+    <data name="ProdBaja" xml:space="preserve">
+        <value>Prod. Baja</value>
+    </data>
+    <data name="Camareros" xml:space="preserve">
+        <value>Camareros</value>
+    </data>
+    <data name="Ajustes" xml:space="preserve">
+        <value>Ajustes</value>
+    </data>
+    <data name="ServicioActivo" xml:space="preserve">
+        <value>Servicio Activo</value>
+    </data>
+    <data name="TiempoEntrega" xml:space="preserve">
+        <value>Tiempo de Entrega</value>
+    </data>
+    <data name="PedidosSoportados" xml:space="preserve">
+        <value>Pedidos Soportados (15min)</value>
+    </data>
+    <data name="PedidoMinimo" xml:space="preserve">
+        <value>Pedido Mínimo</value>
+    </data>
+    <data name="ModoEscaparate" xml:space="preserve">
+        <value>Modo Escaparate</value>
+    </data>
+    <data name="ModoDetalle" xml:space="preserve">
+        <value>Modo Detalle</value>
+    </data>
+    <data name="TextoDetalle" xml:space="preserve">
+        <value>Texto Detalle</value>
+    </data>
+    <data name="TExtras" xml:space="preserve">
+        <value>T. Extras</value>
+    </data>
+    <data name="Impresora" xml:space="preserve">
+        <value>Impresora</value>
+    </data>
+    <data name="Impresora1" xml:space="preserve">
+        <value>Impresora 1</value>
+    </data>
+    <data name="Impresora2" xml:space="preserve">
+        <value>Impresora 2</value>
+    </data>
+    <data name="Impresora3" xml:space="preserve">
+        <value>Impresora 3</value>
+    </data>
+    <data name="Impresora4" xml:space="preserve">
+        <value>Impresora 4</value>
+    </data>
+    <data name="Impresora5" xml:space="preserve">
+        <value>Impresora 5</value>
+    </data>
+    <data name="Impresora6" xml:space="preserve">
+        <value>Impresora 6</value>
+    </data>
+    <data name="Impresora7" xml:space="preserve">
+        <value>Impresora 7</value>
+    </data>
+    <data name="Impresora8" xml:space="preserve">
+        <value>Impresora 8</value>
+    </data>
+    <data name="Impresora9" xml:space="preserve">
+        <value>Impresora 9</value>
+    </data>
+    <data name="Impresora10" xml:space="preserve">
+        <value>Impresora 10</value>
+    </data>
+    <data name="Comision" xml:space="preserve">
+        <value>Comisión</value>
+    </data>
+    <data name="Lunes" xml:space="preserve">
+        <value>Lunes</value>
+    </data>
+    <data name="Martes" xml:space="preserve">
+        <value>Martes</value>
+    </data>
+    <data name="Miercoles" xml:space="preserve">
+        <value>Miércoles</value>
+    </data>
+    <data name="Jueves" xml:space="preserve">
+        <value>Jueves</value>
+    </data>
+    <data name="Viernes" xml:space="preserve">
+        <value>Viernes</value>
+    </data>
+    <data name="Sabado" xml:space="preserve">
+        <value>Sábado</value>
+    </data>
+    <data name="Domingo" xml:space="preserve">
+        <value>Domingo</value>
+    </data>
+    <data name="Mañana" xml:space="preserve">
+        <value>Mañana</value>
+    </data>
+    <data name="Tarde" xml:space="preserve">
+        <value>Tarde</value>
+    </data>
+    <data name="ConfiguracionLocal" xml:space="preserve">
+        <value>Configuración Local</value>
+    </data>
+    <data name="Extra" xml:space="preserve">
+        <value>Extra</value>
+    </data>
+    <data name="Comercios" xml:space="preserve">
+        <value>Comercios</value>
+    </data>
+    <data name="Latitud" xml:space="preserve">
+        <value>Latitud</value>
+    </data>
+    <data name="Longitud" xml:space="preserve">
+        <value>Longitud</value>
+    </data>
+    <data name="PedidoMin" xml:space="preserve">
+        <value>Pedido Min.</value>
+    </data>
+    <data name="PedidoMinComercio" xml:space="preserve">
+        <value>Pedido Min. Comercio</value>
+    </data>
+    <data name="DistanciaMapa" xml:space="preserve">
+        <value>Distancia Mapa</value>
+    </data>
+    <data name="TelefonoInfo" xml:space="preserve">
+        <value>Teléfono Info.</value>
+    </data>
+    <data name="WhatsappInfo" xml:space="preserve">
+        <value>WhatsApp Info.</value>
+    </data>
+    <data name="EmailInfo" xml:space="preserve">
+        <value>Email Info.</value>
+    </data>
+    <data name="PagosEfect" xml:space="preserve">
+        <value>Pagos Efect.</value>
+    </data>
+    <data name="PagosBizum" xml:space="preserve">
+        <value>Pagos Bizum</value>
+    </data>
+    <data name="PagosDatafono" xml:space="preserve">
+        <value>Pagos Datafono</value>
+    </data>
+    <data name="PagosTarjeta" xml:space="preserve">
+        <value>Pagos Tarjeta</value>
+    </data>
+    <data name="NombreTicket" xml:space="preserve">
+        <value>Nombre ticket</value>
+    </data>
+    <data name="CIFTicket" xml:space="preserve">
+        <value>CIF ticket</value>
+    </data>
+    <data name="DirTicket" xml:space="preserve">
+        <value>Direc. ticket</value>
+    </data>
+    <data name="TelefTicket" xml:space="preserve">
+        <value>Teléf. ticket</value>
+    </data>
+    <data name="IBAN" xml:space="preserve">
+        <value>IBAN</value>
+    </data>
+    <data name="RazonSocial" xml:space="preserve">
+        <value>Razón Social</value>
+    </data>
+    <data name="MesasAsignadasDe" xml:space="preserve">
+        <value>Mesas Asignadas: de </value>
+    </data>
+    <data name="DesdeA" xml:space="preserve">
+        <value> a </value>
+    </data>
+    <data name="Padre" xml:space="preserve">
+        <value>Padre</value>
+    </data>
+    <data name="PrecioLocal" xml:space="preserve">
+        <value>Precio en local</value>
+    </data>
+    <data name="Descripcion" xml:space="preserve">
+        <value>Descipción</value>
+    </data>
+    <data name="VisibleFuera" xml:space="preserve">
+        <value>Visible para fuera</value>
+    </data>
+    <data name="VisibleLocal" xml:space="preserve">
+        <value>Visible para local</value>
+    </data>
+    <data name="NumIngredientes" xml:space="preserve">
+        <value>Nº Ingredientes</value>
+    </data>
+    <data name="IngObligat" xml:space="preserve">
+        <value>Ing. obligat.</value>
+    </data>
+    <data name="Ingredientes" xml:space="preserve">
+        <value>Ingredientes</value>
+    </data>
+    <data name="WhatsApp" xml:space="preserve">
+        <value>WhatsApp</value>
+    </data>
+    <data name="Logo" xml:space="preserve">
+        <value>Logo</value>
+    </data>
+    <data name="EsComercio" xml:space="preserve">
+        <value>Es comercio</value>
+    </data>
+    <data name="EnvDomic" xml:space="preserve">
+        <value>Env. Domic.</value>
+    </data>
+    <data name="RecogLocal" xml:space="preserve">
+        <value>Recog. Local</value>
+    </data>
+    <data name="PedidoEnMesa" xml:space="preserve">
+        <value>Pedido en mesa</value>
+    </data>
+    <data name="RecogerEnBarra" xml:space="preserve">
+        <value>Recoger en barra</value>
+    </data>
+    <data name="LlevaAMesa" xml:space="preserve">
+        <value>Lleva a mesa</value>
+    </data>
+    <data name="PermiteReserva" xml:space="preserve">
+        <value>Permite reserva</value>
+    </data>
+    <data name="Inactivos" xml:space="preserve">
+        <value>Inactivos</value>
+    </data>
+    <data name="PreguntaDeseoPedido" xml:space="preserve">
+        <value>¿Cómo desea el pedido?</value>
+    </data>
+    <data name="RecogerEnLocal" xml:space="preserve">
+        <value>Recoger en local</value>
+    </data>
+    <data name="DireccionEnvio" xml:space="preserve">
+        <value>Dirección de envío</value>
+    </data>
+    <data name="FormaPago" xml:space="preserve">
+        <value>Forma de pago</value>
+    </data>
+    <data name="SeleccionHora" xml:space="preserve">
+        <value>Seleccionar hora</value>
+    </data>
+    <data name="SeleccionarTodo" xml:space="preserve">
+        <value>Seleccionar todo</value>
+    </data>
+    <data name="QuitarTodo" xml:space="preserve">
+        <value>Quitar todo</value>
+    </data>
+    <data name="Gastos" xml:space="preserve">
+        <value>Gastos</value>
+    </data>
+    <data name="Modificable" xml:space="preserve">
+        <value>Modificable</value>
+    </data>
+    <data name="PermiteCambioDireccion" xml:space="preserve">
+        <value>Permite cambio dirección</value>
+    </data>
+    <data name="Color" xml:space="preserve">
+        <value>Color</value>
+    </data>
+    <data name="Notificaciones" xml:space="preserve">
+        <value>Notificaciones</value>
+    </data>
+    <data name="De" xml:space="preserve">
+        <value>De</value>
+    </data>
+    <data name="Verificado" xml:space="preserve">
+        <value>Verificado</value>
+    </data>
+    <data name="Rol" xml:space="preserve">
+        <value>Rol</value>
+    </data>
+    <data name="SO" xml:space="preserve">
+        <value>S.O.</value>
+    </data>
+    <data name="EnviarNotificacion" xml:space="preserve">
+        <value>Enviar notificación</value>
+    </data>
+    <data name="DebesRegistrarte" xml:space="preserve">
+        <value>Para poder realizar pedidos, debe estar registrado en PolloAndaluz</value>
+    </data>
+    <data name="EnviarPedido" xml:space="preserve">
+        <value>Enviar Pedido</value>
+    </data>
+    <data name="Historico" xml:space="preserve">
+        <value>Histórico</value>
+    </data>
+    <data name="Info" xml:space="preserve">
+        <value>Info</value>
+    </data>
+    <data name="Repetir" xml:space="preserve">
+        <value>Repetir</value>
+    </data>
+    <data name="VerPedidosHoy" xml:space="preserve">
+        <value>Ver sólo pedidos para hoy</value>
+    </data>
+    <data name="SinPedidos" xml:space="preserve">
+        <value>No existen pedidos en estos momentos</value>
+    </data>
+    <data name="Anular" xml:space="preserve">
+        <value>Anular</value>
+    </data>
+    <data name="Imprimir" xml:space="preserve">
+        <value>Imprimir</value>
+    </data>
+    <data name="PideDesdeMesa" xml:space="preserve">
+        <value>Pide desde tu mesa</value>
+    </data>
+    <data name="SeleccionMesaManual" xml:space="preserve">
+        <value>Seleccionar mesa manualmente</value>
+    </data>
+    <data name="EscanearQR" xml:space="preserve">
+        <value>Escanear QR</value>
+    </data>
+    <data name="TusFavoritos" xml:space="preserve">
+        <value>Tus Favoritos</value>
+    </data>
+    <data name="VerTodos" xml:space="preserve">
+        <value>Ver Todos</value>
+    </data>
+    <data name="SinFavoritos" xml:space="preserve">
+        <value>No tiene establecimientos favoritos en estos momentos</value>
+    </data>
+    <data name="CuentasPedidas" xml:space="preserve">
+        <value>Cuentas pedidas</value>
+    </data>
+    <data name="PedidosRecogerEnviar" xml:space="preserve">
+        <value>Pedidos para recoger o enviar</value>
+    </data>
+    <data name="PedidosLocales" xml:space="preserve">
+        <value>Pedidos locales</value>
+    </data>
+    <data name="OlvidoContraseña" xml:space="preserve">
+        <value>¿Olvidó su contraseña?</value>
+    </data>
+    <data name="ORedesSociales" xml:space="preserve">
+        <value>-- O con tus redes sociales --</value>
+    </data>
+    <data name="GraciasPorPedido" xml:space="preserve">
+        <value>Gracias por realizar su pedido en </value>
+    </data>
+    <data name="BuenProvecho" xml:space="preserve">
+        <value>Buen Provecho</value>
+    </data>
+    <data name="VerificaPIN" xml:space="preserve">
+        <value>Verifica PIN</value>
+    </data>
+    <data name="SMSRecibido" xml:space="preserve">
+        <value>Ha recibido un SMS con un código de 4 cifras</value>
+    </data>
+    <data name="GenerarPIN" xml:space="preserve">
+        <value>Generar nuevo PIN</value>
+    </data>
+    <data name="EmailRecibido" xml:space="preserve">
+        <value>Ha recibido un correo electrónico con un código de 4 cifras. Puede ser que el correo esté en la bandeja de correo no deseado o spam.</value>
+    </data>
+    <data name="DatosPedido" xml:space="preserve">
+        <value>Datos Pedido</value>
+    </data>
+    <data name="CodigoPedido" xml:space="preserve">
+        <value>Código de pedido</value>
+    </data>
+    <data name="DatosUsuario" xml:space="preserve">
+        <value>Datos usuario</value>
+    </data>
+    <data name="Poblaciones" xml:space="preserve">
+        <value>Poblaciones</value>
+    </data>
+    <data name="Repartidores" xml:space="preserve">
+        <value>Repartidores</value>
+    </data>
+    <data name="ValoreApp" xml:space="preserve">
+        <value>Valore PolloAndaluz</value>
+    </data>
+    <data name="OpinionImportante" xml:space="preserve">
+        <value>Su opinión es importante para nosotros</value>
+    </data>
+    <data name="DejenosComentario" xml:space="preserve">
+        <value>Déjenos un comentario nos servirá para ofercerle un mejor servicio</value>
+    </data>
+    <data name="Pueblos" xml:space="preserve">
+        <value>Pueblos</value>
+    </data>
+    <data name="Contacto" xml:space="preserve">
+        <value>Contacto</value>
+    </data>
+    <data name="CambiarContraseña" xml:space="preserve">
+        <value>Cambiar contraseña</value>
+    </data>
+    <data name="NuevaContraseña" xml:space="preserve">
+        <value>Nueva contraseña</value>
+    </data>
+    <data name="Solicitar" xml:space="preserve">
+        <value>Solicitar</value>
+    </data>
+    <data name="Registro" xml:space="preserve">
+        <value>Registro</value>
+    </data>
+    <data name="PulsaImagen" xml:space="preserve">
+        <value>Pulsa en la imagen para cambiarla</value>
+    </data>
+    <data name="IntroduceEmailUsuario" xml:space="preserve">
+        <value>Introduce el email del usuario</value>
+    </data>
+    <data name="BuscarUsuario" xml:space="preserve">
+        <value>Buscar usuario</value>
+    </data>
+    <data name="DetalleUsuario" xml:space="preserve">
+        <value>Detalle usuario</value>
+    </data>
+    <data name="ModificarUsuario" xml:space="preserve">
+        <value>Modificar usuario</value>
+    </data>
+    <data name="Valoracion" xml:space="preserve">
+        <value>Valoración</value>
+    </data>
+    <data name="TuOpinion" xml:space="preserve">
+        <value>Tu opinión nos ayuda a mejorar y ofrecerte un mejor servicio.</value>
+    </data>
+    <data name="Servicio" xml:space="preserve">
+        <value>Servicio</value>
+    </data>
+    <data name="Puntualidad" xml:space="preserve">
+        <value>Puntualidad</value>
+    </data>
+    <data name="EnviarValoracion" xml:space="preserve">
+        <value>Enviar valoración</value>
+    </data>
+    <data name="SeleccionaProvincia" xml:space="preserve">
+        <value>Selecciona Provincia</value>
+    </data>
+    <data name="SeleccionaPoblacion" xml:space="preserve">
+        <value>Selecciona Población</value>
+    </data>
+    <data name="SeleccionaCP" xml:space="preserve">
+        <value>Selecciona Cód. Postal.</value>
+    </data>
+    <data name="SeleccionaCategoria" xml:space="preserve">
+        <value>Selecciona Categoría</value>
+    </data>
+    <data name="SeleccionaZona" xml:space="preserve">
+        <value>Selecciona Zona</value>
+    </data>
+    <data name="Diario" xml:space="preserve">
+        <value>Diario</value>
+    </data>
+    <data name="Semanal" xml:space="preserve">
+        <value>Semanal</value>
+    </data>
+    <data name="Mensual" xml:space="preserve">
+        <value>Mensual</value>
+    </data>
+    <data name="Tarjetas" xml:space="preserve">
+        <value>Tarjetas</value>
+    </data>
+    <data name="TotalPedido" xml:space="preserve">
+        <value>Total pedido</value>
+    </data>
+    <data name="Min" xml:space="preserve">
+        <value>min</value>
+    </data>
+    <data name="RecibiraPedido" xml:space="preserve">
+        <value>Recibirá su pedido, con código </value>
+    </data>
+    <data name="RepartoPropio" xml:space="preserve">
+        <value>Reparto propio</value>
+    </data>
+    <data name="RepartoPolloAndaluz" xml:space="preserve">
+        <value>Reparto PolloAndaluz</value>
+    </data>
+    <data name="PreferenciaReparto" xml:space="preserve">
+        <value>Pref. reparto</value>
+    </data>
+    <data name="ComisionReparto" xml:space="preserve">
+        <value>Comisión reparto propio</value>
+    </data>
+    <data name="CuotaFija" xml:space="preserve">
+        <value>Cuota fija</value>
+    </data>
+    <data name="OtrasCuotas" xml:space="preserve">
+        <value>Otras cuotas</value>
+    </data>
+    <data name="Admin" xml:space="preserve">
+        <value>Admin.</value>
+    </data>
+    <data name="Config" xml:space="preserve">
+        <value>Config.</value>
+    </data>
+    <data name="Horario" xml:space="preserve">
+        <value>Horario</value>
+    </data>
+    <data name="Local" xml:space="preserve">
+        <value>Local</value>
+    </data>
+    <data name="ComisionRecogida" xml:space="preserve">
+        <value>Comisión recogida en local</value>
+    </data>
+    <data name="ComisionLocal" xml:space="preserve">
+        <value>Comisión pedido en mesa</value>
+    </data>
+    <data name="ComisionAutoPedido" xml:space="preserve">
+        <value>Comisión auto pedido</value>
+    </data>
+    <data name="Todo" xml:space="preserve">
+        <value>Todo</value>
+    </data>
+    <data name="AvisarRepartidorPolloAndaluz" xml:space="preserve">
+        <value>¿Desea avisar al repartidor de PolloAndaluz?</value>
+    </data>
+    <data name="RepartirPedido" xml:space="preserve">
+        <value>¿Entregará su repartidor el pedido?, si es así el pedido no será gestionado por PolloAndaluz</value>
+    </data>
+    <data name="AutoPedido" xml:space="preserve">
+        <value>Auto pedido</value>
+    </data>
+    <data name="PreguntaHacerAutoPedido" xml:space="preserve">
+        <value>¿Quiere hacer este auto pedido?</value>
+    </data>
+    <data name="TodosCamposObligatorios" xml:space="preserve">
+        <value>Todos los campos son obligatorios.</value>
+    </data>
+    <data name="ImporteMayor0" xml:space="preserve">
+        <value>El importe debe ser mayor que 0</value>
+    </data>
+    <data name="ImporteMenorMinimo" xml:space="preserve">
+        <value>El importe es menor que el pedido mínimo</value>
+    </data>
+    <data name="TelefonoIncorrecto" xml:space="preserve">
+        <value>El teléfono es incorrecto</value>
+    </data>
+    <data name="CIF" xml:space="preserve">
+        <value>CIF</value>
+    </data>
+    <data name="IBANIncorrecto" xml:space="preserve">
+        <value>El IBAN es incorrecto</value>
+    </data>
+    <data name="Reservas" xml:space="preserve">
+        <value>Reservas</value>
+    </data>
+    <data name="NoPuedePedirDesdeSuDireccion" xml:space="preserve">
+        <value>Lo sentimos, no puede pedir en este establecimiento desde su dirección.</value>
+    </data>
+    <data name="PorEncargo" xml:space="preserve">
+        <value>Por encargo</value>
+    </data>
+    <data name="PreguntaEncargo" xml:space="preserve">
+        <value>Si introduce en su carrito un producto por encargo, todo su pedido será por encargo. ¿Desea continuar?</value>
+    </data>
+    <data name="SinHoras" xml:space="preserve">
+        <value>No existen horas para realizar su pedido</value>
+    </data>
+    <data name="Facturas" xml:space="preserve">
+        <value>Facturas</value>
+    </data>
+    <data name="NumeroFactura" xml:space="preserve">
+        <value>Número Factura</value>
+    </data>
+    <data name="GenerarFacturas" xml:space="preserve">
+        <value>Generar Facturas</value>
+    </data>
+    <data name="FechaDesde" xml:space="preserve">
+        <value>Fecha Desde</value>
+    </data>
+    <data name="FechaHasta" xml:space="preserve">
+        <value>Fecha Hasta</value>
+    </data>
+    <data name="Anyo" xml:space="preserve">
+        <value>Año</value>
+    </data>
+    <data name="CobrarCuota" xml:space="preserve">
+        <value>Cobrar cuota</value>
+    </data>
+    <data name="PreguntaGuardarFacturas" xml:space="preserve">
+        <value>¿Quiere guardar las facturas?</value>
+    </data>
+    <data name="FacturasGeneradasOK" xml:space="preserve">
+        <value>Facturas guardadas correctemente</value>
+    </data>
+    <data name="SeleccionePueblo" xml:space="preserve">
+        <value>Por favor, seleccione su población</value>
+    </data>
+    <data name="PermiteEncargos" xml:space="preserve">
+        <value>Permite encargos</value>
+    </data>
+    <data name="EncargosDiasDesde" xml:space="preserve">
+        <value>D. Encargos desde</value>
+    </data>
+    <data name="EncargosDiasHasta" xml:space="preserve">
+        <value>D. Encargos hasta</value>
+    </data>
+    <data name="EncargosPorHora" xml:space="preserve">
+        <value>Encargos por hora</value>
+    </data>
+    <data name="ErrorEncargosDias" xml:space="preserve">
+        <value>Los días desde debe ser menor que los días hasta</value>
+    </data>
+    <data name="ErrorEncargosHora" xml:space="preserve">
+        <value>Los encargos por hora deben ser mayor que 0</value>
+    </data>
+    <data name="Puntos" xml:space="preserve">
+        <value>Puntos</value>
+    </data>
+    <data name="PuntosPorPedido" xml:space="preserve">
+        <value>Puntos por pedido</value>
+    </data>
+    <data name="PuntosPorEuro" xml:space="preserve">
+        <value>Puntos por euro</value>
+    </data>
+    <data name="TextoPuntos" xml:space="preserve">
+        <value>Texto puntos</value>
+    </data>
+    <data name="SistemaPuntos" xml:space="preserve">
+        <value>Sistema de puntos</value>
+    </data>
+    <data name="MiEstablecimiento" xml:space="preserve">
+        <value>Mi Establecimiento</value>
+    </data>
+    <data name="Cupones" xml:space="preserve">
+        <value>Cupones</value>
+    </data>
+</root>

@@ -1,0 +1,298 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Administrador.EnviarNotificacionView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="ViewNotif"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Notificaciones"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" VerticalOptions="FillAndExpand">
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid
+                    Margin="20,0,20,20"
+                    ColumnDefinitions="Auto,*"
+                    VerticalOptions="FillAndExpand"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*">
+                    
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="13"
+                        Text="Nombre"
+                        TextColor="{DynamicResource Rojo}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="13"
+                        ItemsSource="{Binding OpcionesTexto}"
+                        SelectedItem="{Binding Path=BindingContext.OpcionNombre, Source={x:Reference Name=ViewNotif}}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Entry
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="13"
+                        Keyboard="Plain"
+                        Placeholder="Nombre"
+                        Text="{Binding Nombre}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="13"
+                        Text="Apellidos"
+                        TextColor="{DynamicResource Rojo}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="13"
+                        ItemsSource="{Binding OpcionesTexto}"
+                        SelectedItem="{Binding Path=BindingContext.OpcionApellidos, Source={x:Reference Name=ViewNotif}}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Entry
+                        Grid.Row="4"
+                        Grid.ColumnSpan="2"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="13"
+                        Keyboard="Plain"
+                        Placeholder="Apellidos"
+                        Text="{Binding Apellidos}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="13"
+                        Text="Email"
+                        TextColor="{DynamicResource Rojo}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="13"
+                        ItemsSource="{Binding OpcionesTexto}"
+                        SelectedItem="{Binding Path=BindingContext.OpcionEmail, Source={x:Reference Name=ViewNotif}}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Entry
+                        Grid.Row="6"
+                        Grid.ColumnSpan="2"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="13"
+                        Keyboard="Email"
+                        Placeholder="Email"
+                        Text="{Binding Email}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        IsVisible="False"
+                        Grid.Row="7"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="13"
+                        Text="Versión"
+                        TextColor="{DynamicResource Rojo}"
+                        VerticalTextAlignment="Center" />
+                    <StackLayout
+                        IsVisible="False"
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
+                        <Label
+                            FontFamily="Nunito"
+                            FontSize="13"
+                            Text="De"
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="13"
+                            Keyboard="Numeric"
+                            Placeholder="Desde"
+                            MinimumWidthRequest="150"
+                            Text="{Binding VersionDesde}"
+                            TextColor="{DynamicResource Negro}"
+                            Margin="0,0,30,0"/>
+                        <Label
+                            FontFamily="Nunito"
+                            FontSize="13"
+                            Text=" a "
+                            TextColor="{DynamicResource Negro}"
+                            VerticalTextAlignment="Center" />
+                        <Entry
+                            BackgroundColor="White"
+                            FontFamily="Nunito"
+                            FontSize="13"
+                            Keyboard="Numeric"
+                            Placeholder="Hasta"
+                            MinimumWidthRequest="150"
+                            Text="{Binding VersionHasta}"
+                            TextColor="{DynamicResource Negro}"
+                            Margin="0,0,10,0"/>
+                    </StackLayout>
+                    <Label
+                        IsVisible="False"
+                        Grid.Row="8"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="13"
+                        Text="Verificado"
+                        TextColor="{DynamicResource Rojo}"
+                        VerticalTextAlignment="Center" />
+                    <StackLayout
+                        IsVisible="False"
+                        Grid.Row="8"
+                        Grid.Column="1"
+                        Orientation="Horizontal">
+                        <StackLayout Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding VerificadoTodos}" />
+                            <Label
+                                Margin="-10,0,20,0"
+                                FontFamily="Nunito"
+                                FontSize="13"
+                                HorizontalTextAlignment="Start"
+                                Text="Todos"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding Verificado}" />
+                            <Label
+                                Margin="-10,0,50,0"
+                                FontFamily="Nunito"
+                                FontSize="13"
+                                Text="Si"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding NoVerificado}" />
+                            <Label
+                                Margin="-10,0,20,0"
+                                FontFamily="Nunito"
+                                FontSize="13"
+                                Text="No"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
+                    </StackLayout>
+                    <Label
+                        IsVisible="False"
+                        Grid.Row="9"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="13"
+                        Text="Rol"
+                        TextColor="{DynamicResource Rojo}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        IsVisible="False"
+                        Grid.Row="9"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="13"
+                        ItemDisplayBinding="{Binding nombre}"
+                        ItemsSource="{Binding Roles}"
+                        SelectedItem="{Binding Path=BindingContext.Rol, Source={x:Reference Name=ViewNotif}}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="10"
+                        Grid.Column="0"
+                        FontFamily="Syne"
+                        FontSize="13"
+                        Text="S.O."
+                        TextColor="{DynamicResource Rojo}"
+                        VerticalTextAlignment="Center" />
+                    <Grid ColumnDefinitions="Auto,Auto,*"
+                        Grid.Row="10"
+                        Grid.Column="1">
+                        <StackLayout Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding SOTodos}" />
+                            <Label
+                                Margin="-10,0,10,0"
+                                FontFamily="Nunito"
+                                FontSize="12"
+                                HorizontalTextAlignment="Start"
+                                Text="Todos"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal" Grid.Column="1">
+                            <CheckBox IsChecked="{Binding Android}" />
+                            <Label
+                                Margin="-10,0,10,0"
+                                FontFamily="Nunito"
+                                FontSize="12"
+                                Text="Android"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal" Grid.Column="2">
+                            <CheckBox IsChecked="{Binding IOS}" />
+                            <Label
+                                Margin="-10,0,20,0"
+                                FontFamily="Nunito"
+                                FontSize="12"
+                                Text="iOS"
+                                TextColor="{DynamicResource Negro}"
+                                VerticalTextAlignment="Center" />
+                        </StackLayout>
+                    </Grid>
+                    <StackLayout
+                        Grid.Row="11"
+                        Grid.ColumnSpan="2"
+                        VerticalOptions="FillAndExpand">
+
+                        <StackLayout
+                            Margin="0,20,0,20"
+                            HorizontalOptions="FillAndExpand"
+                            Orientation="Vertical">
+                            <Editor
+                                BackgroundColor="LightGray"
+                                FontFamily="Nunito"
+                                HeightRequest="200"
+                                Text="{Binding Cuerpo}"
+                                TextColor="{DynamicResource Negro}" />
+                            <Button
+                                BackgroundColor="{DynamicResource Negro}"
+                                Command="{Binding cmdEmail}"
+                                CornerRadius="20"
+                                FontFamily="Nunito"
+                                HeightRequest="50"
+                                Text="Enviar notificación"
+                                TextColor="{DynamicResource Blanco}" />
+
+                        </StackLayout>
+                    </StackLayout>
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

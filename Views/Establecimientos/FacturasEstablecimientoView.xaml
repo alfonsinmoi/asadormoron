@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Establecimientos.FacturasEstablecimientoView"
+    x:Name="HistoricoFacturasEst"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Facturas"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+           <Style x:Key="ExpanderTitleTextStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="FontFamily" Value="Syne" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+
+            <Style x:Key="CollpasedColorSytle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="WidthRequest" Value="48" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="Margin" Value="12, 0" />
+            </Style>
+            <Style x:Key="miLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Android=10, iOS=12, UWP=14}" />
+                <Setter Property="TextColor" Value="{DynamicResource Rojo}" />
+                <Setter Property="FontFamily" Value="Nunito" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="Auto,*"
+            VerticalOptions="FillAndExpand">
+            <Grid
+                Grid.Row="0"
+                Margin="10,0,10,0"
+                ColumnDefinitions="*,*"
+                RowDefinitions="Auto,Auto,Auto">
+                    <Label
+                        FontFamily="Syne"
+                        FontSize="14"
+                         IsVisible="{Binding VisibleEstablecimiento}"
+                        Grid.Column="0"
+                        HorizontalOptions="StartAndExpand"
+                        HorizontalTextAlignment="Start"
+                        Text="Establecimiento"
+                        TextColor="{DynamicResource Amarillo}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        HorizontalOptions="FillAndExpand"
+                        FontFamily="Nunito"
+                        Grid.Column="1"
+                        FontSize="12"
+                         IsVisible="{Binding VisibleEstablecimiento}"
+                        ItemsSource="{Binding MisEstablecimientos, Mode=TwoWay}"
+                        SelectedItem="{Binding MiEstablecimiento}"
+                        ItemDisplayBinding="{Binding nombre}"
+                        VerticalOptions="Center" />
+
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Style="{StaticResource miLabel}"
+                    Text="Desde" />
+                <DatePicker
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    BackgroundColor="White"
+                    Date="{Binding Desde}"
+                    FontFamily="Nunito"
+                    FontSize="12"
+                    TextColor="{DynamicResource Negro}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Style="{StaticResource miLabel}"
+                    Text="Hasta" />
+                <DatePicker
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    
+                    BackgroundColor="White"
+                    Date="{Binding Hasta}"
+                    FontFamily="Nunito"
+                    FontSize="12"
+                    TextColor="{DynamicResource Negro}" />
+            </Grid>
+            <CollectionView
+                Grid.Row="1"
+                BackgroundColor="White"
+                ItemsSource="{Binding Listado}">
+                <CollectionView.EmptyView>
+                    <StackLayout>
+                        <Label
+                            Margin="15"
+                            FontFamily="Syne"
+                            FontSize="30"
+                            HorizontalOptions="CenterAndExpand"
+                            HorizontalTextAlignment="Center"
+                            Text="No existen datos para el filtro seleccionado"
+                            TextColor="{StaticResource Rojo}"
+                            VerticalOptions="CenterAndExpand"
+                            VerticalTextAlignment="Center" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid
+                            Margin="0,0"
+                            BackgroundColor="White"
+                            ColumnDefinitions="*,Auto,60"
+                            ColumnSpacing="10"
+                            RowDefinitions="Auto, Auto,Auto"
+                            RowSpacing="10">
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                LineBreakMode="TailTruncation"
+                                Style="{StaticResource ExpanderTitleTextStyle}"
+                                Text="{Binding nombre}"
+                                TextColor="{StaticResource Rojo}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="0,0,12,0"
+                                BackgroundColor="Transparent"
+                                FontFamily="Nunito_bold"
+                                FontSize="15"
+                                HorizontalOptions="EndAndExpand"
+                                Text="{Binding numero}"
+                                TextColor="{StaticResource Rojo}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                HorizontalOptions="StartAndExpand"
+                                 BackgroundColor="Transparent"
+                                FontAttributes="Bold"
+                                FontFamily="Nunito_bold"
+                                Margin="12,0"
+                                FontSize="16"
+                                TextColor="{StaticResource Amarillo}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span
+                                            Text="{Binding desde, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                        <Span
+                                            Text=" - "/>
+                                        <Span
+                                            Text="{Binding hasta, StringFormat='{0:dd/MM/yyyy}'}"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <BoxView
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="3"
+                                Margin="0,4,0,0"
+                                BackgroundColor="{StaticResource Rojo}"
+                                HeightRequest="0.3"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="End" />
+                            <ImageButton BackgroundColor="Transparent" Source="visto.png" Command="{Binding Path=BindingContext.cmdVerPDF, Source={x:Reference Name=HistoricoFacturasEst}}"
+                                         Grid.RowSpan="3" Grid.Column="2" Margin="0,0,12,0" VerticalOptions="Center"
+                                         CommandParameter="{Binding .}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

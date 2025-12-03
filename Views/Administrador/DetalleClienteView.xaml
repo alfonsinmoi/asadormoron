@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:AsadorMoron.Converters"
+    x:Class="AsadorMoron.Views.Administrador.DetalleClienteView"
+    x:Name="viewDetalleCliente"
+    BackgroundColor="{StaticResource Rojo}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Nombre}"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding GuardarCommand}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <ContentPage.Content>
+        <ScrollView
+            BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}">
+            <StackLayout
+                Margin="{OnPlatform iOS='15,10',
+                                    Android='15,10',
+                                    UWP='25,10,25,10'}"
+                Spacing="15">
+
+                <!-- SECCIÓN DATOS PERSONALES -->
+                <Label Text="Datos Personales"
+                       FontFamily="Syne"
+                       FontSize="18"
+                       TextColor="{DynamicResource Rojo}"
+                       Margin="0,10,0,0"/>
+
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                    <!-- Nombre -->
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="Nombre"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="0" Grid.Column="1"
+                           Text="{Binding Nombre}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           BackgroundColor="White"/>
+
+                    <!-- Apellidos -->
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Text="Apellidos"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="1" Grid.Column="1"
+                           Text="{Binding Apellidos}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           BackgroundColor="White"/>
+
+                    <!-- Email -->
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Text="Email"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="2" Grid.Column="1"
+                           Text="{Binding Email}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           Keyboard="Email"
+                           BackgroundColor="White"/>
+
+                    <!-- Teléfono -->
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Text="Teléfono"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="3" Grid.Column="1"
+                           Text="{Binding Telefono}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           Keyboard="Telephone"
+                           BackgroundColor="White"/>
+                </Grid>
+
+                <!-- SECCIÓN DIRECCIÓN -->
+                <Label Text="Dirección"
+                       FontFamily="Syne"
+                       FontSize="18"
+                       TextColor="{DynamicResource Rojo}"
+                       Margin="0,10,0,0"/>
+
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                    <!-- Dirección -->
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="Dirección"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="0" Grid.Column="1"
+                           Text="{Binding Direccion}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           BackgroundColor="White"/>
+
+                    <!-- Población -->
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Text="Población"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="1" Grid.Column="1"
+                           Text="{Binding Poblacion}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           BackgroundColor="White"/>
+
+                    <!-- Provincia -->
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Text="Provincia"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="2" Grid.Column="1"
+                           Text="{Binding Provincia}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           BackgroundColor="White"/>
+
+                    <!-- C.P. -->
+                    <Label Grid.Row="3" Grid.Column="0"
+                           Text="C.P."
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Entry Grid.Row="3" Grid.Column="1"
+                           Text="{Binding CodigoPostal}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           Keyboard="Numeric"
+                           BackgroundColor="White"/>
+                </Grid>
+
+                <!-- SECCIÓN CONFIGURACIÓN -->
+                <Label Text="Configuración"
+                       FontFamily="Syne"
+                       FontSize="18"
+                       TextColor="{DynamicResource Rojo}"
+                       Margin="0,10,0,0"/>
+
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="10">
+                    <!-- Estado -->
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="Estado"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Switch Grid.Row="0" Grid.Column="1"
+                            IsToggled="{Binding Estado}"/>
+
+                    <!-- Kiosko -->
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Text="Modo Kiosko"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalTextAlignment="Center"/>
+                    <Switch Grid.Row="1" Grid.Column="1"
+                            IsToggled="{Binding Kiosko, Converter={StaticResource IntToBoolConverter}}"/>
+                </Grid>
+
+                <!-- SECCIÓN PUNTOS -->
+                <Frame BackgroundColor="{DynamicResource Rojo}"
+                       CornerRadius="15"
+                       Padding="20"
+                       Margin="0,15,0,0"
+                       HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding EditarPuntosDirectoCommand}"/>
+                    </Frame.GestureRecognizers>
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <Label Grid.Row="0"
+                               Text="Puntos del Cliente"
+                               FontFamily="Syne"
+                               FontSize="16"
+                               TextColor="White"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Grid.Row="1"
+                               Text="{Binding TotalPuntos}"
+                               FontFamily="Syne"
+                               FontSize="48"
+                               FontAttributes="Bold"
+                               TextColor="{DynamicResource Amarillo}"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center"
+                               Margin="0,10,0,0"/>
+                        <Label Grid.Row="2"
+                               Text="Toca para editar"
+                               FontFamily="Nunito"
+                               FontSize="12"
+                               TextColor="White"
+                               HorizontalTextAlignment="Center"
+                               Opacity="0.7"/>
+                    </Grid>
+                </Frame>
+
+                <!-- SECCIÓN ESTADÍSTICAS -->
+                <Label Text="Estadísticas"
+                       FontFamily="Syne"
+                       FontSize="18"
+                       TextColor="{DynamicResource Rojo}"
+                       Margin="0,10,0,0"/>
+
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="5">
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="Pedidos:"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"/>
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Text="{Binding TotalPedidos}"
+                           FontFamily="Nunito"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"/>
+
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Text="Total Gastado:"
+                           FontFamily="Syne"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"/>
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Text="{Binding TotalGastado, StringFormat='{0:F2} €'}"
+                           FontFamily="Nunito"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="{DynamicResource Rojo}"/>
+                </Grid>
+
+                <!-- SECCIÓN HISTÓRICO PEDIDOS -->
+                <Label Text="Histórico de Pedidos"
+                       FontFamily="Syne"
+                       FontSize="18"
+                       TextColor="{DynamicResource Rojo}"
+                       Margin="0,10,0,0"/>
+
+                <ListView ItemsSource="{Binding HistoricoPedidos}"
+                          SelectedItem="{Binding PedidoSeleccionado, Mode=TwoWay}"
+                          HasUnevenRows="True"
+                          SeparatorVisibility="Default"
+                          SeparatorColor="#E0E0E0"
+                          HeightRequest="300"
+                          VerticalOptions="Start">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid ColumnDefinitions="*,Auto" Padding="5,10" RowDefinitions="Auto,Auto" RowSpacing="3">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding codigoPedido, StringFormat='Pedido #{0}'}"
+                                           FontFamily="Nunito"
+                                           FontAttributes="Bold"
+                                           FontSize="14"
+                                           TextColor="{DynamicResource Negro}"/>
+                                    <Label Grid.Row="0" Grid.Column="1"
+                                           Text="{Binding precioTotalPedido, StringFormat='{0:F2} €'}"
+                                           FontFamily="Syne"
+                                           FontSize="16"
+                                           TextColor="{DynamicResource Rojo}"
+                                           HorizontalTextAlignment="End"/>
+
+                                    <Label Grid.Row="1" Grid.Column="0"
+                                           Text="{Binding horaPedido, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                           FontFamily="Nunito"
+                                           FontSize="12"
+                                           TextColor="#666666"/>
+                                    <Label Grid.Row="1" Grid.Column="1"
+                                           Text="{Binding estadoPedido}"
+                                           FontFamily="Nunito"
+                                           FontSize="12"
+                                           TextColor="#666666"
+                                           HorizontalTextAlignment="End"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <!-- BOTÓN GUARDAR -->
+                <Button Text="Guardar Cambios"
+                        Command="{Binding GuardarCommand}"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        TextColor="White"
+                        FontFamily="Syne"
+                        FontSize="16"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        Margin="0,20,0,30"/>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

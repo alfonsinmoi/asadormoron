@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Administrador.InvitaAmigoView"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Margin="0,0,50,0"
+                Grid.ColumnSpan="2"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Promo Amigos"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+            <ImageButton 
+                Grid.Column="1"
+                Margin="0,0,10,0"
+                BackgroundColor="Transparent"
+                Command="{Binding CommandGuardar}"
+                HeightRequest="30"
+                HorizontalOptions="End"
+                VerticalOptions="CenterAndExpand"
+                Source="save.png"
+                WidthRequest="30" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout
+            
+            BackgroundColor="White"
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Grid ColumnDefinitions="Auto,*"
+            RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                  Margin="20">
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="Descipción"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <Editor
+                Grid.Row="0"
+                Grid.Column="1"
+                BackgroundColor="LightGray"
+                FontFamily="Nunito"
+                FontSize="14"
+                HeightRequest="80"
+                Text="{Binding Descripcion}"
+                TextColor="{DynamicResource Negro}" />
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="Fecha Inicio"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <DatePicker
+                Grid.Row="1"
+                Grid.Column="1"
+                BackgroundColor="LightGray"
+                FontFamily="Nunito"
+                FontSize="14"
+                Date="{Binding FechaInicio}"
+                TextColor="{DynamicResource Negro}" />
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="Fecha Fin"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <DatePicker
+                Grid.Row="2"
+                Grid.Column="1"
+                BackgroundColor="LightGray"
+                FontFamily="Nunito"
+                FontSize="14"
+                Date="{Binding FechaFin}"
+                TextColor="{DynamicResource Negro}" />
+            <Label
+                Grid.Row="3"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="Pedido Mínimo"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <Entry
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="3"
+                BackgroundColor="White"
+                FontFamily="Nunito"
+                FontSize="14"
+                HorizontalTextAlignment="Start"
+                Keyboard="Numeric"
+                Text="{Binding PedidoMinimo}"
+                TextColor="{DynamicResource Negro}" />
+            <Label
+                Grid.Row="4"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="Saldo para cliente"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <Entry
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="3"
+                BackgroundColor="White"
+                FontFamily="Nunito"
+                FontSize="14"
+                HorizontalTextAlignment="Start"
+                Keyboard="Numeric"
+                Text="{Binding SaldoUsuario}"
+                TextColor="{DynamicResource Negro}" />
+            <Label
+                Grid.Row="5"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="Saldo para amigo"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <Entry
+                Grid.Row="5"
+                Grid.Column="1"
+                Margin="3"
+                BackgroundColor="White"
+                FontFamily="Nunito"
+                FontSize="14"
+                HorizontalTextAlignment="Start"
+                Keyboard="Numeric"
+                Text="{Binding SaldoAmigo}"
+                TextColor="{DynamicResource Negro}" />
+            <Label
+                Grid.Row="6"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="{Binding PersonasAlcanzadas,StringFormat='Personas Alcanzadas: {0}'}"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="7"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="{Binding SaldoRepartido,StringFormat='Saldo Repartido: {0:C2}'}"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+            <Label
+                Grid.Row="8"
+                Grid.Column="0"
+                FontFamily="Syne"
+                FontSize="14"
+                Text="Activo"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalTextAlignment="Center" />
+                <Switch IsToggled="{Binding Activo}" Grid.Row="8" Grid.Column="1"/>
+                </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

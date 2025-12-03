@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.VersionMinimaPopUp"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    NavigationPage.HasBackButton="False"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid
+            HorizontalOptions="Center"
+            RowDefinitions="Auto,Auto,*,Auto"
+            VerticalOptions="FillAndExpand">
+            <Image
+                Grid.Row="0"
+                Margin="20,40"
+                Source="logo_morado.png" />
+            <Label
+                Grid.Row="1"
+                Margin="20,0"
+                BackgroundColor="Transparent"
+                FontAttributes="Bold"
+                FontFamily="Syne_Regular"
+                FontSize="18"
+                HorizontalTextAlignment="Center"
+                Text="{Binding Texto}"
+                TextColor="Black" />
+            <!-- Lottie animation replaced with ActivityIndicator for MAUI compatibility -->
+            <ActivityIndicator
+                Grid.Row="2"
+                IsRunning="True"
+                Color="{DynamicResource Rojo}"
+                HeightRequest="100"
+                WidthRequest="100"
+                HorizontalOptions="Center"
+                VerticalOptions="Center" />
+            <Button
+                Grid.Row="3"
+                Margin="0,0,0,30"
+                BackgroundColor="{DynamicResource Rojo}"
+                Command="{Binding cmdActualizar}"
+                HorizontalOptions="Center"
+                Text="Actualizar"
+                TextColor="{DynamicResource Blanco}"
+                WidthRequest="120" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

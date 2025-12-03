@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="AsadorMoron.Views.Administrador.AutoPedidoAdminView"
+    BackgroundColor="{StaticResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*">
+            <Label
+                Grid.Column="0"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Auto pedido"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <Grid RowDefinitions="*,Auto" BackgroundColor="{DynamicResource Fondo}"  Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0,0,0,0'}">
+            <ScrollView
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand">
+                <StackLayout HorizontalOptions="FillAndExpand"
+                             VerticalOptions="FillAndExpand" Margin="20">
+                    <Label Text="Nombre" FontFamily="Syne"
+                            FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            TextColor="{DynamicResource Negro}"/>
+                    <Entry Text="{Binding Nombre}" BackgroundColor="White"
+                            FontSize="14"
+                            FontFamily="Nunito"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center"/>
+                    <Label Text="Dirección" FontFamily="Syne"
+                           FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            TextColor="{DynamicResource Negro}"/>
+                    <Entry Text="{Binding Direccion}" BackgroundColor="White"
+                            FontSize="14"
+                            FontFamily="Nunito"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center"/>
+                    <Label Text="Zona" FontFamily="Syne"
+                           FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            TextColor="{DynamicResource Negro}"/>
+                    <Picker ItemsSource="{Binding Zonas}" SelectedItem="{Binding ZonaSeleccionada}"
+                            ItemDisplayBinding="{Binding nombre}"  BackgroundColor="White"
+                            FontSize="14"
+                            FontFamily="Nunito"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center" />
+                    <Label Text="Teléfono" FontFamily="Syne"
+                           FontSize="14"
+                            HorizontalTextAlignment="Start"
+                            TextColor="{DynamicResource Negro}"/>
+                    <Entry Text="{Binding Telefono}"  BackgroundColor="White"
+                            FontSize="14"
+                           Keyboard="Telephone"
+                            FontFamily="Nunito"
+                            TextColor="Black"
+                            VerticalTextAlignment="Center"/>
+
+                    <Button Text="Hacer Pedido"
+                            Command="{Binding cmdGenerar}"
+                            BackgroundColor="{DynamicResource Negro}"
+                            CornerRadius="15"
+                            FontSize="14"
+                            HeightRequest="50"
+                            HorizontalOptions="Center"
+                            TextColor="{DynamicResource Blanco}"
+                            VerticalOptions="CenterAndExpand"
+                            WidthRequest="180"/>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

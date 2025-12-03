@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.PopupValoracionAppView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:AsadorMoron.ViewModels.Clientes"
+    x:DataType="viewmodels:PopupValoracionAppViewModel"
+    mc:Ignorable="d">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="colorGray">Gray</Color>
+            <Style x:Key="frameCancel" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Margin" Value="10,0,0,0" />
+            </Style>
+            <Style x:Key="frameConfirm" TargetType="Border">
+                <Setter Property="BackgroundColor" Value="{DynamicResource Rojo}" />
+                <Setter Property="Padding" Value="0" />
+            </Style>
+            <Style x:Key="btnCancel" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="TextColor" Value="{DynamicResource Rojo}" />
+            </Style>
+            <Style x:Key="btnConfirm" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource Rojo}" />
+                <Setter Property="HeightRequest" Value="50" />
+                <Setter Property="TextColor" Value="White" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Border
+        x:Name="pancake"
+        Margin="20,0,20,0"
+        BackgroundColor="White"
+        StrokeShape="RoundRectangle 25"
+        HeightRequest="400"
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        WidthRequest="350">
+        <Grid
+            ColumnDefinitions="*, *"
+            ColumnSpacing="0"
+            RowDefinitions="Auto, Auto,Auto,Auto,*, Auto">
+            <Label
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Margin="20,20,20,0"
+                FontAttributes="Bold"
+                FontFamily="Nunito"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Valore PolloAndaluz"
+                TextColor="{DynamicResource Rojo}" />
+            <Label
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Margin="10,0,10,10"
+                FontFamily="Nunito"
+                FontSize="13"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Su opinión es importante para nosotros"
+                TextColor="{DynamicResource Rojo}" />
+            <!-- Rating usando Slider como alternativa a SfRating -->
+            <HorizontalStackLayout
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Margin="10,0,10,10"
+                HorizontalOptions="Center"
+                Spacing="5">
+                <Slider
+                    Minimum="0"
+                    Maximum="5"
+                    Value="{Binding Valoracion}"
+                    MinimumTrackColor="{DynamicResource Amarillo}"
+                    MaximumTrackColor="LightGray"
+                    ThumbColor="{DynamicResource Amarillo}"
+                    WidthRequest="200" />
+                <Label
+                    Text="{Binding Valoracion, StringFormat='{0:F1}'}"
+                    FontFamily="Nunito"
+                    FontSize="16"
+                    TextColor="{DynamicResource Rojo}"
+                    VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Label
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Margin="10,10,10,0"
+                FontFamily="Nunito"
+                FontSize="13"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Déjenos un comentario nos servirá para ofercerle un mejor servicio"
+                TextColor="{DynamicResource Rojo}" />
+            <Editor
+                Grid.Row="4"
+                Grid.ColumnSpan="2"
+                Margin="20,0"
+                BackgroundColor="#eae5e7"
+                FontFamily="Nunito"
+                FontSize="13"
+                Placeholder="Ingrese aquí su comentario"
+                Text="{Binding Comentario}"
+                TextColor="{DynamicResource Rojo}" />
+            <Border
+                Grid.Row="5"
+                Grid.Column="0"
+                Style="{StaticResource frameCancel}">
+                <Button
+                    Command="{Binding ClosePopUpCommand}"
+                    Style="{StaticResource btnCancel}"
+                    Text="Cancelar" />
+            </Border>
+            <Border
+                Grid.Row="5"
+                Grid.Column="1"
+                Style="{StaticResource frameConfirm}">
+                <Button
+                    Command="{Binding AceptarCommand}"
+                    Style="{StaticResource btnConfirm}"
+                    Text="Enviar" />
+            </Border>
+        </Grid>
+    </Border>
+</ContentPage>

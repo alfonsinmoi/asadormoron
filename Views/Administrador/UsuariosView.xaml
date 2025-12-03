@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Administrador.UsuariosView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Usuarios"
+    BackgroundColor="{DynamicResource Rojo}">
+    <NavigationPage.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
+            <Label
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="0,0,50,0"
+                FontFamily="Syne"
+                FontSize="25"
+                HorizontalTextAlignment="Center"
+                Text="Usuarios"
+                TextColor="{DynamicResource Amarillo}"
+                VerticalOptions="Center" />
+        </Grid>
+    </NavigationPage.TitleView>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="miLabel" TargetType="Label">
+                <Setter Property="FontSize" Value="{OnPlatform Android=10, iOS=12, UWP=14}" />
+                <Setter Property="TextColor" Value="{DynamicResource Rojo}" />
+                <Setter Property="FontFamily" Value="Syne_Regular" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ScrollView VerticalOptions="FillAndExpand" BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,60,0,0',
+                                UWP='0'}">
+
+            <StackLayout Margin="{OnPlatform iOS='15,0',
+                                Android='15,0',
+                                UWP='25,0,25,0'}" VerticalOptions="FillAndExpand">
+                
+                <Label
+                    Margin="0,20,0,0"
+                    BackgroundColor="Transparent"
+                    FontFamily="Syne"
+                    FontSize="20"
+                    HorizontalTextAlignment="Center"
+                    Text="Introduce el email del usuario"
+                    TextColor="{StaticResource Negro}" />
+                <Entry
+                    BackgroundColor="White"
+                    FontFamily="Nunito"
+                    Keyboard="Email"
+                    Placeholder="Email"
+                    Text="{Binding Email}"
+                    TextColor="Black" />
+                <Button
+                    BackgroundColor="{DynamicResource Rojo}"
+                    Command="{Binding cmdBuscarUsuario}"
+                    CornerRadius="20"
+                    FontFamily="Syne"
+                    HeightRequest="50"
+                    Text="Buscar usuario"
+                    TextColor="{DynamicResource Blanco}" />
+                <Grid
+                    Margin="0,20,0,0"
+                    ColumnDefinitions="Auto,*"
+                    IsVisible="{Binding VisibleCliente}"
+                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
+                    <Label
+                        Grid.Row="0"
+                        Grid.ColumnSpan="2"
+                        BackgroundColor="Transparent"
+                        FontFamily="Syne"
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="Detalle usuario"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Nombre"
+                        TextColor="{StaticResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        Text="{Binding Nombre}"
+                        TextColor="Black" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Apellidos"
+                        TextColor="{StaticResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        Text="{Binding Apellidos}"
+                        TextColor="Black" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Rol"
+                        TextColor="{StaticResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Title="Rol"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="18"
+                        ItemDisplayBinding="{Binding nombre}"
+                        ItemsSource="{Binding Roles}"
+                        SelectedItem="{Binding RolSeleccionado}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        IsVisible="{Binding VisibleRepartidor}"
+                        Text="Repartidor"
+                        TextColor="{StaticResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Picker
+                        Title="Repartidor"
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        BackgroundColor="White"
+                        FontFamily="Nunito"
+                        FontSize="18"
+                        IsVisible="{Binding VisibleRepartidor}"
+                        ItemDisplayBinding="{Binding nombre}"
+                        ItemsSource="{Binding Repartidores}"
+                        SelectedItem="{Binding Path=BindingContext.RepartidorSeleccionado, Source={x:Reference Name=Usuarios}, Mode=TwoWay}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Label
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        FontFamily="Syne"
+                        FontSize="14"
+                        Text="Estado"
+                        TextColor="{StaticResource Negro}"
+                        VerticalTextAlignment="Center" />
+                    <Switch
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        IsToggled="{Binding Estado}" />
+                    <Button
+                        Grid.Row="7"
+                        Grid.ColumnSpan="2"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        Command="{Binding cmdModificar}"
+                        CornerRadius="10"
+                        FontFamily="Syne"
+                        HeightRequest="50"
+                        Text="Modificar usuario"
+                        TextColor="{DynamicResource Blanco}" />
+                </Grid>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

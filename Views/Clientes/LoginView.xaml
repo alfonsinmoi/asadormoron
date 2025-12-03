@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Clientes.LoginView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Acceso"
+    BackgroundColor="{DynamicResource Rojo}"
+    NavigationPage.HasNavigationBar="False">
+    <ContentPage.Content>
+        <Grid
+            Margin="{OnPlatform iOS='0,90,0,0',
+                                Android='0,80,0,0',
+                                Default='0,0,0,0'}"
+            HorizontalOptions="FillAndExpand"
+            RowDefinitions="*"
+            VerticalOptions="FillAndExpand">
+            <StackLayout
+                Grid.Row="0"
+                Padding="20"
+                BackgroundColor="Transparent"
+                HorizontalOptions="FillAndExpand"
+                Orientation="Vertical"
+                VerticalOptions="FillAndExpand">
+                <Image
+                    Margin="15,0,15,0"
+                    HorizontalOptions="Start"
+                    InputTransparent="True"
+                    Source="logoqoorder.png" />
+                <Grid
+                    Padding="20"
+                    ColumnDefinitions="*, *, *"
+                    RowDefinitions="Auto, Auto, Auto, Auto, Auto,Auto,Auto">
+                    <Entry
+                        Grid.Row="0"
+                        Grid.ColumnSpan="3"
+                        BackgroundColor="{DynamicResource Blanco}"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        Keyboard="Email"
+                        Placeholder="Email"
+                        PlaceholderColor="Gray"
+                        Text="{Binding Email}"
+                        TextColor="{DynamicResource Negro}" />
+                    <Entry
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        Margin="0,10,0,0"
+                        BackgroundColor="{DynamicResource Blanco}"
+                        FontFamily="Nunito"
+                        FontSize="14"
+                        IsPassword="true"
+                        Placeholder="Contraseña"
+                        PlaceholderColor="Gray"
+                        Text="{Binding Password}"
+                        TextColor="{DynamicResource Negro}" />
+
+                    <Grid
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        ColumnDefinitions="*,*">
+                        <Button
+                            Grid.Column="0"
+                            Margin="0,20,5,0"
+                            BackgroundColor="{DynamicResource Amarillo}"
+                            Command="{Binding BtnLogin}"
+                            CornerRadius="10"
+                            FontFamily="Nunito"
+                            FontSize="16"
+                            HeightRequest="40"
+                            Text="Entrar"
+                            TextColor="{DynamicResource Negro}" />
+                        <Button
+                            Grid.Column="1"
+                            Margin="5,20,0,0"
+                            BackgroundColor="{DynamicResource Blanco}"
+                            Command="{Binding BtnCancel}"
+                            CornerRadius="10"
+                            FontFamily="Nunito"
+                            FontSize="16"
+                            HeightRequest="40"
+                            Text="Cancelar"
+                            TextColor="{DynamicResource Negro}" />
+                    </Grid>
+                    <Button
+                        Grid.Row="4"
+                        Grid.ColumnSpan="3"
+                        BackgroundColor="Transparent"
+                        Command="{Binding BtnOlvido}"
+                        FontFamily="Nunito"
+                        FontSize="17"
+                        HorizontalOptions="Center"
+                        Text="¿Olvidó su contraseña?"
+                        TextColor="{DynamicResource Blanco}" />
+                    <Button
+                        Grid.Row="5"
+                        Grid.ColumnSpan="3"
+                        BackgroundColor="Transparent"
+                        Command="{Binding BtnRegistro}"
+                        FontFamily="Nunito"
+                        FontSize="21"
+                        HorizontalOptions="Center"
+                        Text="¿Aún no tienes cuenta? Regístrate"
+                        TextColor="{DynamicResource Blanco}" />
+                </Grid>
+            </StackLayout>
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>
