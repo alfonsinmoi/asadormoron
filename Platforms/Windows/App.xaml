@@ -1,8 +1,8 @@
 ﻿<maui:MauiWinUIApplication
-    x:Class="AsadorMoron.WinUI.App"
+    x:Class="AsadorMoron.WinUIApp"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:maui="using:Microsoft.Maui"
-    xmlns:local="using:AsadorMoron.WinUI">
+    xmlns:local="using:AsadorMoron">
 
 </maui:MauiWinUIApplication>

@@ -9,6 +9,7 @@ using AsadorMoron.Recursos;
 using AsadorMoron.Services;
 using AsadorMoron.ViewModels.Base;
 using AsadorMoron.Utils;
+using AsadorMoron.Print;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Syncfusion.XlsIO;
@@ -29,6 +30,7 @@ namespace AsadorMoron.ViewModels.Administrador
     {
         #region Properties
         private bool todoCargado = false;
+        public ICommand ToggleDetailCommand { get; private set; }
         int numeroDias = 1;
         public List<CabeceraPedido> ListPedidosTemp;
         private decimal itemsSummary;
@@ -425,7 +427,7 @@ namespace AsadorMoron.ViewModels.Administrador
         private int alturaLinea;
         public HistoricoPedidosAnuladosViewModelAdmin()
         {
-
+            ToggleDetailCommand = new Command(ToggleDetail);
         }
         public async override Task InitializeAsync(object navigationData)
         {
@@ -697,7 +699,7 @@ namespace AsadorMoron.ViewModels.Administrador
                     await App.customDialog.ShowDialogAsync(AppResources.ImpresoraNoConfigurada, AppResources.App, AppResources.Cerrar);
                 else
                 {
-                    Printer printer = new Printer(nombreImpresora, codigo, "ISO-8859-1");
+                    AsadorMoron.Print.Printer printer = new AsadorMoron.Print.Printer(nombreImpresora, codigo, "ISO-8859-1");
                     printer.ImprimirTicketPedido(alturaLinea);
                     printer.PrintDocument();
                 }
@@ -938,5 +940,9 @@ namespace AsadorMoron.ViewModels.Administrador
             }
         }
         #endregion
+        private void ToggleDetail()
+        {
+            IsDetailVisible = !IsDetailVisible;
+        }
     }
 }

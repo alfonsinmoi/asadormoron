@@ -69,6 +69,9 @@
             VerticalOptions="FillAndExpand">
             <!-- Expander replaced with StackLayout -->
             <StackLayout Grid.Row="0">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleDetailCommand}" />
+                </StackLayout.GestureRecognizers>
                     <Image Source="down.png" Margin="0,0,0,3">
                         <Image.Triggers>
                             <DataTrigger
@@ -248,10 +251,11 @@
                 BackgroundColor="LightGray"
                 HeightRequest="1"
                 HorizontalOptions="FillAndExpand" />
+            <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
             <CollectionView
                 Grid.Row="2"
                 BackgroundColor="{DynamicResource Blanco}"
-                ItemSizingStrategy="MeasureAllItems"
+                ItemSizingStrategy="MeasureFirstItem"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Listado}"
                 VerticalOptions="FillAndExpand"

@@ -71,7 +71,7 @@
                             Android='0,60,0,0'}"
         RowSpacing="0"
         ColumnSpacing="0"
-        RowDefinitions="Auto,Auto,Auto,*,*,Auto">
+        RowDefinitions="Auto,Auto,Auto,Auto,*,*,Auto">
         <StackLayout Grid.Row="0" BackgroundColor="{DynamicResource Negro}" HorizontalOptions="FillAndExpand" Margin="0,5,0,0">
             <CollectionView
                 Margin="0,0,0,0.5"
@@ -122,8 +122,67 @@
         <Button BackgroundColor="Red" TextColor="White" Text="CERRAR TODO"
                 Grid.Row="2" HeightRequest="40" CornerRadius="0" HorizontalOptions="FillAndExpand"
                 Command="{Binding commandCerrarTodo}"/>
+
+        <!--Contador Pollos Asados-->
+        <Border Grid.Row="3"
+                HorizontalOptions="Fill"
+                Margin="16,8"
+                Stroke="Transparent"
+                StrokeShape="RoundRectangle 12"
+                BackgroundColor="{DynamicResource Rojo}"
+                Padding="16,10">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,4" Radius="8" Opacity="0.3"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                <Image Source="pollo.png"
+                       WidthRequest="36"
+                       HeightRequest="36"
+                       VerticalOptions="Center"/>
+                <Label Grid.Column="1"
+                       Text="{Binding ContadorPollos}"
+                       TextColor="White"
+                       FontFamily="Nunito_bold"
+                       FontSize="40"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"/>
+                <Border Grid.Column="2"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 20"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        Stroke="Transparent">
+                    <Label Text="-"
+                           TextColor="{DynamicResource Rojo}"
+                           FontFamily="Nunito_bold"
+                           FontSize="28"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding RestarPolloCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+                <Border Grid.Column="3"
+                        BackgroundColor="White"
+                        StrokeShape="RoundRectangle 20"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        Stroke="Transparent">
+                    <Label Text="+"
+                           TextColor="{DynamicResource Rojo}"
+                           FontFamily="Nunito_bold"
+                           FontSize="28"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SumarPolloCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
         <StackLayout
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.RowSpan="2"
             Grid.Column="0">
             <CollectionView

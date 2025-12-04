@@ -121,6 +121,58 @@
                 TextColor="{DynamicResource Negro}"
                 VerticalTextAlignment="Center" />
         </StackLayout>
+
+        <!--Contador Pollos Asados-->
+        <Border Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Margin="16,8"
+                Stroke="{DynamicResource Amarillo}"
+                StrokeThickness="2"
+                StrokeShape="RoundRectangle 12"
+                BackgroundColor="White"
+                Padding="12,8">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,2" Radius="4" Opacity="0.2"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*" ColumnSpacing="10">
+                <Image Source="pollo.png"
+                       WidthRequest="36"
+                       HeightRequest="36"
+                       VerticalOptions="Center"/>
+                <Label Grid.Column="1"
+                       Text="Pollos Asados Hoy:"
+                       TextColor="{DynamicResource Negro}"
+                       FontFamily="Nunito_bold"
+                       FontSize="16"
+                       VerticalOptions="Center"/>
+                <Border Grid.Column="2"
+                        Stroke="{DynamicResource Rojo}"
+                        StrokeShape="RoundRectangle 8"
+                        BackgroundColor="#FFF5F5"
+                        Padding="12,6"
+                        MinimumWidthRequest="60">
+                    <Label Text="{Binding ContadorPollos}"
+                           TextColor="{DynamicResource Rojo}"
+                           FontFamily="Nunito_bold"
+                           FontSize="22"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"/>
+                </Border>
+                <ImageButton Grid.Column="3"
+                             Source="btnmenos.png"
+                             BackgroundColor="Transparent"
+                             WidthRequest="44"
+                             HeightRequest="44"
+                             Command="{Binding RestarPolloCommand}"/>
+                <ImageButton Grid.Column="4"
+                             Source="nuevo.png"
+                             BackgroundColor="Transparent"
+                             WidthRequest="44"
+                             HeightRequest="44"
+                             Command="{Binding SumarPolloCommand}"/>
+            </Grid>
+        </Border>
+
         <!--Listado pedidos para recoger y enviar, visible si no tiene local-->
         <StackLayout
             Grid.Row="3"

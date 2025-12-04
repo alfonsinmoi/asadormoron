@@ -9,6 +9,7 @@ using AsadorMoron.Recursos;
 using AsadorMoron.Services;
 using AsadorMoron.ViewModels.Base;
 using AsadorMoron.Utils;
+using AsadorMoron.Print;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Syncfusion.XlsIO;
@@ -29,6 +30,7 @@ namespace AsadorMoron.ViewModels.Administrador
     {
         #region Properties
         private bool todoCargado = false;
+        public ICommand ToggleDetailCommand { get; private set; }
         int numeroDias = 1;
         public List<CabeceraPedido> ListPedidosTemp;
         private List<GastoModel> ListGastosTemp;
@@ -488,7 +490,7 @@ namespace AsadorMoron.ViewModels.Administrador
         private int alturaLinea;
         public HistoricoPedidosViewModelAdmin()
         {
-
+            ToggleDetailCommand = new Command(ToggleDetail);
         }
         public async override Task InitializeAsync(object navigationData)
         {
@@ -572,14 +574,19 @@ namespace AsadorMoron.ViewModels.Administrador
                         {
                             Total = 0;
                             List<CabeceraPedido> l = ListPedidosTemp.FindAll(p => ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date));
-                            List<GastoModel> l2 = ListGastosTemp.FindAll(p => ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date));
+                            List<GastoModel> l2 = new List<GastoModel>();
+                            if (ListGastosTemp != null)
+                            {
+                                l2 = ListGastosTemp.FindAll(p => ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date));
+                            }
+
                             if (l != null)
                             {
                                 Listado = new List<CabeceraPedido>(l);
                                 Total = Listado.Sum(p => p.precioTotalPedido);
                                 TotalPedidosE= Listado.Sum(p => p.precioTotalPedido);
                             }
-                            if (l2 != null)
+                            if (l2 != null && l2.Count > 0)
                             {
                                 Gastos = new ObservableCollection<GastoModel>(l2);
                                 Total += Gastos.Sum(p => p.precio);
@@ -808,7 +815,7 @@ namespace AsadorMoron.ViewModels.Administrador
                     await App.customDialog.ShowDialogAsync(AppResources.ImpresoraNoConfigurada, AppResources.App, AppResources.Cerrar);
                 else
                 {
-                    Printer printer = new Printer(nombreImpresora, codigo, "ISO-8859-1");
+                    AsadorMoron.Print.Printer printer = new AsadorMoron.Print.Printer(nombreImpresora, codigo, "ISO-8859-1");
                     printer.ImprimirTicketPedido(alturaLinea);
                     printer.PrintDocument();
                 }
@@ -1049,5 +1056,9 @@ namespace AsadorMoron.ViewModels.Administrador
             }
         }
         #endregion
+        private void ToggleDetail()
+        {
+            IsDetailVisible = !IsDetailVisible;
+        }
     }
 }

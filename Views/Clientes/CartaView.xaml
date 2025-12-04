@@ -50,7 +50,7 @@
             RowSpacing="0"
             VerticalOptions="FillAndExpand">
 
-            <Grid RowDefinitions="Auto,Auto,*" BackgroundColor="White">
+            <Grid RowDefinitions="Auto,Auto,Auto,*" BackgroundColor="White">
 
                 <!-- Buscador -->
                 <Border Grid.Row="0"
@@ -86,8 +86,71 @@
                     </Grid>
                 </Border>
 
-                <!-- Puntos -->
+                <!-- Contador Pollos Asados (solo Kiosko) -->
                 <Border Grid.Row="1"
+                        HorizontalOptions="Fill"
+                        Margin="16,0,16,8"
+                        Stroke="Transparent"
+                        StrokeShape="RoundRectangle 12"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        IsVisible="{Binding Kiosko}"
+                        Padding="16,10">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,4" Radius="8" Opacity="0.3"/>
+                    </Border.Shadow>
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" VerticalOptions="Center">
+                        <!-- Icono -->
+                        <Image Source="pollo.png"
+                               WidthRequest="36"
+                               HeightRequest="36"
+                               VerticalOptions="Center"/>
+                        <!-- Número -->
+                        <Label Grid.Column="1"
+                               Text="{Binding ContadorPollos}"
+                               TextColor="White"
+                               FontFamily="Nunito_bold"
+                               FontSize="40"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                        <!-- Botón - -->
+                        <Border Grid.Column="2"
+                                BackgroundColor="White"
+                                StrokeShape="RoundRectangle 20"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                Stroke="Transparent">
+                            <Label Text="-"
+                                   TextColor="{DynamicResource Rojo}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="28"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding RestarPolloCommand}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                        <!-- Botón + -->
+                        <Border Grid.Column="3"
+                                BackgroundColor="White"
+                                StrokeShape="RoundRectangle 20"
+                                WidthRequest="40"
+                                HeightRequest="40"
+                                Stroke="Transparent">
+                            <Label Text="+"
+                                   TextColor="{DynamicResource Rojo}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="28"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SumarPolloCommand}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Puntos -->
+                <Border Grid.Row="2"
                         IsVisible="{Binding SistemaPuntos}"
                         Stroke="Transparent"
                         StrokeShape="RoundRectangle 12"
@@ -104,7 +167,7 @@
 
                 <!-- Categorias (visible cuando no hay búsqueda) -->
                 <CollectionView
-                    Grid.Row="2"
+                    Grid.Row="3"
                     IsVisible="{Binding MostrandoResultados, Converter={StaticResource InverseBoolConverter}}"
                     BackgroundColor="Transparent"
                     Margin="12,8,12,12"
@@ -159,11 +222,12 @@
                 </CollectionView>
 
                 <!-- Resultados de búsqueda (visible cuando hay búsqueda) -->
+                <!-- OPTIMIZADO: MeasureFirstItem en lugar de MeasureAllItems para mejor rendimiento -->
                 <CollectionView
-                    Grid.Row="2"
+                    Grid.Row="3"
                     IsVisible="{Binding MostrandoResultados}"
                     BackgroundColor="{DynamicResource Fondo}"
-                    ItemSizingStrategy="MeasureAllItems"
+                    ItemSizingStrategy="MeasureFirstItem"
                     ItemsSource="{Binding ResultadosBusqueda}"
                     SelectionMode="None">
                     <CollectionView.Triggers>

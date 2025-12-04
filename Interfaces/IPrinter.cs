@@ -1,12 +1,7 @@
-// TODO: Reimplementar para MAUI - ESC_POS_USB_NET no compatible
+using ESC_POS_USB_NET.Enums;
+
 namespace AsadorMoron.Interfaces
 {
-    // Enums temporales para compilación
-    public enum Fonts { FontA, FontB, FontC }
-    public enum QrCodeSize { Small, Medium, Large }
-    public enum Positions { None, Above, Below, Both }
-    // TipoImpresion moved to ManagerImpresora
-
     internal interface IPrinter
     {
         int ColsNomal { get; }
@@ -24,13 +19,13 @@ namespace AsadorMoron.Interfaces
         void ImprimirTicketPedido(int altura);
         void Font(string value, Fonts state);
         void BoldMode(string value);
-        void BoldMode(int state);
+        void BoldMode(PrinterModeState state);
         void UnderlineMode(string value);
-        void UnderlineMode(int state);
+        void UnderlineMode(PrinterModeState state);
         void ExpandedMode(string value);
-        void ExpandedMode(int state);
+        void ExpandedMode(PrinterModeState state);
         void CondensedMode(string value);
-        void CondensedMode(int state);
+        void CondensedMode(PrinterModeState state);
         void NormalWidth();
         void DoubleWidth2();
         void DoubleWidth3();
@@ -42,7 +37,7 @@ namespace AsadorMoron.Interfaces
         void FullPaperCut();
         void PartialPaperCut();
         void OpenDrawer();
-        void Image(byte[] imageBytes);
+        void Image(System.Drawing.Bitmap image);
         void QrCode(string qrData);
         void QrCode(string qrData, QrCodeSize qrCodeSize);
         void Code128(string code, Positions positions);

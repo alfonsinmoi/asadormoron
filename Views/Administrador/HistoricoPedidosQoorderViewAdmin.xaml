@@ -70,7 +70,10 @@
             VerticalOptions="FillAndExpand">
             <!-- Expander replaced with StackLayout -->
             <StackLayout Grid.Row="0">
-                    <Image Source="down.png" Margin="0,0,0,3">
+                <StackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleDetailCommand}" />
+                </StackLayout.GestureRecognizers>
+                    <Image Source="down.png" Margin="0,0,0,3" HeightRequest="30">
                         <Image.Triggers>
                             <DataTrigger
                                 Binding="{Binding IsDetailVisible}"
@@ -267,10 +270,11 @@
                 BackgroundColor="LightGray"
                 HeightRequest="1"
                 HorizontalOptions="FillAndExpand" />
+            <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
             <CollectionView
                 Grid.Row="2"
                 BackgroundColor="{DynamicResource Blanco}"
-                ItemSizingStrategy="MeasureAllItems"
+                ItemSizingStrategy="MeasureFirstItem"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Listado}"
                 VerticalOptions="FillAndExpand"
@@ -473,10 +477,11 @@
                 <Label Text="GASTOS E INGRESOS EXTRA" TextColor="White" FontFamily="Nunito_bold"/>
 
             </StackLayout>
+            <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
             <CollectionView
                 Grid.Row="4"
                 BackgroundColor="{DynamicResource Blanco}"
-                ItemSizingStrategy="MeasureAllItems"
+                ItemSizingStrategy="MeasureFirstItem"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Gastos}"
                 VerticalOptions="FillAndExpand"

@@ -236,10 +236,11 @@
                 BackgroundColor="LightGray"
                 HeightRequest="1"
                 HorizontalOptions="FillAndExpand" />
+            <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
             <CollectionView
                 Grid.Row="2"
                 BackgroundColor="{DynamicResource Blanco}"
-                ItemSizingStrategy="MeasureAllItems"
+                ItemSizingStrategy="MeasureFirstItem"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Listado}"
                 VerticalOptions="FillAndExpand"

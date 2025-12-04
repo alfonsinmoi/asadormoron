@@ -102,11 +102,12 @@ namespace AsadorMoron.ViewModels.Clientes
                 {
                     int cantidadIngredientes = Regex.Matches(item.nombreProducto, " x ").Count;
                     int cantidadActual = App.ResponseWS.getCantidadIngredientes(item.idProducto);
-                    if (cantidadIngredientes != cantidadActual && cantidadActual>0)
+                    if (cantidadIngredientes != cantidadActual && cantidadActual > 0)
                     {
                         continuar = false;
                         App.customDialog.ShowDialogAsync("No se puede repetir este pedido, por que no cumple con el número de ingredientes", AppResources.App, AppResources.Cerrar);
-                    }else if (!item.nombreProducto.Contains("GASTOS") && !item.nombreProducto.Contains("Bolsa") && !item.nombreProducto.ToUpper().Contains("DESCUENTO"))
+                    }
+                    else if (!item.nombreProducto.Contains("GASTOS") && !item.nombreProducto.Contains("Bolsa") && !item.nombreProducto.ToUpper().Contains("DESCUENTO"))
                     {
                         CarritoModel carritoModel = new CarritoModel();
                         carritoModel.cantidad = item.cantidad;
@@ -144,8 +145,8 @@ namespace AsadorMoron.ViewModels.Clientes
                         MainThread.BeginInvokeOnMainThread(async () =>
                         {
                             App.DAUtil.GuardaCarrito(carritoModels);
-                                await App.DAUtil.NavigationService.NavigateToAsync<DetallePedidoViewModel>(carritoModels);
-                           
+                            await App.DAUtil.NavigationService.NavigateToAsync<DetallePedidoViewModel>(carritoModels);
+
                         });
                     }
                 }
@@ -210,7 +211,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 App.DAUtil.pedidoNuevo = false;
                 Listado = new ObservableCollection<CabeceraPedido>();
                 Listado2 = new List<CabeceraPedido>();
-                ListPedidosTemp = new ObservableCollection<CabeceraPedido>(ResponseServiceWS.getPedidoUsuarios().Where(p=>!p.tipoVenta.Equals("Local")).OrderByDescending(p => p.horaPedido).ToList());
+                ListPedidosTemp = new ObservableCollection<CabeceraPedido>(ResponseServiceWS.getPedidoUsuarios().Where(p => !p.tipoVenta.Equals("Local")).OrderByDescending(p => p.horaPedido).ToList());
                 TotalPedidos = 0;
 
                 string ids = "";
@@ -266,6 +267,7 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     foreach (var items in Listado2)
                     {
+
                         double result = 0;
                         foreach (var item in items.lineasPedidos)
                         {

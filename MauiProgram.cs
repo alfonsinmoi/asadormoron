@@ -36,7 +36,7 @@ public static class MauiProgram
         builder.Services.AddSingleton(AudioManager.Current);
 
 #if DEBUG
-        builder.Logging.AddDebug();
+        // builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
