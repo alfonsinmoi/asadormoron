@@ -267,10 +267,11 @@
                 BackgroundColor="LightGray"
                 HeightRequest="1"
                 HorizontalOptions="FillAndExpand" />
+            <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
             <CollectionView
                 Grid.Row="2"
                 BackgroundColor="{DynamicResource Blanco}"
-                ItemSizingStrategy="MeasureAllItems"
+                ItemSizingStrategy="MeasureFirstItem"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Listado}"
                 VerticalOptions="FillAndExpand"
@@ -473,10 +474,11 @@
                 <Label Text="GASTOS E INGRESOS EXTRA" TextColor="White" FontFamily="Nunito_bold"/>
 
             </StackLayout>
+            <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
             <CollectionView
                 Grid.Row="4"
                 BackgroundColor="{DynamicResource Blanco}"
-                ItemSizingStrategy="MeasureAllItems"
+                ItemSizingStrategy="MeasureFirstItem"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Gastos}"
                 VerticalOptions="FillAndExpand"

@@ -126,6 +126,9 @@ namespace AsadorMoron.ViewModels.Administrador
                 App.timer.Elapsed += _timer_Elapsed;
                 App.timer.Start();
 
+                // Cargar contador de pollos asados
+                _ = CargarContadorPollosAsync();
+
                 await base.InitializeAsync(navigationData).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() =>
                 {
                     App.userdialog.HideLoading();
@@ -389,9 +392,79 @@ namespace AsadorMoron.ViewModels.Administrador
                 }
             }
         }
+
+        // Contador de pollos asados del día
+        private int contadorPollos = 0;
+        public int ContadorPollos
+        {
+            get { return contadorPollos; }
+            set
+            {
+                if (contadorPollos != value)
+                {
+                    contadorPollos = value;
+                    OnPropertyChanged(nameof(ContadorPollos));
+                }
+            }
+        }
         #endregion
 
         #region Funciones
+
+        private async Task CargarContadorPollosAsync()
+        {
+            try
+            {
+                if (App.EstActual == null) return;
+
+                var contador = await ResponseServiceWS.GetContadorPollosAsync(App.EstActual.idEstablecimiento);
+                if (contador != null)
+                {
+                    ContadorPollos = contador.cantidad;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[HomeViewModelAdmin] Error cargando contador pollos: {ex.Message}");
+            }
+        }
+
+        private async Task SumarPolloAsync()
+        {
+            try
+            {
+                if (App.EstActual == null) return;
+
+                var resultado = await ResponseServiceWS.SumarPollosAsync(App.EstActual.idEstablecimiento, 1);
+                if (resultado != null)
+                {
+                    ContadorPollos = resultado.cantidad;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[HomeViewModelAdmin] Error sumando pollo: {ex.Message}");
+            }
+        }
+
+        private async Task RestarPolloAsync()
+        {
+            try
+            {
+                if (App.EstActual == null || ContadorPollos <= 0) return;
+
+                var resultado = await ResponseServiceWS.RestarPollosAsync(App.EstActual.idEstablecimiento, 1);
+                if (resultado != null)
+                {
+                    ContadorPollos = resultado.cantidad;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[HomeViewModelAdmin] Error restando pollo: {ex.Message}");
+            }
+        }
+
         private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             MainThread.BeginInvokeOnMainThread(async () =>
@@ -1234,6 +1307,8 @@ namespace AsadorMoron.ViewModels.Administrador
         #region Comandos
         public ICommand InfoUsuarioPedidoCommand => new Command(InfoUsuarioPedido);
         public ICommand cmdVerRepartidor { get { return new Command((parametro) => VerRepartidor(parametro)); } }
+        public ICommand SumarPolloCommand { get { return new Command(async () => await SumarPolloAsync()); } }
+        public ICommand RestarPolloCommand { get { return new Command(async () => await RestarPolloAsync()); } }
         public ICommand PrintCommand => new Command<string>(async (codigo) => await PrePrint(codigo));
         public ICommand cmdAutoPedido { get { return new Command(VerAutoPedidoExe); } }
         public ICommand cerrarCommand { get { return new Command((parametro) => CerrarPedido(parametro)); } }

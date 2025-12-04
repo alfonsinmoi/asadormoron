@@ -60,8 +60,17 @@ namespace AsadorMoron.ViewModels.Clientes
                     _categoria = (Categoria)navigationData;
                     EsPorPuntos = _categoria.esPuntos;
                     App.esPorPuntos = EsPorPuntos;
-                    List<ArticuloModel> lista = await App.ResponseWS.getListadoProductosEstablecimientoCat(_categoria.id, false);
-                    lista = (await App.DAUtil.getProductosEstablecimientoCat(_categoria.id)).FindAll(p => p.estado == 1 && p.estadoCategoria == 1);
+                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Cargando productos para categoría: {_categoria.id} - {_categoria.nombre}");
+                    List<ArticuloModel> listaServer = await App.ResponseWS.getListadoProductosEstablecimientoCat(_categoria.id, false);
+                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos del servidor: {listaServer?.Count ?? 0}");
+                    List<ArticuloModel> listaSQLite = await App.DAUtil.getProductosEstablecimientoCat(_categoria.id);
+                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos de SQLite: {listaSQLite?.Count ?? 0}");
+                    // Usar los datos del servidor si existen, si no los de SQLite
+                    List<ArticuloModel> lista = (listaServer != null && listaServer.Count > 0)
+                        ? listaServer.FindAll(p => p.estado == 1 && p.estadoCategoria == 1)
+                        : listaSQLite.FindAll(p => p.estado == 1 && p.estadoCategoria == 1);
+                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos filtrados (estado=1): {lista?.Count ?? 0}");
+                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] aceptaEncargos: {App.EstActual.configuracion.aceptaEncargos}");
                     if (App.EstActual.configuracion.aceptaEncargos)
                     {
                         App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
@@ -72,6 +81,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
                         lista = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
                     }
+                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos después filtro vistaEnvios: {lista?.Count ?? 0}");
                     if (App.EstActual.horario.Equals(AppResources.Cerrado))
                         ModoTienda = true;
                     else

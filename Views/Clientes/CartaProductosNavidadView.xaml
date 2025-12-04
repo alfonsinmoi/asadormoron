@@ -78,10 +78,11 @@
                     <Label Text="{Binding Puntos,StringFormat='Tienes {0} puntos'}" HorizontalTextAlignment="Center"
                            TextColor="{DynamicResource Negro}" FontFamily="Nunito_bold" FontSize="20"/>
                 </StackLayout>
+                <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
                 <CollectionView
                 BackgroundColor="{DynamicResource Fondo}"
                 Grid.Row="1"
-                ItemSizingStrategy="MeasureAllItems"
+                ItemSizingStrategy="MeasureFirstItem"
                 ItemsSource="{Binding Comidas}"
                 SelectionMode="None">
                 <CollectionView.ItemTemplate>

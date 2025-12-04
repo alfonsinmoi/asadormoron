@@ -1726,28 +1726,6 @@ namespace AsadorMoron.Services
                 return new List<AlergenosModel>();
             }
         }
-        internal static List<ArticuloModel> getListadoProductosMasVendidosLocal()
-        {
-            List<ArticuloModel> listProducto = new List<ArticuloModel>();
-            try
-            {
-                string requestUri = App.DAUtil.miURL + "productos.php/GET?masvendidoslocal=true&idGrupo=" + Preferences.Get("idGrupo1", 1);
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
-                {
-                    listProducto = JsonConvert.DeserializeObject<List<ArticuloModel>>(resultJSON);
-                    if (listProducto == null)
-                        listProducto = new List<ArticuloModel>();
-                }
-                return listProducto;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new List<ArticuloModel>();
-            }
-        }
         internal static List<ArticuloModel> TraePodructosBaja(string ids)
         {
             List<ArticuloModel> listProducto = new List<ArticuloModel>();
@@ -7003,6 +6981,117 @@ namespace AsadorMoron.Services
                 Debug.WriteLine("Error ActualizarPuntosCliente: " + ex.Message);
                 return false;
             }
+        }
+
+        #endregion
+
+        #region Contador Pollos Asados
+
+        /// <summary>
+        /// Obtiene el contador diario de pollos asados para un establecimiento
+        /// </summary>
+        public static ContadorPollosModel GetContadorPollos(int idEstablecimiento)
+        {
+            try
+            {
+                string requestUri = App.DAUtil.miURL + "contador_pollos.php?idEstablecimiento=" + idEstablecimiento;
+                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
+                string resultJSON = response.Content.ReadAsStringAsync().Result;
+
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(resultJSON) && !resultJSON.ToLower().Equals("false"))
+                {
+                    return JsonConvert.DeserializeObject<ContadorPollosModel>(resultJSON);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error GetContadorPollos: " + ex.Message);
+            }
+            return new ContadorPollosModel { idEstablecimiento = idEstablecimiento, cantidad = 0, fecha = DateTime.Now.ToString("yyyy-MM-dd") };
+        }
+
+        /// <summary>
+        /// Obtiene el contador diario de pollos asados (async)
+        /// </summary>
+        public static async Task<ContadorPollosModel> GetContadorPollosAsync(int idEstablecimiento)
+        {
+            try
+            {
+                string requestUri = App.DAUtil.miURL + "contador_pollos.php?idEstablecimiento=" + idEstablecimiento;
+                Debug.WriteLine($"[GetContadorPollosAsync] URL: {requestUri}");
+
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
+
+                Debug.WriteLine($"[GetContadorPollosAsync] StatusCode: {response.StatusCode}, Response: {resultJSON}");
+
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(resultJSON) && !resultJSON.ToLower().Equals("false"))
+                {
+                    var result = JsonConvert.DeserializeObject<ContadorPollosModel>(resultJSON);
+                    Debug.WriteLine($"[GetContadorPollosAsync] Deserializado: cantidad={result?.cantidad}");
+                    return result;
+                }
+                else
+                {
+                    Debug.WriteLine($"[GetContadorPollosAsync] Respuesta no válida - IsSuccess: {response.IsSuccessStatusCode}, Empty: {string.IsNullOrEmpty(resultJSON)}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[GetContadorPollosAsync] Error: {ex.Message}");
+                Debug.WriteLine($"[GetContadorPollosAsync] Stack: {ex.StackTrace}");
+            }
+            return new ContadorPollosModel { idEstablecimiento = idEstablecimiento, cantidad = 0, fecha = DateTime.Now.ToString("yyyy-MM-dd") };
+        }
+
+        /// <summary>
+        /// Suma pollos al contador diario
+        /// </summary>
+        public static async Task<ContadorPollosModel> SumarPollosAsync(int idEstablecimiento, int cantidad = 1)
+        {
+            try
+            {
+                string requestUri = App.DAUtil.miURL + "contador_pollos.php";
+                var data = new { idEstablecimiento = idEstablecimiento, operacion = "sumar", cantidad = cantidad };
+                HttpResponseMessage response = await App.Client.PostAsync(requestUri,
+                    new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+                string resultJSON = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(resultJSON) && !resultJSON.ToLower().Equals("false"))
+                {
+                    return JsonConvert.DeserializeObject<ContadorPollosModel>(resultJSON);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error SumarPollosAsync: " + ex.Message);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Resta pollos del contador diario
+        /// </summary>
+        public static async Task<ContadorPollosModel> RestarPollosAsync(int idEstablecimiento, int cantidad = 1)
+        {
+            try
+            {
+                string requestUri = App.DAUtil.miURL + "contador_pollos.php";
+                var data = new { idEstablecimiento = idEstablecimiento, operacion = "restar", cantidad = cantidad };
+                HttpResponseMessage response = await App.Client.PostAsync(requestUri,
+                    new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json"));
+                string resultJSON = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(resultJSON) && !resultJSON.ToLower().Equals("false"))
+                {
+                    return JsonConvert.DeserializeObject<ContadorPollosModel>(resultJSON);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error RestarPollosAsync: " + ex.Message);
+            }
+            return null;
         }
 
         #endregion

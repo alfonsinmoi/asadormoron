@@ -108,6 +108,10 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 ListadoRepartidores = new ObservableCollection<RepartidorModel>(App.DAUtil.GetRepartidores().Where(p => p.activo == 1 && p.idPueblo==App.DAUtil.Usuario.idPueblo).ToList());
                 IsVisibleRepartidores = ListadoRepartidores.Count > 0;
                 await initTimer();
+
+                // Cargar contador de pollos
+                _ = CargarContadorPollosAsync();
+
                 App.DAUtil.Usuario.platform = DeviceInfo.Platform.ToString().ToLower();
                 App.DAUtil.Usuario.token = App.DAUtil.InstallId.ToString();
                 if (DeviceInfo.Platform.ToString() == "iOS")
@@ -379,6 +383,73 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     tieneLocal = value;
                     OnPropertyChanged(nameof(TieneLocal));
                 }
+            }
+        }
+
+        // Contador de pollos
+        private int _contadorPollos;
+        public int ContadorPollos
+        {
+            get => _contadorPollos;
+            set
+            {
+                if (_contadorPollos != value)
+                {
+                    _contadorPollos = value;
+                    OnPropertyChanged(nameof(ContadorPollos));
+                }
+            }
+        }
+
+        public ICommand SumarPolloCommand => new AsyncRelayCommand(SumarPolloAsync);
+        public ICommand RestarPolloCommand => new AsyncRelayCommand(RestarPolloAsync);
+
+        private async Task CargarContadorPollosAsync()
+        {
+            try
+            {
+                var contador = await ResponseServiceWS.GetContadorPollosAsync(App.EstActual.idEstablecimiento);
+                if (contador != null)
+                {
+                    MainThread.BeginInvokeOnMainThread(() => ContadorPollos = contador.cantidad);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error cargando contador pollos: {ex.Message}");
+            }
+        }
+
+        private async Task SumarPolloAsync()
+        {
+            try
+            {
+                var resultado = await ResponseServiceWS.SumarPollosAsync(App.EstActual.idEstablecimiento, 1);
+                if (resultado != null)
+                {
+                    ContadorPollos = resultado.cantidad;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error sumando pollo: {ex.Message}");
+            }
+        }
+
+        private async Task RestarPolloAsync()
+        {
+            try
+            {
+                if (ContadorPollos <= 0) return;
+                var resultado = await ResponseServiceWS.RestarPollosAsync(App.EstActual.idEstablecimiento, 1);
+                if (resultado != null)
+                {
+                    ContadorPollos = resultado.cantidad;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error restando pollo: {ex.Message}");
             }
         }
         #endregion

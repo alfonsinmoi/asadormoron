@@ -139,8 +139,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
           $zonas=explode(", ",$_GET['zonas']);
           foreach ($zonas as $z) {
               $mesas=explode("--",$z);
-              $sql="INSERT INTO `qo_camareros_zonas`(`idZona`, `idCamarero`, `inicio`, `fin`) VALUES ($mesas[0],$postId,$mesas[1],$mesas[2])";
+              // CORREGIDO: Prepared statement para evitar SQL Injection
+              $sql="INSERT INTO `qo_camareros_zonas`(`idZona`, `idCamarero`, `inicio`, `fin`) VALUES (:idZona, :idCamarero, :inicio, :fin)";
               $statement = $dbConn->prepare($sql);
+              $statement->bindValue(':idZona', intval($mesas[0]), PDO::PARAM_INT);
+              $statement->bindValue(':idCamarero', $postId, PDO::PARAM_INT);
+              $statement->bindValue(':inicio', intval($mesas[1]), PDO::PARAM_INT);
+              $statement->bindValue(':fin', intval($mesas[2]), PDO::PARAM_INT);
               $statement->execute();
           }
           $input['id'] = $postId;
@@ -168,12 +173,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
     $id = $input['id'];
     $fields = getParams($input);
 
-    $sql = "UPDATE `qo_camareros` SET `nombre`=:nombre,foto=:foto, activo=:activo,idEstablecimiento=:idEstablecimiento WHERE id=$id";
+    // CORREGIDO: Prepared statement para evitar SQL Injection
+    $sql = "UPDATE `qo_camareros` SET `nombre`=:nombre,foto=:foto, activo=:activo,idEstablecimiento=:idEstablecimiento WHERE id=:id";
     $statement = $dbConn->prepare($sql);
     $statement->bindValue(':nombre', $input['nombre']);
-      $statement->bindValue(':activo', $input['activo']);
-      $statement->bindValue(':foto', $input['foto']);
-      $statement->bindValue(':idEstablecimiento', $input['idEstablecimiento']);
+    $statement->bindValue(':activo', $input['activo']);
+    $statement->bindValue(':foto', $input['foto']);
+    $statement->bindValue(':idEstablecimiento', $input['idEstablecimiento']);
+    $statement->bindValue(':id', intval($id), PDO::PARAM_INT);
     $statement->execute();
 
     $statement = $dbConn->prepare("DELETE FROM qo_camareros_zonas where idCamarero=:id");
@@ -183,8 +190,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT')
     $zonas=explode(", ",$_GET['zonas']);
     foreach ($zonas as $z) {
         $mesas=explode("--",$z);
-        $sql="INSERT INTO `qo_camareros_zonas`(`idZona`, `idCamarero`, `inicio`, `fin`) VALUES ($mesas[0],$id,$mesas[1],$mesas[2])";
+        // CORREGIDO: Prepared statement para evitar SQL Injection
+        $sql="INSERT INTO `qo_camareros_zonas`(`idZona`, `idCamarero`, `inicio`, `fin`) VALUES (:idZona, :idCamarero, :inicio, :fin)";
         $statement = $dbConn->prepare($sql);
+        $statement->bindValue(':idZona', intval($mesas[0]), PDO::PARAM_INT);
+        $statement->bindValue(':idCamarero', intval($id), PDO::PARAM_INT);
+        $statement->bindValue(':inicio', intval($mesas[1]), PDO::PARAM_INT);
+        $statement->bindValue(':fin', intval($mesas[2]), PDO::PARAM_INT);
         $statement->execute();
     }
     header("HTTP/1.1 200 OK");
