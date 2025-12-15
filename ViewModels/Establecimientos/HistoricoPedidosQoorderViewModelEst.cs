@@ -493,15 +493,33 @@ namespace AsadorMoron.ViewModels.Establecimientos
         #endregion
 
         #region Methods
-        private void ExeMas()
+        private async void ExeMas()
         {
-            numeroDias++;
-            CargaPedidos();
+            try
+            {
+                App.userdialog?.ShowLoading(AppResources.Cargando);
+                await Task.Delay(100);
+                numeroDias++;
+                CargaPedidos();
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
+            }
         }
-        private void ExeTodo()
+        private async void ExeTodo()
         {
-            numeroDias = 1000;
-            CargaPedidos();
+            try
+            {
+                App.userdialog?.ShowLoading(AppResources.Cargando);
+                await Task.Delay(100);
+                numeroDias = 1000;
+                CargaPedidos();
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
+            }
         }
         private void SetTipos()
         {
@@ -586,20 +604,27 @@ namespace AsadorMoron.ViewModels.Establecimientos
             }
 
         }
-        private void InfoUsuarioPedido(object codigo)
+        private async void InfoUsuarioPedido(object codigo)
         {
             try
             {
                 if (MopupService.Instance.PopupStack.Count() == 0)
                 {
+                    App.userdialog?.ShowLoading(AppResources.Cargando);
+                    await Task.Delay(100);
                     string cod = (string)codigo;
                     CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
-                    MopupService.Instance.PushAsync(new PopupPageInfoUsuarioPedido(c2), true);
+                    App.userdialog?.HideLoading();
+                    await MopupService.Instance.PushAsync(new PopupPageInfoUsuarioPedido(c2), true);
                 }
             }
             catch (Exception ex)
             {
-                // 
+                //
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
             }
         }
         private void InitTimer()

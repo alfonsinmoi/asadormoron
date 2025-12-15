@@ -29,7 +29,7 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <!--  CONTAINER  -->
-        <Grid BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" RowDefinitions="*, AUTO">
+        <Grid BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,0,0,0', UWP='0,0,0,0'}" RowDefinitions="*, AUTO">
             <ScrollView Grid.Row="0">
                 <StackLayout
                     HorizontalOptions="FillAndExpand"

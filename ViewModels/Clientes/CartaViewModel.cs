@@ -28,7 +28,8 @@ namespace AsadorMoron.ViewModels.Clientes
         private readonly ResponseServiceAsync _serviceAsync = new();
         private readonly Debouncer _searchDebouncer = new();
         private CancellationTokenSource _cts;
-
+        private bool _navegando = false;
+        private bool cargado = false;
         public CartaViewModel()
         {
             App.entradoEnCarta = false;
@@ -38,159 +39,221 @@ namespace AsadorMoron.ViewModels.Clientes
 
         public override async Task InitializeAsync(object navigationData)
         {
-            // Cancelar operaciones anteriores si existen
-            _cts?.Cancel();
-            _cts = new CancellationTokenSource();
-            var ct = _cts.Token;
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Debug.WriteLine($"[CV] InitializeAsync INICIO (0ms)");
 
-            var benchmarkTotal = PerformanceBenchmark.StartTimer();
-
-            try
+            if (!cargado)
             {
-                // Inicialización local rápida (no bloquea)
-                Logado = App.DAUtil.Usuario != null;
-                Kiosko = (App.DAUtil.Usuario?.kiosko ?? 0) == 1;
-                App.DAUtil.EnTimer = false;
-                Logo = "logomorado.png";
-                carrito = App.DAUtil.Getcarrito();
-                Idioma = App.idioma;
+                cargado = true;
+                System.Diagnostics.Debug.WriteLine($"[CV] Primera carga ({sw.ElapsedMilliseconds}ms)");
+                // Cancelar operaciones anteriores si existen
+                _cts?.Cancel();
+                _cts = new CancellationTokenSource();
+                var ct = _cts.Token;
 
-                // OPTIMIZADO: Usar LINQ Sum en lugar de foreach
-                Cantidad = carrito.Sum(c => c.cantidad).ToString();
+                var benchmarkTotal = PerformanceBenchmark.StartTimer();
 
-                _establecimiento = App.EstActual;
-                if (!string.IsNullOrEmpty(_establecimiento.logo))
-                    Logo = _establecimiento.logo;
+                // Mostrar loading al inicio
+                try { App.userdialog?.ShowLoading(Recursos.AppResources.Cargando); } catch { }
+                System.Diagnostics.Debug.WriteLine($"[CV] ShowLoading ({sw.ElapsedMilliseconds}ms)");
 
-                // OPTIMIZADO: Cargar datos en PARALELO con async/await
-                // ANTES: 3 llamadas síncronas bloqueantes secuenciales
-                // DESPUÉS: 3 llamadas async en paralelo
-                var datosTask = _serviceAsync.CargarDatosCartaAsync(_establecimiento.idEstablecimiento, ct);
-                var productosTask = productos == null
-                    ? App.ResponseWS.getListadoProductosEstablecimiento()
-                    : Task.FromResult(productos);
-
-                // Esperar ambas tareas en paralelo
-                await Task.WhenAll(datosTask, productosTask);
-
-                var datos = await datosTask;
-                productos = (await productosTask)?.FindAll(p => p.estado == 1) ?? new List<ArticuloModel>();
-
-                // Aplicar resultados
-                Categorias = new ObservableCollection<Categoria>(datos.Categorias);
-                App.EstActual.configuracion = datos.Config;
-                SistemaPuntos = datos.Config?.sistemaPuntos ?? false;
-
-                if (SistemaPuntos)
+                try
                 {
+                    // Inicialización local rápida (no bloquea)
+                    System.Diagnostics.Debug.WriteLine($"[CV] Iniciando configuración local ({sw.ElapsedMilliseconds}ms)");
+                    Logado = App.DAUtil.Usuario != null;
+                    Kiosko = (App.DAUtil.Usuario?.kiosko ?? 0) == 1;
+                    System.Diagnostics.Debug.WriteLine($"[CV] Logado={Logado}, Kiosko={Kiosko} ({sw.ElapsedMilliseconds}ms)");
+
+                    // Permitir añadir productos para Kiosko, Admin o Establecimiento
+                    var rol = App.DAUtil.Usuario?.rol ?? 0;
+                    PuedeAnadirProducto = Kiosko ||
+                        rol == (int)RolesEnum.Administrador ||
+                        rol == (int)RolesEnum.SuperAdmin ||
+                        rol == (int)RolesEnum.Establecimiento;
+
+                    App.DAUtil.EnTimer = false;
+                    Logo = "logomorado.png";
+                    carrito = App.DAUtil.Getcarrito();
+                    Idioma = App.idioma;
+
                     // OPTIMIZADO: Usar LINQ Sum en lugar de foreach
-                    Puntos = datos.Puntos - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
-                }
-                else
-                {
-                    Puntos = 0;
-                }
+                    Cantidad = carrito.Sum(c => c.cantidad).ToString();
 
-                // Verificar estado del servicio
-                if (App.EstActual.configuracion?.servicioActivo == true)
-                {
-                    Cerrado = false;
-                }
-                else
-                {
-                    TextoCerrado = App.EstActual.configuracion?.textoCerrado ?? "";
-                    Cerrado = true;
-                }
+                    _establecimiento = App.EstActual;
+                    if (!string.IsNullOrEmpty(_establecimiento.logo))
+                        Logo = _establecimiento.logo;
 
-                // Cargar contador de pollos si es modo kiosko
-                if (Kiosko)
-                {
-                    await CargarContadorPollosAsync();
-                }
+                    // Kiosko: desactivar sistema de puntos
+                    if (Kiosko)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[CartaViewModel] MODO KIOSKO - Sistema de puntos desactivado");
+                    }
 
-                await base.InitializeAsync(navigationData);
+                    {
+                        // Cargar datos del servidor
+                        System.Diagnostics.Debug.WriteLine($"[CV] Cargando datos - idEst: {_establecimiento?.idEstablecimiento} ({sw.ElapsedMilliseconds}ms)");
+                        var datosTask = _serviceAsync.CargarDatosCartaAsync(_establecimiento.idEstablecimiento, ct);
+                        var productosTask = productos == null
+                            ? App.ResponseWS.getListadoProductosEstablecimiento(_establecimiento.idEstablecimiento, true)
+                            : Task.FromResult(productos);
+
+                        // Esperar ambas tareas en paralelo
+                        System.Diagnostics.Debug.WriteLine($"[CV] Task.WhenAll iniciado ({sw.ElapsedMilliseconds}ms)");
+                        await Task.WhenAll(datosTask, productosTask);
+                        System.Diagnostics.Debug.WriteLine($"[CV] Task.WhenAll completado ({sw.ElapsedMilliseconds}ms)");
+
+                        var datos = await datosTask;
+                        System.Diagnostics.Debug.WriteLine($"[CV] Categorias: {datos.Categorias?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
+                        productos = (await productosTask)?.FindAll(p => p.estado == 1) ?? new List<ArticuloModel>();
+                        System.Diagnostics.Debug.WriteLine($"[CV] Productos: {productos?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
+
+                        // Aplicar resultados
+                        Categorias = new ObservableCollection<Categoria>(datos.Categorias);
+                        App.EstActual.configuracion = datos.Config;
+
+                        // Kiosko NO usa sistema de puntos
+                        if (Kiosko)
+                        {
+                            SistemaPuntos = false;
+                            Puntos = 0;
+                        }
+                        else
+                        {
+                            SistemaPuntos = datos.Config?.sistemaPuntos ?? false;
+                            if (SistemaPuntos)
+                            {
+                                // OPTIMIZADO: Usar LINQ Sum en lugar de foreach
+                                Puntos = datos.Puntos - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                            }
+                            else
+                            {
+                                Puntos = 0;
+                            }
+                        }
+                    }
+
+                    // Verificar estado del servicio
+                    if (App.EstActual.configuracion?.servicioActivo == true)
+                    {
+                        Cerrado = false;
+                    }
+                    else
+                    {
+                        TextoCerrado = App.EstActual.configuracion?.textoCerrado ?? "";
+                        Cerrado = true;
+                    }
+
+                    // Cargar contador de pollos si es modo kiosko
+                    if (Kiosko)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[CV] Cargando contador pollos ({sw.ElapsedMilliseconds}ms)");
+                        await CargarContadorPollosAsync();
+                        System.Diagnostics.Debug.WriteLine($"[CV] Contador pollos cargado ({sw.ElapsedMilliseconds}ms)");
+                    }
+
+                    System.Diagnostics.Debug.WriteLine($"[CV] Antes base.InitializeAsync ({sw.ElapsedMilliseconds}ms)");
+                    await base.InitializeAsync(navigationData);
+                    System.Diagnostics.Debug.WriteLine($"[CV] Después base.InitializeAsync ({sw.ElapsedMilliseconds}ms)");
+                }
+                catch (OperationCanceledException)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CV] CANCELADO ({sw.ElapsedMilliseconds}ms)");
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CV] ERROR: {ex.Message} ({sw.ElapsedMilliseconds}ms)");
+                }
+                finally
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CV] FIN TOTAL: {sw.ElapsedMilliseconds}ms");
+                    MainThread.BeginInvokeOnMainThread(() => App.userdialog?.HideLoading());
+                    PerformanceBenchmark.StopAndRecord(benchmarkTotal, "CartaViewModel_InitializeAsync_OPTIMIZADO");
+                }
             }
-            catch (OperationCanceledException)
+            else
             {
-                // Operación cancelada, es esperado
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[CartaViewModel] Error InitializeAsync: {ex.Message}");
-            }
-            finally
-            {
-                MainThread.BeginInvokeOnMainThread(() => App.userdialog?.HideLoading());
-                PerformanceBenchmark.StopAndRecord(benchmarkTotal, "CartaViewModel_InitializeAsync_OPTIMIZADO");
+                System.Diagnostics.Debug.WriteLine($"[CV] Ya cargado, saltando ({sw.ElapsedMilliseconds}ms)");
             }
         }
 
         #region Métodos
 
         /// <summary>
-        /// OPTIMIZADO: Búsqueda con debounce para evitar búsquedas excesivas mientras el usuario escribe
+        /// Búsqueda con debounce para evitar búsquedas excesivas mientras el usuario escribe
         /// </summary>
         private async Task BuscarProductosConDebounce()
         {
-            await _searchDebouncer.DebounceAsync(async () =>
+            await _searchDebouncer.DebounceAsync(() =>
             {
-                await BuscarProductosInterno();
-            }, 300); // 300ms de delay
+                FiltrarProductos();
+                return Task.CompletedTask;
+            }, 150); // 150ms - más rápido porque es solo filtrado local
         }
 
-        private async Task BuscarProductosInterno()
+        /// <summary>
+        /// Filtra los productos ya cargados en memoria (sin llamadas al servidor)
+        /// </summary>
+        private void FiltrarProductos()
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(TextoBusqueda))
+                var busqueda = TextoBusqueda?.Trim();
+
+                if (string.IsNullOrWhiteSpace(busqueda))
                 {
-                    // Si no hay texto de búsqueda, mostrar categorías
                     MostrandoResultados = false;
                     ResultadosBusqueda = new ObservableCollection<Comida>();
                     return;
                 }
 
-                // OPTIMIZADO: Usar StringComparison para mejor rendimiento
-                var busqueda = TextoBusqueda;
+                // Si no hay productos cargados, no buscar
+                if (productos == null || productos.Count == 0)
+                {
+                    MostrandoResultados = false;
+                    return;
+                }
 
-                // OPTIMIZADO: Usar LINQ con StringComparison.OrdinalIgnoreCase (más rápido)
-                var resultados = productos
-                    .Where(p =>
-                        (p.nombre?.Contains(busqueda, StringComparison.OrdinalIgnoreCase) == true) ||
-                        (p.descripcion?.Contains(busqueda, StringComparison.OrdinalIgnoreCase) == true))
-                    .Select(p =>
+                // Filtrado local - muy rápido
+                var resultados = new List<Comida>();
+                var idEst = _establecimiento?.idEstablecimiento ?? 0;
+
+                foreach (var p in productos)
+                {
+                    bool nombreMatch = p.nombre?.IndexOf(busqueda, StringComparison.OrdinalIgnoreCase) >= 0;
+                    bool descMatch = p.descripcion?.IndexOf(busqueda, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                    if (nombreMatch || descMatch)
                     {
-                        var comida = new Comida
+                        var itemCarrito = carrito.Find(c => c.idArticulo == p.idArticulo);
+                        var cant = itemCarrito?.cantidad ?? 0;
+                        p.Cantidad = cant;
+
+                        resultados.Add(new Comida
                         {
                             articulo = p,
-                            idEstablecimiento = _establecimiento.idEstablecimiento,
+                            idEstablecimiento = idEst,
                             noTieneOpciones = string.IsNullOrEmpty(p.opciones) && string.IsNullOrEmpty(p.ingredientes),
-                            cantidad = 0
-                        };
+                            cantidad = cant
+                        });
+                    }
+                }
 
-                        // Verificar si está en el carrito
-                        var itemCarrito = carrito.Find(c => c.idArticulo == p.idArticulo);
-                        if (itemCarrito != null)
-                        {
-                            comida.cantidad = itemCarrito.cantidad;
-                            p.Cantidad = itemCarrito.cantidad;
-                        }
-
-                        return comida;
-                    })
-                    .ToList();
-
-                // Actualizar en el hilo UI
-                await MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    ResultadosBusqueda = new ObservableCollection<Comida>(resultados);
-                    MostrandoResultados = true;
-                });
+                ResultadosBusqueda = new ObservableCollection<Comida>(resultados);
+                MostrandoResultados = true;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[CartaViewModel] Error búsqueda: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Ejecuta la búsqueda cuando el usuario pulsa el botón Buscar
+        /// </summary>
+        private void Buscar()
+        {
+            FiltrarProductos();
         }
 
         private void LimpiarBusqueda()
@@ -300,21 +363,24 @@ namespace AsadorMoron.ViewModels.Clientes
             }
         }
 
-        private void ProductoSeleccionado(object parametro)
+        private async void ProductoSeleccionado(object parametro)
         {
+            if (_navegando) return;
+            _navegando = true;
+
             try
             {
                 Comida comida = (Comida)parametro;
-                try { App.userdialog?.ShowLoading(AppResources.Cargando); } catch (Exception) { }
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    App.DAUtil.Idioma = "ES";
-                    await App.DAUtil.NavigationService.NavigateToAsync<DetalleArticuloViewModel>(comida.articulo);
-                });
+                App.DAUtil.Idioma = "ES";
+                await App.DAUtil.NavigationService.NavigateToAsync<DetalleArticuloViewModel>(comida.articulo);
             }
             catch (Exception ex)
             {
                 App.customDialog?.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
+            }
+            finally
+            {
+                _navegando = false;
             }
         }
 
@@ -326,52 +392,77 @@ namespace AsadorMoron.ViewModels.Clientes
                 await App.DAUtil.NavigationService.NavigateToAsyncMenu<LoginViewModel>();
             });
         }
-        private void IrDetallePedido()
+        private async void IrDetallePedido()
         {
+            if (_navegando) return;
+            _navegando = true;
+
             try
             {
                 if (carrito.Count > 0)
                 {
-                    try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    // Mostrar loading INMEDIATAMENTE
+                    try { App.userdialog?.ShowLoading(AppResources.Cargando); } catch { }
+
+                    // Pequeña pausa para que el loading se renderice
+                    await Task.Delay(30);
+
+                    App.DAUtil.Idioma = "ES";
+                    if (App.autoPedidoAdmin != null)
                     {
-                        App.DAUtil.Idioma = "ES";
-                        if (App.autoPedidoAdmin != null)
-                        {
-                            carrito[0].direccion = App.autoPedidoAdmin.direccion;
-                            carrito[0].idZona = App.autoPedidoAdmin.idZona;
-                            carrito[0].poblacion = App.autoPedidoAdmin.poblacion;
-                            carrito[0].observaciones = App.autoPedidoAdmin.nombre + Environment.NewLine + App.autoPedidoAdmin.telefono;
-                            Preferences.Set("idPueblo", App.autoPedidoAdmin.idPueblo);
-                        }
-                        await App.DAUtil.NavigationService.NavigateToAsync<DetallePedidoViewModel>(carrito);
-                    });
+                        carrito[0].direccion = App.autoPedidoAdmin.direccion;
+                        carrito[0].idZona = App.autoPedidoAdmin.idZona;
+                        carrito[0].poblacion = App.autoPedidoAdmin.poblacion;
+                        carrito[0].observaciones = App.autoPedidoAdmin.nombre + Environment.NewLine + App.autoPedidoAdmin.telefono;
+                        Preferences.Set("idPueblo", App.autoPedidoAdmin.idPueblo);
+                    }
+                    await App.DAUtil.NavigationService.NavigateToAsync<DetallePedidoViewModel>(carrito);
                 }
             }
             catch (Exception ex)
             {
-                App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
-                // 
+                App.userdialog?.HideLoading();
+                _ = App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
+            }
+            finally
+            {
+                _navegando = false;
             }
         }
-        private void CategoriaSeleccionadaExe(Categoria idCategoria)
+        private async void CategoriaSeleccionadaExe(Categoria idCategoria)
         {
+            if (_navegando) return;
+            _navegando = true;
+
+            // Mostrar loading INMEDIATAMENTE
+            try { App.userdialog?.ShowLoading(AppResources.Cargando); } catch { }
+
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Debug.WriteLine($"[PERF] CategoriaSeleccionadaExe INICIO - Categoria: {idCategoria?.nombre}");
+
             try
             {
-                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    App.DAUtil.Idioma = "ES";
-                    if (idCategoria.navidad)
-                        await App.DAUtil.NavigationService.NavigateToAsync<CartaProductosNavidadViewModel>(idCategoria);
-                    else
-                        await App.DAUtil.NavigationService.NavigateToAsync<CartaProductosViewModel>(idCategoria);
-                });
+                // Pequeña pausa para que el loading se renderice en pantalla
+                await Task.Delay(30);
+
+                App.DAUtil.Idioma = "ES";
+
+                System.Diagnostics.Debug.WriteLine($"[PERF] Antes de NavigateToAsync: {sw.ElapsedMilliseconds}ms");
+                if (idCategoria.navidad)
+                    await App.DAUtil.NavigationService.NavigateToAsync<CartaProductosNavidadViewModel>(idCategoria);
+                else
+                    await App.DAUtil.NavigationService.NavigateToAsync<CartaProductosViewModel>(idCategoria);
+                System.Diagnostics.Debug.WriteLine($"[PERF] Después de NavigateToAsync: {sw.ElapsedMilliseconds}ms");
             }
             catch (Exception ex)
             {
+                App.userdialog?.HideLoading();
                 App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
-                // 
+            }
+            finally
+            {
+                _navegando = false;
+                System.Diagnostics.Debug.WriteLine($"[PERF] CategoriaSeleccionadaExe FIN TOTAL: {sw.ElapsedMilliseconds}ms");
             }
         }
         private void AbrirPopupKiosko()
@@ -510,7 +601,7 @@ namespace AsadorMoron.ViewModels.Clientes
         #region Comandos
         public ICommand IrDetallePedidoCommand { get { return new Command(IrDetallePedido); } }
         public ICommand loginCommand { get { return new Command(IrLogin); } }
-        public ICommand BuscarCommand { get { return new Command(async () => await BuscarProductosConDebounce()); } }
+        public ICommand BuscarCommand { get { return new Command(Buscar); } }
         public ICommand LimpiarBusquedaCommand { get { return new Command(LimpiarBusqueda); } }
         public ICommand ProductoSeleccionadoCommand { get { return new Command(ProductoSeleccionado); } }
         public ICommand ClickMasCommand { get { return new Command((parametro) => Add(parametro)); } }
@@ -520,6 +611,35 @@ namespace AsadorMoron.ViewModels.Clientes
         public ICommand AnadirProductoKioskoCommand { get { return new Command(AnadirProductoKiosko); } }
         public ICommand SumarPolloCommand { get { return new Command(async () => await SumarPolloAsync()); } }
         public ICommand RestarPolloCommand { get { return new Command(async () => await RestarPolloAsync()); } }
+        public ICommand SeleccionarCategoriaCommand { get { return new Command<Categoria>((cat) => CategoriaSeleccionada = cat); } }
+        #endregion
+
+        #region Métodos Públicos
+        /// <summary>
+        /// Refresca el carrito desde la base de datos local.
+        /// Llamar desde OnAppearing para actualizar después de volver de DetalleArticulo.
+        /// </summary>
+        public void RefrescarCarrito()
+        {
+            try
+            {
+                carrito = App.DAUtil.Getcarrito();
+                Cantidad = carrito.Sum(c => c.cantidad).ToString();
+
+                // Actualizar puntos si aplica
+                if (SistemaPuntos && !Kiosko)
+                {
+                    var puntosUsados = carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                    // Nota: Puntos base se mantiene, solo restamos los usados en carrito
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[CartaViewModel] Carrito refrescado: {carrito.Count} items, cantidad total: {Cantidad}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CartaViewModel] Error al refrescar carrito: {ex.Message}");
+            }
+        }
         #endregion
 
         #region Propiedades
@@ -690,8 +810,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 {
                     textoBusqueda = value;
                     OnPropertyChanged(nameof(TextoBusqueda));
-                    // OPTIMIZADO: Buscar con debounce para no disparar en cada tecla
-                    _ = BuscarProductosConDebounce();
+                    // La búsqueda se ejecuta al pulsar el botón Buscar, no automáticamente
                 }
             }
         }
@@ -748,6 +867,20 @@ namespace AsadorMoron.ViewModels.Clientes
                 {
                     kiosko = value;
                     OnPropertyChanged(nameof(Kiosko));
+                }
+            }
+        }
+
+        private bool puedeAnadirProducto = false;
+        public bool PuedeAnadirProducto
+        {
+            get { return puedeAnadirProducto; }
+            set
+            {
+                if (puedeAnadirProducto != value)
+                {
+                    puedeAnadirProducto = value;
+                    OnPropertyChanged(nameof(PuedeAnadirProducto));
                 }
             }
         }

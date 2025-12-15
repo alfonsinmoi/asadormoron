@@ -52,40 +52,54 @@ namespace AsadorMoron.ViewModels.Clientes
 
         #region Metodos
 
-        private void InfoUsuario(object codigo)
+        private async void InfoUsuario(object codigo)
         {
             try
             {
                 if (MopupService.Instance.PopupStack.Count() == 0)
                 {
+                    App.userdialog?.ShowLoading(AppResources.Cargando);
+                    await Task.Delay(100);
                     string cod = (string)codigo;
                     CabeceraPedido c2 = Listado.Where(p => p.codigoPedido == cod).FirstOrDefault<CabeceraPedido>();
                     ZonaModel z = App.DAUtil.getZonas().Find(p => p.idZona == c2.idZona);
                     string nombrezona = string.Empty;
                     if (z != null)
                         nombrezona = z.nombre;
-                    MopupService.Instance.PushAsync(new PopupPageInfoUsuario(c2.nombreUsuario, c2.emailUsuario, c2.telefonoUsuario, c2.direccionUsuario, nombrezona), true);
+                    App.userdialog?.HideLoading();
+                    await MopupService.Instance.PushAsync(new PopupPageInfoUsuario(c2.nombreUsuario, c2.emailUsuario, c2.telefonoUsuario, c2.direccionUsuario, nombrezona), true);
                 }
             }
             catch (Exception ex)
             {
-                // 
+                //
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
             }
         }
-        private void InfoPedido(object codigo)
+        private async void InfoPedido(object codigo)
         {
             try
             {
                 if (MopupService.Instance.PopupStack.Count() == 0)
                 {
+                    App.userdialog?.ShowLoading(AppResources.Cargando);
+                    await Task.Delay(100);
                     string cod = (string)codigo;
                     CabeceraPedido c2 = Listado.Where(p => p.codigoPedido == cod).FirstOrDefault<CabeceraPedido>();
-                    MopupService.Instance.PushAsync(new PopupPageInfoPedidoCliente(c2), true);
+                    App.userdialog?.HideLoading();
+                    await MopupService.Instance.PushAsync(new PopupPageInfoPedidoCliente(c2), true);
                 }
             }
             catch (Exception ex)
             {
-                // 
+                //
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
             }
         }
 

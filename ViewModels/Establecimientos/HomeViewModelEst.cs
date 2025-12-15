@@ -30,6 +30,7 @@ using static AsadorMoron.Managers.ManagerImpresora;
 using AsadorMoron.Views.Repartidores;
 using AsadorMoron.ViewModels.Administrador;
 using AsadorMoron.Models.PayComet;
+using System.Drawing;
 
 namespace AsadorMoron.ViewModels.Establecimientos
 {
@@ -120,7 +121,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 IsVisibleRepartidores = ListadoRepartidores.Count > 0;
                 await initTimer();
                 App.timer = new System.Timers.Timer();
-                App.timer.Interval = 8000;
+                App.timer.Interval = 5000;
                 App.timer.Elapsed += _timer_Elapsed;
                 App.timer.Start();
 
@@ -166,7 +167,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private int alturaLinea;
         private IUserDialogs dialogHomeAdmin = App.userdialog;
         public List<CabeceraPedido> ListPedidosTemp;
-        IAudioPlayer player = null; // Initialized when needed
+        private readonly IAudioManager _audioManager = AudioManager.Current;
         private bool esComercio;
         public bool EsComercio
         {
@@ -409,6 +410,41 @@ namespace AsadorMoron.ViewModels.Establecimientos
 
         #region Funciones
 
+        private async Task PlaySoundAsync(string soundFile)
+        {
+            try
+            {
+#if WINDOWS
+                // En Windows usar MediaPlayer nativo
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    try
+                    {
+                        var audioFile = await FileSystem.OpenAppPackageFileAsync(soundFile);
+                        var player = _audioManager.CreatePlayer(audioFile);
+                        player.Play();
+
+                        // Esperar a que termine y liberar recursos
+                        await Task.Delay(3000);
+                        player.Dispose();
+                    }
+                    catch (Exception winEx)
+                    {
+                        Debug.WriteLine($"[HomeViewModelEst] Error Windows reproduciendo sonido {soundFile}: {winEx.Message}");
+                    }
+                });
+#else
+                var audioFile = await FileSystem.OpenAppPackageFileAsync(soundFile);
+                var player = _audioManager.CreatePlayer(audioFile);
+                player.Play();
+#endif
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[HomeViewModelEst] Error reproduciendo sonido {soundFile}: {ex.Message}");
+            }
+        }
+
         private async Task CargarContadorPollosAsync()
         {
             try
@@ -468,6 +504,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await actualizaPedidos();
+                await CargarContadorPollosAsync();
                 Console.WriteLine(DateTime.Now);
             });
 
@@ -533,7 +570,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     List<CabeceraPedido> toBeUpdated = ListPedidosTemp.Where(c => !c.tipoVenta.Equals("Local") && Listado.Any(d => c.idPedido == d.idPedido && (c.idEstadoPedido != d.idEstadoPedido))).ToList();
 
 
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    Device.BeginInvokeOnMainThread(async () =>
                     {
                         if (toBeAdded != null)
                         {
@@ -541,7 +578,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             {
                                 foreach (var item in toBeAdded)
                                 {
-                                    item.ColorPedido = "pedidoporrecoger.png";
+                                    item.ColorPedido = "pedidoPorRecoger.png";
                                     item.imagenBoton = "recogido.png";
                                     int i = 0;
                                     bool insertado = false;
@@ -559,8 +596,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
                                         Listado.Insert(i, item);
                                     if (item.idEstadoPedido == 2)
                                     {
+                                        // Reproducir sonido de nuevo pedido
+                                        await PlaySoundAsync("nuevo.mp3");
                                         await Print(item.codigoPedido, TipoImpresion.Normal);
+
+                                        // Cambiar estado a 3 en servidor Y localmente para evitar doble impresión
                                         App.ResponseWS.cambiaEstadoPedido(item.idPedido, 3);
+                                        item.idEstadoPedido = 3;
+
                                         if (item.idRepartidor != 0)
                                         {
                                             string tokenUser = App.ResponseWS.getTokenRepartidor(item.idRepartidor);
@@ -608,10 +651,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
                                         switch (item.idEstadoPedido)
                                         {
                                             case 2:
-                                                item.ColorPedido = "pedidoporrecoger.png";
-                                                item.imagenBoton = "recogido.png";
+                                                x.ColorPedido = "pedidoPorRecoger.png";
+                                                x.imagenBoton = "recogido.png";
                                                 Print(item.codigoPedido, TipoImpresion.Normal);
+
+                                                // Cambiar estado a 3 en servidor Y localmente para evitar doble impresión
                                                 App.ResponseWS.cambiaEstadoPedido(item.idPedido, 3);
+                                                x.idEstadoPedido = 3;
+
                                                 if (item.idRepartidor != 0)
                                                 {
                                                     string tokenUser = App.ResponseWS.getTokenRepartidor(item.idRepartidor);
@@ -625,11 +672,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
                                                 }
                                                 break;
                                             case (int)EstadoPedido.PorRecoger:
-                                                x.ColorPedido = "pedidoporrecoger.png";
+                                                x.ColorPedido = "pedidoPorRecoger.png";
                                                 x.imagenBoton = "recogido.png";
                                                 break;
                                             case (int)EstadoPedido.Recogido:
-                                                x.ColorPedido = "pedidorecogido.png";
+                                                x.ColorPedido = "pedidoRecogido.png";
                                                 x.imagenBoton = "entrega.png";
                                                 break;
                                         }
@@ -642,33 +689,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
 
                         if (toBeDeleted.Count > 0 || toBeUpdated.Count > 0)
                         {
-
                             TotalPedidos = ListPedidosTemp.Count();
-                            if (toBeDeleted.Count > 0 )
+                            if (toBeDeleted.Count > 0)
                             {
-                                try
-                                {
-                                    // TODO: Fix audio - player.Load("quitado.mp3");
-                                    // TODO: Fix audio - player.Play();
-                                }
-                                catch (Exception)
-                                {
-                                    if (DeviceInfo.Platform.ToString() != "WinUI")
-                                        DependencyService.Get<IAppAudio>().PlayAudioFile("quitado.mp3");
-                                }
+                                await PlaySoundAsync("quitado.mp3");
                             }
-                            else if (toBeUpdated.Count > 0 )
+                            else if (toBeUpdated.Count > 0)
                             {
-                                try
-                                {
-                                    // TODO: Fix audio - player.Load("otros.mp3");
-                                    // TODO: Fix audio - player.Play();
-                                }
-                                catch (Exception)
-                                {
-                                    if (DeviceInfo.Platform.ToString() != "WinUI")
-                                        DependencyService.Get<IAppAudio>().PlayAudioFile("otros.mp3");
-                                }
+                                await PlaySoundAsync("otros.mp3");
                             }
                         }
                     });
@@ -676,7 +704,6 @@ namespace AsadorMoron.ViewModels.Establecimientos
             }
             catch (Exception ex)
             {
-                // 
             }
         }
         private async Task EnvioNotificacionesPedido(string mensajeAdmin, string mensajeUsuario, string mensajeCamarero, string mensajeRepartidor, CabeceraPedido c)
@@ -728,7 +755,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
                                 item.ColorPedido = "pedidoporrecoger.png";
                                 item.imagenBoton = "recogido.png";
                                 await Print(item.codigoPedido, TipoImpresion.Normal);
+
+                                // Cambiar estado a 3 en servidor Y localmente para evitar doble impresión
                                 App.ResponseWS.cambiaEstadoPedido(item.idPedido, 3);
+                                item.idEstadoPedido = 3;
+
                                 if (item.idRepartidor != 0)
                                 {
                                     string tokenUser = App.ResponseWS.getTokenRepartidor(item.idRepartidor);
@@ -811,21 +842,12 @@ namespace AsadorMoron.ViewModels.Establecimientos
         {
             try
             {
-                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    await App.DAUtil.NavigationService.NavigateToAsync<CartaViewModel>();
-                });
+                await App.DAUtil.NavigationService.NavigateToAsync<CartaViewModel>();
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[VerAutoPedidoExe] Error: {ex.Message}");
                 await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
-            }
-            finally
-            {
-                App.userdialog.HideLoading();
             }
         }
         #endregion
@@ -858,70 +880,106 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private void CerrarPedido(object accion)
         {
             string idPedido = (string)accion;
-            CabeceraPedido c = ResponseServiceWS.TraePedidoPorCodigo(idPedido);
-            c.opciones = false;
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaCerrarPedido, AppResources.No, AppResources.Si);
-
-                if (result)
+                try
                 {
-                    await CerrarPedidoexe(c);
-                    await actualizaPedidos();
-                }
+                    bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaCerrarPedido, AppResources.No, AppResources.Si);
 
+                    if (result)
+                    {
+                        App.userdialog.ShowLoading("Cerrando pedido...", MaskType.Black);
+
+                        CabeceraPedido c = await Task.Run(() => ResponseServiceWS.TraePedidoPorCodigo(idPedido));
+                        if (c != null)
+                        {
+                            c.opciones = false;
+                            await CerrarPedidoexe(c);
+                        }
+
+                        App.userdialog.HideLoading();
+                        await actualizaPedidos();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    App.userdialog.HideLoading();
+                    Debug.WriteLine($"[CerrarPedido] Error: {ex.Message}");
+                }
             });
         }
         private void AnularPedido(object accion)
         {
             string idPedido = (string)accion;
-            CabeceraPedido c = ResponseServiceWS.TraePedidoPorCodigo(idPedido);
-            c.opciones = false;
             MainThread.BeginInvokeOnMainThread(async () =>
             {
-                bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaAnularPedido, AppResources.No, AppResources.Si);
-
-                if (result)
+                try
                 {
-                    await AnularPedidoexe(c);
-                    await actualizaPedidos();
-                }
+                    bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaAnularPedido, AppResources.No, AppResources.Si);
 
+                    if (result)
+                    {
+                        App.userdialog.ShowLoading("Anulando pedido...", MaskType.Black);
+
+                        CabeceraPedido c = await Task.Run(() => ResponseServiceWS.TraePedidoPorCodigo(idPedido));
+                        if (c != null)
+                        {
+                            c.opciones = false;
+                            await AnularPedidoexe(c);
+                        }
+
+                        App.userdialog.HideLoading();
+                        await actualizaPedidos();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    App.userdialog.HideLoading();
+                    Debug.WriteLine($"[AnularPedido] Error: {ex.Message}");
+                }
             });
         }
         private async Task CerrarPedidoexe(CabeceraPedido c)
         {
             try
             {
-
                 if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 5))
                 {
-
-                    List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
-                    foreach (TokensModel to in tokens3)
-                        App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Cancelado: " + c.codigoPedido, to.token);
-
-                    if (c.idRepartidor != 0)
+                    // Enviar notificaciones en segundo plano para no bloquear
+                    _ = Task.Run(() =>
                     {
-                        string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
-                        App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, tokenUser);
-                    }
-                    else
-                    {
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
-                        foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, to.token);
-                    }
+                        try
+                        {
+                            List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                            foreach (TokensModel to in tokens3)
+                                App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Cancelado: " + c.codigoPedido, to.token);
+
+                            if (c.idRepartidor != 0)
+                            {
+                                string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                                App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, tokenUser);
+                            }
+                            else
+                            {
+                                List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                                foreach (TokensModel to in tokens2)
+                                    App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, to.token);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[CerrarPedidoexe] Error enviando notificaciones: {ex.Message}");
+                        }
+                    });
                 }
                 else
                 {
-                    App.userdialog.HideLoading();
-                    await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "AsadorMoron", "OK");
+                    await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "AsadorMoron", "OK");
                 }
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[CerrarPedidoexe] Error: {ex.Message}");
             }
         }
         private async Task AnularPedidoexe(CabeceraPedido c)
@@ -930,31 +988,41 @@ namespace AsadorMoron.ViewModels.Establecimientos
             {
                 if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 99))
                 {
-                    List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
-                    foreach (TokensModel to in tokens3)
-                        App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Anulado: " + c.codigoPedido, to.token);
+                    // Enviar notificaciones en segundo plano para no bloquear
+                    _ = Task.Run(() =>
+                    {
+                        try
+                        {
+                            List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                            foreach (TokensModel to in tokens3)
+                                App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Anulado: " + c.codigoPedido, to.token);
 
-                    if (c.idRepartidor != 0)
-                    {
-                        string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
-                        App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, tokenUser);
-                    }
-                    else
-                    {
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
-                        foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, to.token);
-                    }
+                            if (c.idRepartidor != 0)
+                            {
+                                string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                                App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, tokenUser);
+                            }
+                            else
+                            {
+                                List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                                foreach (TokensModel to in tokens2)
+                                    App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, to.token);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine($"[AnularPedidoexe] Error enviando notificaciones: {ex.Message}");
+                        }
+                    });
                 }
                 else
                 {
-                    App.userdialog.HideLoading();
-                    await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "AsadorMoron", "OK");
+                    await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "AsadorMoron", "OK");
                 }
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[AnularPedidoexe] Error: {ex.Message}");
             }
         }
         #endregion

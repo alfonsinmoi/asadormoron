@@ -81,33 +81,44 @@ namespace AsadorMoron
         public static CabeceraPedido pedidoEnCurso;
         public static List<CarritoModel> carritoEnCurso;
         public static List<string> pedidosARecoger = new List<string>();
+        // Stopwatch global para medir tiempos de inicio
+        private static Stopwatch _appStartStopwatch = Stopwatch.StartNew();
+
         public App()
         {
             try
             {
+                Debug.WriteLine($"[PERF] App() constructor INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
+
                 // Register SQLite service before anything else
                 DependencyService.Register<ISQLite, SQLiteService>();
+                Debug.WriteLine($"[PERF] DependencyService.Register: {_appStartStopwatch.ElapsedMilliseconds}ms");
 
                 InitializeComponent();
+                Debug.WriteLine($"[PERF] InitializeComponent: {_appStartStopwatch.ElapsedMilliseconds}ms");
+
                 DAUtil.ConFoto = false;
 
                 if (DAUtil.DoIHaveInternet())
                     tengoConexion = true;
                 else
                     tengoConexion = false;
+                Debug.WriteLine($"[PERF] DoIHaveInternet: {_appStartStopwatch.ElapsedMilliseconds}ms");
+
                 MainPage = new NavigationPage(new PaginaEspera())
                 {
                     BarBackgroundColor = Color.FromArgb("#ffffff")
                 };
+                Debug.WriteLine($"[PERF] MainPage creado: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 // TODO: Initialize OneSignal for MAUI
                 // OneSignal initialization code removed - needs reimplementation
-                
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 userdialog.HideLoading();
-                
+
             }
         }
         public static int Usage
@@ -122,39 +133,51 @@ namespace AsadorMoron
 
         protected override async void OnStart()
         {
+            Debug.WriteLine($"[PERF] OnStart INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
             try
             {
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                Debug.WriteLine($"[PERF] RegisterProvider: {_appStartStopwatch.ElapsedMilliseconds}ms");
 
                 // Intentar carga optimizada, con fallback al método original si falla
                 try
                 {
+                    Debug.WriteLine($"[PERF] CargarDatosInicialesAsync INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                     var (establecimiento, combosList) = await AsyncService.CargarDatosInicialesAsync(67);
                     App.EstActual = establecimiento;
                     combos = combosList;
+                    Debug.WriteLine($"[PERF] CargarDatosInicialesAsync FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 }
                 catch (Exception exAsync)
                 {
-                    Debug.WriteLine($"Fallback a método síncrono: {exAsync.Message}");
+                    Debug.WriteLine($"[PERF] Fallback a método síncrono: {exAsync.Message} ({_appStartStopwatch.ElapsedMilliseconds}ms)");
                     // Fallback al método original síncrono
                     App.EstActual = ResponseServiceWS.getEstablecimiento(67);
                     if (App.EstActual != null)
                         App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(67);
                     combos = ResponseServiceWS.getCombos();
+                    Debug.WriteLine($"[PERF] Fallback FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 }
 
                 online = new OnlineModel();
+                Debug.WriteLine($"[PERF] OnlineModel: {_appStartStopwatch.ElapsedMilliseconds}ms");
+
+                Debug.WriteLine($"[PERF] InitNotification INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 await InitNotification();
+                Debug.WriteLine($"[PERF] InitNotification FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
 
                 // Usar método optimizado o el original según disponibilidad
                 try
                 {
+                    Debug.WriteLine($"[PERF] InitNavigationOptimizado INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                     await InitNavigationOptimizado();
+                    Debug.WriteLine($"[PERF] InitNavigationOptimizado FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 }
                 catch (Exception exNav)
                 {
-                    Debug.WriteLine($"Fallback a InitNavigation: {exNav.Message}");
+                    Debug.WriteLine($"[PERF] Fallback a InitNavigation: {exNav.Message} ({_appStartStopwatch.ElapsedMilliseconds}ms)");
                     await InitNavigation();
+                    Debug.WriteLine($"[PERF] InitNavigation FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 }
 
                 Connectivity.ConnectivityChanged += HandleConnectivityChanged;
@@ -165,10 +188,11 @@ namespace AsadorMoron
                     _ = CrossStoreReview.Current.RequestReview(false);
                 }
                 Usage = count;
+                Debug.WriteLine($"[PERF] OnStart FIN TOTAL: {_appStartStopwatch.ElapsedMilliseconds}ms");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error OnStart: {ex}");
+                Debug.WriteLine($"[PERF] Error OnStart: {ex} ({_appStartStopwatch.ElapsedMilliseconds}ms)");
                 try { userdialog.HideLoading(); } catch { }
             }
 
@@ -351,7 +375,8 @@ namespace AsadorMoron
                     }
                 }
 
-                ResponseWS.getConfiguracionGlobal();
+                // OPTIMIZADO: Usar versión async
+                await ResponseWS.getConfiguracionGlobalAsync();
                 if ((DeviceInfo.Platform.ToString() == "Android" && Preferences.Get("VersionMinimaAndroid", 0) > DAUtil.versionAppAndroid) || (DeviceInfo.Platform.ToString() == "iOS" && Preferences.Get("VersionMinimaiOS", 0) > DAUtil.versionAppiOS))
                 {
                     DAUtil.NavigationService.LogOutApp(typeof(VersionMinimaViewModel), null);
@@ -381,33 +406,49 @@ namespace AsadorMoron
         public static async Task<bool> InitNavigationOptimizado()
         {
             var sw = PerformanceBenchmark.StartTimer();
+            Debug.WriteLine($"[PERF] InitNavigationOptimizado INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
             try
             {
+                Debug.WriteLine($"[PERF] CreaTablas INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 DAUtil.CreaTablas();
+                Debug.WriteLine($"[PERF] CreaTablas FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
 
-                // Login (aún síncrono, pero se podría mejorar)
+                // Login OPTIMIZADO: Usando versiones async para evitar bloqueos
                 bool result;
+                Debug.WriteLine($"[PERF] IsLoginAsync INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 if (!Preferences.Get("Social", false))
-                    result = IsLogin();
+                    result = await IsLoginAsync();
                 else
-                    result = IsLoginSocial();
+                    result = await IsLoginSocialAsync();
+                Debug.WriteLine($"[PERF] IsLoginAsync FIN (result={result}): {_appStartStopwatch.ElapsedMilliseconds}ms");
 
-                // OPTIMIZACIÓN: Cargar configuración, mensajes, pueblos y zonas en PARALELO
-                // ANTES: 5 llamadas secuenciales (~3-4 segundos)
-                // AHORA: 1 llamada paralela (~1 segundo)
+                // KIOSKO: Crear tablas y precargar datos en SEGUNDO PLANO (no bloquea inicio)
+                if (result && KioskoPreloadService.EsKiosko && EstActual != null)
+                {
+                    Debug.WriteLine($"[PERF] Kiosko: creando tablas e iniciando precarga en background: {_appStartStopwatch.ElapsedMilliseconds}ms");
+                    DAUtil.CreaTablasKiosko();
+                    // NO esperamos - la precarga se ejecuta en segundo plano
+                    _ = KioskoPreloadService.Instance.PrecargarDatosKioskoAsync(EstActual.idEstablecimiento);
+                }
+
+                // OPTIMIZACIÓN: Cargar TODAS las configuraciones en PARALELO
+                Debug.WriteLine($"[PERF] Tareas paralelas INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 var configTask = ResponseWS.getConfiguracionGeneralASync();
                 var datosNavTask = AsyncService.CargarDatosNavegacionAsync();
+                var configGlobalTask = ResponseWS.getConfiguracionGlobalAsync(); // Añadido al paralelo
 
-                await Task.WhenAll(configTask, datosNavTask);
+                await Task.WhenAll(configTask, datosNavTask, configGlobalTask);
+                Debug.WriteLine($"[PERF] Tareas paralelas FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
 
                 var (mensajes, predefinidos, pueblos) = await datosNavTask;
                 MensajesGlobal = mensajes;
                 MensajesPredefinidos = predefinidos;
 
-                // Cargar datos adicionales según rol
+                // Cargar datos adicionales según rol (en paralelo si es posible)
                 if (DAUtil.Usuario != null)
                 {
                     int rol = DAUtil.Usuario.rol;
+                    Debug.WriteLine($"[PERF] Datos rol {rol} INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                     if (rol == (int)RolesEnum.Establecimiento || rol == (int)RolesEnum.Administrador || rol == (int)RolesEnum.SuperAdmin)
                     {
                         try
@@ -422,8 +463,8 @@ namespace AsadorMoron
                                     ids += item.id;
                                 }
                             }
-                            // Esta llamada podría optimizarse también en el futuro
-                            responseWS.ListadoRepartidoresMultiAdmin(ids);
+                            // OPTIMIZADO: Usar versión async
+                            await AsyncService.ListadoRepartidoresMultiAdminAsync(ids);
                             if (DeviceInfo.Platform.ToString() != "WinUI")
                             {
                                 if (App.DAUtil.Usuario.establecimientos != null)
@@ -449,9 +490,8 @@ namespace AsadorMoron
                         // Usar versión async
                         promocionAmigo = await AsyncService.GetPromocionAmigoAsync();
                     }
+                    Debug.WriteLine($"[PERF] Datos rol {rol} FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 }
-
-                ResponseWS.getConfiguracionGlobal();
 
                 if ((DeviceInfo.Platform.ToString() == "Android" && Preferences.Get("VersionMinimaAndroid", 0) > DAUtil.versionAppAndroid) ||
                     (DeviceInfo.Platform.ToString() == "iOS" && Preferences.Get("VersionMinimaiOS", 0) > DAUtil.versionAppiOS))
@@ -461,6 +501,7 @@ namespace AsadorMoron
                 else
                 {
                     Preferences.Set("PIN", "");
+                    Debug.WriteLine($"[PERF] NavigationService.InitializeAsync INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
                     DAUtil.NavigationService.InitializeAsync();
                 }
 
@@ -468,12 +509,13 @@ namespace AsadorMoron
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error InitNavigationOptimizado: {ex}");
+                Debug.WriteLine($"[PERF] Error InitNavigationOptimizado: {ex} ({_appStartStopwatch.ElapsedMilliseconds}ms)");
                 userdialog.HideLoading();
                 return false;
             }
             finally
             {
+                Debug.WriteLine($"[PERF] InitNavigationOptimizado TOTAL: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 PerformanceBenchmark.StopAndRecord(sw, "InitNavigationOptimizado");
             }
         }
@@ -625,6 +667,110 @@ namespace AsadorMoron
             }
             return true;
         }
+
+        /// <summary>
+        /// Version async de IsLogin - usa LoginAsync para evitar bloqueos
+        /// </summary>
+        private static async Task<bool> IsLoginAsync()
+        {
+            try
+            {
+                UsuarioModel persona = DAUtil.GetUsuarioSQLite();
+                if (persona != null)
+                {
+                    DAUtil.Usuario = persona;
+                }
+
+                if (tengoConexion && persona != null)
+                {
+                    string username = persona.email;
+                    string pass = persona.password;
+
+                    if (!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(pass))
+                    {
+                        try
+                        {
+                            if (await AsyncService.LoginAsync(username, pass))
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                DAUtil.Usuario = null;
+                                DAUtil.DeleteUsuarioSQLite();
+                                return false;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("Error IsLoginAsync: " + ex.ToString());
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+                return persona != null; // Sin conexion pero con usuario local
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error IsLoginAsync: " + ex.ToString());
+                userdialog.HideLoading();
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Version async de IsLoginSocial - usa LoginSocialAsync para evitar bloqueos
+        /// </summary>
+        private static async Task<bool> IsLoginSocialAsync()
+        {
+            try
+            {
+                UsuarioModel persona = DAUtil.GetUsuarioSQLite();
+                if (persona != null)
+                {
+                    DAUtil.Usuario = persona;
+                }
+
+                if (tengoConexion && persona != null)
+                {
+                    string username = persona.email;
+                    string idSocial = persona.idSocial;
+
+                    if (!string.IsNullOrEmpty(username) || !string.IsNullOrEmpty(idSocial))
+                    {
+                        try
+                        {
+                            AuthNetworkData data = new AuthNetworkData
+                            {
+                                Id = idSocial,
+                                Email = username
+                            };
+
+                            if (await AsyncService.LoginSocialAsync(data))
+                            {
+                                return true;
+                            }
+                            return false;
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine("Error IsLoginSocialAsync: " + ex.ToString());
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+                return persona != null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error IsLoginSocialAsync: " + ex.ToString());
+                userdialog.HideLoading();
+                return false;
+            }
+        }
+
         internal static double ParseaPrecio(string precio)
         {
             string miles = ",";

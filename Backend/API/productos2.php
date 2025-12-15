@@ -317,6 +317,56 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     // ==========================================================================
+    // Opciones de un producto (usado por KioskoPreloadService)
+    // ==========================================================================
+    if (isset($_GET['idOpcionesProducto'])) {
+        $idProducto = intval($_GET['idOpcionesProducto']);
+        $cacheKey = "opciones_prod_$idProducto";
+
+        $sql = "SELECT
+                id, idProducto, opcion,
+                IFNULL(NULLIF(opcion_eng,''), opcion) as opcion_eng,
+                IFNULL(NULLIF(opcion_ger,''), opcion) as opcion_ger,
+                IFNULL(NULLIF(opcion_fr,''), opcion) as opcion_fr,
+                tipoIncremento, valorIncremento as precio, puntos,
+                IFNULL(observaciones,'') as observaciones
+            FROM qo_productos_opc
+            WHERE idProducto = :id";
+
+        $result = getCachedOrQuery($cacheKey, $dbConn, $sql, [':id' => $idProducto], 300);
+
+        setCacheHeaders(300);
+        header("HTTP/1.1 200 OK");
+        echo json_encode($result);
+        exit();
+    }
+
+    // ==========================================================================
+    // Alérgenos de un producto (usado por KioskoPreloadService)
+    // ==========================================================================
+    if (isset($_GET['idAlergenosProducto'])) {
+        $idProducto = intval($_GET['idAlergenosProducto']);
+        $cacheKey = "alergenos_prod_$idProducto";
+
+        $sql = "SELECT
+                a.id, a.nombre,
+                IFNULL(NULLIF(a.nombre_eng,''), a.nombre) as nombre_eng,
+                IFNULL(NULLIF(a.nombre_ger,''), a.nombre) as nombre_ger,
+                IFNULL(NULLIF(a.nombre_fr,''), a.nombre) as nombre_fr,
+                a.imagen
+            FROM qo_productos_ing_aler pa
+            INNER JOIN qo_alergenos a ON a.id = pa.idAlergeno
+            WHERE pa.idProducto = :id";
+
+        $result = getCachedOrQuery($cacheKey, $dbConn, $sql, [':id' => $idProducto], 300);
+
+        setCacheHeaders(300);
+        header("HTTP/1.1 200 OK");
+        echo json_encode($result);
+        exit();
+    }
+
+    // ==========================================================================
     // Ingredientes de un producto
     // ==========================================================================
     if (isset($_GET['idIngredientesProducto'])) {

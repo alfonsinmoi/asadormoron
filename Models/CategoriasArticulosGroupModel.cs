@@ -6,11 +6,14 @@ namespace AsadorMoron.Models
     public class CategoriasArticulosGroupModel : List<Comida>, INotifyPropertyChanged
     {
         private bool _expanded;
+        private int _eventosCount;
+
         public string Categoria { get; set; }
         public string Categoria_eng { get; set; }
         public string Categoria_fr { get; set; }
         public string Categoria_ger { get; set; }
         public string ColorCategoria { get; set; }
+
         public string TitleWithItemCount
         {
             get { return $"{Categoria} ({EventosCount})"; }
@@ -30,12 +33,29 @@ namespace AsadorMoron.Models
             }
         }
 
+        /// <summary>
+        /// Icono que indica el estado del grupo
+        /// expanded.png = flecha hacia abajo (se puede expandir)
+        /// collapsed.png = flecha hacia arriba (se puede colapsar)
+        /// </summary>
         public string StateIcon
         {
-            get { return Expanded ? "collapsed.png" : "expanded.png"; }
+            get { return Expanded ? "expanded.png" : "collapsed.png"; }
         }
 
-        public int EventosCount { get; set; }
+        public int EventosCount
+        {
+            get { return _eventosCount; }
+            set
+            {
+                if (_eventosCount != value)
+                {
+                    _eventosCount = value;
+                    OnPropertyChanged(nameof(EventosCount));
+                    OnPropertyChanged(nameof(TitleWithItemCount));
+                }
+            }
+        }
 
         public CategoriasArticulosGroupModel(string title, string title_eng, string title_ger, string title_fr, bool expanded = true, string color = "")
         {

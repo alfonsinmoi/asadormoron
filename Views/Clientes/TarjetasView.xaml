@@ -34,7 +34,7 @@
         <StackLayout
             BackgroundColor="White"
             Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,60,0,0',
+                                Android='0,0,0,0',
                                 WinUI='0'}"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">

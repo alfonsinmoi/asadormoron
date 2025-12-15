@@ -13,25 +13,6 @@
     <!--Cabecera-->
     <NavigationPage.TitleView>
          <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="Auto,*">
-            <ImageButton
-                 IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}"
-                BackgroundColor="Transparent"
-                Command="{Binding IrDetallePedidoCommand}"
-                HeightRequest="40"
-                Margin="0,0,20,0"
-                Source="carrito.png"
-                WidthRequest="40" />
-             <Frame Padding="0" BackgroundColor="{DynamicResource Amarillo}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
-                   VerticalOptions="Start" HorizontalOptions="End" HasShadow="False"
-                    IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
-                <Label Text="{Binding Cantidad, Mode=TwoWay}"
-                       FontSize="15" TextColor="Black" FontAttributes="Bold"
-                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
-                </Frame.GestureRecognizers>
-             </Frame>
             <Grid
                 Grid.Column="0"
                 Grid.ColumnSpan="2"

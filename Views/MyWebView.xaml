@@ -7,6 +7,6 @@
     NavigationPage.HasNavigationBar="False"
     BackgroundColor="{DynamicResource Rojo}">
     <ContentPage.Content>
-        <controls:CustomWebView x:Name="webView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="{OnPlatform Android='0,50,0,0'}"/>    
+        <controls:CustomWebView x:Name="webView" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="{OnPlatform Android='0,0,0,0'}"/>    
     </ContentPage.Content>
 </ContentPage>

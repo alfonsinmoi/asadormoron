@@ -32,7 +32,7 @@
         </Grid>
     </NavigationPage.TitleView>
         <Grid
-            Margin="{OnPlatform Default='0,90,0,0', Android='0,60,0,0',UWP=0}"
+            Margin="{OnPlatform Default='0,90,0,0', Android='0,0,0,0',UWP=0}"
             HorizontalOptions="FillAndExpand"
             RowDefinitions="Auto,Auto, *"
             RowSpacing="0"

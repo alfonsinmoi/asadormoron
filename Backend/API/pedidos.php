@@ -1220,15 +1220,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $postId = $dbConn->lastInsertId();
 
     // Insertar líneas de pedido
+    $totalPollosAsados = 0; // Contador de pollos asados en este pedido
     if (isset($input['lineasPedidos']) && is_array($input['lineasPedidos'])) {
         foreach ($input['lineasPedidos'] as $linea) {
             $comentarioLinea = $linea['comentario'] ?? '';
             $cantidad = intval($linea['cantidad'] ?? 0);
             $precio = $linea['precio'] ?? 0;
+            $nombreProducto = $linea['nombreProducto'] ?? '';
 
             if (intval($linea['tipoComida'] ?? 0) == 4 && $cantidad == 0) {
                 $cantidad = 1;
                 $precio = '0.2';
+            }
+
+            // Verificar si es POLLO ASADO para incrementar contador
+            if (stripos($nombreProducto, 'POLLO ASADO') !== false) {
+                $totalPollosAsados += $cantidad;
             }
 
             $sql = "INSERT INTO `qo_pedidos_detalle`(comentario, pagadoConPuntos, tipoVenta, `idPedido`, `idProducto`, `precio`, `cantidad`, tipo, concepto)
@@ -1240,10 +1247,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $statement->bindValue(':precio', floatval($precio));
             $statement->bindValue(':cantidad', $cantidad, PDO::PARAM_INT);
             $statement->bindValue(':tipo', intval($linea['tipoComida'] ?? 0), PDO::PARAM_INT);
-            $statement->bindValue(':concepto', $linea['nombreProducto'] ?? '');
+            $statement->bindValue(':concepto', $nombreProducto);
             $statement->bindValue(':tipoVenta', $linea['tipoVenta'] ?? 'Envío');
             $statement->bindValue(':pagadoConPuntos', intval($linea['pagadoConPuntos'] ?? 0), PDO::PARAM_INT);
             $statement->execute();
+        }
+    }
+
+    // Si el pedido incluye pollos asados, actualizar el contador
+    if ($totalPollosAsados > 0) {
+        $idEstablecimiento = intval($input['idEstablecimiento'] ?? 0);
+        $fechaHoy = date('Y-m-d');
+
+        // Verificar si existe registro para hoy
+        $sqlContador = $dbConn->prepare("SELECT id, cantidad FROM qo_contador_pollos
+                                          WHERE idEstablecimiento = :idEst AND fecha = :fecha");
+        $sqlContador->bindValue(':idEst', $idEstablecimiento);
+        $sqlContador->bindValue(':fecha', $fechaHoy);
+        $sqlContador->execute();
+        $resultContador = $sqlContador->fetch(PDO::FETCH_ASSOC);
+
+        if ($resultContador) {
+            // Actualizar registro existente
+            $sqlUpdate = $dbConn->prepare("UPDATE qo_contador_pollos
+                                            SET cantidad = cantidad + :cantidad
+                                            WHERE id = :id");
+            $sqlUpdate->bindValue(':cantidad', $totalPollosAsados, PDO::PARAM_INT);
+            $sqlUpdate->bindValue(':id', $resultContador['id'], PDO::PARAM_INT);
+            $sqlUpdate->execute();
+        } else {
+            // Crear nuevo registro
+            $sqlInsert = $dbConn->prepare("INSERT INTO qo_contador_pollos (idEstablecimiento, fecha, cantidad)
+                                            VALUES (:idEst, :fecha, :cantidad)");
+            $sqlInsert->bindValue(':idEst', $idEstablecimiento, PDO::PARAM_INT);
+            $sqlInsert->bindValue(':fecha', $fechaHoy);
+            $sqlInsert->bindValue(':cantidad', $totalPollosAsados, PDO::PARAM_INT);
+            $sqlInsert->execute();
         }
     }
 

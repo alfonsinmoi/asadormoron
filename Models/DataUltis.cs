@@ -41,8 +41,6 @@ namespace AsadorMoron.Models
             dbConn = Microsoft.Maui.Controls.DependencyService.Get<ISQLite>().GetConnection();
 
         }
-        public HomeViewModelAdmin homeAdmin;
-        public HomeViewModelAdminMobile homeAdminMobile;
         public HomeViewModelEstMobile homeEst;
         public HomeViewModelRepartidor homeRep;
         public bool EstoyenHome = false;
@@ -1351,25 +1349,44 @@ namespace AsadorMoron.Models
         {
             try
             {
-                /*List<IngredienteProductoModel> list = dbConn.Query<IngredienteProductoModel>("Select * From [IngredienteProductoModel] WHERE idProducto=" + idProducto + " order by nombre");
+                // KIOSKO: Primero intentar cargar de SQLite (instantáneo)
+                List<IngredienteProductoModel> list = dbConn.Query<IngredienteProductoModel>(
+                    "Select * From [IngredienteProductoModel] WHERE idProducto=" + idProducto + " order by nombre");
+
                 if (list.Count > 0)
                 {
                     return list;
                 }
-                else
-                {*/
-                List<IngredienteProductoModel> list = await App.ResponseWS.listadoIngredientesProducto(idProducto);
+
+                // Si no hay datos en SQLite, cargar del servidor
+                list = await App.ResponseWS.listadoIngredientesProducto(idProducto);
                 if (list.Count > 0)
                 {
                     return list;
                 }
                 else
                     return new List<IngredienteProductoModel>();
-                //}
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return new List<IngredienteProductoModel>();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene ingredientes de producto desde SQLite (para Kiosko - instantáneo)
+        /// </summary>
+        internal List<IngredienteProductoModel> GetIngredienteProductoKiosko(int idProducto)
+        {
+            try
+            {
+                return dbConn.Query<IngredienteProductoModel>(
+                    "Select * From [IngredienteProductoModel] WHERE idProducto=" + idProducto + " order by nombre");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[GetIngredienteProductoKiosko] Error: {ex.Message}");
                 return new List<IngredienteProductoModel>();
             }
         }
@@ -1717,13 +1734,16 @@ namespace AsadorMoron.Models
         }
         internal void saveArticulosEstablecimiento(List<ArticuloModel> lista)
         {
-            if (lista.Count > 0)
-                dbConn.Query<ArticuloModel>("DELETE FROM [ArticuloModel] WHERE idEstablecimiento=" + lista[0].idEstablecimiento);
-            foreach (ArticuloModel c in lista)
+            lock (_dbLock)
             {
-                dbConn.Insert(c);
+                if (lista.Count > 0)
+                    dbConn.Query<ArticuloModel>("DELETE FROM [ArticuloModel] WHERE idEstablecimiento=" + lista[0].idEstablecimiento);
+                foreach (ArticuloModel c in lista)
+                {
+                    dbConn.Insert(c);
+                }
+                dbConn.Commit();
             }
-            dbConn.Commit();
         }
         internal void GuardaCarrito(List<CarritoModel> carrito)
         {
@@ -1777,6 +1797,11 @@ namespace AsadorMoron.Models
         }
 
         private static SQLiteConnection dbConn;
+
+        /// <summary>
+        /// Lock para sincronizar acceso a SQLite y evitar crashes por concurrencia
+        /// </summary>
+        private static readonly object _dbLock = new object();
 
         public INavigationService NavigationService { get; }
 
@@ -2464,5 +2489,469 @@ namespace AsadorMoron.Models
             texto = texto.Replace('ó', 'o').Replace('á', 'a').Replace('é', 'e').Replace('í', 'i').Replace('ú', 'u').Replace('ñ', 'n').Replace('Ó', 'O').Replace('Á', 'A').Replace('É', 'E').Replace('Í', 'I').Replace('Ú', 'U').Replace('Ñ', 'N').Replace("€", "E").Replace("º", "").Replace("ª", "");
             return texto;
         }
+
+        #region Kiosko SQLite Methods
+
+        /// <summary>
+        /// Crea las tablas necesarias para el modo Kiosko
+        /// </summary>
+        internal void CreaTablasKiosko()
+        {
+            try
+            {
+                dbConn.CreateTable<OpcionProductoKioskoModel>();
+                dbConn.CreateTable<AlergenoProductoKioskoModel>();
+                Debug.WriteLine("[Kiosko] Tablas SQLite creadas correctamente");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error creando tablas: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Guarda las categorias para el modo Kiosko
+        /// </summary>
+        internal void GuardarCategoriasKiosko(List<Categoria> categorias)
+        {
+            try
+            {
+                if (categorias == null || categorias.Count == 0) return;
+
+                lock (_dbLock)
+                {
+                    // Eliminar categorias existentes del establecimiento
+                    dbConn.Query<Categoria>($"DELETE FROM [Categoria] WHERE idEstablecimiento={categorias[0].idEstablecimiento}");
+
+                    foreach (var cat in categorias)
+                    {
+                        dbConn.Insert(cat);
+                    }
+                    dbConn.Commit();
+                }
+                Debug.WriteLine($"[Kiosko] {categorias.Count} categorias guardadas en SQLite");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error guardando categorias: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene las categorias desde SQLite para Kiosko
+        /// </summary>
+        internal List<Categoria> GetCategoriasKiosko()
+        {
+            try
+            {
+                var categorias = dbConn.Query<Categoria>("SELECT * FROM [Categoria] WHERE estado=1 ORDER BY posicion");
+                return categorias ?? new List<Categoria>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error obteniendo categorias: {ex.Message}");
+                return new List<Categoria>();
+            }
+        }
+
+        /// <summary>
+        /// Guarda todos los datos de productos Kiosko en un solo lock para evitar contención
+        /// </summary>
+        internal void GuardarTodosProductosKioskoBatch(List<ArticuloModel> productos)
+        {
+            if (productos == null || productos.Count == 0) return;
+
+            var sw = Stopwatch.StartNew();
+            Debug.WriteLine($"[Kiosko-Batch] Iniciando guardado batch de {productos.Count} productos...");
+
+            lock (_dbLock)
+            {
+                try
+                {
+                    // 1. Guardar productos
+                    if (productos.Count > 0)
+                    {
+                        dbConn.Query<ArticuloModel>("DELETE FROM [ArticuloModel] WHERE idEstablecimiento=" + productos[0].idEstablecimiento);
+                        foreach (var p in productos)
+                        {
+                            dbConn.Insert(p);
+                        }
+                    }
+
+                    int totalOpciones = 0, totalIngredientes = 0, totalAlergenos = 0;
+
+                    // 2. Guardar opciones, ingredientes y alergenos de todos los productos
+                    foreach (var producto in productos)
+                    {
+                        // Opciones
+                        if (producto.listadoOpciones != null && producto.listadoOpciones.Count > 0)
+                        {
+                            dbConn.Execute($"DELETE FROM [OpcionProductoKioskoModel] WHERE idProducto={producto.idArticulo}");
+                            foreach (var opcion in producto.listadoOpciones)
+                            {
+                                var opcionKiosko = new OpcionProductoKioskoModel
+                                {
+                                    idProducto = producto.idArticulo,
+                                    id = opcion.id,
+                                    opcion = opcion.opcion,
+                                    opcion_eng = opcion.opcion_eng,
+                                    opcion_ger = opcion.opcion_ger,
+                                    opcion_fr = opcion.opcion_fr,
+                                    precio = opcion.precio,
+                                    tipoIncremento = opcion.tipoIncremento,
+                                    puntos = opcion.puntos,
+                                    observaciones = opcion.observaciones
+                                };
+                                dbConn.Insert(opcionKiosko);
+                            }
+                            totalOpciones += producto.listadoOpciones.Count;
+                        }
+
+                        // Ingredientes
+                        if (producto.listadoIngredientes != null && producto.listadoIngredientes.Count > 0)
+                        {
+                            dbConn.Query<IngredienteProductoModel>($"DELETE FROM [IngredienteProductoModel] WHERE idProducto={producto.idArticulo}");
+                            foreach (var ingrediente in producto.listadoIngredientes)
+                            {
+                                ingrediente.idProducto = producto.idArticulo;
+                                dbConn.Insert(ingrediente);
+                            }
+                            totalIngredientes += producto.listadoIngredientes.Count;
+                        }
+
+                        // Alergenos
+                        if (producto.listadoAlergenos != null && producto.listadoAlergenos.Count > 0)
+                        {
+                            dbConn.Query<AlergenoProductoKioskoModel>($"DELETE FROM [AlergenoProductoKioskoModel] WHERE idProducto={producto.idArticulo}");
+                            foreach (var alergeno in producto.listadoAlergenos)
+                            {
+                                var alergenoKiosko = new AlergenoProductoKioskoModel
+                                {
+                                    idProducto = producto.idArticulo,
+                                    id = alergeno.id,
+                                    nombre = alergeno.nombre,
+                                    imagen = alergeno.imagen
+                                };
+                                dbConn.Insert(alergenoKiosko);
+                            }
+                            totalAlergenos += producto.listadoAlergenos.Count;
+                        }
+                    }
+
+                    dbConn.Commit();
+                    Debug.WriteLine($"[Kiosko-Batch] Guardado completado en {sw.ElapsedMilliseconds}ms: {productos.Count} productos, {totalOpciones} opciones, {totalIngredientes} ingredientes, {totalAlergenos} alergenos");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Kiosko-Batch] Error: {ex.Message}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Guarda las opciones de un producto para Kiosko
+        /// </summary>
+        internal void GuardarOpcionesProductoKiosko(int idProducto, ObservableCollection<OpcionesModel> opciones)
+        {
+            try
+            {
+                if (opciones == null || opciones.Count == 0) return;
+
+                lock (_dbLock)
+                {
+                    // Eliminar opciones existentes del producto
+                    dbConn.Execute($"DELETE FROM [OpcionProductoKioskoModel] WHERE idProducto={idProducto}");
+
+                    foreach (var opcion in opciones)
+                    {
+                        var opcionKiosko = new OpcionProductoKioskoModel
+                        {
+                            idProducto = idProducto,
+                            id = opcion.id,
+                            opcion = opcion.opcion,
+                            opcion_eng = opcion.opcion_eng,
+                            opcion_ger = opcion.opcion_ger,
+                            opcion_fr = opcion.opcion_fr,
+                            precio = opcion.precio,
+                            tipoIncremento = opcion.tipoIncremento,
+                            puntos = opcion.puntos,
+                            observaciones = opcion.observaciones
+                        };
+                        dbConn.Insert(opcionKiosko);
+                    }
+                }
+                Debug.WriteLine($"[Kiosko] Guardadas {opciones.Count} opciones para producto {idProducto}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error guardando opciones producto {idProducto}: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Guarda los ingredientes de un producto para Kiosko
+        /// </summary>
+        internal void GuardarIngredientesProductoKiosko(int idProducto, ObservableCollection<IngredienteProductoModel> ingredientes)
+        {
+            try
+            {
+                if (ingredientes == null || ingredientes.Count == 0) return;
+
+                lock (_dbLock)
+                {
+                    // Eliminar ingredientes existentes del producto
+                    dbConn.Query<IngredienteProductoModel>($"DELETE FROM [IngredienteProductoModel] WHERE idProducto={idProducto}");
+
+                    foreach (var ingrediente in ingredientes)
+                    {
+                        ingrediente.idProducto = idProducto;
+                        dbConn.Insert(ingrediente);
+                    }
+                    dbConn.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error guardando ingredientes producto {idProducto}: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Guarda los alergenos de un producto para Kiosko
+        /// </summary>
+        internal void GuardarAlergenosProductoKiosko(int idProducto, ObservableCollection<AlergenosModel> alergenos)
+        {
+            try
+            {
+                if (alergenos == null || alergenos.Count == 0) return;
+
+                lock (_dbLock)
+                {
+                    // Eliminar alergenos existentes del producto
+                    dbConn.Query<AlergenoProductoKioskoModel>($"DELETE FROM [AlergenoProductoKioskoModel] WHERE idProducto={idProducto}");
+
+                    foreach (var alergeno in alergenos)
+                    {
+                        var alergenoKiosko = new AlergenoProductoKioskoModel
+                        {
+                            idProducto = idProducto,
+                            id = alergeno.id,
+                            nombre = alergeno.nombre,
+                            imagen = alergeno.imagen
+                        };
+                        dbConn.Insert(alergenoKiosko);
+                    }
+                    dbConn.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error guardando alergenos producto {idProducto}: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene todos los productos desde SQLite para Kiosko
+        /// </summary>
+        internal List<ArticuloModel> GetProductosKiosko()
+        {
+            try
+            {
+                var productos = dbConn.Query<ArticuloModel>("SELECT * FROM [ArticuloModel] WHERE estado=1");
+
+                // Cargar opciones, ingredientes y alergenos para cada producto
+                foreach (var producto in productos)
+                {
+                    CargarDetallesProductoKiosko(producto);
+                }
+
+                return productos ?? new List<ArticuloModel>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error obteniendo productos: {ex.Message}");
+                return new List<ArticuloModel>();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los productos de una categoria desde SQLite para Kiosko
+        /// </summary>
+        internal List<ArticuloModel> GetProductosKioskoByCategoria(int idCategoria)
+        {
+            try
+            {
+                var productos = dbConn.Query<ArticuloModel>($"SELECT * FROM [ArticuloModel] WHERE idCategoria={idCategoria} AND estado=1");
+
+                // Cargar opciones, ingredientes y alergenos para cada producto
+                foreach (var producto in productos)
+                {
+                    CargarDetallesProductoKiosko(producto);
+                }
+
+                return productos ?? new List<ArticuloModel>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error obteniendo productos por categoria: {ex.Message}");
+                return new List<ArticuloModel>();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene un producto por ID desde SQLite para Kiosko, con todas sus opciones, ingredientes y alergenos
+        /// </summary>
+        internal ArticuloModel GetProductoKioskoById(int idArticulo)
+        {
+            try
+            {
+                var producto = dbConn.Query<ArticuloModel>($"SELECT * FROM [ArticuloModel] WHERE idArticulo={idArticulo}").FirstOrDefault();
+                if (producto != null)
+                {
+                    CargarDetallesProductoKiosko(producto);
+                }
+                return producto;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error obteniendo producto {idArticulo}: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Carga opciones, ingredientes y alergenos de un producto desde SQLite
+        /// </summary>
+        private void CargarDetallesProductoKiosko(ArticuloModel producto)
+        {
+            try
+            {
+                // Cargar opciones
+                var opcionesKiosko = dbConn.Query<OpcionProductoKioskoModel>($"SELECT * FROM [OpcionProductoKioskoModel] WHERE idProducto={producto.idArticulo}");
+                producto.listadoOpciones = new ObservableCollection<OpcionesModel>();
+                foreach (var opKiosko in opcionesKiosko)
+                {
+                    producto.listadoOpciones.Add(new OpcionesModel
+                    {
+                        id = opKiosko.id,
+                        opcion = opKiosko.opcion,
+                        opcion_eng = opKiosko.opcion_eng,
+                        opcion_ger = opKiosko.opcion_ger,
+                        opcion_fr = opKiosko.opcion_fr,
+                        precio = opKiosko.precio,
+                        tipoIncremento = opKiosko.tipoIncremento,
+                        puntos = opKiosko.puntos,
+                        observaciones = opKiosko.observaciones
+                    });
+                }
+
+                // Cargar ingredientes
+                var ingredientes = dbConn.Query<IngredienteProductoModel>($"SELECT * FROM [IngredienteProductoModel] WHERE idProducto={producto.idArticulo}");
+                producto.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>(ingredientes);
+
+                // Cargar alergenos
+                var alergenosKiosko = dbConn.Query<AlergenoProductoKioskoModel>($"SELECT * FROM [AlergenoProductoKioskoModel] WHERE idProducto={producto.idArticulo}");
+                producto.listadoAlergenos = new ObservableCollection<AlergenosModel>();
+                foreach (var alerKiosko in alergenosKiosko)
+                {
+                    producto.listadoAlergenos.Add(new AlergenosModel
+                    {
+                        id = alerKiosko.id,
+                        nombre = alerKiosko.nombre,
+                        imagen = alerKiosko.imagen
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error cargando detalles producto {producto.idArticulo}: {ex.Message}");
+                producto.listadoOpciones ??= new ObservableCollection<OpcionesModel>();
+                producto.listadoIngredientes ??= new ObservableCollection<IngredienteProductoModel>();
+                producto.listadoAlergenos ??= new ObservableCollection<AlergenosModel>();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene las opciones de un producto desde SQLite para Kiosko
+        /// </summary>
+        internal List<OpcionesModel> GetOpcionesProductoKiosko(int idProducto)
+        {
+            try
+            {
+                var opcionesKiosko = dbConn.Query<OpcionProductoKioskoModel>($"SELECT * FROM [OpcionProductoKioskoModel] WHERE idProducto={idProducto}");
+                Debug.WriteLine($"[Kiosko] GetOpcionesProductoKiosko({idProducto}): encontradas {opcionesKiosko?.Count ?? 0} filas en SQLite");
+                var opciones = new List<OpcionesModel>();
+                foreach (var opKiosko in opcionesKiosko)
+                {
+                    opciones.Add(new OpcionesModel
+                    {
+                        id = opKiosko.id,
+                        opcion = opKiosko.opcion,
+                        opcion_eng = opKiosko.opcion_eng,
+                        opcion_ger = opKiosko.opcion_ger,
+                        opcion_fr = opKiosko.opcion_fr,
+                        precio = opKiosko.precio,
+                        tipoIncremento = opKiosko.tipoIncremento,
+                        puntos = opKiosko.puntos,
+                        observaciones = opKiosko.observaciones
+                    });
+                }
+                return opciones;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error obteniendo opciones producto {idProducto}: {ex.Message}");
+                return new List<OpcionesModel>();
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los alergenos de un producto desde SQLite para Kiosko
+        /// </summary>
+        internal List<AlergenosModel> GetAlergenosProductoKiosko(int idProducto)
+        {
+            try
+            {
+                var alergenosKiosko = dbConn.Query<AlergenoProductoKioskoModel>($"SELECT * FROM [AlergenoProductoKioskoModel] WHERE idProducto={idProducto}");
+                var alergenos = new List<AlergenosModel>();
+                foreach (var alerKiosko in alergenosKiosko)
+                {
+                    alergenos.Add(new AlergenosModel
+                    {
+                        id = alerKiosko.id,
+                        nombre = alerKiosko.nombre,
+                        imagen = alerKiosko.imagen
+                    });
+                }
+                return alergenos;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error obteniendo alergenos producto {idProducto}: {ex.Message}");
+                return new List<AlergenosModel>();
+            }
+        }
+
+        /// <summary>
+        /// Limpia todos los datos de Kiosko de SQLite
+        /// </summary>
+        internal void LimpiarDatosKiosko()
+        {
+            try
+            {
+                lock (_dbLock)
+                {
+                    dbConn.DeleteAll<OpcionProductoKioskoModel>();
+                    dbConn.DeleteAll<AlergenoProductoKioskoModel>();
+                }
+                Debug.WriteLine("[Kiosko] Datos de Kiosko eliminados de SQLite");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[Kiosko] Error limpiando datos: {ex.Message}");
+            }
+        }
+
+        #endregion
     }
 }

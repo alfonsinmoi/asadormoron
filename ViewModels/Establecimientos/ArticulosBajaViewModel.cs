@@ -120,75 +120,78 @@ namespace AsadorMoron.ViewModels.Establecimientos
             {
                 await Task.Run(() =>
                 {
-                try
-                {
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    try
                     {
-                        _allGroups = new ObservableCollection<CategoriasArticulosGroupModel>();
-                        int idCat = 0;
-                        int i = 0;
-                        CategoriasArticulosGroupModel ev = null;
-                        String paraBuscar = "";
-                        if (TextoBusqueda != null)
-                            paraBuscar = TextoBusqueda;
-
-                        foreach (Comida a in Comidas)
+                        MainThread.BeginInvokeOnMainThread(async () =>
                         {
-                            try
-                            {
-                                if (a.articulo.nombre.ToString().ToUpper().Contains(paraBuscar.ToUpper()) || string.IsNullOrWhiteSpace(paraBuscar)
-                                    || a.articulo.descripcion.ToString().ToUpper().Contains(paraBuscar.ToUpper())
-                                    || a.articulo.alergenos.ToString().ToUpper().Contains(paraBuscar.ToUpper())
-                                    || a.articulo.ingredientes.ToString().ToUpper().Contains(paraBuscar.ToUpper()))
-                                {
-                                    if (idCat != a.articulo.idCategoria)
-                                    {
-                                        idCat = a.articulo.idCategoria;
-                                        if (ev != null)
-                                            _allGroups.Add(ev);
-                                        string color = "";
-                                        if (a.articulo.idTipoCategoria == 1)
-                                            color = "#F8C149";
-                                        else
-                                            color = "#FFFFFF";
-                                        if (i == 0)
-                                            ev = new CategoriasArticulosGroupModel(a.articulo.categoria, a.articulo.categoria_eng, a.articulo.categoria_ger, a.articulo.categoria_fr, true, color);
-                                        else
-                                            ev = new CategoriasArticulosGroupModel(a.articulo.categoria, a.articulo.categoria_eng, a.articulo.categoria_ger, a.articulo.categoria_fr, false, color);
-                                        ev.ColorCategoria = color;
-                                        i++;
-                                    }
+                            _allGroups = new ObservableCollection<CategoriasArticulosGroupModel>();
+                            int idCat = 0;
+                            int i = 0;
+                            CategoriasArticulosGroupModel ev = null;
+                            string paraBuscar = TextoBusqueda ?? "";
 
-                                    a.cantidad = 0;
-                                    if (ev != null)
-                                        ev.Add(a);
+                            foreach (Comida a in Comidas)
+                            {
+                                try
+                                {
+                                    // Filtro de búsqueda
+                                    bool coincide = string.IsNullOrWhiteSpace(paraBuscar) ||
+                                        (a.articulo.nombre?.ToUpper().Contains(paraBuscar.ToUpper()) ?? false) ||
+                                        (a.articulo.descripcion?.ToUpper().Contains(paraBuscar.ToUpper()) ?? false) ||
+                                        (a.articulo.alergenos?.ToUpper().Contains(paraBuscar.ToUpper()) ?? false) ||
+                                        (a.articulo.ingredientes?.ToUpper().Contains(paraBuscar.ToUpper()) ?? false);
+
+                                    if (coincide)
+                                    {
+                                        if (idCat != a.articulo.idCategoria)
+                                        {
+                                            idCat = a.articulo.idCategoria;
+                                            if (ev != null)
+                                                _allGroups.Add(ev);
+
+                                            string color = a.articulo.idTipoCategoria == 1 ? "#F8C149" : "#FFFFFF";
+
+                                            // TODOS los grupos expandidos por defecto para que se vean los datos
+                                            ev = new CategoriasArticulosGroupModel(
+                                                a.articulo.categoria,
+                                                a.articulo.categoria_eng,
+                                                a.articulo.categoria_ger,
+                                                a.articulo.categoria_fr,
+                                                true, // Siempre expandido
+                                                color);
+                                            ev.ColorCategoria = color;
+                                            i++;
+                                        }
+
+                                        a.cantidad = 0;
+                                        ev?.Add(a);
+                                    }
+                                }
+                                catch (Exception ex2)
+                                {
+                                    Debug.WriteLine($"[ArticulosBaja] Filtrar item error: {ex2.Message}");
                                 }
                             }
-                            catch (Exception ex2)
-                            {
-                                Console.WriteLine(ex2.Message);
-                            }
-                        }
-                        if (Comidas.Count > 0)
-                        {
-                            if (ev != null)
+
+                            // Añadir el último grupo
+                            if (ev != null && Comidas.Count > 0)
                             {
                                 _allGroups.Add(ev);
                             }
-                        }
-                        await UpdateListContent();
-                    });
-                        
+
+                            await UpdateListContent();
+                        });
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Debug.WriteLine($"[ArticulosBaja] Filtrar error: {ex.Message}");
                         App.userdialog.HideLoading();
                     }
                 });
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[ArticulosBaja] Filtrar outer error: {ex.Message}");
             }
         }
         private async void Activar()
@@ -530,67 +533,91 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 // 
             }
         }
-        private void headerTapped(Object obj)
+        private async void headerTapped(Object obj)
         {
             try
             {
-                int selectedIndex = 0;
-                int i = 0;
-                foreach (CategoriasArticulosGroupModel c in _expandedGroups)
+                Debug.WriteLine($"[ArticulosBaja] headerTapped: {obj}");
+                string categoriaSeleccionada = obj?.ToString() ?? "";
+
+                // Buscar el índice de la categoría seleccionada
+                int selectedIndex = -1;
+                for (int i = 0; i < _allGroups.Count; i++)
                 {
-                    if (c.Categoria.Equals(obj.ToString()))
+                    if (_allGroups[i].Categoria.Equals(categoriaSeleccionada))
+                    {
                         selectedIndex = i;
-                    else
-                        _allGroups[i].Expanded = false;
-                    i += 1;
+                        break;
+                    }
                 }
-                _allGroups[selectedIndex].Expanded = !_allGroups[selectedIndex].Expanded;
-                UpdateListContent().ConfigureAwait(false);
+
+                if (selectedIndex >= 0)
+                {
+                    // Toggle el grupo seleccionado
+                    _allGroups[selectedIndex].Expanded = !_allGroups[selectedIndex].Expanded;
+                    Debug.WriteLine($"[ArticulosBaja] Grupo '{categoriaSeleccionada}' Expanded={_allGroups[selectedIndex].Expanded}");
+
+                    // Actualizar la lista
+                    await UpdateListContent();
+                }
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[ArticulosBaja] headerTapped ERROR: {ex.Message}");
             }
         }
         private async Task UpdateListContent()
         {
             try
             {
-                await Task.Run(() =>
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    MainThread.BeginInvokeOnMainThread(() =>
+                    _expandedGroups = new List<CategoriasArticulosGroupModel>();
+
+                    foreach (CategoriasArticulosGroupModel group in _allGroups)
                     {
-                        _expandedGroups = new List<CategoriasArticulosGroupModel>();
+                        // Guardar el conteo ANTES de crear el nuevo grupo
+                        int itemCount = group.Count;
 
-                        foreach (CategoriasArticulosGroupModel group in _allGroups)
+                        // Crear nuevo grupo con el estado de expansión correcto
+                        CategoriasArticulosGroupModel newGroup = new CategoriasArticulosGroupModel(
+                            group.Categoria,
+                            group.Categoria_eng,
+                            group.Categoria_ger,
+                            group.Categoria_fr,
+                            group.Expanded,
+                            group.ColorCategoria);
+
+                        // Guardar el conteo total de items (siempre, independiente de si está expandido)
+                        newGroup.EventosCount = itemCount;
+
+                        // Solo añadir items si el grupo está expandido
+                        if (group.Expanded)
                         {
-                            //Create new FoodGroups so we do not alter original list
-                            CategoriasArticulosGroupModel newGroup = new CategoriasArticulosGroupModel(group.Categoria, group.Categoria_eng, group.Categoria_ger, group.Categoria_fr, group.Expanded, group.ColorCategoria);
-                            //Add the count of food items for Lits Header Titles to use
-                            newGroup.EventosCount = group.Count;
-                            if (group.Expanded)
+                            foreach (Comida food in group)
                             {
-                                foreach (Comida food in group)
-                                {
-                                    string color = "";
-                                    if (food.articulo.idTipoCategoria == 1)
-                                        color = "#F8C149";
-                                    else
-                                        color = "#FFFFFF";
-                                    newGroup.ColorCategoria = color;
-                                    newGroup.Add(food);
-                                }
+                                newGroup.Add(food);
                             }
-                            _expandedGroups.Add(newGroup);
-
                         }
-                        ListadoCategorias = new ObservableCollection<CategoriasArticulosGroupModel>(_expandedGroups);
-                    });
+
+                        Debug.WriteLine($"[ArticulosBaja] Grupo '{group.Categoria}': Expanded={group.Expanded}, Items={itemCount}, Added={newGroup.Count}");
+                        _expandedGroups.Add(newGroup);
+                    }
+
+                    ListadoCategorias = new ObservableCollection<CategoriasArticulosGroupModel>(_expandedGroups);
+
+                    // Actualizar la propiedad SinProductos basada en si hay productos en _allGroups
+                    int totalProductos = 0;
+                    foreach (var g in _allGroups)
+                        totalProductos += g.Count;
+                    SinProductos = totalProductos == 0;
+
+                    Debug.WriteLine($"[ArticulosBaja] ListadoCategorias actualizado con {_expandedGroups.Count} grupos, TotalProductos={totalProductos}, SinProductos={SinProductos}");
                 });
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[ArticulosBaja] UpdateListContent ERROR: {ex.Message}");
             }
         }
         private async void EliminarProductoCommandExecute(object parametro)
@@ -769,6 +796,20 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 {
                     logo = value;
                     OnPropertyChanged(nameof(Logo));
+                }
+            }
+        }
+
+        private bool sinProductos;
+        public bool SinProductos
+        {
+            get { return sinProductos; }
+            set
+            {
+                if (sinProductos != value)
+                {
+                    sinProductos = value;
+                    OnPropertyChanged(nameof(SinProductos));
                 }
             }
         }

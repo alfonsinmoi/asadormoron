@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.Clientes.DetalleArticulosView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -12,7 +12,7 @@
         <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
             <Grid
                 Grid.Column="0"
-                 Grid.ColumnSpan="2"
+                Grid.ColumnSpan="2"
                 Margin="0,0,0,5"
                 HeightRequest="40"
                 HorizontalOptions="FillAndExpand">
@@ -39,774 +39,371 @@
                         WidthRequest="30" />
                 </badge:SfBadgeView.Content>
                 <badge:SfBadgeView.BadgeSettings>
-                    <badge:BadgeSettings Background="{DynamicResource Amarillo}" TextColor="Black" FontFamily="Nunito_bold"  Type="None" />
+                    <badge:BadgeSettings Background="{DynamicResource Amarillo}" TextColor="Black" FontFamily="Nunito_bold" Type="None" />
                 </badge:SfBadgeView.BadgeSettings>
             </badge:SfBadgeView>
         </Grid>
     </NavigationPage.TitleView>
     <ContentPage.Content>
-        <Grid Margin="{OnPlatform iOS='0,90,0,0',
-                                    Android='0,60,0,0',
-                                    Default='0,0,0,0'}"
-              RowDefinitions="*,Auto">
-        <StackLayout  VerticalOptions="FillAndExpand">
-            <StackLayout IsVisible="{Binding SistemaPuntos}" BackgroundColor="{DynamicResource Amarillo}" HorizontalOptions="FillAndExpand">
+        <Grid RowDefinitions="Auto,*,Auto">
+            <!-- Banner de puntos -->
+            <StackLayout Grid.Row="0" IsVisible="{Binding SistemaPuntos}" BackgroundColor="{DynamicResource Amarillo}" HorizontalOptions="FillAndExpand">
                 <Label Text="{Binding Puntos,StringFormat='Tienes {0} puntos'}" HorizontalTextAlignment="Center"
                        TextColor="{DynamicResource Negro}" FontSize="20" FontFamily="Nunito_bold"/>
             </StackLayout>
-            
-            <ScrollView BackgroundColor="White" VerticalOptions="FillAndExpand">
-            <Grid RowDefinitions="*,Auto,Auto">
-                <Grid
-                    VerticalOptions="FillAndExpand"
-                    Margin="10,10"
-                    ColumnDefinitions="*"
-                    RowDefinitions="170, Auto,Auto, Auto, Auto, Auto, Auto, Auto">
-                    <Image
-                    Margin="0"
-                    Aspect="AspectFill"
-                    HeightRequest="{OnPlatform iOS='170',
-                                                Default='160'}"
-                    HorizontalOptions="FillAndExpand"
-                    Source="{Binding Articulo.imagen}"
-                    VerticalOptions="Start" />
+
+            <!-- Contenido scrolleable -->
+            <ScrollView Grid.Row="1" BackgroundColor="White">
+                <StackLayout Spacing="0" Padding="10">
+                    <!-- Imagen del producto -->
+                    <Border Padding="0" StrokeShape="RoundRectangle 12" StrokeThickness="0" HeightRequest="180">
+                        <Image
+                            Aspect="AspectFill"
+                            Source="{Binding Articulo.imagen}"
+                            VerticalOptions="FillAndExpand"
+                            HorizontalOptions="FillAndExpand"/>
+                    </Border>
+
+                    <!-- Nombre y descripción -->
                     <Label
-                    Grid.Row="1"
-                    FontFamily="Syne"
-                    FontSize="20"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding Articulo.nombre}"
-                    TextColor="{DynamicResource Negro}" />
+                        Margin="0,15,0,5"
+                        FontFamily="Nunito_bold"
+                        FontSize="22"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Articulo.nombre}"
+                        TextColor="{DynamicResource Negro}" />
                     <Label
-                    Grid.Row="2"
-                    FontFamily="Syne_Medium"
-                    FontSize="14"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding Articulo.descripcion}"
-                    TextColor="{DynamicResource Negro}"/>
-
-
-
-
-                    <StackLayout
-                    Grid.Row="3"
-                    Margin="0,10,0,0"
-                    HorizontalOptions="FillAndExpand"
-                    IsVisible="{Binding TieneOpciones}"
-                    VerticalOptions="Start">
-                        <Label IsVisible="{Binding Combo, Converter={StaticResource InverseBoolConverter}}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
+                        Margin="0,0,0,15"
+                        FontFamily="Nunito"
                         FontSize="14"
-                        HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Opciones" TextTransform="Uppercase"/>
-                                    <Span Text=" ("/>
-                                    <Span Text="Seleccione una"/>
-                                    <Span Text=")"/>
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Articulo.listadoOpciones}"
-                                      IsVisible="{Binding Combo, Converter={StaticResource InverseBoolConverter}}">
-                            <BindableLayout.ItemTemplate>
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding Articulo.descripcion}"
+                        TextColor="#666666"/>
+
+                    <!-- OPCIONES (cuando no es combo) -->
+                    <StackLayout IsVisible="{Binding TieneOpciones}" Spacing="0">
+                        <!-- Header Opciones -->
+                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,10,0,5"
+                               IsVisible="{Binding Combo, Converter={StaticResource InverseBoolConverter}}">
+                            <Label FontFamily="Nunito_bold" FontSize="16" TextColor="{DynamicResource Negro}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="OPCIONES" FontAttributes="Bold"/>
+                                        <Span Text=" (Seleccione una)" FontSize="14"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Border>
+
+                        <!-- Lista de Opciones - CollectionView para mejor rendimiento -->
+                        <CollectionView
+                            ItemsSource="{Binding OpcionesLista}"
+                            ItemSizingStrategy="MeasureFirstItem"
+                            VerticalScrollBarVisibility="Never"
+                            IsVisible="{Binding Combo, Converter={StaticResource InverseBoolConverter}}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="2"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
+                                    <Grid Padding="8,6" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" HeightRequest="44">
                                         <CheckBox
+                                            VerticalOptions="Center"
                                             IsChecked="{Binding seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
+                                            Color="{DynamicResource Rojo}"
+                                            CheckedChanged="CheckBox_CheckedChanged"
+                                            AutomationId="{Binding id}" />
                                         <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding opcion}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center"/>
-                                        <Label
-                                        Grid.Column="2"
-                                        Padding="0"
-                                        BackgroundColor="Transparent"
-                                        FontFamily="Nunito_bold"
-                                        FontSize="14"
-                                        HorizontalTextAlignment="Start"
-                                        IsVisible="{Binding visiblePuntos, Converter={StaticResource InverseBoolConverter}}"
-                                        Text="{Binding precio, StringFormat='{0:N2} €'}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                        <Label
-                                        Grid.Column="2"
-                                        Padding="0"
-                                        BackgroundColor="Transparent"
-                                        FontFamily="Nunito_bold"
-                                        FontSize="14"
-                                        HorizontalTextAlignment="Start"
-                                        IsVisible="{Binding visiblePuntos}"
-                                        Text="{Binding puntos, StringFormat='{0:} p.'}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                        FontSize="14"
-                               HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="1. ENTRANTES"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo1}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                        FontSize="14"
-                               HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="2. PRIMER PLATO 1"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo2}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                        FontSize="14"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="3. PRIMER PLATO 2"
-                               HeightRequest="30"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo3}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                        FontSize="14"
-                               HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="4. SEGUNDO PLATO 1"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo4}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                        FontSize="14"
-                               HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="5. SEGUNDO PLATO 2"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo5}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                        FontSize="14"
-                               HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="6. BEBIDA"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo6}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                        FontSize="14"
-                               HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="7. POSTRE 1"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo7}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                        <Label IsVisible="{Binding Combo}"
-                        Padding="20,10"
-                        FontAttributes="Bold"
-                        FontFamily="Syne"
-                               HeightRequest="30"
-                        FontSize="14"
-                        HorizontalTextAlignment="Start"
-                        TextColor="{DynamicResource Negro}"
-                        Text="8. POSTRE 2"
-                        VerticalOptions="FillAndExpand"
-                        VerticalTextAlignment="Center">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding Combo8}"
-                                      IsVisible="{Binding Combo}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="Auto,*,Auto"
-                                    HeightRequest="30">
-                                        <CheckBox
-                                            IsChecked="{Binding Seleccionado}"
-                                            Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged"  AutomationId="{Binding id}" />
-                                        <Label
-                                        Grid.Column="1"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="18"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
-                    </StackLayout>
-                    <StackLayout
-                    Grid.Row="4"
-                    Margin="0,10,0,0"
-                        BackgroundColor="White"
-                    HorizontalOptions="FillAndExpand"
-                    IsVisible="{Binding ModoTienda}"
-                    VerticalOptions="Start">
-                        <Label
-                        BackgroundColor="{DynamicResource Amarillo}"
-                        FontFamily="Syne"
-                        FontSize="14"
-                        HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        Text="Cantidad"
-                        TextColor="{DynamicResource Negro}"
-                        VerticalOptions="FillAndExpand">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
-                        <Grid
-                            BackgroundColor="White"
-                        Margin="0,0,20,0"
-                        ColumnDefinitions="25, 50, 25"
-                        ColumnSpacing="0"
-                        HorizontalOptions="End"
-                        RowDefinitions="25">
-                            <ImageButton
-                            Grid.Column="0"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
-                            Command="{Binding Path=BindingContext.ClickMenosCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                            CommandParameter="{Binding id}"
-                            HeightRequest="30"
-                            Source="btnmenos.png" />
-
-                            <Label
-                            Grid.Column="1"
-                            FontFamily="Nunito"
-                            HorizontalTextAlignment="Center"
-                            Text="{Binding CantidadOpcion, Mode=TwoWay}"
-                            TextColor="Black"
-                            VerticalTextAlignment="Center" />
-
-                            <ImageButton
-                            Grid.Column="2"
-                            BackgroundColor="Transparent"
-                            BorderColor="Transparent"
-                            Command="{Binding Path=BindingContext.ClickMasCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                            CommandParameter="{Binding id}"
-                            HeightRequest="30"
-                            Source="nuevo.png" />
-                        </Grid>
-                    </StackLayout>
-                    <StackLayout
-                    Grid.Row="5"
-                    Margin="0,10,0,0"
-                        BackgroundColor="White"
-                    HorizontalOptions="FillAndExpand"
-                    IsVisible="{Binding TieneIngredientes}"
-                    VerticalOptions="Start">
-                        <Label
-                        Padding="20,10,0,10"
-                        BackgroundColor="{DynamicResource Amarillo}"
-                        FontFamily="Syne"
-                        FontSize="14"
-                            HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        Text="{Binding TextoIngredientes}"
-                        TextColor="{DynamicResource Negro}"
-                        VerticalOptions="FillAndExpand">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                            <Label.Triggers>
-                                    <DataTrigger
-                                        Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                        TargetType="Label"
-                                        Value="EN">
-                                        <Setter Property="Text" Value="{Binding TextoIngredientes_eng}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                        TargetType="Label"
-                                        Value="DE">
-                                        <Setter Property="Text" Value="{Binding TextoIngredientes_ger}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                        TargetType="Label"
-                                        Value="FR">
-                                        <Setter Property="Text" Value="{Binding TextoIngredientes_fr}" />
-                                    </DataTrigger>
-                                </Label.Triggers>
-                        </Label>
-                        <StackLayout BackgroundColor="White" BindableLayout.ItemsSource="{Binding ListadoIngredientes}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                    Margin="0,5,0,0"
-                                    ColumnDefinitions="*,Auto"
-                                    RowDefinitions="Auto,Auto"
-                                    RowSpacing="0">
-                                        <Label
-                                        Grid.Row="0"
-                                        Margin="20,0"
-                                        BackgroundColor="Transparent"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="15"
-                                        HorizontalTextAlignment="Start"
-                                        Text="{Binding nombre}"
-                                        TextColor="{DynamicResource Negro}"
-                                        VerticalTextAlignment="Center" />
-                                        <StackLayout Grid.Row="1"
-                                        Margin="20,0" Orientation="Horizontal">
-                                        <Label
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            FontFamily="Nunito_bold"
-                                            FontSize="12"
-                                            HorizontalTextAlignment="Start"
-                                            Text="{Binding precio, StringFormat='{0:N2} €'}"
-                                            TextColor="{DynamicResource Negro}"
-                                            VerticalTextAlignment="Center" />
-                                        <Label
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            FontFamily="Nunito_bold"
-                                            FontSize="12"
-                                            IsVisible="{Binding visiblePuntos}"
-                                            HorizontalTextAlignment="Start"
-                                            Text=" -- "
-                                            TextColor="{DynamicResource Negro}"
-                                            VerticalTextAlignment="Center" />
-                                        <Label
-                                            Padding="0"
-                                            BackgroundColor="Transparent"
-                                            FontFamily="Nunito_bold"
-                                            FontSize="12"
-                                            IsVisible="{Binding visiblePuntos}"
-                                            HorizontalTextAlignment="Start"
-                                            Text="{Binding puntos, StringFormat='{0} p.'}"
-                                            TextColor="{DynamicResource Negro}"
-                                            VerticalTextAlignment="Center" />
-                                        </StackLayout>
-                                        <Grid
-                                        Grid.RowSpan="2"
-                                        Grid.Column="1"
-                                        Margin="0,0,20,0"
-                                        ColumnDefinitions="25, 50, 25"
-                                        ColumnSpacing="0"
-                                        HorizontalOptions="Center"
-                                        IsVisible="{Binding ModoTienda}"
-                                        RowDefinitions="25">
-                                            <ImageButton
-                                            Grid.Column="0"
-                                            BackgroundColor="Transparent"
-                                            BorderColor="Transparent"
-                                            Command="{Binding Path=BindingContext.ClickMenosIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                            CommandParameter="{Binding idIngrediente}"
-                                            HeightRequest="30"
-                                            Source="btnmenos.png" />
-                                            <Label
                                             Grid.Column="1"
                                             FontFamily="Nunito"
-                                            HorizontalTextAlignment="Center"
-                                            Text="{Binding Cantidad, Mode=TwoWay}"
-                                            TextColor="Black"
-                                            VerticalTextAlignment="Center" />
-
-                                            <ImageButton
+                                            FontSize="16"
+                                            Text="{Binding opcion}"
+                                            TextColor="{DynamicResource Negro}"
+                                            VerticalOptions="Center"/>
+                                        <Label
                                             Grid.Column="2"
-                                            BackgroundColor="Transparent"
-                                            BorderColor="Transparent"
-                                            Command="{Binding Path=BindingContext.ClickMasIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                            CommandParameter="{Binding idIngrediente}"
-                                            HeightRequest="30"
-                                            Source="nuevo.png" />
+                                            FontFamily="Nunito_bold"
+                                            FontSize="15"
+                                            IsVisible="{Binding visiblePuntos, Converter={StaticResource InverseBoolConverter}}"
+                                            Text="{Binding precio, StringFormat='{0:N2} €'}"
+                                            TextColor="{DynamicResource Rojo}"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!-- COMBOS (múltiples secciones) -->
+                        <StackLayout IsVisible="{Binding Combo}" Spacing="10">
+                            <!-- Combo 1: Entrantes -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,10,0,5">
+                                <Label Text="1. ENTRANTES" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo1}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                            <!-- Combo 2 -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
+                                <Label Text="2. PRIMER PLATO 1" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo2}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                            <!-- Combo 3 -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
+                                <Label Text="3. PRIMER PLATO 2" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo3}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                            <!-- Combo 4 -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
+                                <Label Text="4. SEGUNDO PLATO 1" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo4}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                            <!-- Combo 5 -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
+                                <Label Text="5. SEGUNDO PLATO 2" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo5}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                            <!-- Combo 6: Bebida -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
+                                <Label Text="6. BEBIDA" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo6}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                            <!-- Combo 7: Postre 1 -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
+                                <Label Text="7. POSTRE 1" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo7}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+
+                            <!-- Combo 8: Postre 2 -->
+                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
+                                <Label Text="8. POSTRE 2" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                            </Border>
+                            <StackLayout BindableLayout.ItemsSource="{Binding Combo8}" Spacing="2">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
+                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+
+                    <!-- CANTIDAD (Modo Tienda) -->
+                    <StackLayout IsVisible="{Binding ModoTienda}" Margin="0,15,0,0">
+                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,10">
+                            <Label Text="CANTIDAD" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                        </Border>
+                        <Border Padding="10" StrokeShape="RoundRectangle 20" StrokeThickness="0" BackgroundColor="#F0F0F0" HorizontalOptions="Center">
+                            <Grid ColumnDefinitions="40,60,40" ColumnSpacing="5">
+                                <ImageButton
+                                    Grid.Column="0"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding Path=BindingContext.ClickMenosCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
+                                    CommandParameter="{Binding id}"
+                                    HeightRequest="40"
+                                    WidthRequest="40"
+                                    Source="btnmenos.png" />
+                                <Label
+                                    Grid.Column="1"
+                                    FontFamily="Nunito_bold"
+                                    FontSize="20"
+                                    HorizontalTextAlignment="Center"
+                                    Text="{Binding CantidadOpcion, Mode=TwoWay}"
+                                    TextColor="Black"
+                                    VerticalTextAlignment="Center" />
+                                <ImageButton
+                                    Grid.Column="2"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding Path=BindingContext.ClickMasCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
+                                    CommandParameter="{Binding id}"
+                                    HeightRequest="40"
+                                    WidthRequest="40"
+                                    Source="nuevo.png" />
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- INGREDIENTES/EXTRAS - CollectionView para mejor rendimiento -->
+                    <StackLayout IsVisible="{Binding TieneIngredientes}" Margin="0,15,0,0">
+                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,5">
+                            <Label Text="{Binding TextoIngredientes}" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}" TextTransform="Uppercase"/>
+                        </Border>
+                        <CollectionView
+                            ItemsSource="{Binding ListadoIngredientes}"
+                            ItemSizingStrategy="MeasureFirstItem"
+                            VerticalScrollBarVisibility="Never">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="4"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="10,8" BackgroundColor="#F8F8F8" ColumnDefinitions="*,Auto" HeightRequest="50">
+                                        <StackLayout Spacing="0" VerticalOptions="Center">
+                                            <Label FontFamily="Nunito_bold" FontSize="15" Text="{Binding nombre}" TextColor="{DynamicResource Negro}"/>
+                                            <Label FontFamily="Nunito" FontSize="13" Text="{Binding precio, StringFormat='{0:N2} €'}" TextColor="{DynamicResource Rojo}"/>
+                                        </StackLayout>
+                                        <Grid Grid.Column="1" Padding="5" BackgroundColor="#E8E8E8" VerticalOptions="Center" ColumnDefinitions="32,40,32" ColumnSpacing="0">
+                                            <ImageButton
+                                                Grid.Column="0"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding Path=BindingContext.ClickMenosIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
+                                                CommandParameter="{Binding idIngrediente}"
+                                                HeightRequest="32"
+                                                WidthRequest="32"
+                                                Source="btnmenos.png" />
+                                            <Label
+                                                Grid.Column="1"
+                                                FontFamily="Nunito_bold"
+                                                FontSize="16"
+                                                HorizontalTextAlignment="Center"
+                                                Text="{Binding Cantidad, Mode=TwoWay}"
+                                                TextColor="Black"
+                                                VerticalTextAlignment="Center" />
+                                            <ImageButton
+                                                Grid.Column="2"
+                                                BackgroundColor="Transparent"
+                                                Command="{Binding Path=BindingContext.ClickMasIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
+                                                CommandParameter="{Binding idIngrediente}"
+                                                HeightRequest="32"
+                                                WidthRequest="32"
+                                                Source="nuevo.png" />
                                         </Grid>
                                     </Grid>
                                 </DataTemplate>
-                            </BindableLayout.ItemTemplate>
-                        </StackLayout>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
                     </StackLayout>
-                    <StackLayout
-                    Grid.Row="6"
-                    Margin="0,10,0,0"
-                        BackgroundColor="White"
-                    HorizontalOptions="FillAndExpand"
-                    IsVisible="{Binding TieneAlergenos}">
-                        <Label
-                        Padding="20,10,0,10"
-                        BackgroundColor="{DynamicResource Amarillo}"
-                        FontFamily="Syne"
-                        FontSize="14"
 
-                            HeightRequest="30"
-                        HorizontalTextAlignment="Start"
-                        Text="Alérgenos"
-                            TextTransform="Uppercase"
-                        TextColor="{DynamicResource Negro}"
-                        VerticalOptions="Start">
-                            <Label.Background>
-                                <LinearGradientBrush EndPoint="1,0">
-                                    <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                    <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                </LinearGradientBrush>
-                            </Label.Background>
-                        </Label>
+                    <!-- ALÉRGENOS -->
+                    <StackLayout IsVisible="{Binding TieneAlergenos}" Margin="0,15,0,0">
+                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,5">
+                            <Label Text="ALÉRGENOS" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                        </Border>
                         <FlexLayout
-                            BackgroundColor="White"
-                        x:Name="HLAlergenos"
-                        Margin="0,0,0,10"
-                        AlignContent="SpaceBetween"
-                        AlignItems="Center"
-                        BindableLayout.ItemsSource="{Binding Articulo.listadoAlergenos}"
-                        Direction="Row"
-                        HorizontalOptions="CenterAndExpand"
-                        Wrap="Wrap">
+                            x:Name="HLAlergenos"
+                            Margin="0,5"
+                            BindableLayout.ItemsSource="{Binding AlergenosLista}"
+                            Direction="Row"
+                            JustifyContent="Center"
+                            Wrap="Wrap">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <templates:AlergenosItemTemplate />
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </FlexLayout>
-
                     </StackLayout>
-                    <StackLayout
-                        Grid.Row="7"
-                        Margin="0,10,0,0"
-                        HorizontalOptions="FillAndExpand"
-                        VerticalOptions="Start">
-                            <Label
-                            Padding="20,10"
-                            FontAttributes="Bold"
-                            FontFamily="Syne"
-                            FontSize="14"
-                            HorizontalTextAlignment="Start"
-                            TextColor="{DynamicResource Negro}"
-                            VerticalOptions="FillAndExpand"
-                            Text="Comentario"
-                            VerticalTextAlignment="Center">
-                                <Label.Background>
-                                    <LinearGradientBrush EndPoint="1,0">
-                                        <GradientStop Offset="0.1" Color="{StaticResource Amarillo}" />
-                                        <GradientStop Offset="1.0" Color="{StaticResource Blanco}" />
-                                    </LinearGradientBrush>
-                                </Label.Background>
-                            </Label>
-                            <Frame HasShadow="False" Padding="0" BorderColor="{DynamicResource Negro}">
-                                <Editor Text="{Binding Comentario}" HeightRequest="200" HorizontalOptions="FillAndExpand"
-                                    BackgroundColor="{DynamicResource Blanco}" TextColor="{DynamicResource Negro}"/>
-                            </Frame>
-                        </StackLayout>
-                </Grid>
-               
-            </Grid>
-        </ScrollView>
-        </StackLayout>
-             
+
+                    <!-- COMENTARIO -->
+                    <StackLayout Margin="0,15,0,20">
+                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,5">
+                            <Label Text="COMENTARIO" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                        </Border>
+                        <Border StrokeThickness="1" Stroke="#E0E0E0" StrokeShape="RoundRectangle 8" Padding="0">
+                            <Editor
+                                Text="{Binding Comentario}"
+                                HeightRequest="100"
+                                Placeholder="Escribe aquí tus comentarios..."
+                                PlaceholderColor="#AAAAAA"
+                                BackgroundColor="White"
+                                TextColor="{DynamicResource Negro}"/>
+                        </Border>
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+
+            <!-- Botón Añadir -->
             <Button
-                Grid.Row="1"
-                Margin="30,0,30,20"
+                Grid.Row="2"
+                Margin="16,10,16,20"
                 BackgroundColor="{DynamicResource Rojo}"
                 Command="{Binding cmdActualizarCaja}"
-                CornerRadius="10"
+                CornerRadius="25"
                 FontFamily="Nunito_bold"
-                HeightRequest="60"
+                FontSize="18"
+                HeightRequest="55"
                 HorizontalOptions="FillAndExpand"
                 IsVisible="{Binding Path=BindingContext.ModoTienda, Source={x:Reference Name=ViewDetalleArticulos}}"
                 Text="{Binding TextoCaja}"
                 TextColor="{DynamicResource Blanco}" />
             <Button
-                Grid.Row="1"
-                Margin="30,0,30,20"
+                Grid.Row="2"
+                Margin="16,10,16,20"
                 BackgroundColor="{DynamicResource Rojo}"
                 Command="{Binding cmdActualizarCajaPuntos}"
-                CornerRadius="10"
+                CornerRadius="25"
                 FontFamily="Nunito_bold"
-                HeightRequest="60"
+                FontSize="18"
+                HeightRequest="55"
                 HorizontalOptions="FillAndExpand"
                 IsVisible="{Binding Path=BindingContext.VisiblePuntos, Source={x:Reference Name=ViewDetalleArticulos}}"
                 Text="{Binding TextoCajaPuntos}"

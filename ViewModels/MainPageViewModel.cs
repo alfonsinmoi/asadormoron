@@ -90,12 +90,6 @@ namespace AsadorMoron.ViewModels
                                 else
                                     result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<HomeViewModelEstMobile>());
                                 break;
-                            case (int)RolesEnum.Administrador: //Administrador
-                                if (DeviceInfo.Platform.ToString() == "WinUI")
-                                    result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<HomeViewModelAdmin>());
-                                else
-                                    result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<HomeViewModelAdminMobile>());
-                                break;
                             case (int)RolesEnum.Repartidor: //REpartidor
                                 result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<HomeViewModelRepartidor>());
                                 break;

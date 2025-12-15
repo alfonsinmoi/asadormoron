@@ -32,23 +32,33 @@ namespace AsadorMoron.ViewModels.Clientes
             }
         }
 
+        private static Stopwatch _loginStopwatch;
+
         public override Task InitializeAsync(object navigationData)
         {
+            _loginStopwatch = Stopwatch.StartNew();
+            Debug.WriteLine($"[PERF-LOGIN] InitializeAsync INICIO: {_loginStopwatch.ElapsedMilliseconds}ms");
             try
             {
                 App.DAUtil.EnTimer = false;
+                Debug.WriteLine($"[PERF-LOGIN] getConfiguracionAdmin INICIO: {_loginStopwatch.ElapsedMilliseconds}ms");
                 ConfiguracionAdmin cAdmin = ResponseServiceWS.getConfiguracionAdmin();
+                Debug.WriteLine($"[PERF-LOGIN] getConfiguracionAdmin FIN: {_loginStopwatch.ElapsedMilliseconds}ms");
                 VisibleRS = cAdmin.visibleRS;
+                Debug.WriteLine($"[PERF-LOGIN] GetUsuarioSQLite INICIO: {_loginStopwatch.ElapsedMilliseconds}ms");
                 UsuarioModel persona = App.DAUtil.GetUsuarioSQLite();
+                Debug.WriteLine($"[PERF-LOGIN] GetUsuarioSQLite FIN: {_loginStopwatch.ElapsedMilliseconds}ms");
                 if (persona != null)
                 {
                     Email = persona.username;
                     Password = persona.password;
+                    Debug.WriteLine($"[PERF-LOGIN] Login() INICIO: {_loginStopwatch.ElapsedMilliseconds}ms");
                     Login();
                 }
             }
             catch (Exception ex)
             {
+                Debug.WriteLine($"[PERF-LOGIN] ERROR: {ex.Message} ({_loginStopwatch.ElapsedMilliseconds}ms)");
                 App.userdialog.HideLoading();
             }
             finally
@@ -59,36 +69,54 @@ namespace AsadorMoron.ViewModels.Clientes
         }
 
         #region Metodos
-        private void Cancelar()
+        private async void Cancelar()
         {
-            App.DAUtil.NavigationService.InitializeAsync();
+            try
+            {
+                App.userdialog?.ShowLoading(AppResources.Cargando);
+                await App.DAUtil.NavigationService.InitializeAsync();
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
+            }
         }
 
         private async Task Login()
         {
+            Debug.WriteLine($"[PERF-LOGIN] Login() ENTRADA: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
             try
             {
                 try { App.userdialog.ShowLoading(AppResources.Cargando, MaskType.Black); } catch (Exception) { }
                 await Task.Delay(millisecondsDelay: 200);
+                Debug.WriteLine($"[PERF-LOGIN] InitLogin INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                 await InitLogin();
+                Debug.WriteLine($"[PERF-LOGIN] InitLogin FIN (result={resultLogin}): {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                 if (resultLogin)
                 {
-                    if (App.DAUtil.Usuario.rol == (int)RolesEnum.Establecimiento || App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador)
+                    // OPTIMIZADO: Usar versiones async para no bloquear UI
+                    int rol = App.DAUtil.Usuario.rol;
+                    Debug.WriteLine($"[PERF-LOGIN] Carga datos rol {rol} INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
+                    if (rol == (int)RolesEnum.Establecimiento || rol == (int)RolesEnum.Administrador)
                     {
                         string ids = App.DAUtil.Usuario.idPueblo.ToString();
-                        App.ResponseWS.ListadoRepartidoresMultiAdmin(ids);
+                        await App.AsyncService.ListadoRepartidoresMultiAdminAsync(ids);
                     }
-                    else if (App.DAUtil.Usuario.rol == (int)RolesEnum.Repartidor)
+                    else if (rol == (int)RolesEnum.Repartidor)
                     {
-                        App.DAUtil.Usuario.Repartidor = ResponseServiceWS.GetRepartidorByIdUsuario(App.DAUtil.Usuario.idUsuario);
+                        App.DAUtil.Usuario.Repartidor = await App.AsyncService.GetRepartidorByIdUsuarioAsync(App.DAUtil.Usuario.idUsuario);
                     }
-                    else if (App.DAUtil.Usuario.rol == (int)RolesEnum.Cliente)
-                        App.promocionAmigo = ResponseServiceWS.getPromocionAmigo();
+                    else if (rol == (int)RolesEnum.Cliente)
+                        App.promocionAmigo = await App.AsyncService.GetPromocionAmigoAsync();
+                    Debug.WriteLine($"[PERF-LOGIN] Carga datos rol FIN: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
 
                     Preferences.Set("PIN", "");
                     Preferences.Set("Social", false);
                     Preferences.Set("RedSocial", "");
-                    App.ResponseWS.getZonas();
+                    Debug.WriteLine($"[PERF-LOGIN] GetZonasAsync INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
+                    await App.AsyncService.GetZonasAsync();
+                    Debug.WriteLine($"[PERF-LOGIN] GetZonasAsync FIN: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
+                    Debug.WriteLine($"[PERF-LOGIN] NavigationService.InitializeAsync INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                     App.DAUtil.NavigationService.InitializeAsync().ContinueWith(task => Device.BeginInvokeOnMainThread(() => { App.userdialog.HideLoading(); }));
                 }
                 else
@@ -101,15 +129,17 @@ namespace AsadorMoron.ViewModels.Clientes
             catch (Exception ex)
             {
                 App.userdialog.HideLoading();
-                Debug.WriteLine("Error Login: " + ex.Message);
+                Debug.WriteLine($"[PERF-LOGIN] ERROR Login: {ex.Message} ({_loginStopwatch?.ElapsedMilliseconds ?? 0}ms)");
             }
             finally
             {
+                Debug.WriteLine($"[PERF-LOGIN] Login TOTAL: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                 App.userdialog.HideLoading();
             }
         }
         private async Task InitLogin()
         {
+            Debug.WriteLine($"[PERF-LOGIN] InitLogin ENTRADA: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
             try
             {
                 if (App.tengoConexion)
@@ -118,8 +148,10 @@ namespace AsadorMoron.ViewModels.Clientes
                     {
                         try
                         {
+                            Debug.WriteLine($"[PERF-LOGIN] ResponseServiceWS.Login INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                             if (ResponseServiceWS.Login(Email, Password))
                             {
+                                Debug.WriteLine($"[PERF-LOGIN] ResponseServiceWS.Login FIN (OK): {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                                 if (Device.RuntimePlatform != Device.UWP)
                                 {
                                     App.DAUtil.Usuario.platform = Device.RuntimePlatform.ToLower();
@@ -130,8 +162,23 @@ namespace AsadorMoron.ViewModels.Clientes
                                     else if (Device.RuntimePlatform == Device.Android)
                                         App.DAUtil.Usuario.version = App.DAUtil.versionAndroid;
                                     if (App.DAUtil.InstallId != null)
+                                    {
+                                        Debug.WriteLine($"[PERF-LOGIN] RegistraTokenFCM INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                                         App.ResponseWS.RegistraTokenFCM(App.DAUtil.Usuario);
+                                        Debug.WriteLine($"[PERF-LOGIN] RegistraTokenFCM FIN: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
+                                    }
                                 }
+
+                                // KIOSKO: Si el usuario es Kiosko, precargar todos los datos al inicio
+                                if (Services.KioskoPreloadService.EsKiosko && App.EstActual != null)
+                                {
+                                    Debug.WriteLine("[Login] Usuario Kiosko detectado - Iniciando precarga de datos...");
+                                    // Crear tablas Kiosko si no existen
+                                    App.DAUtil.CreaTablasKiosko();
+                                    // Precargar datos en segundo plano (no bloqueamos el login)
+                                    _ = Services.KioskoPreloadService.Instance.PrecargarDatosKioskoAsync(App.EstActual.idEstablecimiento);
+                                }
+
                                 resultLogin = true;
                             }
                             else if (App.DAUtil.Usuario != null)
@@ -206,25 +253,32 @@ namespace AsadorMoron.ViewModels.Clientes
             }
         }
 
-        private void Registro(object obj)
+        private async void Registro(object obj)
         {
-            try { App.userdialog.ShowLoading(AppResources.Cargando, MaskType.Black); } catch (Exception) { }
-            Device.BeginInvokeOnMainThread(async () =>
+            try
             {
+                App.userdialog?.ShowLoading(AppResources.Cargando);
                 App.DAUtil.Idioma = "ES";
                 await App.DAUtil.NavigationService.NavigateToAsync<RegistroViewModel>();
-            });
-
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
+            }
         }
 
-        private void Olvido(object obj)
+        private async void Olvido(object obj)
         {
-            try { App.userdialog.ShowLoading(AppResources.Cargando, MaskType.Black); } catch (Exception) { }
-            Device.BeginInvokeOnMainThread(async () =>
+            try
             {
+                App.userdialog?.ShowLoading(AppResources.Cargando);
                 App.DAUtil.Idioma = "ES";
                 await App.DAUtil.NavigationService.NavigateToAsync<RecoveryViewModel>();
-            });
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
+            }
         }
         private void EnviaEmail(string nuevoPIN)
         {

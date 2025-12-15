@@ -28,16 +28,19 @@ namespace AsadorMoron.Services
         /// </summary>
         public async Task<List<Categoria>> GetCategoriasAsync(int idEstablecimiento, CancellationToken ct = default)
         {
-            var sw = PerformanceBenchmark.StartTimer();
+            var sw = Stopwatch.StartNew();
+            Debug.WriteLine($"[GCA] GetCategoriasAsync INICIO (0ms)");
             try
             {
                 var url = $"{App.DAUtil.miURL}categorias.php/GET?idEstablecimiento={idEstablecimiento}";
+                Debug.WriteLine($"[GCA] URL: {url} ({sw.ElapsedMilliseconds}ms)");
                 var result = await _http.GetAsync<List<Categoria>>(url, ct);
+                Debug.WriteLine($"[GCA] Resultado: {result?.Count ?? 0} categorias ({sw.ElapsedMilliseconds}ms)");
                 return result ?? new List<Categoria>();
             }
             finally
             {
-                PerformanceBenchmark.StopAndRecord(sw, "GetCategoriasAsync");
+                Debug.WriteLine($"[GCA] FIN: {sw.ElapsedMilliseconds}ms");
             }
         }
 
@@ -51,17 +54,19 @@ namespace AsadorMoron.Services
         /// </summary>
         public async Task<ConfiguracionEstablecimiento> GetConfiguracionEstablecimientoAsync(int idEstablecimiento, CancellationToken ct = default)
         {
-            var sw = PerformanceBenchmark.StartTimer();
+            var sw = Stopwatch.StartNew();
+            Debug.WriteLine($"[GCEA] GetConfiguracionEstAsync INICIO (0ms)");
             try
             {
                 var url = $"{App.DAUtil.miURL}configuracion.php/GET?idEstablecimiento={idEstablecimiento}";
-                // La API devuelve un objeto único, no una lista
+                Debug.WriteLine($"[GCEA] URL: {url} ({sw.ElapsedMilliseconds}ms)");
                 var result = await _http.GetAsync<ConfiguracionEstablecimiento>(url, ct);
+                Debug.WriteLine($"[GCEA] Resultado obtenido ({sw.ElapsedMilliseconds}ms)");
                 return result ?? new ConfiguracionEstablecimiento();
             }
             finally
             {
-                PerformanceBenchmark.StopAndRecord(sw, "GetConfiguracionEstablecimientoAsync");
+                Debug.WriteLine($"[GCEA] FIN: {sw.ElapsedMilliseconds}ms");
             }
         }
 
@@ -116,18 +121,25 @@ namespace AsadorMoron.Services
         /// </summary>
         public async Task<int> GetPuntosEstablecimientoAsync(CancellationToken ct = default)
         {
-            var sw = PerformanceBenchmark.StartTimer();
+            var sw = Stopwatch.StartNew();
+            Debug.WriteLine($"[GPEA] GetPuntosEstAsync INICIO (0ms)");
             try
             {
-                if (App.DAUtil.Usuario == null) return 0;
+                if (App.DAUtil.Usuario == null)
+                {
+                    Debug.WriteLine($"[GPEA] Usuario NULL, retornando 0 ({sw.ElapsedMilliseconds}ms)");
+                    return 0;
+                }
 
                 var url = $"{App.DAUtil.miURL}puntos.php/GET?puntosEstablecimiento=true&idUsuario={App.DAUtil.Usuario.idUsuario}&idEstablecimiento={App.EstActual.idEstablecimiento}";
+                Debug.WriteLine($"[GPEA] URL construida ({sw.ElapsedMilliseconds}ms)");
                 var result = await _http.GetAsync<ResultdadoModel>(url, ct);
+                Debug.WriteLine($"[GPEA] Resultado: {result?.resultado ?? 0} ({sw.ElapsedMilliseconds}ms)");
                 return result?.resultado ?? 0;
             }
             finally
             {
-                PerformanceBenchmark.StopAndRecord(sw, "GetPuntosEstablecimientoAsync");
+                Debug.WriteLine($"[GPEA] FIN: {sw.ElapsedMilliseconds}ms");
             }
         }
 
@@ -335,20 +347,28 @@ namespace AsadorMoron.Services
         public async Task<(List<Categoria> Categorias, ConfiguracionEstablecimiento Config, int Puntos)>
             CargarDatosCartaAsync(int idEstablecimiento, CancellationToken ct = default)
         {
-            var sw = PerformanceBenchmark.StartTimer();
+            var sw = Stopwatch.StartNew();
+            Debug.WriteLine($"[CDCA] CargarDatosCartaAsync INICIO (0ms)");
             try
             {
+                Debug.WriteLine($"[CDCA] Iniciando tareas paralelas ({sw.ElapsedMilliseconds}ms)");
                 var categoriasTask = GetCategoriasAsync(idEstablecimiento, ct);
                 var configTask = GetConfiguracionEstablecimientoAsync(idEstablecimiento, ct);
                 var puntosTask = GetPuntosEstablecimientoAsync(ct);
 
+                Debug.WriteLine($"[CDCA] Tareas creadas, esperando WhenAll ({sw.ElapsedMilliseconds}ms)");
                 await Task.WhenAll(categoriasTask, configTask, puntosTask);
+                Debug.WriteLine($"[CDCA] WhenAll completado ({sw.ElapsedMilliseconds}ms)");
 
-                return (
-                    await categoriasTask,
-                    await configTask,
-                    await puntosTask
-                );
+                var categorias = await categoriasTask;
+                Debug.WriteLine($"[CDCA] Categorias: {categorias?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
+                var config = await configTask;
+                Debug.WriteLine($"[CDCA] Config obtenida ({sw.ElapsedMilliseconds}ms)");
+                var puntos = await puntosTask;
+                Debug.WriteLine($"[CDCA] Puntos: {puntos} ({sw.ElapsedMilliseconds}ms)");
+
+                Debug.WriteLine($"[CDCA] FIN: {sw.ElapsedMilliseconds}ms");
+                return (categorias, config, puntos);
             }
             finally
             {
@@ -690,6 +710,137 @@ namespace AsadorMoron.Services
             finally
             {
                 PerformanceBenchmark.StopAndRecord(sw, "GetMensajesAsync");
+            }
+        }
+
+        #endregion
+
+        #region Repartidores
+
+        /// <summary>
+        /// Versión async de ListadoRepartidoresMultiAdmin
+        /// </summary>
+        public async Task<List<RepartidorModel>> ListadoRepartidoresMultiAdminAsync(string ids)
+        {
+            var sw = Stopwatch.StartNew();
+            Debug.WriteLine($"[LRMAA] ListadoRepartidoresMultiAdminAsync INICIO (0ms)");
+            try
+            {
+                if (!App.DAUtil.DoIHaveInternet())
+                    return new List<RepartidorModel>();
+
+                string requestUri = BaseUrl + "repartidores.php/GET?multiAdmin=true&idPueblos=" + ids;
+                Debug.WriteLine($"[LRMAA] URL: {requestUri} ({sw.ElapsedMilliseconds}ms)");
+
+                var repartidores = await _http.GetAsync<List<RepartidorModel>>(requestUri);
+
+                if (repartidores != null)
+                {
+                    var ordered = repartidores.OrderBy(p => p.nombre).ToList();
+                    App.DAUtil.ActualizaRepartidores(ordered);
+                    Debug.WriteLine($"[LRMAA] Resultado: {ordered.Count} repartidores ({sw.ElapsedMilliseconds}ms)");
+                    return ordered;
+                }
+                return new List<RepartidorModel>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[LRMAA] Error: {ex.Message} ({sw.ElapsedMilliseconds}ms)");
+                return new List<RepartidorModel>();
+            }
+            finally
+            {
+                Debug.WriteLine($"[LRMAA] FIN: {sw.ElapsedMilliseconds}ms");
+            }
+        }
+
+        #endregion
+
+        #region Login Social Async
+
+        /// <summary>
+        /// Version async de LoginSocial - evita bloqueos .Result
+        /// </summary>
+        public async Task<bool> LoginSocialAsync(AuthNetworkData socialLoginData, CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                if (!App.DAUtil.DoIHaveInternet())
+                    return false;
+
+                var url = $"{App.DAUtil.miURL}usuarios.php/GET?email={socialLoginData.Email}&id={socialLoginData.Id}&social=true";
+                var respuesta = await _http.GetAsync<UsuarioModel>(url, ct);
+
+                if (respuesta != null && !string.IsNullOrEmpty(respuesta.nombre))
+                {
+                    // Usuario existente
+                    respuesta.password = "";
+                    respuesta.idSocial = socialLoginData.Id;
+                    respuesta.nombreCompleto = $"{respuesta.nombre} {respuesta.apellidos}";
+
+                    if (!App.DAUtil.SaveConfiguracionUsuarioSQLite(respuesta))
+                        return false;
+
+                    App.DAUtil.Usuario = respuesta;
+
+                    // Cargar datos adicionales en paralelo segun rol
+                    await CargarDatosUsuarioSegunRolAsync(respuesta, ct);
+
+                    Preferences.Set("idGrupo", 1);
+                    Preferences.Set("idPueblo", 1);
+                    return true;
+                }
+                else
+                {
+                    // Usuario nuevo - crear
+                    App.DAUtil.Usuario = new UsuarioModel
+                    {
+                        apellidos = socialLoginData.Apellidos,
+                        nombre = socialLoginData.Nombre,
+                        nombreCompleto = socialLoginData.Name,
+                        email = socialLoginData.Email,
+                        foto = !string.IsNullOrEmpty(socialLoginData.Picture)
+                            ? socialLoginData.Picture.Replace("&", "___")
+                            : "logo_producto.png",
+                        idSocial = socialLoginData.Id,
+                        codPostal = "",
+                        demo = 0,
+                        direccion = "",
+                        dni = "",
+                        estado = 1,
+                        fechaAlta = DateTime.Now,
+                        fechaNacimiento = DateTime.Now,
+                        idPueblo = 0,
+                        idUsuario = 0,
+                        idZona = 0,
+                        password = "",
+                        pin = "",
+                        platform = DeviceInfo.Platform.ToString().ToLower(),
+                        poblacion = "",
+                        provincia = "",
+                        rol = 1,
+                        telefono = "",
+                        token = App.DAUtil.InstallId,
+                        username = socialLoginData.Email,
+                        version = DeviceInfo.Platform.ToString() == "iOS"
+                            ? App.DAUtil.versioniOS
+                            : App.DAUtil.versionAndroid
+                    };
+
+                    ResponseServiceWS.registroUsuario(App.DAUtil.Usuario);
+                    App.DAUtil.SaveConfiguracionUsuarioSQLite(App.DAUtil.Usuario);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error LoginSocialAsync: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "LoginSocialAsync");
             }
         }
 

@@ -10,7 +10,20 @@ namespace AsadorMoron.Models
         public long Id { get; set; }
         public ArticuloModel articulo { get; set; }
         public bool esMediaPizza { get; set; }
-        public Boolean noTieneOpciones { get; set; }
+
+        private bool _noTieneOpciones;
+        public bool noTieneOpciones
+        {
+            get => _noTieneOpciones;
+            set
+            {
+                if (_noTieneOpciones != value)
+                {
+                    _noTieneOpciones = value;
+                    OnPropertyChanged(nameof(noTieneOpciones));
+                }
+            }
+        }
         [Ignore]
         public Boolean botonesVisibles { get; set; }
         [Ignore]
@@ -30,6 +43,44 @@ namespace AsadorMoron.Models
 
                 }
 
+            }
+        }
+
+        /// <summary>
+        /// Nombre localizado del artículo según el idioma actual
+        /// </summary>
+        [Ignore]
+        public string NombreLocalizado
+        {
+            get
+            {
+                if (articulo == null) return "";
+                return App.idioma switch
+                {
+                    "EN" => !string.IsNullOrEmpty(articulo.nombre_eng) ? articulo.nombre_eng : articulo.nombre,
+                    "DE" => !string.IsNullOrEmpty(articulo.nombre_ger) ? articulo.nombre_ger : articulo.nombre,
+                    "FR" => !string.IsNullOrEmpty(articulo.nombre_fr) ? articulo.nombre_fr : articulo.nombre,
+                    _ => articulo.nombre ?? ""
+                };
+            }
+        }
+
+        /// <summary>
+        /// Descripción localizada del artículo según el idioma actual
+        /// </summary>
+        [Ignore]
+        public string DescripcionLocalizada
+        {
+            get
+            {
+                if (articulo == null) return "";
+                return App.idioma switch
+                {
+                    "EN" => !string.IsNullOrEmpty(articulo.descripcion_eng) ? articulo.descripcion_eng : articulo.descripcion,
+                    "DE" => !string.IsNullOrEmpty(articulo.descripcion_ger) ? articulo.descripcion_ger : articulo.descripcion,
+                    "FR" => !string.IsNullOrEmpty(articulo.descripcion_fr) ? articulo.descripcion_fr : articulo.descripcion,
+                    _ => articulo.descripcion ?? ""
+                };
             }
         }
 

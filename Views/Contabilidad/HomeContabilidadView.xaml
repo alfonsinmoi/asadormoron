@@ -19,7 +19,7 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,50,0,0',
+                                Android='0,0,0,0',
                                 WinUI='0'}" RowDefinitions="350,350,350" ColumnDefinitions="*">
             <chart:SfCircularChart>
                 <chart:SfCircularChart.Title>

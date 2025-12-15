@@ -12,39 +12,13 @@
     BackgroundColor="{StaticResource Rojo}">
     <NavigationPage.TitleView>
          <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="Auto,*,Auto,Auto">
-           <ImageButton
-                 IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}"
-                BackgroundColor="Transparent"
-                Command="{Binding IrDetallePedidoCommand}"
-                HeightRequest="40"
-                Margin="0,0,20,0"
-                Source="carrito.png"
-                WidthRequest="40" />
-             <Frame Padding="0" BackgroundColor="{DynamicResource Amarillo}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
-                   VerticalOptions="Start" HorizontalOptions="End" HasShadow="False"
-                    IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
-                <Label Text="{Binding Cantidad, Mode=TwoWay}"
-                       FontSize="15" TextColor="Black" FontAttributes="Bold"
-                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
-                </Frame.GestureRecognizers>
-             </Frame>
-            <Image
+           <Image
                 Grid.ColumnSpan="4"
                 Margin="0,0,35,0"
                     Aspect="AspectFit"
                     HeightRequest="35"
                     Source="logomorado.png"
                     VerticalOptions="StartAndExpand" />
-             <ImageButton Grid.Column="2"
-                Margin="0,0,10,0"
-                BackgroundColor="Transparent"
-                Command="{Binding cmdVerCliente}"
-                HeightRequest="30"
-                Source="profile.png"
-                WidthRequest="30" />
              <ImageButton Grid.Column="3"
                 Margin="0,0,10,0"
                 BackgroundColor="Transparent"
@@ -68,7 +42,7 @@
     </ContentPage.Resources>
     <Grid
         Margin="{OnPlatform iOS='0,90,0,0',
-                            Android='0,60,0,0'}"
+                            Android='0,0,0,0'}"
         RowSpacing="0"
         ColumnSpacing="0"
         RowDefinitions="Auto,Auto,Auto,Auto,*,*,Auto">

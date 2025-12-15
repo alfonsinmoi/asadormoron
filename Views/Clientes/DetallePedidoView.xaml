@@ -20,7 +20,7 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <Grid RowDefinitions="Auto,*,Auto" BackgroundColor="White"  Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,60,0,0',
+                                Android='0,0,0,0',
                                 UWP='0,0,0,0'}">
             <StackLayout BackgroundColor="Red" Padding="10" IsVisible="{Binding VisibleSaldo}">
                 <Label Text="{Binding Saldo,StringFormat='Tiene un saldo acumulado de {0:C2}'}" FontFamily="Nunito_bold" TextColor="White"/>
@@ -35,7 +35,7 @@
                 <Grid
                     VerticalOptions="FillAndExpand"
                     Margin="0,0,0,0"
-                    RowDefinitions="Auto,Auto,Auto, Auto, Auto,Auto, Auto, Auto, Auto, Auto, Auto, 200"
+                    RowDefinitions="Auto,Auto,Auto, Auto, Auto,Auto, Auto, Auto, Auto, Auto, Auto, Auto"
                     RowSpacing="0">
                     <StackLayout
                         Grid.Row="0"
@@ -101,28 +101,7 @@
                                         FontFamily="Syne_Medium"
                                         FontSize="15"
                                         Text="{Binding comida}"
-                                        TextColor="{DynamicResource Negro}">
-                                        <Label.Triggers>
-                                            <DataTrigger
-                                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=DetallePedido}}"
-                                                TargetType="Label"
-                                                Value="EN">
-                                                <Setter Property="Text" Value="{Binding comida_eng}" />
-                                            </DataTrigger>
-                                            <DataTrigger
-                                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=DetallePedido}}"
-                                                TargetType="Label"
-                                                Value="DE">
-                                                <Setter Property="Text" Value="{Binding comida_ger}" />
-                                            </DataTrigger>
-                                            <DataTrigger
-                                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=DetallePedido}}"
-                                                TargetType="Label"
-                                                Value="FR">
-                                                <Setter Property="Text" Value="{Binding comida_fr}" />
-                                            </DataTrigger>
-                                        </Label.Triggers>
-                                        </Label>
+                                        TextColor="{DynamicResource Negro}"/>
                                     <Label
                                         Grid.Row="1"
                                         Margin="10,0,0,0"
@@ -289,163 +268,161 @@
                         Grid.Row="8"
                         Margin="10"
                         Padding="15,12"
-                        BackgroundColor="{DynamicResource Gris}"
-                        StrokeThickness="0"
+                        BackgroundColor="{DynamicResource Fondo}"
+                        StrokeThickness="1"
+                        Stroke="{DynamicResource Gris}"
                         Shadow="{Shadow Brush={DynamicResource Gris}, Offset='0,2', Radius=10, Opacity=0.15}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16"/>
                         </Border.StrokeShape>
-                    <Grid
-                        ColumnDefinitions="*,*"
-                        RowDefinitions="Auto, Auto"
-                        VerticalOptions="EndAndExpand">
-                        <Label
-                            Grid.Row="0"
-                            Grid.ColumnSpan="2"
-                            Padding="10"
-                            FontAttributes="Bold"
-                            FontFamily="Syne"
-                            FontSize="16"
-                            VerticalOptions="Start"
-                            HorizontalOptions="FillAndExpand"
-                            Text="¿Cómo desea el pedido?"
-                            TextColor="{DynamicResource Negro}">
-                        </Label>
-                        <StackLayout
-                            Grid.Row="1"
-                            BackgroundColor="White"
-                            Grid.Column="1"
-                            Spacing="5"
-                            IsVisible="{Binding TieneRecogida}"
-                            Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding Recogida}" Color="{DynamicResource Rojo}" />
+                        <Grid
+                            ColumnDefinitions="*,*"
+                            RowDefinitions="Auto, Auto"
+                            VerticalOptions="EndAndExpand">
                             <Label
-                                Margin="{OnPlatform iOS='-15,0,0,0',
-                                                    Android=0,
-                                                    Default=0}"
+                                Grid.Row="0"
+                                Grid.ColumnSpan="2"
+                                Padding="10"
+                                FontFamily="Syne"
+                                FontSize="16"
+                                VerticalOptions="Start"
+                                HorizontalOptions="FillAndExpand"
+                                Text="¿Cómo desea el pedido?"
+                                TextColor="{DynamicResource Negro}" />
+                            <StackLayout
+                                Grid.Row="1"
+                                Grid.Column="1"
                                 BackgroundColor="Transparent"
-                                FontFamily="Nunito"
-                                FontSize="13"
-                                Text="Recoger en local"
-                                TextColor="{DynamicResource Negro}"
-                                VerticalTextAlignment="Center" />
-                        </StackLayout>
-                        <StackLayout
-                            BackgroundColor="White"
-                            Grid.Row="1"
-                            Spacing="5"
-                            IsVisible="{Binding TieneEnvio}"
-                            Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding Envio}" Color="{DynamicResource Rojo}" />
-                            <Label
-                                Margin="{OnPlatform iOS='-15,0,0,0',
-                                                    Android=0,
-                                                    Default=0}"
+                                Spacing="5"
+                                IsVisible="{Binding TieneRecogida}"
+                                Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding Recogida}" Color="{DynamicResource Rojo}" />
+                                <Label
+                                    Margin="{OnPlatform iOS='-15,0,0,0',
+                                                        Android=0,
+                                                        Default=0}"
+                                    BackgroundColor="Transparent"
+                                    FontFamily="Nunito"
+                                    FontSize="13"
+                                    Text="Recoger en local"
+                                    TextColor="{DynamicResource Negro}"
+                                    VerticalTextAlignment="Center" />
+                            </StackLayout>
+                            <StackLayout
+                                Grid.Row="1"
                                 BackgroundColor="Transparent"
-                                FontFamily="Nunito"
-                                FontSize="13"
-                                Text="Envío a domicilio"
-                                TextColor="{DynamicResource Negro}"
-                                VerticalTextAlignment="Center" />
-                        </StackLayout>
-                    </Grid>
+                                Spacing="5"
+                                IsVisible="{Binding TieneEnvio}"
+                                Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding Envio}" Color="{DynamicResource Rojo}" />
+                                <Label
+                                    Margin="{OnPlatform iOS='-15,0,0,0',
+                                                        Android=0,
+                                                        Default=0}"
+                                    BackgroundColor="Transparent"
+                                    FontFamily="Nunito"
+                                    FontSize="13"
+                                    Text="Envío a domicilio"
+                                    TextColor="{DynamicResource Negro}"
+                                    VerticalTextAlignment="Center" />
+                            </StackLayout>
+                        </Grid>
                     </Border>
                     <Border
                         Grid.Row="9"
                         Margin="10"
                         Padding="15,12"
                         IsVisible="{Binding Envio}"
-                        BackgroundColor="{DynamicResource Gris}"
-                        StrokeThickness="0"
+                        BackgroundColor="{DynamicResource Fondo}"
+                        StrokeThickness="1"
+                        Stroke="{DynamicResource Gris}"
                         Shadow="{Shadow Brush={DynamicResource Gris}, Offset='0,2', Radius=10, Opacity=0.15}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16"/>
                         </Border.StrokeShape>
-                    <Grid
-                        RowDefinitions="Auto, Auto, Auto,Auto"
-                        VerticalOptions="EndAndExpand">
-                        <Label
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Padding="10"
-                            FontAttributes="Bold"
-                            FontFamily="Syne"
-                            FontSize="16"
-                            VerticalOptions="Start"
-                            HorizontalOptions="FillAndExpand"
-                            Text="Dirección de envío"
-                            TextColor="{DynamicResource Negro}">
-                        </Label>
-                        <Entry
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            BackgroundColor="White"
-                            FontFamily="Nunito"
-                            FontSize="13"
-                            IsEnabled="{Binding CambiaDireccion}"
-                            Text="{Binding Direccion}"
-                            TextColor="{DynamicResource Negro}" />
-                        <Picker
-                            Title="Zona"
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            BackgroundColor="White"
-                            FontFamily="Nunito"
-                            FontSize="13"
-                            IsEnabled="{Binding Modificable}"
-                            ItemDisplayBinding="{Binding nombre}"
-                            ItemsSource="{Binding Zonas}"
-                            SelectedItem="{Binding ZonaSeleccionda}"
-                            TextColor="{DynamicResource Negro}" />
-                        <Label
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            BackgroundColor="White"
-                            FontFamily="Nunito"
-                            FontSize="13"
-                            IsVisible="{Binding PuebloCambiado}"
-                            Text="{Binding Poblacion}"
-                            TextColor="{DynamicResource Negro}" />
-                    </Grid>
-                        </Border>
+                        <Grid
+                            RowDefinitions="Auto, Auto, Auto,Auto"
+                            VerticalOptions="EndAndExpand">
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Padding="10"
+                                FontFamily="Syne"
+                                FontSize="16"
+                                VerticalOptions="Start"
+                                HorizontalOptions="FillAndExpand"
+                                Text="Dirección de envío"
+                                TextColor="{DynamicResource Negro}" />
+                            <Entry
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                BackgroundColor="Transparent"
+                                FontFamily="Nunito"
+                                FontSize="13"
+                                IsEnabled="{Binding CambiaDireccion}"
+                                Text="{Binding Direccion}"
+                                TextColor="{DynamicResource Negro}" />
+                            <Picker
+                                Title="Zona"
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                BackgroundColor="Transparent"
+                                FontFamily="Nunito"
+                                FontSize="13"
+                                IsEnabled="{Binding Modificable}"
+                                ItemDisplayBinding="{Binding nombre}"
+                                ItemsSource="{Binding Zonas}"
+                                SelectedItem="{Binding ZonaSeleccionda}"
+                                TextColor="{DynamicResource Negro}" />
+                            <Label
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                BackgroundColor="Transparent"
+                                FontFamily="Nunito"
+                                FontSize="13"
+                                IsVisible="{Binding PuebloCambiado}"
+                                Text="{Binding Poblacion}"
+                                TextColor="{DynamicResource Negro}" />
+                        </Grid>
+                    </Border>
                     <Border
                         Grid.Row="10"
                         Margin="10"
                         Padding="15,12"
-                        BackgroundColor="{DynamicResource Gris}"
-                        StrokeThickness="0"
+                        BackgroundColor="{DynamicResource Fondo}"
+                        StrokeThickness="1"
+                        Stroke="{DynamicResource Gris}"
                         Shadow="{Shadow Brush={DynamicResource Gris}, Offset='0,2', Radius=10, Opacity=0.15}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16"/>
                         </Border.StrokeShape>
-                    <Grid
-                        
-                        RowDefinitions="Auto, Auto, Auto, Auto,Auto,Auto"
-                        RowSpacing="0"
-                        VerticalOptions="EndAndExpand">
-                        <Label
-                            Grid.Row="0"
-                            Padding="10"
-                            FontFamily="Syne"
-                            VerticalOptions="Start"
-                            FontSize="16"
-                            HorizontalOptions="FillAndExpand"
-                            Text="Forma de pago"
-                            TextColor="{DynamicResource Negro}"/>
-                        <StackLayout
-                            Grid.Row="1"
-                            BackgroundColor="White"
-                            IsVisible="{Binding TieneEfectivo}"
-                            Orientation="Horizontal">
-                            <CheckBox IsChecked="{Binding Efectivo}" Color="{DynamicResource Rojo}" />
+                        <Grid
+                            RowDefinitions="Auto, Auto, Auto, Auto,Auto,Auto"
+                            RowSpacing="0"
+                            VerticalOptions="EndAndExpand">
                             <Label
+                                Grid.Row="0"
+                                Padding="10"
+                                FontFamily="Syne"
+                                VerticalOptions="Start"
+                                FontSize="16"
+                                HorizontalOptions="FillAndExpand"
+                                Text="Forma de pago"
+                                TextColor="{DynamicResource Negro}"/>
+                            <StackLayout
+                                Grid.Row="1"
                                 BackgroundColor="Transparent"
-                                FontFamily="Nunito"
-                                FontSize="15"
-                                Text="Efectivo o Datáfono en casa"
-                                TextColor="{DynamicResource Negro}"
-                                VerticalTextAlignment="Center" />
-                        </StackLayout>
+                                IsVisible="{Binding TieneEfectivo}"
+                                Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding Efectivo}" Color="{DynamicResource Rojo}" />
+                                <Label
+                                    BackgroundColor="Transparent"
+                                    FontFamily="Nunito"
+                                    FontSize="15"
+                                    Text="Efectivo o Datáfono en casa"
+                                    TextColor="{DynamicResource Negro}"
+                                    VerticalTextAlignment="Center" />
+                            </StackLayout>
                          <!--<StackLayout
                             Grid.Row="3"
                             IsVisible="{Binding TieneDatafono}"
@@ -576,41 +553,55 @@
                                         </Grid>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
-                            </StackLayout>
+                                </StackLayout>
+                            </Grid>
                         </Grid>
-                    </Grid>
                     </Border>
                     <Border
                         Grid.Row="11"
-                        Margin="10"
+                        Margin="10,10,10,20"
                         Padding="15,12"
-                        BackgroundColor="{DynamicResource Gris}"
-                        StrokeThickness="0"
+                        BackgroundColor="{DynamicResource Fondo}"
+                        StrokeThickness="1"
+                        Stroke="{DynamicResource Gris}"
                         Shadow="{Shadow Brush={DynamicResource Gris}, Offset='0,2', Radius=10, Opacity=0.15}">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="16"/>
                         </Border.StrokeShape>
                     <Grid
-                        RowDefinitions="Auto, 150"
-                        VerticalOptions="EndAndExpand">
+                        RowDefinitions="Auto, *"
+                        VerticalOptions="FillAndExpand">
                         <Label
                             Grid.Row="0"
-                            Padding="10"
+                            Padding="10,10,10,5"
                             FontFamily="Syne"
                             FontSize="16"
                             HorizontalOptions="FillAndExpand"
                             Text="Observaciones"
                             TextColor="{DynamicResource Negro}"
                             VerticalOptions="Start"/>
-                        <Editor
+                        <Border
                             Grid.Row="1"
+                            Margin="5"
+                            Padding="10"
                             BackgroundColor="{DynamicResource Blanco}"
-                            FontFamily="Nunito"
-                            FontSize="13"
-                            HorizontalOptions="FillAndExpand"
-                            Text="{Binding Observaciones, Mode=TwoWay}"
-                            TextColor="Black"
-                            VerticalOptions="FillAndExpand" />
+                            StrokeThickness="1"
+                            Stroke="{DynamicResource Gris}"
+                            MinimumHeightRequest="120">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Editor
+                                BackgroundColor="Transparent"
+                                FontFamily="Nunito"
+                                FontSize="14"
+                                Placeholder="Escribe tus observaciones aquí..."
+                                PlaceholderColor="{DynamicResource Gray400}"
+                                HorizontalOptions="FillAndExpand"
+                                Text="{Binding Observaciones, Mode=TwoWay}"
+                                TextColor="Black"
+                                VerticalOptions="FillAndExpand" />
+                        </Border>
                     </Grid>
                     </Border>
                 </Grid>

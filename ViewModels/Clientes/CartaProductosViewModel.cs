@@ -11,8 +11,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
-// 
+//
 using AsadorMoron.Services;
+using AsadorMoron.Utils;
 using Microsoft.Maui.Devices;
 using Microsoft.Maui.Storage;
 using Microsoft.Maui.ApplicationModel;
@@ -22,6 +23,9 @@ namespace AsadorMoron.ViewModels.Clientes
 {
     public class CartaProductosViewModel : ViewModelBase
     {
+        private bool _navegando = false;
+        private readonly Debouncer _searchDebouncer = new();
+
         public CartaProductosViewModel()
         {
             App.entradoEnCarta = false;
@@ -29,49 +33,84 @@ namespace AsadorMoron.ViewModels.Clientes
         List<Comida> originalComidas;
         public override async Task InitializeAsync(object navigationData)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Debug.WriteLine($"[CP] InitializeAsync INICIO (0ms)");
+
             try
             {
+                // OPTIMIZADO: Inicialización rápida sin bloqueo
                 Logado = App.DAUtil.Usuario != null;
                 App.DAUtil.EnTimer = false;
                 carrito = App.DAUtil.Getcarrito();
-                Cantidad = "0";
                 Idioma = App.idioma;
-                int ca = 0;
-                foreach (CarritoModel c in carrito)
-                {
-                    ca += c.cantidad;
-                }
-                Cantidad = ca.ToString();
+                System.Diagnostics.Debug.WriteLine($"[CP] Config local ({sw.ElapsedMilliseconds}ms)");
 
-                SistemaPuntos = App.EstActual.configuracion.sistemaPuntos;
-                if (SistemaPuntos)
+                // OPTIMIZADO: Usar LINQ Sum en lugar de foreach
+                Cantidad = carrito.Sum(c => c.cantidad).ToString();
+
+                // Verificar si es modo Kiosko
+                bool esKiosko = (App.DAUtil.Usuario?.kiosko ?? 0) == 1;
+
+                // KIOSKO: Desactivar sistema de puntos
+                if (esKiosko)
                 {
-                    Puntos = ResponseServiceWS.getPuntosEstablecimiento();
-                    foreach (CarritoModel c in carrito.Where(p => p.porPuntos == 1).ToList())
-                    {
-                        Puntos -= c.puntos;
-                    }
+                    SistemaPuntos = false;
+                    Puntos = 0;
+                    System.Diagnostics.Debug.WriteLine($"[CP] KIOSKO - Sistema puntos OFF ({sw.ElapsedMilliseconds}ms)");
                 }
                 else
-                    Puntos = 0;
+                {
+                    SistemaPuntos = App.EstActual.configuracion?.sistemaPuntos ?? false;
+                    if (SistemaPuntos)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[CP] Antes getPuntos ({sw.ElapsedMilliseconds}ms)");
+                        Puntos = ResponseServiceWS.getPuntosEstablecimiento() - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                        System.Diagnostics.Debug.WriteLine($"[CP] Después getPuntos ({sw.ElapsedMilliseconds}ms)");
+                    }
+                    else
+                        Puntos = 0;
+                }
 
                 if (_categoria == null)
                 {
                     _categoria = (Categoria)navigationData;
-                    EsPorPuntos = _categoria.esPuntos;
+                    EsPorPuntos = esKiosko ? false : _categoria.esPuntos; // Kiosko nunca usa puntos
                     App.esPorPuntos = EsPorPuntos;
-                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Cargando productos para categoría: {_categoria.id} - {_categoria.nombre}");
-                    List<ArticuloModel> listaServer = await App.ResponseWS.getListadoProductosEstablecimientoCat(_categoria.id, false);
-                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos del servidor: {listaServer?.Count ?? 0}");
-                    List<ArticuloModel> listaSQLite = await App.DAUtil.getProductosEstablecimientoCat(_categoria.id);
-                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos de SQLite: {listaSQLite?.Count ?? 0}");
-                    // Usar los datos del servidor si existen, si no los de SQLite
-                    List<ArticuloModel> lista = (listaServer != null && listaServer.Count > 0)
-                        ? listaServer.FindAll(p => p.estado == 1 && p.estadoCategoria == 1)
-                        : listaSQLite.FindAll(p => p.estado == 1 && p.estadoCategoria == 1);
-                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos filtrados (estado=1): {lista?.Count ?? 0}");
-                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] aceptaEncargos: {App.EstActual.configuracion.aceptaEncargos}");
-                    if (App.EstActual.configuracion.aceptaEncargos)
+                    System.Diagnostics.Debug.WriteLine($"[CP] Categoria: {_categoria?.nombre} ({sw.ElapsedMilliseconds}ms)");
+
+                    List<ArticuloModel> lista = null;
+
+                    // Primero intentar cargar de SQLite
+                    System.Diagnostics.Debug.WriteLine($"[CP] Antes SQLite ({sw.ElapsedMilliseconds}ms)");
+                    var listaSQLite = await App.DAUtil.getProductosEstablecimientoCat(_categoria.id);
+                    System.Diagnostics.Debug.WriteLine($"[CP] SQLite: {listaSQLite?.Count ?? 0} items ({sw.ElapsedMilliseconds}ms)");
+
+                    // Usar SQLite si hay datos
+                    if (listaSQLite != null && listaSQLite.Count > 0)
+                    {
+                        lista = listaSQLite.FindAll(p => p.estado == 1 && p.estadoCategoria == 1);
+                        System.Diagnostics.Debug.WriteLine($"[CP] Usando SQLite ({sw.ElapsedMilliseconds}ms)");
+                    }
+                    else
+                    {
+                        // Solo si no hay datos en SQLite, llamar al servidor
+                        System.Diagnostics.Debug.WriteLine($"[CP] SQLite vacío, llamando servidor ({sw.ElapsedMilliseconds}ms)");
+                        var listaServer = await App.ResponseWS.getListadoProductosEstablecimientoCat(_categoria.id, false);
+                        lista = listaServer?.FindAll(p => p.estado == 1 && p.estadoCategoria == 1) ?? new List<ArticuloModel>();
+                        System.Diagnostics.Debug.WriteLine($"[CP] Servidor: {lista?.Count ?? 0} items ({sw.ElapsedMilliseconds}ms)");
+                    }
+                    System.Diagnostics.Debug.WriteLine($"[CP] Productos filtrados: {lista?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
+
+                    // Asegurar que configuracion existe para Kiosko
+                    if (esKiosko && App.EstActual.configuracion == null)
+                    {
+                        App.EstActual.configuracion = new ConfiguracionEstablecimiento { servicioActivo = true, aceptaEncargos = true };
+                    }
+
+                    bool aceptaEncargos = App.EstActual.configuracion?.aceptaEncargos ?? true;
+                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] aceptaEncargos: {aceptaEncargos}");
+
+                    if (aceptaEncargos)
                     {
                         App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
                         lista = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
@@ -81,15 +120,27 @@ namespace AsadorMoron.ViewModels.Clientes
                         App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
                         lista = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
                     }
-                    System.Diagnostics.Debug.WriteLine($"[CartaProductos] Productos después filtro vistaEnvios: {lista?.Count ?? 0}");
-                    if (App.EstActual.horario.Equals(AppResources.Cerrado))
+                    System.Diagnostics.Debug.WriteLine($"[CP] Filtro vistaEnvios: {lista?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
+
+                    string horario = App.EstActual?.horario ?? "";
+                    if (horario.Equals(AppResources.Cerrado))
                         ModoTienda = true;
                     else
                         ModoTienda = !Logado;
 
                     if (EsPorPuntos)
                         ModoTienda = true;
-                    originalComidas = new List<Comida>();
+
+                    System.Diagnostics.Debug.WriteLine($"[CP] Antes crear originalComidas ({sw.ElapsedMilliseconds}ms)");
+
+                    // OPTIMIZADO: Agrupar carrito por idArticulo (puede haber duplicados con opciones distintas)
+                    var carritoDict = carrito
+                        .GroupBy(c => c.idArticulo)
+                        .ToDictionary(g => g.Key, g => g.Sum(c => c.cantidad));
+                    int idEstablecimiento = App.EstActual?.idEstablecimiento ?? 0;
+
+                    // OPTIMIZADO: Pre-dimensionar lista para evitar redimensionamientos
+                    originalComidas = new List<Comida>(lista.Count);
                     int idArt = 0;
 
                     foreach (ArticuloModel p in lista)
@@ -97,93 +148,101 @@ namespace AsadorMoron.ViewModels.Clientes
                         if (idArt != p.idArticulo)
                         {
                             idArt = p.idArticulo;
-                            Comida co = new Comida();
-                            co.articulo = p;
-                            try
+
+                            // OPTIMIZADO: Búsqueda O(1) en diccionario
+                            int cantidadCarrito = 0;
+                            if (carritoDict.TryGetValue(idArt, out int cant))
                             {
-                                if (carrito.Count > 0)
-                                {
-                                    var item = carrito.Find(p2 => p2.idArticulo == idArt);
-                                    if (item != null)
-                                    {
-                                        co.cantidad = item.cantidad;
-                                        p.Cantidad = item.cantidad;
-                                    }
-                                    else
-                                    {
-                                        co.cantidad = 0;
-                                        p.Cantidad = 0;
-                                    }
-                                }
+                                cantidadCarrito = cant;
                             }
-                            catch (Exception)
+                            p.Cantidad = cantidadCarrito;
+
+                            var co = new Comida
                             {
-                                co.cantidad = 0;
-                            }
-                            try
-                            {
-                                co.idEstablecimiento = App.EstActual.idEstablecimiento;
-                            }
-                            catch (Exception)
-                            {
-                                co.idEstablecimiento = 0;
-                            }
-                            //co.noTieneOpciones = (co.articulo.listadoOpciones.Count == 0 && co.articulo.listadoIngredientes.Count == 0);
-                            co.noTieneOpciones = (string.IsNullOrEmpty(p.opciones) && string.IsNullOrEmpty(p.ingredientes));
-                            co.botonesVisibles = false;
-                            if (co.articulo.idArticulo == 11806)
+                                articulo = p,
+                                cantidad = cantidadCarrito,
+                                idEstablecimiento = idEstablecimiento,
+                                noTieneOpciones = string.IsNullOrEmpty(p.opciones) && string.IsNullOrEmpty(p.ingredientes),
+                                botonesVisibles = false
+                            };
+
+                            // Caso especial
+                            if (p.idArticulo == 11806)
                                 co.noTieneOpciones = false;
 
-                            if (co.articulo.puntos > 0 && SistemaPuntos && co.articulo.puntos<Puntos)
-                                co.articulo.visiblePuntos = true;
+                            if (p.puntos > 0 && SistemaPuntos && p.puntos < Puntos)
+                                p.visiblePuntos = true;
+
                             originalComidas.Add(co);
                         }
                     }
+                    System.Diagnostics.Debug.WriteLine($"[CP] originalComidas: {originalComidas.Count} ({sw.ElapsedMilliseconds}ms)");
+
+                    System.Diagnostics.Debug.WriteLine($"[CP] Antes Filtrar ({sw.ElapsedMilliseconds}ms)");
                     await Filtrar();
+                    System.Diagnostics.Debug.WriteLine($"[CP] Después Filtrar ({sw.ElapsedMilliseconds}ms)");
+
+                    System.Diagnostics.Debug.WriteLine($"[CP] Antes base.InitializeAsync ({sw.ElapsedMilliseconds}ms)");
                     await base.InitializeAsync(navigationData).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() =>
                     {
                         App.userdialog.HideLoading();
+                        System.Diagnostics.Debug.WriteLine($"[CP] HideLoading ({sw.ElapsedMilliseconds}ms)");
                     }));
+                    System.Diagnostics.Debug.WriteLine($"[CP] Después base.InitializeAsync ({sw.ElapsedMilliseconds}ms)");
                 }
                 else
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CP] ActualizaProductos (recarga) ({sw.ElapsedMilliseconds}ms)");
                     await ActualizaProductos();
+                }
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"[CP] ERROR: {ex.Message} ({sw.ElapsedMilliseconds}ms)");
                 App.userdialog.HideLoading();
-                // 
             }
+
+            System.Diagnostics.Debug.WriteLine($"[CP] FIN TOTAL: {sw.ElapsedMilliseconds}ms");
 
             await base.InitializeAsync(navigationData).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() => { App.userdialog.HideLoading(); }));
         }
 
         #region Métodos
-        private void IrDetallePedido()
+        private async void IrDetallePedido()
         {
+            if (_navegando) return;
+            _navegando = true;
+
             try
             {
                 if (carrito.Count > 0)
                 {
-                    try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    // Mostrar loading INMEDIATAMENTE
+                    try { App.userdialog?.ShowLoading(AppResources.Cargando); } catch { }
+
+                    // Pequeña pausa para que el loading se renderice
+                    await Task.Delay(30);
+
+                    App.DAUtil.Idioma = "ES";
+                    if (App.autoPedidoAdmin != null)
                     {
-                        App.DAUtil.Idioma = "ES";
-                        if (App.autoPedidoAdmin != null)
-                        {
-                            carrito[0].direccion = App.autoPedidoAdmin.direccion;
-                            carrito[0].idZona = App.autoPedidoAdmin.idZona;
-                            carrito[0].poblacion = App.autoPedidoAdmin.poblacion;
-                            carrito[0].observaciones = App.autoPedidoAdmin.nombre + Environment.NewLine + App.autoPedidoAdmin.telefono;
-                            Preferences.Set("idPueblo", App.autoPedidoAdmin.idPueblo);
-                        }
-                        await App.DAUtil.NavigationService.NavigateToAsync<DetallePedidoViewModel>(carrito);
-                    });
+                        carrito[0].direccion = App.autoPedidoAdmin.direccion;
+                        carrito[0].idZona = App.autoPedidoAdmin.idZona;
+                        carrito[0].poblacion = App.autoPedidoAdmin.poblacion;
+                        carrito[0].observaciones = App.autoPedidoAdmin.nombre + Environment.NewLine + App.autoPedidoAdmin.telefono;
+                        Preferences.Set("idPueblo", App.autoPedidoAdmin.idPueblo);
+                    }
+                    await App.DAUtil.NavigationService.NavigateToAsync<DetallePedidoViewModel>(carrito);
                 }
             }
             catch (Exception ex)
             {
-                App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
-                // 
+                App.userdialog?.HideLoading();
+                _ = App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
+            }
+            finally
+            {
+                _navegando = false;
             }
         }
         private void IrDetalleEstablecimiento()
@@ -203,84 +262,91 @@ namespace AsadorMoron.ViewModels.Clientes
                 // 
             }
         }
+        /// <summary>
+        /// OPTIMIZADO: Filtrar con debounce para búsqueda rápida
+        /// </summary>
+        private async Task FiltrarConDebounce()
+        {
+            await _searchDebouncer.DebounceAsync(async () =>
+            {
+                await FiltrarInterno();
+            }, 200); // 200ms de delay
+        }
+
         public async Task Filtrar()
         {
-            try
-            {
-                await Task.Run(() =>
-                {
-                    try
-                    {
-                        MainThread.BeginInvokeOnMainThread(async () =>
-                        {
-                            List<Comida> c = new List<Comida>();
-                            String paraBuscar = "";
-                            if (!string.IsNullOrEmpty(TextoBusqueda))
-                            {
-                                paraBuscar = TextoBusqueda;
-
-                                foreach (Comida a in originalComidas)
-                                {
-                                    try
-                                    {
-                                        if (a.articulo != null)
-                                        {
-                                            if (string.IsNullOrEmpty(a.articulo.alergenos))
-                                                a.articulo.alergenos = "";
-                                            if (string.IsNullOrEmpty(a.articulo.ingredientes))
-                                                a.articulo.ingredientes = "";
-                                            if (a.articulo.nombre.ToString().ToUpper().Contains(paraBuscar.ToUpper()) || string.IsNullOrWhiteSpace(paraBuscar)
-                                                || a.articulo.descripcion.ToString().ToUpper().Contains(paraBuscar.ToUpper())
-                                                || a.articulo.alergenos.ToString().ToUpper().Contains(paraBuscar.ToUpper())
-                                                || a.articulo.ingredientes.ToString().ToUpper().Contains(paraBuscar.ToUpper()))
-                                            {
-                                                c.Add(a);
-                                            }
-                                        }
-                                    }
-                                    catch (Exception ex2)
-                                    {
-                                        Console.WriteLine(ex2.Message);
-                                    }
-                                }
-                                Comidas = new ObservableCollection<Comida>(c);
-                            }
-                            else
-                            {
-                                Comidas = new ObservableCollection<Comida>(originalComidas);
-                            }
-                            
-                        });
-                    }
-                    catch (Exception)
-                    {
-                        App.userdialog.HideLoading();
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                await App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
-                // 
-            }
+            await FiltrarInterno();
         }
-        private void articuloSeleccionado(object idArticulo)
+
+        private async Task FiltrarInterno()
         {
             try
             {
-                Comida articulo = (Comida)idArticulo;
-                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                MainThread.BeginInvokeOnMainThread(async () =>
+                if (originalComidas == null) return;
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
                 {
-                    App.DAUtil.Idioma = "ES";
-                    await App.DAUtil.NavigationService.NavigateToAsync<DetalleArticuloViewModel>(articulo.articulo);
-                    
+                    if (string.IsNullOrEmpty(TextoBusqueda))
+                    {
+                        Comidas = new ObservableCollection<Comida>(originalComidas);
+                    }
+                    else
+                    {
+                        // OPTIMIZADO: Usar LINQ con StringComparison (más rápido)
+                        var paraBuscar = TextoBusqueda;
+                        var resultados = originalComidas
+                            .Where(a => a.articulo != null && (
+                                (a.articulo.nombre?.Contains(paraBuscar, StringComparison.OrdinalIgnoreCase) == true) ||
+                                (a.articulo.descripcion?.Contains(paraBuscar, StringComparison.OrdinalIgnoreCase) == true) ||
+                                (a.articulo.alergenos?.Contains(paraBuscar, StringComparison.OrdinalIgnoreCase) == true) ||
+                                (a.articulo.ingredientes?.Contains(paraBuscar, StringComparison.OrdinalIgnoreCase) == true)
+                            ))
+                            .ToList();
+
+                        Comidas = new ObservableCollection<Comida>(resultados);
+                    }
+
+                    // DEBUG: Verificar estado final de Comidas
+                    System.Diagnostics.Debug.WriteLine($"[BOTONES] Comidas asignadas: {Comidas?.Count ?? 0} items, ModoTienda={ModoTienda}");
+                    if (Comidas?.Count > 0)
+                    {
+                        foreach (var c in Comidas.Take(3))
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[BOTONES] -> '{c.articulo?.nombre}': noTieneOpciones={c.noTieneOpciones}");
+                        }
+                    }
                 });
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"[CartaProductos] Error filtrar: {ex.Message}");
+            }
+        }
+        private async void articuloSeleccionado(object idArticulo)
+        {
+            if (_navegando) return;
+            _navegando = true;
+
+            // Mostrar loading INMEDIATAMENTE
+            try { App.userdialog?.ShowLoading(AppResources.Cargando); } catch { }
+
+            try
+            {
+                // Pequeña pausa para que el loading se renderice
+                await Task.Delay(30);
+
+                Comida articulo = (Comida)idArticulo;
+                App.DAUtil.Idioma = "ES";
+                await App.DAUtil.NavigationService.NavigateToAsync<DetalleArticuloViewModel>(articulo.articulo);
+            }
+            catch (Exception ex)
+            {
+                App.userdialog?.HideLoading();
                 App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
-                // 
+            }
+            finally
+            {
+                _navegando = false;
             }
         }
         private async Task Add(object parametro)
@@ -441,32 +507,26 @@ namespace AsadorMoron.ViewModels.Clientes
                 {
                     List<ArticuloModel> lista;
                     if (App.listaProductos != null && App.listaProductos.Count > 0)
-                        lista = App.listaProductos;//await App.ResponseWS.getListadoProductosEstablecimiento(_establecimiento.idEstablecimiento, false);
+                        lista = App.listaProductos;
                     else
                     {
-                        lista = await App.ResponseWS.getListadoProductosEstablecimientoCat(_categoria.id, false);
+                        // OPTIMIZADO: Solo cargar de SQLite (ya sincronizado previamente)
                         lista = (await App.DAUtil.getProductosEstablecimientoCat(_categoria.id)).FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
-                        if (App.EstActual.configuracion.aceptaEncargos)
+                        if (App.EstActual.configuracion?.aceptaEncargos == true)
                         {
-                            App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
-                            lista = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
+                            App.listaProductos = lista;
                         }
                         else
                         {
-                            App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
-                            lista = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
+                            lista = lista.FindAll(p => p.porEncargo == false);
+                            App.listaProductos = lista;
                         }
                     }
                     originalComidas = new List<Comida>();
                     int idArt = 0;
                     carrito = App.DAUtil.Getcarrito();
-                    Cantidad = "0";
-                    int ca = 0;
-                    foreach (CarritoModel c in carrito)
-                    {
-                        ca += c.cantidad;
-                    }
-                    Cantidad = ca.ToString();
+                    // OPTIMIZADO: Usar LINQ Sum en lugar de foreach
+                    Cantidad = carrito.Sum(c => c.cantidad).ToString();
 
                     foreach (ArticuloModel p in lista)
                     {
@@ -546,8 +606,9 @@ namespace AsadorMoron.ViewModels.Clientes
                 if (textoBusqueda != value)
                 {
                     textoBusqueda = value;
-                    Filtrar();
                     OnPropertyChanged(nameof(TextoBusqueda));
+                    // OPTIMIZADO: Usar debounce para no filtrar en cada tecla
+                    _ = FiltrarConDebounce();
                 }
             }
         }

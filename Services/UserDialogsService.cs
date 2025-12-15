@@ -4,6 +4,8 @@ using Microsoft.Maui.Controls;
 using System;
 using System.Threading.Tasks;
 using MauiToast = CommunityToolkit.Maui.Alerts.Toast;
+using Mopups.Services;
+using Mopups.Pages;
 
 namespace AsadorMoron.Services
 {
@@ -15,30 +17,45 @@ namespace AsadorMoron.Services
         private static Page CurrentPage => Application.Current?.MainPage;
         private CancellationTokenSource _loadingCts;
         private IToast _currentToast;
+        private LoadingPopupPage _loadingPopup;
+        private bool _isLoadingVisible = false;
 
         public void ShowLoading(string title = null, MaskType maskType = MaskType.None)
         {
+            if (_isLoadingVisible) return;
+            _isLoadingVisible = true;
+
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 try
                 {
-                    _loadingCts = new CancellationTokenSource();
-                    _currentToast = MauiToast.Make(title ?? "Cargando...", ToastDuration.Long);
-                    await _currentToast.Show(_loadingCts.Token);
+                    _loadingPopup = new LoadingPopupPage(title ?? "Cargando...");
+                    await MopupService.Instance.PushAsync(_loadingPopup, false);
                 }
-                catch { }
+                catch { _isLoadingVisible = false; }
             });
         }
 
         public void HideLoading()
         {
-            try
+            if (!_isLoadingVisible) return;
+
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
-                _loadingCts?.Cancel();
-                _loadingCts?.Dispose();
-                _loadingCts = null;
-            }
-            catch { }
+                try
+                {
+                    if (_loadingPopup != null && MopupService.Instance.PopupStack.Contains(_loadingPopup))
+                    {
+                        await MopupService.Instance.RemovePageAsync(_loadingPopup, false);
+                    }
+                    _loadingPopup = null;
+                }
+                catch { }
+                finally
+                {
+                    _isLoadingVisible = false;
+                }
+            });
         }
 
         public void ShowError(string message, int durationMillis = 2000)
@@ -148,6 +165,52 @@ namespace AsadorMoron.Services
                     _service.HideLoading();
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Popup de loading con ActivityIndicator centrado
+    /// </summary>
+    public class LoadingPopupPage : PopupPage
+    {
+        public LoadingPopupPage(string message)
+        {
+            BackgroundColor = Color.FromArgb("#80000000");
+            CloseWhenBackgroundIsClicked = false;
+
+            Content = new Frame
+            {
+                CornerRadius = 15,
+                BackgroundColor = Colors.White,
+                Padding = new Thickness(30, 20),
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+                HasShadow = true,
+                Content = new StackLayout
+                {
+                    Spacing = 15,
+                    Children =
+                    {
+                        new ActivityIndicator
+                        {
+                            IsRunning = true,
+                            Color = Color.FromArgb("#C41E3A"),
+                            HeightRequest = 50,
+                            WidthRequest = 50,
+                            HorizontalOptions = LayoutOptions.Center
+                        },
+                        new Label
+                        {
+                            Text = message,
+                            TextColor = Colors.Black,
+                            FontSize = 16,
+                            FontFamily = "Nunito",
+                            HorizontalOptions = LayoutOptions.Center,
+                            HorizontalTextAlignment = TextAlignment.Center
+                        }
+                    }
+                }
+            };
         }
     }
 }

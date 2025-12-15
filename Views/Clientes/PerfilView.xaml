@@ -36,7 +36,7 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-        <Grid RowDefinitions="Auto,Auto,*" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" VerticalOptions="FillAndExpand">
+        <Grid RowDefinitions="Auto,Auto,*" Margin="{OnPlatform iOS='0,90,0,0', Android='0,0,0,0', UWP='0,0,0,0'}" VerticalOptions="FillAndExpand">
             <ff:CachedImage
                 Aspect="AspectFill"
                 HeightRequest="130"

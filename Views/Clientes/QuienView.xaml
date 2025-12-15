@@ -18,7 +18,7 @@
         </Grid>
     </NavigationPage.TitleView>
     <ContentPage.Content>
-        <StackLayout BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0',Android='0,60,0,0',UWP='0,0,0,0'}">
+        <StackLayout BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0',Android='0,0,0,0',UWP='0,0,0,0'}">
             <ScrollView  VerticalOptions="FillAndExpand">
                 <StackLayout Margin="20" VerticalOptions="FillAndExpand">
                     <Image

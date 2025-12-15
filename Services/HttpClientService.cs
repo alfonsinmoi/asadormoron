@@ -72,9 +72,13 @@ namespace AsadorMoron.Services
         /// </summary>
         public async Task<T> GetAsync<T>(string url, CancellationToken cancellationToken = default) where T : class, new()
         {
+            var sw = Stopwatch.StartNew();
+            var shortUrl = url.Length > 80 ? url.Substring(url.IndexOf(".php")) : url;
             try
             {
+                Debug.WriteLine($"[HTTP] GET START: {shortUrl}");
                 using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+                Debug.WriteLine($"[HTTP] GET RESP: {shortUrl} ({sw.ElapsedMilliseconds}ms) Status={response.StatusCode}");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -83,11 +87,14 @@ namespace AsadorMoron.Services
                 }
 
                 var json = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                Debug.WriteLine($"[HTTP] GET READ: {shortUrl} ({sw.ElapsedMilliseconds}ms) len={json?.Length ?? 0}");
 
                 if (string.IsNullOrEmpty(json) || json.ToLower().Equals("false"))
                     return new T();
 
-                return JsonConvert.DeserializeObject<T>(json, _jsonSettings) ?? new T();
+                var result = JsonConvert.DeserializeObject<T>(json, _jsonSettings) ?? new T();
+                Debug.WriteLine($"[HTTP] GET DONE: {shortUrl} ({sw.ElapsedMilliseconds}ms)");
+                return result;
             }
             catch (OperationCanceledException)
             {
@@ -96,7 +103,7 @@ namespace AsadorMoron.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[HTTP] GET Exception: {ex.Message} - {url}");
+                Debug.WriteLine($"[HTTP] GET Exception: {ex.Message} - {url} ({sw.ElapsedMilliseconds}ms)");
                 return new T();
             }
         }

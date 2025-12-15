@@ -36,7 +36,7 @@
     <ContentPage.Content>
         <Grid BackgroundColor="White"
             Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,50,0,0',
+                                Android='0,0,0,0',
                                 UWP='0'}"
             RowDefinitions="Auto,*,Auto"
             VerticalOptions="FillAndExpand">
@@ -67,20 +67,22 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout BackgroundColor="Transparent">
+                        <Grid BackgroundColor="Transparent" InputTransparent="False">
                             <Frame
                                 Margin="0,15"
                                 Padding="40,15"
                                 BackgroundColor="{Binding Color}"
                                 CornerRadius="20"
-                                HorizontalOptions="CenterAndExpand">
+                                HorizontalOptions="CenterAndExpand"
+                                InputTransparent="True">
                                 <Label
                                     FontAttributes="Bold"
                                     FontFamily="Syne"
                                     FontSize="22"
                                     HorizontalTextAlignment="Center"
                                     Text="{Binding horaInicio}"
-                                    TextColor="{DynamicResource Blanco}">
+                                    TextColor="{DynamicResource Blanco}"
+                                    InputTransparent="True">
                                     <Label.Triggers>
                                         <DataTrigger
                                             Binding="{Binding Color}"
@@ -91,8 +93,7 @@
                                     </Label.Triggers>
                                 </Label>
                             </Frame>
-                            
-                        </StackLayout>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <VisualStateManager.VisualStateGroups>

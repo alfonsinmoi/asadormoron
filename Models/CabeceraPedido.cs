@@ -161,7 +161,24 @@ namespace AsadorMoron.Models
                 {
                     IdEstadoPedido = value;
                     OnPropertyChanged(nameof(idEstadoPedido));
+                    OnPropertyChanged(nameof(ImagenEstadoPedido));
                 }
+            }
+        }
+
+        public string ImagenEstadoPedido
+        {
+            get
+            {
+                return IdEstadoPedido switch
+                {
+                    1 => "pedidonuevo.png",
+                    2 => "pedidovisto.png",
+                    3 => "pedidoporrecoger.png",
+                    4 => "pedidorecogido.png",
+                    5 => "pedidoentregado.png",
+                    _ => "pedidonuevo.png"
+                };
             }
         }
     }

@@ -127,9 +127,13 @@ namespace AsadorMoron.Services
 
         protected virtual async Task NavigateToAsync(Type viewModelType, object parameter,bool visibleMenu=true)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Debug.WriteLine($"[PERF] NavigateToAsync INICIO: {viewModelType.Name}");
+
             if (!App.ViendoDocumento)
             {
                 Page page = CreateAndBindPage(viewModelType, parameter);
+                System.Diagnostics.Debug.WriteLine($"[PERF] CreateAndBindPage completado: {sw.ElapsedMilliseconds}ms");
 
                 if (page is AppMainPage)
                 {
@@ -148,7 +152,11 @@ namespace AsadorMoron.Services
                         {
                             navigationPage.BarTextColor = Color.FromArgb("#f0dd49");
                             navigationPage.BackgroundColor = Colors.Black;
-                            await navigationPage.PushAsync(page);
+                            // Kiosko: sin animación para mayor velocidad
+                            bool animado = (App.DAUtil.Usuario?.kiosko ?? 0) != 1;
+                            System.Diagnostics.Debug.WriteLine($"[PERF] Antes PushAsync (animado={animado}): {sw.ElapsedMilliseconds}ms");
+                            await navigationPage.PushAsync(page, animado);
+                            System.Diagnostics.Debug.WriteLine($"[PERF] Después PushAsync: {sw.ElapsedMilliseconds}ms");
                         }
                         else
                         {
@@ -171,7 +179,9 @@ namespace AsadorMoron.Services
                     {
                         navigationPage.BarTextColor = Color.FromArgb("#f0dd49");
                         navigationPage.BackgroundColor = Colors.Black;
-                        await navigationPage.PushAsync(page).ConfigureAwait(false);
+                        // Kiosko: sin animación para mayor velocidad
+                        bool animado = (App.DAUtil.Usuario?.kiosko ?? 0) != 1;
+                        await navigationPage.PushAsync(page, animado).ConfigureAwait(false);
                     }
                     else
                     {
@@ -182,6 +192,8 @@ namespace AsadorMoron.Services
             }
             else
                 App.ViendoDocumento = false;
+
+            System.Diagnostics.Debug.WriteLine($"[PERF] NavigateToAsync FIN: {sw.ElapsedMilliseconds}ms");
         }
 
         protected virtual async Task NavigateToAsyncMenu(Type viewModelType, object parameter)
@@ -226,24 +238,42 @@ namespace AsadorMoron.Services
 
         private Page CreateAndBindPage(Type viewModelType, object parameter)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Debug.WriteLine($"[PERF] CreateAndBindPage INICIO: {viewModelType.Name}");
             try
             {
-
                 Type pageType = GetPageTypeForViewModel(viewModelType);
+                System.Diagnostics.Debug.WriteLine($"[PERF] GetPageTypeForViewModel: {sw.ElapsedMilliseconds}ms");
 
                 if (pageType == null)
                 {
                     throw new Exception($"Mapping type for {viewModelType} is not a page");
                 }
+
                 Page page = Activator.CreateInstance(pageType) as Page;
+                System.Diagnostics.Debug.WriteLine($"[PERF] Activator.CreateInstance (Page): {sw.ElapsedMilliseconds}ms");
+
                 ViewModelBase viewModel = ViewModelLocator.Instance.Resolve(viewModelType) as ViewModelBase;
+                System.Diagnostics.Debug.WriteLine($"[PERF] ViewModelLocator.Resolve: {sw.ElapsedMilliseconds}ms");
+
                 App.DAUtil.WriteLine(page.GetType().Name, viewModel.GetType().Name);
                 page.BindingContext = viewModel;
+                System.Diagnostics.Debug.WriteLine($"[PERF] BindingContext set: {sw.ElapsedMilliseconds}ms");
 
                 page.Appearing += async (object sender, EventArgs e) =>
                 {
-                    await viewModel.InitializeAsync(parameter).ConfigureAwait(true);
+                    System.Diagnostics.Debug.WriteLine($"[PERF] Page.Appearing DISPARADO para {viewModelType.Name}");
+                    try
+                    {
+                        await viewModel.InitializeAsync(parameter);
+                        System.Diagnostics.Debug.WriteLine($"[PERF] Page.Appearing InitializeAsync COMPLETADO para {viewModelType.Name}");
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[PERF] Page.Appearing ERROR para {viewModelType.Name}: {ex.Message}");
+                    }
                 };
+                System.Diagnostics.Debug.WriteLine($"[PERF] CreateAndBindPage FIN: {sw.ElapsedMilliseconds}ms");
                 return page;
             }
             catch (Exception ex)
@@ -270,8 +300,6 @@ namespace AsadorMoron.Services
             _mappings.Value.Add(typeof(MenuLateralViewModel), typeof(MenuLateral));
             _mappings.Value.Add(typeof(MainPageViewModel), typeof(AppMainPage));
             _mappings.Value.Add(typeof(LoginViewModel), typeof(LoginView));
-            _mappings.Value.Add(typeof(HomeViewModelAdmin), typeof(HomeViewAdmin));
-            _mappings.Value.Add(typeof(HomeViewModelAdminMobile), typeof(HomeAdminMobileView));
             _mappings.Value.Add(typeof(HomeViewModelEstMobile), typeof(HomeViewEstMobile));
             _mappings.Value.Add(typeof(HomeViewModelEst), typeof(HomeViewEst));
             _mappings.Value.Add(typeof(PerfilViewModel), typeof(PerfilView));

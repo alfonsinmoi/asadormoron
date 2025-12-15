@@ -39,7 +39,7 @@
     <ContentPage.Content>
         <Grid BackgroundColor="{DynamicResource Rojo}"
             Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,60,0,0',
+                                Android='0,0,0,0',
                                 UWP='0,0,0,0'}"
             HorizontalOptions="FillAndExpand"
             RowDefinitions="Auto,*,Auto"

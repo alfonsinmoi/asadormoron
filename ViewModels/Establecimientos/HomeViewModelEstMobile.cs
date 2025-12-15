@@ -35,13 +35,6 @@ namespace AsadorMoron.ViewModels.Establecimientos
         public List<RepartidorModel> repartidores;
         public HomeViewModelEstMobile()
         {
-            if (App.DAUtil.NotificacionPantalla.Equals(""))
-            {
-                if (App.userdialog == null)
-                {
-                    try { dialogHomeAdmin.ShowLoading(AppResources.Cargando, MaskType.Black); } catch (Exception) { }
-                }
-            }
         }
         public override async Task InitializeAsync(object navigationData)
         {
@@ -513,12 +506,8 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private async void VerAutoPedidoExe()
         {
             try {
-                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    await App.DAUtil.NavigationService.NavigateToAsync<CartaViewModel>();
-                });
+                App.userdialog.ShowLoading("Cargando...", MaskType.Black);
+                await App.DAUtil.NavigationService.NavigateToAsyncMenu <CartaViewModel>();
             }
             catch (Exception ex)
             {

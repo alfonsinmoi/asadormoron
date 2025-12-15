@@ -28,7 +28,7 @@
         </Grid>
     </NavigationPage.TitleView>
     <ContentPage.Content>
-        <ScrollView Padding="20" BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0'}">
+        <ScrollView Padding="20" BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,0,0,0'}">
         <StackLayout Margin="{OnPlatform UWP='10,0,10,0'}">
             <StackLayout Orientation="Horizontal">
                 <Label Text="Código cupón" TextColor="{DynamicResource Amarillo}" FontFamily="Syne" VerticalOptions="End"

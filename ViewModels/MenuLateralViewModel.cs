@@ -25,6 +25,7 @@ namespace AsadorMoron.ViewModels
 {
     public class MenuLateralViewModel : ViewModelBase
     {
+        private bool _navegando = false;
         private ObservableCollection<ItemMenuLateralModel> listaMenuByRol;
         public ObservableCollection<ItemMenuLateralModel> ListaMenuByRol
         {
@@ -60,8 +61,10 @@ namespace AsadorMoron.ViewModels
 
 
 
-        void Seleccionado(object param)
+        async void Seleccionado(object param)
         {
+            if (_navegando) return;
+
             ItemMenuLateralModel item = (ItemMenuLateralModel)param;
             if (item != null)
             {
@@ -69,6 +72,9 @@ namespace AsadorMoron.ViewModels
                 {
                     if (!item.TieneHijos)
                     {
+                        _navegando = true;
+                        App.userdialog?.ShowLoading(AppResources.Cargando);
+                        await Task.Delay(100); // Dar tiempo para que aparezca el loading
                         bool pasa = true;
 
                         if (item.Title.Equals(AppResources.CerrarSesion))
@@ -84,13 +90,7 @@ namespace AsadorMoron.ViewModels
                             GetListByRol();
                             Preferences.Set("Social", false);
                             Preferences.Set("RedSocial", "");
-                            try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-
-                            MainThread.BeginInvokeOnMainThread(async () =>
-                            {
-                                await App.DAUtil.NavigationService.InitializeAsync();
-                            });
-
+                            await App.DAUtil.NavigationService.InitializeAsync();
                         }
                         else if (item.Title.ToUpper().Equals(AppResources.MiEstablecimiento.ToUpper()))
                         {
@@ -98,28 +98,16 @@ namespace AsadorMoron.ViewModels
                             {
                                 if (App.DAUtil.Usuario.rol == 2)
                                 {
-
-                                    try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-
-                                    MainThread.BeginInvokeOnMainThread(async () =>
-                                    {
-                                        await App.DAUtil.NavigationService.NavigateToAsyncMenu<DetalleEstablecimientoViewModel>(App.EstActual);
-                                    });
+                                    await App.DAUtil.NavigationService.NavigateToAsyncMenu<DetalleEstablecimientoViewModel>(App.EstActual);
                                 }
                                 else
                                 {
-                                    MainThread.BeginInvokeOnMainThread(async () =>
-                                    {
-                                        await App.DAUtil.NavigationService.NavigateToAsyncMenu(item.TargetType, false);
-                                    });
+                                    await App.DAUtil.NavigationService.NavigateToAsyncMenu(item.TargetType, false);
                                 }
                             }
                             else
                             {
-                                MainThread.BeginInvokeOnMainThread(async () =>
-                                {
-                                    await App.DAUtil.NavigationService.NavigateToAsyncMenu(item.TargetType, false);
-                                });
+                                await App.DAUtil.NavigationService.NavigateToAsyncMenu(item.TargetType, false);
                             }
                         }
                         else
@@ -131,29 +119,24 @@ namespace AsadorMoron.ViewModels
                             }
                             if (pasa)
                             {
-                                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-
-                                MainThread.BeginInvokeOnMainThread(async () =>
-                                {
-                                    await App.DAUtil.NavigationService.NavigateToAsyncMenu(item.TargetType, false);
-                                });
+                                await App.DAUtil.NavigationService.NavigateToAsyncMenu(item.TargetType, false);
                             }
                             else
                             {
-                                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-
-                                MainThread.BeginInvokeOnMainThread(async () =>
-                                {
-                                    await App.customDialog.ShowDialogAsync(AppResources.CompleteCampos, AppResources.App, AppResources.Cerrar);
-                                    await App.DAUtil.NavigationService.NavigateToAsyncMenu(typeof(PerfilViewModel), false);
-                                });
+                                await App.customDialog.ShowDialogAsync(AppResources.CompleteCampos, AppResources.App, AppResources.Cerrar);
+                                await App.DAUtil.NavigationService.NavigateToAsyncMenu(typeof(PerfilViewModel), false);
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // 
+                    //
+                }
+                finally
+                {
+                    App.userdialog?.HideLoading();
+                    _navegando = false;
                 }
             }
         }
@@ -161,23 +144,23 @@ namespace AsadorMoron.ViewModels
         {
             TotalUsuarios = ResponseServiceWS.contadorUsuarios();
         }
-        void IrAPerfil()
+        async void IrAPerfil()
         {
             try
             {
                 if (App.DAUtil.Usuario != null)
                 {
-                    App.userdialog.ShowLoading(AppResources.Cargando);
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        App.DAUtil.Idioma = "ES";
-                        await App.DAUtil.NavigationService.NavigateToAsyncMenu<PerfilViewModel>();
-                    });
+                    App.userdialog?.ShowLoading(AppResources.Cargando);
+                    App.DAUtil.Idioma = "ES";
+                    await App.DAUtil.NavigationService.NavigateToAsyncMenu<PerfilViewModel>();
                 }
             }
             catch (Exception)
             {
-
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
             }
         }
 
@@ -314,7 +297,7 @@ namespace AsadorMoron.ViewModels
             }
             return menuItems;
         }
-        private void CerrarSesion()
+        private async void CerrarSesion()
         {
             if (App.DAUtil.DoIHaveInternet())
                 App.ResponseWS.BorraToken(App.DAUtil.Usuario.email);
@@ -324,12 +307,7 @@ namespace AsadorMoron.ViewModels
             App.DAUtil.Usuario = null;
             Preferences.Set("Social", false);
             Preferences.Set("RedSocial", "");
-            try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-
-            MainThread.BeginInvokeOnMainThread(async () =>
-            {
-                await App.DAUtil.NavigationService.InitializeAsync();
-            });
+            await App.DAUtil.NavigationService.InitializeAsync();
         }
         private bool esAdmin = false;
         public bool EsAdmin

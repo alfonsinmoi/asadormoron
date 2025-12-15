@@ -347,12 +347,22 @@ namespace AsadorMoron.ViewModels.Clientes
             return resultado;
         }
 
+        private bool _enviandoPedido = false;
         private async void EnviarPedido(object obj)
         {
+            if (_enviandoPedido) return;
+            _enviandoPedido = true;
+
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Debug.WriteLine($"[FH] EnviarPedido INICIO");
+
             try
             {
+                System.Diagnostics.Debug.WriteLine($"[FH] FranjaSeleccionada: {FranjaSeleccionada?.horaInicio ?? "NULL"} ({sw.ElapsedMilliseconds}ms)");
+
                 if (FranjaSeleccionada == null)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[FH] Error: Franja no seleccionada ({sw.ElapsedMilliseconds}ms)");
                     if (tipo == 1)
                         await App.customDialog.ShowDialogAsync(AppResources.SellecioneHoraEntrega, AppResources.App, AppResources.Cerrar);
                     else
@@ -360,64 +370,89 @@ namespace AsadorMoron.ViewModels.Clientes
                 }
                 else if (!activoHoy)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[FH] Error: No activo hoy ({sw.ElapsedMilliseconds}ms)");
                     await App.customDialog.ShowDialogAsync(App.MensajesGlobal.Where(p => p.clave.Equals("no_disponible_est")).FirstOrDefault<MensajesModel>().valor.Replace("{1}", Environment.NewLine), AppResources.Informacion, AppResources.Cerrar);
                 }
                 else if (Listado.Count == 0)
                 {
+                    System.Diagnostics.Debug.WriteLine($"[FH] Error: Sin horas disponibles ({sw.ElapsedMilliseconds}ms)");
                     await App.customDialog.ShowDialogAsync(App.MensajesGlobal.Where(p => p.clave.Equals("sin_horas")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", Environment.NewLine), AppResources.Informacion, AppResources.Cerrar);
                     await App.DAUtil.NavigationService.InitializeAsync();
                 }
                 else
                 {
-                    if (Preferences.Get("Pago", "Efectivo").Equals("Efectivo") || Preferences.Get("Pago", "Efectivo").Equals("Bizum"))
+                    System.Diagnostics.Debug.WriteLine($"[FH] Validaciones OK, procesando pago... ({sw.ElapsedMilliseconds}ms)");
+                    string metodoPago = Preferences.Get("Pago", "Efectivo");
+                    System.Diagnostics.Debug.WriteLine($"[FH] Método de pago: {metodoPago} ({sw.ElapsedMilliseconds}ms)");
+
+                    if (metodoPago.Equals("Efectivo") || metodoPago.Equals("Bizum"))
                     {
                         if (tipo == 1)
                         {
                             bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, App.MensajesGlobal.Where(p => p.clave.Equals("realizar_pedido")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", (PrecioTotalPedido + Bolsas + Gastos - App.Descuento).ToString("#0.00")).Replace("{1}", App.EstActual.nombre).Replace("{2}", Environment.NewLine), AppResources.No, AppResources.Si);
+                            System.Diagnostics.Debug.WriteLine($"[FH] Confirmación envío: {result} ({sw.ElapsedMilliseconds}ms)");
                             await HacerPedido(result);
                         }
                         else
                         {
                             bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, App.MensajesGlobal.Where(p => p.clave.Equals("realizar_pedido_recogida")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", (PrecioTotalPedido + Bolsas + Gastos - App.Descuento).ToString("#0.00")).Replace("{1}", App.EstActual.nombre).Replace("{2}", Environment.NewLine), AppResources.No, AppResources.Si);
+                            System.Diagnostics.Debug.WriteLine($"[FH] Confirmación recogida: {result} ({sw.ElapsedMilliseconds}ms)");
                             await HacerPedido(result);
                         }
                     }
-                    else if (Preferences.Get("Pago", "Efectivo").Equals("Tarjeta"))
+                    else if (metodoPago.Equals("Tarjeta"))
                     {
                         bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, App.MensajesGlobal.Where(p => p.clave.Equals("realizar_pedido_tarjeta")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", (PrecioTotalPedido + Bolsas + Gastos - App.Descuento).ToString("#0.00")).Replace("{1}", App.EstActual.nombre).Replace("{2}", Environment.NewLine), AppResources.No, AppResources.Si);
+                        System.Diagnostics.Debug.WriteLine($"[FH] Confirmación tarjeta: {result} ({sw.ElapsedMilliseconds}ms)");
                         await HacerPedidoTarjeta(result);
                     }
-                    else if (Preferences.Get("Pago", "Efectivo").Equals("Datafono"))
+                    else if (metodoPago.Equals("Datafono"))
                     {
                         if (tipo == 1)
                         {
                             bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, App.MensajesGlobal.Where(p => p.clave.Equals("realizar_pedido_datafono")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", (PrecioTotalPedido + Bolsas + Gastos - App.Descuento).ToString("#0.00")).Replace("{1}", App.EstActual.nombre).Replace("{2}", Environment.NewLine), AppResources.No, AppResources.Si);
+                            System.Diagnostics.Debug.WriteLine($"[FH] Confirmación datáfono envío: {result} ({sw.ElapsedMilliseconds}ms)");
                             await HacerPedido(result);
                         }
                         else
                         {
                             bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, App.MensajesGlobal.Where(p => p.clave.Equals("realizar_pedido_recogida")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", (PrecioTotalPedido + Bolsas + Gastos - App.Descuento).ToString("#0.00")).Replace("{1}", App.EstActual.nombre).Replace("{2}", Environment.NewLine), AppResources.No, AppResources.Si);
+                            System.Diagnostics.Debug.WriteLine($"[FH] Confirmación datáfono recogida: {result} ({sw.ElapsedMilliseconds}ms)");
                             await HacerPedido(result);
                         }
                     }
                     else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[FH] Error: Método de pago no seleccionado ({sw.ElapsedMilliseconds}ms)");
                         await App.customDialog.ShowDialogAsync(AppResources.SeleccioneMetodoPago, AppResources.App, AppResources.Cerrar);
+                    }
                 }
+
+                System.Diagnostics.Debug.WriteLine($"[FH] EnviarPedido FIN: {sw.ElapsedMilliseconds}ms");
             }
             catch (Exception ex)
             {
-                // 
+                System.Diagnostics.Debug.WriteLine($"[FH] EnviarPedido ERROR: {ex.Message}");
+                App.userdialog?.HideLoading();
+            }
+            finally
+            {
+                _enviandoPedido = false;
             }
         }
 
         private async Task HacerPedido(bool hacer)
         {
+            var swPedido = System.Diagnostics.Stopwatch.StartNew();
+            System.Diagnostics.Debug.WriteLine($"[HP] HacerPedido INICIO - hacer: {hacer}");
+
             try
             {
                 if (hacer)
                 {
                     App.userdialog.ShowLoading(AppResources.Cargando);
                     await Task.Delay(200);
+                    System.Diagnostics.Debug.WriteLine($"[HP] ShowLoading mostrado ({swPedido.ElapsedMilliseconds}ms)");
                     double total = 0;
                     if (string.IsNullOrEmpty(Carrito2[0].observaciones))
                         Carrito2[0].observaciones = "";
@@ -487,31 +522,68 @@ namespace AsadorMoron.ViewModels.Clientes
                         if (App.EstActual.configuracion == null)
                             App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
                     }
+                    System.Diagnostics.Debug.WriteLine($"[HP] Antes de NuevoPedido ({swPedido.ElapsedMilliseconds}ms)");
                     int idCodigoPedido = ResponseServiceWS.NuevoPedido("0", 0, "", tipoVenta, App.DAUtil.Usuario.idUsuario, Carrito2[0].idEstablecimiento, codigoPedido, Carrito2[0].idZona, Carrito2[0].direccion, Carrito2[0].observaciones.Trim(), DateTime.Today.ToString("yyyy-MM-dd") + " " + FranjaSeleccionada.horaInicioReal.ToString(@"hh\:mm"), l, "", tipo, Preferences.Get("Pago", "Efectivo"), puntosAQuitar);
+                    System.Diagnostics.Debug.WriteLine($"[HP] Después de NuevoPedido: idCodigoPedido={idCodigoPedido} ({swPedido.ElapsedMilliseconds}ms)");
 
                     if (idCodigoPedido > 0 || DeviceInfo.Platform.ToString() == "WinUI")
                     {
                         string pedido = string.Empty;
-                        if (tipoVenta.Equals("Envío"))
-                        {
-                            List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(1);
-                            foreach (TokensModel to in tokens)
-                                await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + codigoPedido, to.token);
+                        System.Diagnostics.Debug.WriteLine($"[HP] Pedido creado OK, enviando notificaciones en background ({swPedido.ElapsedMilliseconds}ms)");
 
-                            List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(App.EstActual.idEstablecimiento);
-                            foreach (TokensModel to in tokens2)
-                                await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + codigoPedido, to.token);
-                        }
-
-                        List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(App.EstActual.idEstablecimiento);
-                        foreach (TokensModel to in tokens3)
-                            await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido: " + codigoPedido, to.token);
-
+                        // Calcular puntos antes de fire-and-forget
                         if (App.EstActual.configuracion.puntosPorPedido > 0)
                             punt = App.EstActual.configuracion.puntosPorPedido;
                         else if (App.EstActual.configuracion.puntosPorEuro > 0)
                             punt = App.EstActual.configuracion.puntosPorEuro * ((int)total);
-                        await EnviarEmail(punt.ToString());
+
+                        // OPTIMIZACIÓN: Enviar notificaciones y email en PARALELO (fire-and-forget)
+                        // No esperamos a que terminen - el pedido ya está guardado en el servidor
+                        var codigoPedidoLocal = codigoPedido;
+                        var nombreEstablecimiento = App.EstActual.nombre;
+                        var idEstablecimiento = App.EstActual.idEstablecimiento;
+                        var tipoVentaLocal = tipoVenta;
+                        var puntosLocal = punt.ToString();
+
+                        _ = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[HP-BG] Iniciando envío de notificaciones y email");
+                                var tareasNotificaciones = new List<Task>();
+
+                                if (tipoVentaLocal.Equals("Envío"))
+                                {
+                                    // Notificaciones admin
+                                    var tokens = App.ResponseWS.getTokenMultiAdministrador(1);
+                                    foreach (var to in tokens)
+                                        tareasNotificaciones.Add(App.ResponseWS.enviaNotificacion(nombreEstablecimiento, "Nuevo Pedido para " + nombreEstablecimiento + ": " + codigoPedidoLocal, to.token));
+
+                                    // Notificaciones repartidores
+                                    var tokens2 = App.ResponseWS.getTokenRepartidores(idEstablecimiento);
+                                    foreach (var to in tokens2)
+                                        tareasNotificaciones.Add(App.ResponseWS.enviaNotificacion(nombreEstablecimiento, "Nuevo Pedido para " + nombreEstablecimiento + ": " + codigoPedidoLocal, to.token));
+                                }
+
+                                // Notificaciones establecimiento
+                                var tokens3 = App.ResponseWS.getTokenEstablecimiento(idEstablecimiento);
+                                foreach (var to in tokens3)
+                                    tareasNotificaciones.Add(App.ResponseWS.enviaNotificacion(nombreEstablecimiento, "Nuevo Pedido: " + codigoPedidoLocal, to.token));
+
+                                // Email
+                                tareasNotificaciones.Add(EnviarEmail(puntosLocal));
+
+                                // Esperar todas en paralelo (en background)
+                                await Task.WhenAll(tareasNotificaciones);
+                                System.Diagnostics.Debug.WriteLine($"[HP-BG] Notificaciones y email enviados OK");
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[HP-BG] Error enviando notificaciones: {ex.Message}");
+                            }
+                        });
+
+                        System.Diagnostics.Debug.WriteLine($"[HP] Notificaciones lanzadas en background ({swPedido.ElapsedMilliseconds}ms)");
 
                         List<PedidoModel> pedidosModel = new List<PedidoModel>();
                         DateTime fechaPedido = DateTime.Now;
@@ -533,15 +605,19 @@ namespace AsadorMoron.ViewModels.Clientes
                             p.horaEntrega = FranjaSeleccionada.horaInicio;
                             pedidosModel.Add(p);
                         }
+                        System.Diagnostics.Debug.WriteLine($"[HP] Guardando pedido en SQLite ({swPedido.ElapsedMilliseconds}ms)");
                         App.DAUtil.GuardarPedido(pedidosModel);
                         App.DAUtil.VaciaCarrito();
+                        System.Diagnostics.Debug.WriteLine($"[HP] Pedido guardado, navegando... ({swPedido.ElapsedMilliseconds}ms)");
                         if (DeviceInfo.Platform.ToString() != "WinUI")
                             IrAPedidoConfirmadoViewModel();
                         else
                             await App.DAUtil.NavigationService.InitializeAsync();
+                        System.Diagnostics.Debug.WriteLine($"[HP] HacerPedido FIN: {swPedido.ElapsedMilliseconds}ms");
                     }
                     else
                     {
+                        System.Diagnostics.Debug.WriteLine($"[HP] Error: idCodigoPedido <= 0 ({swPedido.ElapsedMilliseconds}ms)");
                         App.userdialog.HideLoading();
                         await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
                     }
@@ -549,7 +625,7 @@ namespace AsadorMoron.ViewModels.Clientes
             }
             catch (Exception ex)
             {
-                // 
+                System.Diagnostics.Debug.WriteLine($"[HP] HacerPedido ERROR: {ex.Message} ({swPedido.ElapsedMilliseconds}ms)");
                 App.userdialog.HideLoading();
                 await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
             }

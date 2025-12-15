@@ -30,7 +30,7 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <ScrollView VerticalOptions="FillAndExpand" BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,60,0,0',
+                                Android='0,0,0,0',
                                 UWP='0'}">
 
             <StackLayout Margin="{OnPlatform iOS='15,0',

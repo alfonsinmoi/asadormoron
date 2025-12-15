@@ -23,7 +23,7 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto"  Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,50,0,0',
+                                Android='0,0,0,0',
                                 UWP='0'}" BackgroundColor="White"
                VerticalOptions="FillAndExpand"
               Padding="20">

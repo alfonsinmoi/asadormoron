@@ -62,7 +62,7 @@
     </ContentPage.Resources>
     <ContentPage.Content>
         <Grid
-            Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}"
+            Margin="{OnPlatform iOS='0,90,0,0', Android='0,0,0,0', UWP='0,0,0,0'}"
             HorizontalOptions="FillAndExpand"
             RowDefinitions="Auto,Auto,*,Auto"
             RowSpacing="0"
@@ -251,11 +251,11 @@
                 BackgroundColor="LightGray"
                 HeightRequest="1"
                 HorizontalOptions="FillAndExpand" />
-            <!-- OPTIMIZADO: MeasureFirstItem para mejor virtualización -->
+            <!-- OPTIMIZADO: MeasureAllItems para evitar problemas de reciclaje con DataTriggers -->
             <CollectionView
                 Grid.Row="2"
                 BackgroundColor="{DynamicResource Blanco}"
-                ItemSizingStrategy="MeasureFirstItem"
+                ItemSizingStrategy="MeasureAllItems"
                 HorizontalOptions="FillAndExpand"
                 ItemsSource="{Binding Listado}"
                 VerticalOptions="FillAndExpand"
@@ -298,40 +298,7 @@
                                 Margin="{OnPlatform  Default=5 ,iOS=0}"
                                 Aspect="AspectFit"
                                 HorizontalOptions="End"
-                                Source="pedidonuevo.png">
-                                <Image.Triggers>
-                                <DataTrigger
-                                    Binding="{Binding idEstadoPedido}"
-                                    TargetType="Image"
-                                    Value="1">
-                                    <Setter Property="Source" Value="pedidonuevo.png" />
-                                </DataTrigger>
-                                    <DataTrigger
-                                    Binding="{Binding idEstadoPedido}"
-                                    TargetType="Image"
-                                    Value="2">
-                                    <Setter Property="Source" Value="pedidovisto.png" />
-                                </DataTrigger>
-                                    <DataTrigger
-                                    Binding="{Binding idEstadoPedido}"
-                                    TargetType="Image"
-                                    Value="3">
-                                    <Setter Property="Source" Value="pedidoporrecoger.png" />
-                                </DataTrigger>
-                                    <DataTrigger
-                                    Binding="{Binding idEstadoPedido}"
-                                    TargetType="Image"
-                                    Value="4">
-                                    <Setter Property="Source" Value="pedidorecogido.png" />
-                                </DataTrigger>
-                                    <DataTrigger
-                                    Binding="{Binding idEstadoPedido}"
-                                    TargetType="Image"
-                                    Value="5">
-                                    <Setter Property="Source" Value="pedidoentregado.png" />
-                                </DataTrigger>
-                            </Image.Triggers>
-                            </Image>
+                                Source="{Binding ImagenEstadoPedido}" />
                             
                             <Label
                                 Grid.Row="0"

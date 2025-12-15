@@ -33,7 +33,7 @@
                 WidthRequest="30" />
         </Grid>
     </NavigationPage.TitleView>
-    <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,60,0,0', UWP='0,0,0,0'}" >
+    <ScrollView BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,0,0,0', UWP='0,0,0,0'}" >
         <Grid  RowDefinitions="*,Auto" >
             <StackLayout
                 Grid.Row="0"

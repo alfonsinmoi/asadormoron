@@ -21,7 +21,7 @@ namespace AsadorMoron.Print
         private readonly IPrintCommand _command;
         private readonly string _codepage;
         private string cod;
-        
+
         public Printer(string printerName, string codigo, string codepage = "IBM01145")
         {
             _printerName = string.IsNullOrEmpty(printerName) ? "escpos.prn" : printerName.Trim();
@@ -131,66 +131,135 @@ namespace AsadorMoron.Print
         {
             ConfiguracionAdmin cAdmin = ResponseServiceWS.getConfiguracionAdmin();
             CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
-            NewLine();
-            SetLineHeight((byte)altura);
+            if (c2.tipoVenta.Equals("Recogida"))
+                c2.direccionUsuario = "";
+            //NewLine();
+            //SetLineHeight((byte)altura);
             AlignCenter();
-            Append($"{cAdmin.nombreTicket.ToUpper().Replace('�', 'O').Replace('�', 'A').Replace('�', 'E').Replace('�', 'I').Replace('�', 'U').Replace('�', 'N')}");
-            AlignLeft();
-            Font($"{cAdmin.cifTicket}", Fonts.FontB);
-            Font($"{cAdmin.direccionTicket}", Fonts.FontB);
-            Font($"{cAdmin.telefonoTicket}", Fonts.FontB);
+            Append($"{cAdmin.nombreTicket.ToUpper().Replace('Ó', 'O').Replace('Á', 'A').Replace('É', 'E').Replace('Í', 'I').Replace('Ú', 'U').Replace('Ñ', 'N')}");
+            Append($"{cAdmin.cifTicket}");
+            Append($"{cAdmin.direccionTicket}");
+            Append($"{cAdmin.telefonoTicket}");
+            Separator();
             Append(" ");
             AlignCenter();
-            Font($"{c2.nombreEstablecimiento.ToUpper().Replace('�', 'O').Replace('�', 'A').Replace('�', 'E').Replace('�', 'I').Replace('�', 'U').Replace('�', 'N')}", Fonts.FontA);
+            DoubleWidth2();
+            if (c2.tipoVenta.Equals("Recogida"))
+                BoldMode("RECOGIDA");
+            else
+                BoldMode("A DOMICILIO");
+
             AlignLeft();
-            ExpandedMode($"{AppResources.Pedido.ToUpper()}: {cod}");
-            Font($"{AppResources.Fecha.ToUpper()}: {c2.horaPedido.ToString("dd/MM/yyyy HH:mm:ss")}", Fonts.FontB);
-            NewLine();
-            Font($"{AppResources.Pago.ToUpper()}: {c2.tipoPago}", Fonts.FontB);
-            
+            DoubleWidth2();
+            Append($"{AppResources.Pedido.ToUpper()}: {cod}");
+            Append($"FECHA: {c2.horaPedido.ToString("dd/MM/yyyy")}");
+            Append($"H. PEDIDO: {c2.horaPedido.ToString("HH:mm")}");
+            Append($"H. ENTREGA: {DateTime.Parse(c2.horaEntrega).AddMinutes(App.EstActual.configuracion.tiempoEntrega).ToString("HH:mm")}");
+            NormalWidth();
+            Append($"{AppResources.Pago.ToUpper()}: {c2.tipoPago}");
+            Separator();
+            Append(" ");
+
+
+
 
             double total = 0;
             double totalDescuento = 0;
             double totalBolsas = 0;
             double gastos2 = 0;
             if (!string.IsNullOrEmpty(c2.comentario.Trim()))
-                Font($"{AppResources.Notas.ToUpper()}: {c2.comentario.Trim().ToUpper().Replace('�', 'O').Replace('�', 'A').Replace('�', 'E').Replace('�', 'I').Replace('�', 'U').Replace('�', 'N').ToLower()}", Fonts.FontB);
+                Append($"{AppResources.Notas.ToUpper()}: {c2.comentario.Trim().ToUpper().Replace('Ó', 'O').Replace('Á', 'A').Replace('É', 'E').Replace('Í', 'I').Replace('Ú', 'U').Replace('Ñ', 'N').ToLower()}");
             Append(" ");
+
             foreach (LineasPedido l in c2.lineasPedidos)
             {
                 if (l.tipoComida == 3)
                     totalDescuento = l.precio;
                 else if (l.tipoComida == 4)
                     totalBolsas = l.precio;
-                else if (!l.nombreProducto.Equals("GASTOS DE ENV�O"))
+                else if (!l.nombreProducto.Equals("GASTOS DE ENVÍO"))
                 {
-                    string a = l.cantidad + " " + l.nombreProducto.ToUpper().Replace('�', 'O').Replace('�', 'A').Replace('�', 'E').Replace('�', 'I').Replace('�', 'U').Replace('�', 'N');
+                    string a = l.cantidad.ToString().PadRight(4, ' ') + l.nombreProducto.ToUpper().Replace('Ó', 'O').Replace('Á', 'A').Replace('É', 'E').Replace('Í', 'I').Replace('Ú', 'U').Replace('Ñ', 'N');
                     string[] b = a.Split('\n');
                     for (int i = 0; i < b.Length; i++)
                     {
                         if (!string.IsNullOrEmpty(b[i]))
                         {
-                            
+
                             if (i == 0)
                             {
-                                if (b[i].Length > 35)
-                                    b[i] = b[i].Substring(0, 35);
+                                string texto = "";
+                                string resto = "";
+                                if (b[i].Length > 42)
+                                {
+                                    texto = b[i].Substring(0, 42);
+                                    resto = b[i].Substring(42);
+                                }
                                 else
-                                    b[i] = b[i].PadRight(35,' ');
+                                    texto = b[i].PadRight(42, ' ');
                                 if (l.pagadoConPuntos == 0)
-                                    b[i] += string.Format("{0:N2}", l.cantidad * l.precio).PadLeft(6, ' ') ;
+                                    texto += string.Format("{0:N2}", l.cantidad * l.precio).PadLeft(6, ' ');
                                 else
                                 {
-                                    b[i] += string.Format("{0:N2}", 0).PadLeft(6, ' ') ;
+                                    texto += string.Format("{0:N2}", 0).PadLeft(6, ' ');
                                     totalDescuento += l.cantidad * l.precio;
                                 }
                                 total += l.cantidad * l.precio;
-                            }else
-                                b[i] = "  " + b[i];
-
-                            Font($"{b[i]}", Fonts.FontB);
-                            if (!string.IsNullOrEmpty(l.comentario))
-                                Font("    " + l.comentario, Fonts.FontB);
+                                Append($"{texto}");
+                                while (!string.IsNullOrEmpty(resto))
+                                {
+                                    texto = "";
+                                    if (resto.Length > 38)
+                                    {
+                                        texto = "    " + resto.Substring(0, 38);
+                                        resto = resto.Substring(38);
+                                    }
+                                    else
+                                    {
+                                        texto = "    " + resto;
+                                        resto = "";
+                                    }
+                                    Append(texto);
+                                }
+                            }
+                            else
+                            {
+                                string resto = b[i];
+                                while (!string.IsNullOrEmpty(resto))
+                                {
+                                    string texto = "";
+                                    if (resto.Length > 38)
+                                    {
+                                        texto = "    " + resto.Substring(0, 38);
+                                        resto = resto.Substring(38);
+                                    }
+                                    else
+                                    {
+                                        texto = "    " + resto;
+                                        resto = "";
+                                    }
+                                    Append(texto);
+                                }
+                            }
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(l.comentario))
+                    {
+                        string resto = "Nota: " + l.comentario;
+                        while (!string.IsNullOrEmpty(resto))
+                        {
+                            string texto = "";
+                            if (resto.Length > 38)
+                            {
+                                texto = "    " + resto.Substring(0, 38);
+                                resto = resto.Substring(38);
+                            }
+                            else
+                            {
+                                texto = "    " + resto;
+                                resto = "";
+                            }
+                            BoldMode(texto);
                         }
                     }
                 }
@@ -199,93 +268,96 @@ namespace AsadorMoron.Print
                     total += l.precio;
                     gastos2 = l.precio;
                 }
-
+                Append(" ");
             }
 
-            if (gastos2 == 0 && c2.tipoVenta.StartsWith("Env�o"))
+            if (gastos2 == 0 && c2.tipoVenta.StartsWith("Envío"))
             {
-                ZonaModel z2 = App.ResponseWS.getListadoZonas(Preferences.Get("idPueblo",1)).Where(p => p.idZona == c2.idZona).FirstOrDefault();
+                ZonaModel z2 = App.ResponseWS.getListadoZonas(Preferences.Get("idPueblo", 1)).Where(p => p.idZona == c2.idZona).FirstOrDefault();
                 gastos2 = z2.gastos;
                 total += z2.gastos;
 
             }
-            double baseI = (total - totalDescuento+totalBolsas) / 1.10;
-            if (c2.tipoVenta.StartsWith("Env�o"))
+            double baseI = (total - totalDescuento + totalBolsas) / 1.10;
+            if (c2.tipoVenta.StartsWith("Envío"))
             {
 
-                Append($"--------------------------------");
-                Font($"{AppResources.GastosEnvio.ToUpper().Replace('�', 'I')}".PadRight(35) + string.Format("{0:N2}", gastos2).PadLeft(6, ' '), Fonts.FontB);
+                Separator();
+                BoldMode($"{AppResources.GastosEnvio.ToUpper().Replace('Í', 'I')}".PadRight(42) + string.Format("{0:N2}", gastos2).PadLeft(6, ' '));
             }
-            Append($"--------------------------------");
+            Separator();
+            if (totalBolsas > 0)
+                BoldMode($"BOLSAS:".PadRight(42) + string.Format("{0:N2}", totalBolsas).PadLeft(6, ' '));
+            Separator();
             if (totalDescuento > 0)
-                Font($"BOLSAS:".PadRight(35) + string.Format("{0:N2}", totalBolsas).PadLeft(6, ' '), Fonts.FontB);
-            Append($"--------------------------------");
-            if (totalDescuento > 0)
-                Font($"DESCUENTO:".PadRight(35) + string.Format("{0:N2}", totalDescuento).PadLeft(6, ' '), Fonts.FontB);
-            Font($"{AppResources.Base.ToUpper()}".PadRight(35) + string.Format("{0:N2}", baseI).PadLeft(6, ' '), Fonts.FontB);
-            Font($"{AppResources.Iva.ToUpper()} 10%".PadRight(35) + string.Format("{0:N2}", (total-totalDescuento+totalBolsas) - baseI).PadLeft(6, ' '), Fonts.FontB);
-            Font($"{AppResources.Total.ToUpper()}".PadRight(35) + string.Format("{0:N2}", (total-totalDescuento+totalBolsas)).PadLeft(6, ' '), Fonts.FontB);
-            Append($"--------------------------------");
+                BoldMode($"DESCUENTO:".PadRight(42) + string.Format("{0:N2}", totalDescuento).PadLeft(6, ' '));
+            BoldMode($"{AppResources.Base.ToUpper()}".PadRight(42) + string.Format("{0:N2}", baseI).PadLeft(6, ' '));
+            BoldMode($"{AppResources.Iva.ToUpper()} 10%".PadRight(42) + string.Format("{0:N2}", (total - totalDescuento + totalBolsas) - baseI).PadLeft(6, ' '));
+            BoldMode($"{AppResources.Total.ToUpper()}".PadRight(42) + string.Format("{0:N2}", (total - totalDescuento + totalBolsas)).PadLeft(6, ' '));
+            Separator();
+            DoubleWidth2();
             UsuarioModel usu = ResponseServiceWS.getUsuario(c2.idUsuario);
-            Font($"{AppResources.Cliente}: {usu.nombre} {usu.apellidos}", Fonts.FontB);
-            Font($"{AppResources.Direccion}: {c2.direccionUsuario}", Fonts.FontB);
+            BoldMode($"{AppResources.Cliente}: {usu.nombre} {usu.apellidos}");
+            BoldMode($"{AppResources.Direccion}: {c2.direccionUsuario}");
             ZonaModel z = App.DAUtil.getZonas().Find(p => p.idZona == c2.idZona);
-            Font($"{AppResources.Zona}: {z.nombre}", Fonts.FontB);
-            Font($"{AppResources.Telefono}:{usu.telefono}", Fonts.FontB);
+            BoldMode($"{AppResources.Zona}: {z.nombre}");
+            BoldMode($"{AppResources.Telefono}:{usu.telefono}");
+            NormalWidth();
             SetLineHeight((byte)(altura + 10));
             NewLine();
             NewLine();
             NewLine();
             FullPaperCut();
 
-            //Append("NORMAL - 48 COLUMNS");
-            //Append("1...5...10...15...20...25...30...35...40...45.48");
-            //Separator();
-            //Append("Text Normal");
-            //BoldMode("Bold Text");
-            //UnderlineMode("Underlined text");
-            //Separator();
-            //ExpandedMode(PrinterModeState.On);
-            //Append("Expanded - 23 COLUMNS");
-            //Append("1...5...10...15...20..23");
-            //ExpandedMode(PrinterModeState.Off);
-            //Separator();
-            //CondensedMode(PrinterModeState.On);
-            //Append("Condensed - 64 COLUMNS");
-            //Append("1...5...10...15...20...25...30...35...40...45...50...55...60..64");
-            //CondensedMode(PrinterModeState.Off);
-            //Separator();
-            //DoubleWidth2();
-            //Append("Font Width 2");
-            //DoubleWidth3();
-            //Append("Font Width 3");
-            //NormalWidth();
-            //Append("Normal width");
-            //Separator();
-            //AlignRight();
-            //Append("Right aligned text");
-            //AlignCenter();
-            //Append("Center-aligned text");
-            //AlignLeft();
-            //Append("Left aligned text");
-            //Separator();
-            //Font("Font A", Fonts.FontA);
-            //Font("Font B", Fonts.FontB);
-            //Font("Font C", Fonts.FontC);
-            //Font("Font D", Fonts.FontD);
-            //Font("Font E", Fonts.FontE);
-            //Font("Font Special A", Fonts.SpecialFontA);
-            //Font("Font Special B", Fonts.SpecialFontB);
-            //Separator();
-            //InitializePrint();
-            //SetLineHeight(24);
-            //Append("This is first line with line height of 30 dots");
-            //SetLineHeight(40);
-            //Append("This is second line with line height of 24 dots");
-            //Append("This is third line with line height of 40 dots");
-            //NewLines(3);
-            //Append("End of Test :)");
-            //Separator();
+            /*Append("NORMAL - 48 COLUMNS");
+            Append("1...5...10...15...20...25...30...35...40...45.48");
+            Separator();
+            Append("Text Normal");
+            BoldMode("Bold Text");
+            UnderlineMode("Underlined text");
+            Separator();
+            ExpandedMode(PrinterModeState.On);
+            Append("Expanded - 23 COLUMNS");
+            Append("1...5...10...15...20..23");
+            ExpandedMode(PrinterModeState.Off);
+            Separator();
+            CondensedMode(PrinterModeState.On);
+            Append("Condensed - 64 COLUMNS");
+            Append("1...5...10...15...20...25...30...35...40...45...50...55...60..64");
+            CondensedMode(PrinterModeState.Off);
+            Separator();
+            DoubleWidth2();
+            Append("Font Width 2");
+            DoubleWidth3();
+            Append("Font Width 3");
+            NormalWidth();
+            Append("Normal width");
+            Separator();
+            AlignRight();
+            Append("Right aligned text");
+            AlignCenter();
+            Append("Center-aligned text");
+            AlignLeft();
+            Append("Left aligned text");
+            Separator();
+            Font("Font A", Fonts.FontA);
+            Font("Font B", Fonts.FontB);
+            Font("Font C", Fonts.FontC);
+            Font("Font D", Fonts.FontD);
+            Font("Font E", Fonts.FontE);
+            Font("Font Special A", Fonts.SpecialFontA);
+            Font("Font Special B", Fonts.SpecialFontB);
+            Separator();
+            InitializePrint();
+            SetLineHeight(24);
+            Append("This is first line with line height of 30 dots");
+            SetLineHeight(40);
+            Append("This is second line with line height of 24 dots");
+            Append("This is third line with line height of 40 dots");
+            NewLines(3);
+            Append("End of Test :)");
+            Separator();
+            FullPaperCut();*/
         }
         public void ImprimirTicketComanda(int numeroImpresora)
         {
@@ -301,13 +373,13 @@ namespace AsadorMoron.Print
                     Font($"{AppResources.Fecha.ToUpper()}: {c2.horaPedido.ToString("dd/MM/yyyy HH:mm:ss")}", Fonts.FontB);
 
                     if (!string.IsNullOrEmpty(c2.comentario.Trim()))
-                        Font($"{AppResources.Notas.ToUpper()}: {c2.comentario.Trim().ToUpper().Replace('�', 'O').Replace('�', 'A').Replace('�', 'E').Replace('�', 'I').Replace('�', 'U').Replace('�', 'N').ToLower()}", Fonts.FontB);
+                        Font($"{AppResources.Notas.ToUpper()}: {c2.comentario.Trim().ToUpper().Replace('Ó', 'O').Replace('Á', 'A').Replace('É', 'E').Replace('Í', 'I').Replace('Ú', 'U').Replace('Ñ', 'N').ToLower()}", Fonts.FontB);
                     Append(" ");
                     foreach (LineasPedido l in c2.lineasPedidos.Where(p => p.numeroImpresora == numeroImpresora))
                     {
-                        if (!l.nombreProducto.Equals("GASTOS DE ENV�O"))
+                        if (!l.nombreProducto.Equals("GASTOS DE ENVÍO"))
                         {
-                            string a = l.cantidad + " " + l.nombreProducto.ToUpper().Replace('�', 'O').Replace('�', 'A').Replace('�', 'E').Replace('�', 'I').Replace('�', 'U').Replace('�', 'N');
+                            string a = l.cantidad + " " + l.nombreProducto.ToUpper().Replace('Ó', 'O').Replace('Á', 'A').Replace('É', 'E').Replace('Í', 'I').Replace('Ú', 'U').Replace('Ñ', 'N');
                             string[] b = a.Split('\n');
                             for (int i = 0; i < b.Length; i++)
                             {
@@ -334,7 +406,8 @@ namespace AsadorMoron.Print
                     NewLine();
                     FullPaperCut();
                 }
-            }catch (Exception)
+            }
+            catch (Exception)
             {
 
             }

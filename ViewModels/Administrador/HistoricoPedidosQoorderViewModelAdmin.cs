@@ -341,7 +341,7 @@ namespace AsadorMoron.ViewModels.Administrador
                 }
             }
         }
-        private double totalPedidosE=0;
+        private double totalPedidosE = 0;
         public double TotalPedidosE
         {
             get
@@ -463,8 +463,8 @@ namespace AsadorMoron.ViewModels.Administrador
         public bool IsDetailVisible
         {
             get { return isDetailVisible; }
-            set 
-            { 
+            set
+            {
                 isDetailVisible = value;
                 OnPropertyChanged();
             }
@@ -530,35 +530,51 @@ namespace AsadorMoron.ViewModels.Administrador
         #endregion
 
         #region Methods
-        private void ExeMas()
+        private async void ExeMas()
         {
-            numeroDias++;
-            CargaPedidos();
+            try
+            {
+                App.userdialog?.ShowLoading(AppResources.Cargando);
+                numeroDias++;
+                await Task.Run(() => CargaPedidos());
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
+            }
         }
-        private void ExeTodo()
+        private async void ExeTodo()
         {
-            numeroDias = 1000;
-            CargaPedidos();
+            try
+            {
+                App.userdialog?.ShowLoading(AppResources.Cargando);
+                numeroDias = 1000;
+                await Task.Run(() => CargaPedidos());
+            }
+            finally
+            {
+                App.userdialog?.HideLoading();
+            }
         }
         private void SetTipos()
         {
             Tipos = new ObservableCollection<string>();
-            Tipos.Add(AppResources.Todos);
-            Tipos.Add(AppResources.RecogidaLocal);
-            Tipos.Add(AppResources.EnvioDomicilio);
+            Tipos.Add("Todos");
+            Tipos.Add("Recogida Local");
+            Tipos.Add("Envío Domicilio");
             TipoSeleccionado = Tipos[0];
 
             Autos = new ObservableCollection<string>();
-            Autos.Add(AppResources.Todos);
+            Autos.Add("Todos");
             Autos.Add("App");
             Autos.Add("Auto Pedido");
             AutoSeleccionado = Autos[0];
 
             TiposPago = new ObservableCollection<string>();
-            TiposPago.Add(AppResources.Todos);
-            TiposPago.Add(AppResources.Efectivo);
+            TiposPago.Add("Todos");
+            TiposPago.Add("Efectivo");
             //TiposPago.Add("Datafono");
-            TiposPago.Add(AppResources.Tarjeta);
+            TiposPago.Add("Tarjeta");
             TipoPago = TiposPago[0];
         }
         private void Filtro()
@@ -568,7 +584,7 @@ namespace AsadorMoron.ViewModels.Administrador
                 if (todoCargado)
                 {
                     Total = 0;
-                    if ((ZonaSeleccionada == null || ZonaSeleccionada.nombre.Equals(AppResources.Todas)) && (TiempoSeleccionado.Equals(AppResources.Todos)) && (RepartidorSeleccionado == null || RepartidorSeleccionado.nombre.Equals(AppResources.Todos)) && (string.IsNullOrEmpty(TipoSeleccionado) || TipoSeleccionado.Equals(AppResources.Todos)) && (string.IsNullOrEmpty(AutoSeleccionado) || AutoSeleccionado.Equals(AppResources.Todos)) && (string.IsNullOrEmpty(TipoPago) || TipoPago.Equals(AppResources.Todos)))
+                    if ((ZonaSeleccionada == null || ZonaSeleccionada.nombre.Equals("Todas")) && (TiempoSeleccionado.Equals("Todos")) && (RepartidorSeleccionado == null || RepartidorSeleccionado.nombre.Equals("Todos")) && (string.IsNullOrEmpty(TipoSeleccionado) || TipoSeleccionado.Equals("Todos")) && (string.IsNullOrEmpty(AutoSeleccionado) || AutoSeleccionado.Equals("Todos")) && (string.IsNullOrEmpty(TipoPago) || TipoPago.Equals("Todos")))
                     {
                         if (ListPedidosTemp != null)
                         {
@@ -584,13 +600,13 @@ namespace AsadorMoron.ViewModels.Administrador
                             {
                                 Listado = new List<CabeceraPedido>(l);
                                 Total = Listado.Sum(p => p.precioTotalPedido);
-                                TotalPedidosE= Listado.Sum(p => p.precioTotalPedido);
+                                TotalPedidosE = Listado.Sum(p => p.precioTotalPedido);
                             }
                             if (l2 != null && l2.Count > 0)
                             {
                                 Gastos = new ObservableCollection<GastoModel>(l2);
                                 Total += Gastos.Sum(p => p.precio);
-                                TotalGastos= Gastos.Sum(p => p.precio);
+                                TotalGastos = Gastos.Sum(p => p.precio);
                             }
                             TotalPedidos = Listado.Count;
                         }
@@ -600,16 +616,16 @@ namespace AsadorMoron.ViewModels.Administrador
                         if (ListPedidosTemp != null)
                         {
                             Total = 0;
-                            List<CabeceraPedido> l = new List<CabeceraPedido>(ListPedidosTemp).Where(p =>((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
+                            List<CabeceraPedido> l = new List<CabeceraPedido>(ListPedidosTemp).Where(p => ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
                             List<GastoModel> l2 = new List<GastoModel>(ListGastosTemp).Where(p => ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date)).ToList();
-                            if (!ZonaSeleccionada.nombre.Equals(AppResources.Todas))
+                            if (!ZonaSeleccionada.nombre.Equals("Todas"))
                                 l = l.Where(p => p.idZona.Equals(ZonaSeleccionada.idZona) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                            if (!RepartidorSeleccionado.nombre.Equals(AppResources.Todos))
+                            if (!RepartidorSeleccionado.nombre.Equals("Todos"))
                             {
                                 l = l.Where(p => p.idRepartidor.Equals(RepartidorSeleccionado.id) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
                                 l2 = l2.Where(p => p.idRepartidor.Equals(RepartidorSeleccionado.id) && ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date)).ToList();
                             }
-                            if (!TiempoSeleccionado.Equals(AppResources.Todos))
+                            if (!TiempoSeleccionado.Equals("Todos"))
                             {
                                 if (TiempoSeleccionado.Equals("Por la mañana"))
                                 {
@@ -622,38 +638,36 @@ namespace AsadorMoron.ViewModels.Administrador
                                     l2 = l2.Where(p => ((DateTime)p.fecha).Hour > 17 && ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date)).ToList();
                                 }
                             }
-                            if (!TipoSeleccionado.Equals(AppResources.Todos))
+                            if (!TipoSeleccionado.Equals("Todos"))
                             {
                                 string tipoVenta = "Local";
-                                if (TipoSeleccionado.Equals(AppResources.RecogidaLocal))
+                                if (TipoSeleccionado.Equals("Recogida Local"))
                                     tipoVenta = "Recogida";
-                                else if (TipoSeleccionado.Equals(AppResources.EnvioDomicilio))
+                                else if (TipoSeleccionado.Equals("Envío Domicilio"))
                                     tipoVenta = "Envío";
-                                else if (TipoSeleccionado.Equals(AppResources.RepartoPropio))
-                                    tipoVenta = "Reparto Propio";
                                 l = l.Where(p => p.tipoVenta.Equals(tipoVenta) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
                             }
-                            if (!AutoSeleccionado.Equals(AppResources.Todos))
+                            if (!AutoSeleccionado.Equals("Todas"))
                             {
                                 if (AutoSeleccionado.Equals("Auto Pedido"))
                                     l = l.Where(p => p.nombreUsuario.Equals(AutoSeleccionado) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
                                 else
                                     l = l.Where(p => !p.nombreUsuario.Equals("Auto Pedido") && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
                             }
-                            if (!TipoPago.Equals(AppResources.Todos))
+                            if (!TipoPago.Equals("Todos"))
                                 l = l.Where(p => p.tipoPago.Equals(TipoPago) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
 
                             if (l != null)
                             {
                                 Listado = new List<CabeceraPedido>(l);
                                 Total = Listado.Sum(p => p.precioTotalPedido);
-                                TotalPedidosE= Listado.Sum(p => p.precioTotalPedido);
+                                TotalPedidosE = Listado.Sum(p => p.precioTotalPedido);
                             }
                             if (l2 != null)
                             {
                                 Gastos = new ObservableCollection<GastoModel>(l2);
                                 Total += Gastos.Sum(p => p.precio);
-                                TotalGastos= Gastos.Sum(p => p.precio);
+                                TotalGastos = Gastos.Sum(p => p.precio);
                             }
                             TotalPedidos = Listado.Count;
                         }
@@ -671,7 +685,7 @@ namespace AsadorMoron.ViewModels.Administrador
             try
             {
                 List<string> listTiempos = new List<string>();
-                listTiempos.Add(AppResources.Todos);
+                listTiempos.Add("Todos");
                 listTiempos.Add("Por la mañana");
                 listTiempos.Add("Por la noche");
                 Tiempos = new ObservableCollection<string>(listTiempos);
@@ -682,20 +696,22 @@ namespace AsadorMoron.ViewModels.Administrador
                 // 
             }
         }
-        private void InfoUsuarioPedido(object codigo)
+        private async void InfoUsuarioPedido(object codigo)
         {
             try
             {
                 if (MopupService.Instance.PopupStack.Count() == 0)
                 {
+                    App.userdialog?.ShowLoading(AppResources.Cargando);
                     string cod = (string)codigo;
-                    CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
-                    MopupService.Instance.PushAsync(new PopupPageInfoUsuarioPedido(c2), true);
+                    CabeceraPedido c2 = await Task.Run(() => ResponseServiceWS.TraePedidoPorCodigo(cod));
+                    App.userdialog?.HideLoading();
+                    await MopupService.Instance.PushAsync(new PopupPageInfoUsuarioPedido(c2), true);
                 }
             }
             catch (Exception ex)
             {
-                // 
+                App.userdialog?.HideLoading();
             }
         }
         private void InitTimer()
@@ -715,9 +731,9 @@ namespace AsadorMoron.ViewModels.Administrador
         }
         private void CargaPedidos()
         {
-            ListPedidosTemp = new List<CabeceraPedido>(ResponseServiceWS.getHistoricoPedidosMultiAdmin(numeroDias,"1"));
+            ListPedidosTemp = new List<CabeceraPedido>(ResponseServiceWS.getHistoricoPedidosMultiAdmin(numeroDias, "1"));
             TotalPedidos = 0;
-            
+
             if (ListPedidosTemp != null && ListPedidosTemp.Count > 0)
             {
                 List<CabeceraPedido> Listado2 = new List<CabeceraPedido>(ListPedidosTemp.Where(p => ((DateTime)p.horaPedido).Date == DateTime.Now.Date));
@@ -758,7 +774,7 @@ namespace AsadorMoron.ViewModels.Administrador
                 List<ZonaModel> zs = new List<ZonaModel>();
                 ZonaModel zz = new ZonaModel();
                 zz.idZona = 0;
-                zz.nombre = AppResources.Todas;
+                zz.nombre = "Todas";
                 zs.Add(zz);
                 foreach (ZonaModel e in listZonas)
                 {
@@ -780,7 +796,7 @@ namespace AsadorMoron.ViewModels.Administrador
                 List<RepartidorModel> zs = new List<RepartidorModel>();
                 RepartidorModel zz = new RepartidorModel();
                 zz.id = 0;
-                zz.nombre = AppResources.Todos;
+                zz.nombre = "Todos";
                 zs.Add(zz);
                 foreach (RepartidorModel e in listRep)
                 {

@@ -47,7 +47,7 @@
     </NavigationPage.TitleView>
     <ContentPage.Content>
         <Grid Margin="{OnPlatform iOS='0,90,0,0',
-                                    Android='0,60,0,0',
+                                    Android='0,0,0,0',
                                     UWP='0,0,0,0'}"
               RowDefinitions="*,Auto">
         <StackLayout  VerticalOptions="FillAndExpand">

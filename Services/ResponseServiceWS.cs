@@ -1795,9 +1795,13 @@ namespace AsadorMoron.Services
                 }
                 foreach (ArticuloModel p in listProducto)
                 {
-                    p.listadoOpciones = new ObservableCollection<OpcionesModel>();
-                    p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
-                    p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
+                    // Solo inicializar si son null, no sobrescribir datos del JSON
+                    if (p.listadoOpciones == null)
+                        p.listadoOpciones = new ObservableCollection<OpcionesModel>();
+                    if (p.listadoIngredientes == null)
+                        p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
+                    if (p.listadoAlergenos == null)
+                        p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
                 }
                 return listProducto;
             }
@@ -1833,9 +1837,13 @@ namespace AsadorMoron.Services
                 }
                 foreach (ArticuloModel p in listProducto)
                 {
-                    p.listadoOpciones = new ObservableCollection<OpcionesModel>();
-                    p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
-                    p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
+                    // Solo inicializar si son null, no sobrescribir datos del JSON
+                    if (p.listadoOpciones == null)
+                        p.listadoOpciones = new ObservableCollection<OpcionesModel>();
+                    if (p.listadoIngredientes == null)
+                        p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
+                    if (p.listadoAlergenos == null)
+                        p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
                 }
                 return listProducto;
             }
@@ -1851,13 +1859,23 @@ namespace AsadorMoron.Services
             try
             {
                 string requestUri = App.DAUtil.miURL + "productos.php/GET?idEstablecimientoProducto=" + id.ToString();
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
+                System.Diagnostics.Debug.WriteLine($"[PERF-PROD] getListadoProductosEstablecimiento URL: {requestUri}");
+                var swProd = System.Diagnostics.Stopwatch.StartNew();
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                System.Diagnostics.Debug.WriteLine($"[PERF-PROD] HTTP Response: {swProd.ElapsedMilliseconds}ms");
                 string resultJSON = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"[PERF-PROD] ReadAsString: {swProd.ElapsedMilliseconds}ms, Length: {resultJSON?.Length ?? 0}");
                 if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                 {
+                    System.Diagnostics.Debug.WriteLine($"[PERF-PROD] Deserialize INICIO: {swProd.ElapsedMilliseconds}ms");
                     listProducto = JsonConvert.DeserializeObject<List<ArticuloModel>>(resultJSON);
+                    System.Diagnostics.Debug.WriteLine($"[PERF-PROD] Deserialize FIN: {swProd.ElapsedMilliseconds}ms, Count: {listProducto?.Count ?? 0}");
                     if (listProducto != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[PERF-PROD] saveArticulosEstablecimiento INICIO: {swProd.ElapsedMilliseconds}ms");
                         App.DAUtil.saveArticulosEstablecimiento(listProducto);
+                        System.Diagnostics.Debug.WriteLine($"[PERF-PROD] saveArticulosEstablecimiento FIN: {swProd.ElapsedMilliseconds}ms");
+                    }
                     else
                     {
                         App.DAUtil.EliminaProductos();
@@ -1869,12 +1887,18 @@ namespace AsadorMoron.Services
                     App.DAUtil.EliminaProductos();
                     listProducto = new List<ArticuloModel>();
                 }
+                System.Diagnostics.Debug.WriteLine($"[PERF-PROD] Inicializando colecciones: {swProd.ElapsedMilliseconds}ms");
                 foreach (ArticuloModel p in listProducto)
                 {
-                    p.listadoOpciones = new ObservableCollection<OpcionesModel>();
-                    p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
-                    p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
+                    // Solo inicializar si son null, no sobrescribir datos del JSON
+                    if (p.listadoOpciones == null)
+                        p.listadoOpciones = new ObservableCollection<OpcionesModel>();
+                    if (p.listadoIngredientes == null)
+                        p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
+                    if (p.listadoAlergenos == null)
+                        p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
                 }
+                System.Diagnostics.Debug.WriteLine($"[PERF-PROD] getListadoProductosEstablecimiento TOTAL: {swProd.ElapsedMilliseconds}ms");
                 return listProducto;
             }
             catch (Exception ex)
@@ -1897,9 +1921,13 @@ namespace AsadorMoron.Services
                 }
                 foreach (ArticuloModel p in listProducto)
                 {
-                    p.listadoOpciones = new ObservableCollection<OpcionesModel>();
-                    p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
-                    p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
+                    // Solo inicializar si son null, no sobrescribir datos del JSON
+                    if (p.listadoOpciones == null)
+                        p.listadoOpciones = new ObservableCollection<OpcionesModel>();
+                    if (p.listadoIngredientes == null)
+                        p.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
+                    if (p.listadoAlergenos == null)
+                        p.listadoAlergenos = new ObservableCollection<AlergenosModel>();
                 }
                 return listProducto;
             }
@@ -1909,6 +1937,58 @@ namespace AsadorMoron.Services
                 return listProducto;
             }
         }
+        /// <summary>
+        /// Obtiene las opciones de un producto desde el servidor
+        /// </summary>
+        public async Task<List<OpcionesModel>> getOpcionesProducto(int idProducto)
+        {
+            List<OpcionesModel> listOpciones = new List<OpcionesModel>();
+            try
+            {
+                string requestUri = App.DAUtil.miURL + "productos.php/GET?idOpcionesProducto=" + idProducto;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
+                {
+                    listOpciones = JsonConvert.DeserializeObject<List<OpcionesModel>>(resultJSON);
+                    if (listOpciones == null)
+                        listOpciones = new List<OpcionesModel>();
+                }
+                return listOpciones;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ResponseServiceWS] Error getOpcionesProducto: {ex.Message}");
+                return listOpciones;
+            }
+        }
+
+        /// <summary>
+        /// Obtiene los alergenos de un producto desde el servidor
+        /// </summary>
+        public async Task<List<AlergenosModel>> getAlergenosProducto(int idProducto)
+        {
+            List<AlergenosModel> listAlergenos = new List<AlergenosModel>();
+            try
+            {
+                string requestUri = App.DAUtil.miURL + "productos.php/GET?idAlergenosProducto=" + idProducto;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
+                {
+                    listAlergenos = JsonConvert.DeserializeObject<List<AlergenosModel>>(resultJSON);
+                    if (listAlergenos == null)
+                        listAlergenos = new List<AlergenosModel>();
+                }
+                return listAlergenos;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ResponseServiceWS] Error getAlergenosProducto: {ex.Message}");
+                return listAlergenos;
+            }
+        }
+
         public async Task<List<IngredienteProductoModel>> listadoIngredientesProducto(int idProducto)
         {
             List<IngredienteProductoModel> listCategorias = new List<IngredienteProductoModel>();
