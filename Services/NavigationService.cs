@@ -363,7 +363,6 @@ namespace AsadorMoron.Services
             _mappings.Value.Add(typeof(AutoPedidoAdminViewModel), typeof(AutoPedidoAdminView));
             _mappings.Value.Add(typeof(FacturasAdministradorViewModel), typeof(FacturasAdministradorView));
             _mappings.Value.Add(typeof(InvitaAmigoViewModel), typeof(InvitaAmigoView));
-            _mappings.Value.Add(typeof(NumerosSorteoViewModel), typeof(NumerosSorteoView));
             _mappings.Value.Add(typeof(CartaProductosViewModel), typeof(CartaProductosView));
             _mappings.Value.Add(typeof(CartaProductosNavidadViewModel), typeof(CartaProductosNavidadView));
             _mappings.Value.Add(typeof(GastoViewModel), typeof(GastoView));

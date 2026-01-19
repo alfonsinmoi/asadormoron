@@ -398,48 +398,6 @@ namespace AsadorMoron.Services
                 return listCupones;
             }
         }
-        internal List<SorteosNumerosModel> getNumerosSorteo()
-        {
-            List<SorteosNumerosModel> listCupones = new List<SorteosNumerosModel>();
-            try
-            {
-                string requestUri = App.DAUtil.miURL + "promociones.php/GET?sorteo=true&idUsuario=" + App.DAUtil.Usuario.idUsuario;
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
-                {
-                    listCupones = JsonConvert.DeserializeObject<List<SorteosNumerosModel>>(resultJSON);
-                }
-                if (listCupones == null)
-                    listCupones = new List<SorteosNumerosModel>();
-                return listCupones;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return listCupones;
-            }
-        }
-        private static string generaNumerosSorteo()
-        {
-
-            try
-            {
-                string requestUri = App.DAUtil.miURL + "promociones.php/GET?sorteo=true&idUsuario=" + App.DAUtil.Usuario.idUsuario + "&idPueblo=" + App.DAUtil.Usuario.idPueblo;
-                HttpResponseMessage response = App.Client.PostAsync(requestUri, null).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
-                {
-                    return resultJSON.Trim();
-                }
-                return "";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return "";
-            }
-        }
         internal bool compruebaCodigoAmigo(int idPueblo, string codigo)
         {
             List<UsuarioModel> listCupones = new List<UsuarioModel>();
@@ -5789,19 +5747,7 @@ namespace AsadorMoron.Services
                         QuitaPuntos(puntos);
                     if (App.EstActual.configuracion.sistemaPuntos)
                         AñadirPuntos(total);
-                    /* ResponseServiceWS.imprimirTicket(idPedido.ToString());
-                     int idTicket = ResponseServiceWS.traeIdTicket(idPedido.ToString());
-                     if (idTicket == 0)
-                         ResponseServiceWS.nuevoTicketTerminal(idPedido.ToString());
-                     else
-                         ResponseServiceWS.actualizaTicketTerminal(idPedido.ToString(), idTicket);*/
-
-                    if ((App.DAUtil.Usuario.idPueblo == 7 || App.DAUtil.Usuario.idPueblo == 8) && App.DAUtil.Usuario.rol == 1 && p.lineasPedidos.Sum(p20 => p20.cantidad * p20.precio) > 10)
-                    {
-                        if ((App.DAUtil.Usuario.idPueblo == 7 && DateTime.Now >= new DateTime(2022, 04, 25, 21, 0, 0)) || (App.DAUtil.Usuario.idPueblo == 8 && DateTime.Now >= new DateTime(2022, 04, 21, 21, 0, 0)))
-                            Preferences.Set("numerosSorteo", generaNumerosSorteo());
-                    }
-
+                        
                 }
                 return idPedido;
             }

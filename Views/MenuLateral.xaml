@@ -4,168 +4,267 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
-    xmlns:ffTransformations="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
-    Title=" "
     xmlns:xct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+    Title=" "
     IconImageSource="menu.png"
+    BackgroundColor="#f0dd49"
     x:Name="miMenu">
 
-    <Grid BackgroundColor="{DynamicResource Rojo}" VerticalOptions="FillAndExpand" RowDefinitions="Auto,*,Auto,Auto,Auto">
-        <Grid Grid.Row="0">
-            <StackLayout BackgroundColor="{DynamicResource Amarillo}" HeightRequest="{OnPlatform Default='150',Android='120'}" />
-            <StackLayout
-                Padding="{OnPlatform Default='30,40,20,10',Android='30,10,20,10'}"
-                BackgroundColor="Transparent"
-                Orientation="Horizontal">
-                <ff:CachedImage
-                    HeightRequest="70"
-                    HorizontalOptions="Center"
-                    Source="{Binding Foto}"
-                    WidthRequest="70">
-                    <ff:CachedImage.Transformations>
-                        <!-- Transformation removed -->
-                    </ff:CachedImage.Transformations>
-                    <ff:CachedImage.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding PerfilCommand}" />
-                    </ff:CachedImage.GestureRecognizers>
-                </ff:CachedImage>
-                <Label
-                    Margin="15,0,0,0"
-                    FontFamily="Nunito_bold"
-                    FontSize="20"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding Nombre}"
-                    TextColor="{DynamicResource Negro}"
-                    VerticalTextAlignment="Center" />
-            </StackLayout>
-        </Grid>
-        <ScrollView VerticalOptions="FillAndExpand"  Grid.Row="1">
-        <StackLayout 
-            x:Name="navigationDrawerList"
-            Margin="0,20,0,0"
-            BackgroundColor="Transparent"
-            BindableLayout.ItemsSource="{Binding ListaMenuByRol}">
+    <Grid RowDefinitions="Auto,*,Auto">
 
-            <BindableLayout.ItemTemplate>
-                <DataTemplate>
+        <!-- ============================================ -->
+        <!-- HEADER CON PERFIL DE USUARIO -->
+        <!-- ============================================ -->
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,30,30"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+
+            <!-- Perfil de usuario -->
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16" Padding="24,24,24,28">
+
+                <!-- Foto de perfil -->
+                <Border Grid.Column="0"
+                        StrokeThickness="3"
+                        Stroke="{DynamicResource Rojo}"
+                        WidthRequest="70"
+                        HeightRequest="70"
+                        Padding="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="35"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{DynamicResource Rojo}" Offset="0,2" Radius="10" Opacity="0.2"/>
+                    </Border.Shadow>
+                    <ff:CachedImage Source="{Binding Foto}"
+                                    Aspect="AspectFill"
+                                    WidthRequest="64"
+                                    HeightRequest="64">
+                        <ff:CachedImage.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PerfilCommand}"/>
+                        </ff:CachedImage.GestureRecognizers>
+                    </ff:CachedImage>
+                </Border>
+
+                <!-- Nombre y saludo -->
+                <StackLayout Grid.Column="1"
+                             VerticalOptions="Center"
+                             Spacing="4">
+                    <Label Text="Hola,"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="#888888"/>
+                    <Label Text="{Binding Nombre}"
+                           FontFamily="Nunito_bold"
+                           FontSize="20"
+                           TextColor="{DynamicResource Negro}"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="1"/>
+                    <Label Text="Ver perfil"
+                           FontFamily="Nunito"
+                           FontSize="12"
+                           TextColor="{DynamicResource Rojo}"
+                           IsVisible="{Binding Logado}">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding PerfilCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </Grid>
+        </Border>
+
+        <!-- ============================================ -->
+        <!-- LISTA DE MENU -->
+        <!-- ============================================ -->
+        <ScrollView Grid.Row="1" Padding="16,20,16,10">
+            <StackLayout x:Name="navigationDrawerList"
+                         Spacing="8"
+                         BindableLayout.ItemsSource="{Binding ListaMenuByRol}">
+
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
                         <xct:Expander>
                             <xct:Expander.Header>
-                                <Grid ColumnDefinitions="25,*,45" HeightRequest="40"
-                                    Padding="30,0,0,0"
-                                    ColumnSpacing="20"
-                                    RowSpacing="20"
-                                    VerticalOptions="FillAndExpand">
-                                    <Image
-                                        Grid.Column="0"
-                                        HeightRequest="25"
-                                        Source="{Binding IconSource}"
-                                        VerticalOptions="Center"
-                                        WidthRequest="25" />
+                                <Border BackgroundColor="White"
+                                        StrokeThickness="0"
+                                        Padding="16,14">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="16"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#000000" Offset="0,2" Radius="10" Opacity="0.06"/>
+                                    </Border.Shadow>
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                                        <!-- Icono con fondo -->
+                                        <Border Grid.Column="0"
+                                                BackgroundColor="{DynamicResource Rojo}"
+                                                StrokeThickness="0"
+                                                WidthRequest="42"
+                                                HeightRequest="42">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12"/>
+                                            </Border.StrokeShape>
+                                            <Image Source="{Binding IconSource}"
+                                                   WidthRequest="22"
+                                                   HeightRequest="22"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center"/>
+                                        </Border>
 
-                                    <Label
-                                        Grid.Column="1"
-                                        FontAttributes="Bold"
-                                        FontFamily="Nunito"
-                                        FontSize="14"
-                                        Text="{Binding Title}"
-                                        TextColor="{DynamicResource Blanco}"
-                                        VerticalOptions="Center" />
-                                    <Image
-                                        Grid.Column="2"
-                                        HeightRequest="25"
-                                        IsVisible="{Binding TieneHijos}"
-                                        Margin="0,0,20,0"
-                                        Source="expand.png"
-                                        VerticalOptions="Center"
-                                        WidthRequest="25" >
-                                            <Image.Triggers>
-                                                <DataTrigger TargetType="Image"
-                                                             Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}"
-                                                             Value="True">
-                                                    <Setter Property="Source"
-                                                            Value="collapse.png" />
-                                                </DataTrigger>
-                                            </Image.Triggers>
-                                        </Image>
-                                    <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.ItemSelected, Source={x:Reference Name=miMenu}}" CommandParameter="{Binding .}"/>
-                                    </Grid.GestureRecognizers>
-                                </Grid>
+                                        <!-- Titulo -->
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Title}"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="15"
+                                               TextColor="{DynamicResource Negro}"
+                                               VerticalOptions="Center"/>
+
+                                        <!-- Flecha expandir -->
+                                        <Border Grid.Column="2"
+                                                BackgroundColor="#F5F5F5"
+                                                StrokeThickness="0"
+                                                WidthRequest="28"
+                                                HeightRequest="28"
+                                                IsVisible="{Binding TieneHijos}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Image Source="expand.png"
+                                                   WidthRequest="14"
+                                                   HeightRequest="14"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center">
+                                                <Image.Triggers>
+                                                    <DataTrigger TargetType="Image"
+                                                                 Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}"
+                                                                 Value="True">
+                                                        <Setter Property="Source" Value="collapse.png"/>
+                                                    </DataTrigger>
+                                                </Image.Triggers>
+                                            </Image>
+                                        </Border>
+                                    </Grid>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.ItemSelected, Source={x:Reference Name=miMenu}}"
+                                                              CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
                             </xct:Expander.Header>
-                            <StackLayout  
-                                Margin="20,0,0,0"
-                                BackgroundColor="Transparent"
-                                BindableLayout.ItemsSource="{Binding Hijos}">
+
+                            <!-- Submenu (hijos) -->
+                            <StackLayout Margin="0,6,0,0"
+                                         Spacing="4"
+                                         BindableLayout.ItemsSource="{Binding Hijos}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
-                                            <StackLayout
-                                                HeightRequest="40"
-                                                Padding="50,0,0,0"
-                                                Orientation="Horizontal"
-                                                Spacing="20"
-                                                VerticalOptions="FillAndExpand">
-                                                <Image
-                                                    HeightRequest="25"
-                                                    Source="{Binding IconSource}"
-                                                    VerticalOptions="Center"
-                                                    WidthRequest="25" />
-
-                                                <Label
-                                                    FontAttributes="Bold"
-                                                    FontFamily="Nunito"
-                                                    FontSize="14"
-                                                    Text="{Binding Title}"
-                                                    TextColor="{DynamicResource Blanco}"
-                                                    VerticalOptions="Center" />
-                                                <StackLayout.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.ItemSelected, Source={x:Reference Name=miMenu}}" CommandParameter="{Binding .}"/>
-                                                </StackLayout.GestureRecognizers>
-                                            </StackLayout>
+                                        <Border BackgroundColor="#FAFAFA"
+                                                StrokeThickness="0"
+                                                Margin="20,0,0,0"
+                                                Padding="16,12">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12"/>
+                                            </Border.StrokeShape>
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                                                <Image Grid.Column="0"
+                                                       Source="{Binding IconSource}"
+                                                       WidthRequest="20"
+                                                       HeightRequest="20"
+                                                       VerticalOptions="Center"/>
+                                                <Label Grid.Column="1"
+                                                       Text="{Binding Title}"
+                                                       FontFamily="Nunito"
+                                                       FontSize="14"
+                                                       TextColor="#666666"
+                                                       VerticalOptions="Center"/>
+                                            </Grid>
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Path=BindingContext.ItemSelected, Source={x:Reference Name=miMenu}}"
+                                                                      CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+                                        </Border>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </StackLayout>
                         </xct:Expander>
-                        <!--  Main design for our menu items  -->
-                        
-                </DataTemplate>
-            </BindableLayout.ItemTemplate>
-        </StackLayout>
-        </ScrollView>
-        <Label  Grid.Row="2"
-            FontFamily="Nunito_bold"
-            FontSize="14"
-            HorizontalTextAlignment="Start"
-            Text="{Binding Version}"
-            Margin="30,0,0,0"
-            TextColor="{DynamicResource Negro}" />
-        <StackLayout Grid.Row="3" BackgroundColor="{DynamicResource Rojo}" IsVisible="{Binding EsAdmin,Converter={StaticResource InverseBoolConverter}}">
-            <StackLayout IsVisible="{Binding TieneCodigoAmigo}">
-                <Label Text="Tú código amigo" FontFamily="Syne" TextColor="{DynamicResource Negro}"
-                           HorizontalTextAlignment="Center"/>
-                    <Label Text="{Binding Codigo}" FontFamily="Nunito_bold" TextColor="{DynamicResource Negro}"
-                           HorizontalTextAlignment="Center" FontSize="25"/>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
             </StackLayout>
-        </StackLayout>
-        <Label  Grid.Row="3"
-            FontFamily="Nunito_bold"
-            FontSize="23"
-            HorizontalTextAlignment="Center"
-            IsVisible="{Binding EsAdmin}"
-            TextColor="White" >
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span
-                            Text="Usuarios"/>
-                        <Span
-                            Text=": "/>
-                        <Span
-                            Text="{Binding TotalUsuarios}"/>
-                    </FormattedString>
-                </Label.FormattedText>
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding ContadorCommand}"/>
-            </Label.GestureRecognizers>
-            </Label>
+        </ScrollView>
+
+        <!-- ============================================ -->
+        <!-- FOOTER -->
+        <!-- ============================================ -->
+        <Border Grid.Row="2"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Margin="16,0,16,16"
+                Padding="20">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,2" Radius="12" Opacity="0.08"/>
+            </Border.Shadow>
+
+            <StackLayout Spacing="12">
+                <!-- Contador usuarios (solo admin) -->
+                <Border IsVisible="{Binding EsAdmin}"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        StrokeThickness="0"
+                        Padding="16,12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{DynamicResource Rojo}" Offset="0,2" Radius="8" Opacity="0.3"/>
+                    </Border.Shadow>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                        <Label Grid.Column="0"
+                               Text="&#x1F465;"
+                               FontSize="22"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="1"
+                               Text="Usuarios registrados"
+                               FontFamily="Nunito"
+                               FontSize="13"
+                               TextColor="White"
+                               VerticalOptions="Center"/>
+                        <Border Grid.Column="2"
+                                BackgroundColor="White"
+                                StrokeThickness="0"
+                                Padding="12,6">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Label Text="{Binding TotalUsuarios}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="16"
+                                   TextColor="{DynamicResource Rojo}"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </Grid>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ContadorCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Version -->
+                <Label Text="{Binding Version}"
+                       FontFamily="Nunito"
+                       FontSize="12"
+                       TextColor="#AAAAAA"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,4,0,0"/>
+
+            </StackLayout>
+        </Border>
+
     </Grid>
 
 </ContentPage>

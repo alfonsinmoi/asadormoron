@@ -48,11 +48,6 @@ namespace AsadorMoron.ViewModels.Clientes
                     App.DAUtil.Usuario.saldo -= App.saldoGastado;
                     await App.ResponseWS.actualizaUsuario(App.DAUtil.Usuario);
                 }
-                if (!Preferences.Get("numerosSorteo", "").Equals(""))
-                {
-                    TextoPromocion = "Enhorabuena!!!, estos son los números que con los que jugarás para el sorteo de un iPhone 13 Pro Max" + Environment.NewLine + Preferences.Get("numerosSorteo", "");
-                }
-                Preferences.Set("numerosSorteo", "");
                 App.saldoGastado = 0;
                 App.amigos = null;
                 App.PendientePromocion = false;

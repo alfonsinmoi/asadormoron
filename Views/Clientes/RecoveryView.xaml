@@ -1,110 +1,236 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.Clientes.RecoveryView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="{DynamicResource Rojo}"
-    NavigationPage.IconColor="White">
+    x:Name="RecoveryPage"
+    Title="Recuperar contraseña"
+    BackgroundColor="#F5F5F5"
+    NavigationPage.HasNavigationBar="False">
+
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style x:Key="miLabel" TargetType="Label">
-                <Setter Property="FontSize" Value="{OnPlatform Android=12, iOS=14, UWP=14}" />
-                <Setter Property="TextColor" Value="{DynamicResource Blanco}" />
-                <Setter Property="FontFamily" Value="Nunito" />
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+
+            <Style x:Key="PrimaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource RojoMarca}"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontFamily" Value="Nunito"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="CornerRadius" Value="25"/>
+                <Setter Property="HeightRequest" Value="50"/>
             </Style>
-            <Style x:Key="miEntry" TargetType="Entry">
-                <Setter Property="TextColor" Value="{DynamicResource Negro}" />
-                <Setter Property="PlaceholderColor" Value="Gray" />
-                <Setter Property="FontFamily" Value="Nunito" />
-                <Setter Property="BackgroundColor" Value="White" />
-                <Setter Property="FontSize" Value="12" />
-                <Setter Property="Margin" Value="0,0,0,10" />
+
+            <Style x:Key="GhostButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="TextColor" Value="#666666"/>
+                <Setter Property="FontFamily" Value="Nunito"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="CornerRadius" Value="25"/>
+                <Setter Property="HeightRequest" Value="50"/>
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Grid
-        Margin="{OnPlatform iOS='20,90,10,30',
-                            Android='10,50,10,30',
-                            UWP='0,0,0,0'}"
-        ColumnDefinitions="*, *"
-        RowDefinitions="AUTO, AUTO, AUTO, AUTO, AUTO, AUTO, AUTO"
-        RowSpacing="0"
-        VerticalOptions="FillAndExpand">
-        <Image
-            Grid.ColumnSpan="2"
-            Margin="15,0,15,20"
-            HorizontalOptions="Start"
-            InputTransparent="True"
-            Source="logoqoorder.png" />
-        <Label
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Margin="0,0,0,20"
-            FontAttributes="Bold"
-            FontSize="30"
-            HorizontalTextAlignment="Center"
-            Style="{StaticResource miLabel}"
-            Text="Cambiar contraseña"
-            TextColor="{DynamicResource Blanco}" />
-        <Label
-            Grid.Row="2"
-            Grid.ColumnSpan="2"
-            Style="{StaticResource miLabel}"
-            Text="Email" />
-        <Entry
-            Grid.Row="3"
-            Grid.ColumnSpan="2"
-            Keyboard="Email"
-            Placeholder="Email"
-            Style="{StaticResource miEntry}"
-            Text="{Binding Email}" />
 
-        <Label
-            Grid.Row="4"
-            Grid.Column="0"
-            Style="{StaticResource miLabel}"
-            Text="Nueva contraseña" />
-        <Label
-            Grid.Row="4"
-            Grid.Column="1"
-            Style="{StaticResource miLabel}"
-            Text="Repite Contraseña" />
-        <Entry
-            Grid.Row="5"
-            Grid.Column="0"
-            IsPassword="true"
-            Placeholder="Contraseña"
-            Style="{StaticResource miEntry}"
-            Text="{Binding Pass}" />
-        <Entry
-            Grid.Row="5"
-            Grid.Column="1"
-            IsPassword="true"
-            Placeholder="Repite Contraseña"
-            Style="{StaticResource miEntry}"
-            Text="{Binding RePass}" />
+    <ScrollView>
+        <Grid RowDefinitions="Auto, *, Auto"
+              Padding="0"
+              VerticalOptions="FillAndExpand">
 
-        <Button
-            Grid.Row="6"
-            Grid.Column="0"
-            Margin="0,20,5,0"
-            BackgroundColor="{DynamicResource Amarillo}"
-            Command="{Binding CommandGuardar}"
-            CornerRadius="10"
-            FontFamily="Nunito"
-            HeightRequest="40"
-            Text="Solicitar"
-            TextColor="{DynamicResource Negro}" />
-        <Button
-            Grid.Row="6"
-            Grid.Column="1"
-            Margin="5,20,0,0"
-            BackgroundColor="{DynamicResource Blanco}"
-            Command="{Binding CommandCancelar}"
-            CornerRadius="10"
-            FontFamily="Nunito"
-            HeightRequest="40"
-            Text="Cancelar"
-            TextColor="{DynamicResource Negro}" />
-    </Grid>
+            <VerticalStackLayout Grid.Row="0"
+                                 Grid.RowSpan="2"
+                                 Spacing="0"
+                                 VerticalOptions="Start"
+                                 Padding="30,10,30,30">
+
+                <!-- Logo y titulo -->
+                <VerticalStackLayout Spacing="8"
+                                     HorizontalOptions="Center"
+                                     Margin="0,0,0,30">
+
+                    <Image Source="logo_morado.png"
+                           HeightRequest="100"
+                           HorizontalOptions="Center"
+                           Margin="0,0,20,10"
+                           Aspect="AspectFit"/>
+
+                    <Label Text="Recuperar contraseña"
+                           FontFamily="Nunito"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"/>
+
+                    <Label Text="Introduce tu email y nueva contraseña"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="#666666"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Card del formulario -->
+                <Border StrokeThickness="0"
+                        Padding="25"
+                        BackgroundColor="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000"
+                                Offset="0,4"
+                                Radius="20"
+                                Opacity="0.1"/>
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="16">
+
+                        <!-- Campo Email -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Correo electronico"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666"/>
+                            <Border StrokeThickness="1"
+                                    Padding="12,8"
+                                    BackgroundColor="#FAFAFA">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <Label Grid.Column="0"
+                                           Text="&#x2709;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,10,0"/>
+                                    <Entry Grid.Column="1"
+                                           Placeholder="tu@email.com"
+                                           Keyboard="Email"
+                                           Text="{Binding Email}"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{DynamicResource Negro}"
+                                           PlaceholderColor="#BBBBBB"
+                                           FontFamily="Nunito"
+                                           FontSize="15"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Campo Nueva Contraseña -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Nueva contraseña"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666"/>
+                            <Border StrokeThickness="1"
+                                    Padding="12,8"
+                                    BackgroundColor="#FAFAFA">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto, *, Auto">
+                                    <Label Grid.Column="0"
+                                           Text="&#x1F512;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,10,0"/>
+                                    <Entry Grid.Column="1"
+                                           x:Name="PasswordEntry"
+                                           Placeholder="********"
+                                           IsPassword="True"
+                                           Text="{Binding Pass}"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{DynamicResource Negro}"
+                                           PlaceholderColor="#BBBBBB"
+                                           FontFamily="Nunito"
+                                           FontSize="15"/>
+                                    <Label Grid.Column="2"
+                                           x:Name="TogglePasswordIcon"
+                                           Text="&#x1F441;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="10,0,0,0">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnTogglePasswordClicked"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Campo Repetir Contraseña -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Repetir contraseña"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666"/>
+                            <Border StrokeThickness="1"
+                                    Padding="12,8"
+                                    BackgroundColor="#FAFAFA">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto, *, Auto">
+                                    <Label Grid.Column="0"
+                                           Text="&#x1F512;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,10,0"/>
+                                    <Entry Grid.Column="1"
+                                           x:Name="RePasswordEntry"
+                                           Placeholder="********"
+                                           IsPassword="True"
+                                           Text="{Binding RePass}"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{DynamicResource Negro}"
+                                           PlaceholderColor="#BBBBBB"
+                                           FontFamily="Nunito"
+                                           FontSize="15"/>
+                                    <Label Grid.Column="2"
+                                           x:Name="ToggleRePasswordIcon"
+                                           Text="&#x1F441;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="10,0,0,0">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnToggleRePasswordClicked"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Boton Solicitar -->
+                        <Button Text="Cambiar contraseña"
+                                Command="{Binding CommandGuardar}"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="0,15,0,0">
+                            <Button.Shadow>
+                                <Shadow Brush="{StaticResource RojoMarca}"
+                                        Offset="0,4"
+                                        Radius="12"
+                                        Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <!-- Boton Cancelar -->
+                        <Button Text="Cancelar"
+                                Command="{Binding CommandCancelar}"
+                                Style="{StaticResource GhostButton}"
+                                Margin="0,0,0,0"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
 </ContentPage>

@@ -325,6 +325,22 @@ namespace AsadorMoron.ViewModels
                 }
             }
         }
+        private bool logado = false;
+        public bool Logado
+        {
+            get
+            {
+                return logado;
+            }
+            set
+            {
+                if (logado != value)
+                {
+                    logado = value;
+                    OnPropertyChanged(nameof(Logado));
+                }
+            }
+        }
         private string version = "";
         public string Version
         {
@@ -354,6 +370,7 @@ namespace AsadorMoron.ViewModels
                 ListaMenuByRol = GetListByRol();
                 if (App.DAUtil.Usuario != null)
                 {
+                    Logado = true;
                     if (App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador || App.DAUtil.Usuario.rol == (int)RolesEnum.SuperAdmin)
                     {
                         TotalUsuarios = ResponseServiceWS.contadorUsuarios();
@@ -389,7 +406,10 @@ namespace AsadorMoron.ViewModels
                     }
                 }
                 else
+                {
+                    Logado = false;
                     Nombre = AppResources.Invitado;
+                }
             }
             catch (Exception ex)
             {

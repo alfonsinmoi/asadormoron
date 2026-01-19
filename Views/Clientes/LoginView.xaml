@@ -3,108 +3,227 @@
     x:Class="AsadorMoron.Views.Clientes.LoginView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="LoginPage"
     Title="Acceso"
-    BackgroundColor="{DynamicResource Rojo}"
+    BackgroundColor="#F5F5F5"
     NavigationPage.HasNavigationBar="False">
-    <ContentPage.Content>
-        <Grid
-            Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,80,0,0',
-                                Default='0,0,0,0'}"
-            HorizontalOptions="FillAndExpand"
-            RowDefinitions="*"
-            VerticalOptions="FillAndExpand">
-            <StackLayout
-                Grid.Row="0"
-                Padding="20"
-                BackgroundColor="Transparent"
-                HorizontalOptions="FillAndExpand"
-                Orientation="Vertical"
-                VerticalOptions="FillAndExpand">
-                <Image
-                    Margin="15,0,15,0"
-                    HorizontalOptions="Start"
-                    InputTransparent="True"
-                    Source="logoqoorder.png" />
-                <Grid
-                    Padding="20"
-                    ColumnDefinitions="*, *, *"
-                    RowDefinitions="Auto, Auto, Auto, Auto, Auto,Auto,Auto">
-                    <Entry
-                        Grid.Row="0"
-                        Grid.ColumnSpan="3"
-                        BackgroundColor="{DynamicResource Blanco}"
-                        FontFamily="Nunito"
-                        FontSize="14"
-                        Keyboard="Email"
-                        Placeholder="Email"
-                        PlaceholderColor="Gray"
-                        Text="{Binding Email}"
-                        TextColor="{DynamicResource Negro}" />
-                    <Entry
-                        Grid.Row="1"
-                        Grid.ColumnSpan="3"
-                        Margin="0,10,0,0"
-                        BackgroundColor="{DynamicResource Blanco}"
-                        FontFamily="Nunito"
-                        FontSize="14"
-                        IsPassword="true"
-                        Placeholder="Contraseña"
-                        PlaceholderColor="Gray"
-                        Text="{Binding Password}"
-                        TextColor="{DynamicResource Negro}" />
 
-                    <Grid
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="3"
-                        ColumnDefinitions="*,*">
-                        <Button
-                            Grid.Column="0"
-                            Margin="0,20,5,0"
-                            BackgroundColor="{DynamicResource Amarillo}"
-                            Command="{Binding BtnLogin}"
-                            CornerRadius="10"
-                            FontFamily="Nunito"
-                            FontSize="16"
-                            HeightRequest="40"
-                            Text="Entrar"
-                            TextColor="{DynamicResource Negro}" />
-                        <Button
-                            Grid.Column="1"
-                            Margin="5,20,0,0"
-                            BackgroundColor="{DynamicResource Blanco}"
-                            Command="{Binding BtnCancel}"
-                            CornerRadius="10"
-                            FontFamily="Nunito"
-                            FontSize="16"
-                            HeightRequest="40"
-                            Text="Cancelar"
-                            TextColor="{DynamicResource Negro}" />
-                    </Grid>
-                    <Button
-                        Grid.Row="4"
-                        Grid.ColumnSpan="3"
-                        BackgroundColor="Transparent"
-                        Command="{Binding BtnOlvido}"
-                        FontFamily="Nunito"
-                        FontSize="17"
-                        HorizontalOptions="Center"
-                        Text="¿Olvidó su contraseña?"
-                        TextColor="{DynamicResource Blanco}" />
-                    <Button
-                        Grid.Row="5"
-                        Grid.ColumnSpan="3"
-                        BackgroundColor="Transparent"
-                        Command="{Binding BtnRegistro}"
-                        FontFamily="Nunito"
-                        FontSize="21"
-                        HorizontalOptions="Center"
-                        Text="¿Aún no tienes cuenta? Regístrate"
-                        TextColor="{DynamicResource Blanco}" />
-                </Grid>
-            </StackLayout>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Color rojo de la marca -->
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+
+            <Style x:Key="PrimaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource RojoMarca}"/>
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontFamily" Value="Nunito"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="CornerRadius" Value="25"/>
+                <Setter Property="HeightRequest" Value="50"/>
+            </Style>
+
+            <Style x:Key="SecondaryButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{DynamicResource Amarillo}"/>
+                <Setter Property="TextColor" Value="{DynamicResource Negro}"/>
+                <Setter Property="FontFamily" Value="Nunito"/>
+                <Setter Property="FontSize" Value="18"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="CornerRadius" Value="25"/>
+                <Setter Property="HeightRequest" Value="50"/>
+            </Style>
+
+            <Style x:Key="GhostButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent"/>
+                <Setter Property="TextColor" Value="#666666"/>
+                <Setter Property="FontFamily" Value="Nunito"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="CornerRadius" Value="25"/>
+                <Setter Property="HeightRequest" Value="50"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto, *, Auto"
+              Padding="0"
+              VerticalOptions="FillAndExpand">
+
+            <!-- Contenido principal -->
+            <VerticalStackLayout Grid.Row="0"
+                                 Grid.RowSpan="2"
+                                 Spacing="0"
+                                 VerticalOptions="Start"
+                                 Padding="30,10,30,30">
+
+                <!-- Logo y bienvenida -->
+                <VerticalStackLayout Spacing="8"
+                                     HorizontalOptions="Center"
+                                     Margin="0,0,0,30">
+
+                    <!-- Logo -->
+                    <Image Source="logo_morado.png"
+                           HeightRequest="100"
+                           HorizontalOptions="Center"
+                           Margin="0,0,20,10"
+                           Aspect="AspectFit"/>
+
+                    <Label Text="Bienvenido"
+                           FontFamily="Nunito"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           HorizontalOptions="Center"/>
+
+                    <Label Text="Inicia sesion para continuar"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="Black"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <!-- Card del formulario -->
+                <Border StrokeThickness="0"
+                        Padding="25"
+                        BackgroundColor="White">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000"
+                                Offset="0,4"
+                                Radius="20"
+                                Opacity="0.1"/>
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="16">
+
+                        <!-- Campo Email -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Correo electronico"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666"/>
+                            <Border StrokeThickness="1"
+                                    Padding="12,8"
+                                    BackgroundColor="#FAFAFA">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto, *">
+                                    <Label Grid.Column="0"
+                                           Text="&#x2709;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,10,0"/>
+                                    <Entry Grid.Column="1"
+                                           Placeholder="tu@email.com"
+                                           Keyboard="Email"
+                                           Text="{Binding Email}"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{DynamicResource Negro}"
+                                           PlaceholderColor="#BBBBBB"
+                                           FontFamily="Nunito"
+                                           FontSize="15"/>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Campo Password -->
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="Contrasena"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#666666"/>
+                            <Border StrokeThickness="1"
+                                    Padding="12,8"
+                                    BackgroundColor="#FAFAFA">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="Auto, *, Auto">
+                                    <Label Grid.Column="0"
+                                           Text="&#x1F512;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="0,0,10,0"/>
+                                    <Entry Grid.Column="1"
+                                           x:Name="PasswordEntry"
+                                           Placeholder="********"
+                                           IsPassword="True"
+                                           Text="{Binding Password}"
+                                           BackgroundColor="Transparent"
+                                           TextColor="{DynamicResource Negro}"
+                                           PlaceholderColor="#BBBBBB"
+                                           FontFamily="Nunito"
+                                           FontSize="15"/>
+                                    <Label Grid.Column="2"
+                                           x:Name="TogglePasswordIcon"
+                                           Text="&#x1F441;"
+                                           FontSize="18"
+                                           TextColor="#999999"
+                                           VerticalOptions="Center"
+                                           Margin="10,0,0,0">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnTogglePasswordClicked"/>
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+
+                        <!-- Olvidaste tu contrasena -->
+                        <Label Text="¿Olvidaste tu contrasena?"
+                               FontFamily="Nunito"
+                               FontSize="13"
+                               TextColor="{StaticResource RojoMarca}"
+                               HorizontalOptions="End"
+                               Margin="0,0,0,10">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding BtnOlvido}"/>
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <!-- Boton Entrar (Rojo) -->
+                        <Button Text="Iniciar Sesion"
+                                Command="{Binding BtnLogin}"
+                                Style="{StaticResource PrimaryButton}"
+                                Margin="0,5,0,0">
+                            <Button.Shadow>
+                                <Shadow Brush="{StaticResource RojoMarca}"
+                                        Offset="0,4"
+                                        Radius="12"
+                                        Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <!-- Boton Registrarse (Amarillo) -->
+                        <Button Text="Crear cuenta"
+                                Command="{Binding BtnRegistro}"
+                                Style="{StaticResource SecondaryButton}"
+                                Margin="0,5,0,0">
+                            <Button.Shadow>
+                                <Shadow Brush="{DynamicResource Amarillo}"
+                                        Offset="0,4"
+                                        Radius="12"
+                                        Opacity="0.3"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <!-- Boton Cancelar -->
+                        <Button Text="Cancelar"
+                                Command="{Binding BtnCancel}"
+                                Style="{StaticResource GhostButton}"
+                                Margin="0,0,0,0"/>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
         </Grid>
-
-    </ContentPage.Content>
+    </ScrollView>
 </ContentPage>

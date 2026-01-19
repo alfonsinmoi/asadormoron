@@ -5,6 +5,7 @@ using FFImageLoading.Maui;
 using Syncfusion.Maui.Core.Hosting;
 using ZXing.Net.Maui.Controls;
 using Plugin.Maui.Audio;
+using Microsoft.Maui.Handlers;
 
 namespace AsadorMoron;
 
@@ -37,6 +38,19 @@ public static class MauiProgram
 
         // Registrar servicios
         builder.Services.AddSingleton(AudioManager.Current);
+
+        // Quitar borde de los Entry
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoBorder", (handler, view) =>
+        {
+#if ANDROID
+            handler.PlatformView.Background = null;
+            handler.PlatformView.SetBackgroundColor(Android.Graphics.Color.Transparent);
+#elif IOS || MACCATALYST
+            handler.PlatformView.BackgroundColor = UIKit.UIColor.Clear;
+            handler.PlatformView.Layer.BorderWidth = 0;
+            handler.PlatformView.BorderStyle = UIKit.UITextBorderStyle.None;
+#endif
+        });
 
 #if DEBUG
         // builder.Logging.AddDebug();
