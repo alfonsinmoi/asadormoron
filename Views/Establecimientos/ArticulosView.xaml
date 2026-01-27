@@ -324,9 +324,6 @@
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-                <CollectionView.Footer>
-                    
-                </CollectionView.Footer>
             </CollectionView>
 
         </Grid>

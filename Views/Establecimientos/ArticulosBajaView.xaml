@@ -371,9 +371,6 @@
                         </StackLayout>
                     </Border>
                 </CollectionView.EmptyView>
-                <CollectionView.Footer>
-                    
-                </CollectionView.Footer>
             </CollectionView>
 
         </Grid>
