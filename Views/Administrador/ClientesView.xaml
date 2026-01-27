@@ -1,99 +1,176 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    x:Class="AsadorMoron.Views.Administrador.ClientesView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converters="clr-namespace:AsadorMoron.Converters"
-    x:Class="AsadorMoron.Views.Administrador.ClientesView"
     x:Name="viewClientes"
-    BackgroundColor="{StaticResource Rojo}">
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:StringEmptyToBooleanConverter x:Key="StringEmptyToBooleanConverter" />
-            <converters:EstadoToColorConverter x:Key="EstadoToColorConverter" />
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+            <converters:StringEmptyToBooleanConverter x:Key="StringEmptyToBooleanConverter"/>
+            <converters:EstadoToColorConverter x:Key="EstadoToColorConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
-            <Label
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,50,0"
-                FontFamily="Syne"
-                FontSize="25"
-                HorizontalTextAlignment="Center"
-                Text="Clientes"
-                TextColor="{DynamicResource Amarillo}"
-                VerticalOptions="Center" />
-        </Grid>
-    </NavigationPage.TitleView>
+    <Grid RowDefinitions="Auto,*">
 
-    <ContentPage.Content>
-        <StackLayout
-            BackgroundColor="White"
-            Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,0,0,0',
-                                UWP='0,0,0,0'}"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand">
+        <!-- ============================================ -->
+        <!-- HEADER FIJO -->
+        <!-- ============================================ -->
+        <Border Grid.Row="0"
+                StrokeThickness="0"
+                BackgroundColor="White"
+                Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
 
-            <!-- Buscador -->
-            <Grid ColumnDefinitions="*,Auto"
-                  Margin="{OnPlatform iOS='15,10,15,0', Default='15,10,15,0'}">
-                <Entry Grid.Column="0"
-                       Placeholder="Buscar por nombre, email o teléfono..."
-                       PlaceholderColor="#999999"
-                       Text="{Binding TextoBusqueda}"
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <!-- Botón Menú -->
+                <Border BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Image Source="menu.png"
+                           WidthRequest="22"
+                           HeightRequest="22"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Título -->
+                <Label Grid.Column="1"
+                       Text="Clientes"
+                       FontFamily="Nunito_bold"
+                       FontSize="20"
                        TextColor="{DynamicResource Negro}"
-                       FontFamily="Nunito"
-                       FontSize="14"
-                       BackgroundColor="White"/>
-                <ImageButton Grid.Column="1"
-                             Source="cerrar.png"
-                             WidthRequest="30"
-                             HeightRequest="30"
-                             Margin="5,0,0,0"
-                             BackgroundColor="Transparent"
-                             IsVisible="{Binding TextoBusqueda, Converter={StaticResource StringEmptyToBooleanConverter}}"
-                             Command="{Binding LimpiarBusquedaCommand}"/>
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+
+                <!-- Espaciador -->
+                <BoxView Grid.Column="2" WidthRequest="44" Color="White"/>
+
             </Grid>
+        </Border>
 
-            <!-- Lista de clientes -->
-            <ListView
-                Margin="{OnPlatform iOS=15, Default=0}"
-                BackgroundColor="Transparent"
-                HasUnevenRows="True"
-                HorizontalOptions="FillAndExpand"
-                ItemsSource="{Binding ListadoClientes}"
-                SelectedItem="{Binding ClienteSeleccionado, Mode=TwoWay}"
-                SeparatorVisibility="Default"
-                SeparatorColor="#E0E0E0"
-                VerticalOptions="FillAndExpand">
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL -->
+        <!-- ============================================ -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*">
 
-                <ListView.ItemTemplate>
+            <!-- ============================================ -->
+            <!-- BUSCADOR -->
+            <!-- ============================================ -->
+            <Border Grid.Row="0"
+                    BackgroundColor="White"
+                    StrokeThickness="0"
+                    Margin="16,12,16,0"
+                    Padding="4,4,14,4">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,2" Radius="10" Opacity="0.08"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#F5F5F5"
+                            StrokeThickness="0"
+                            WidthRequest="44"
+                            HeightRequest="44">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Image Source="lupa.png"
+                               WidthRequest="20"
+                               HeightRequest="20"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               Opacity="0.5"/>
+                    </Border>
+                    <Entry Grid.Column="1"
+                           Placeholder="Buscar por nombre, email o teléfono..."
+                           PlaceholderColor="#999999"
+                           Text="{Binding TextoBusqueda}"
+                           TextColor="{DynamicResource Negro}"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           BackgroundColor="Transparent"
+                           VerticalOptions="Center"/>
+                    <ImageButton Grid.Column="2"
+                                 Source="cerrar.png"
+                                 WidthRequest="24"
+                                 HeightRequest="24"
+                                 BackgroundColor="Transparent"
+                                 IsVisible="{Binding TextoBusqueda, Converter={StaticResource StringEmptyToBooleanConverter}}"
+                                 Command="{Binding LimpiarBusquedaCommand}"
+                                 VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- ============================================ -->
+            <!-- LISTA DE CLIENTES -->
+            <!-- ============================================ -->
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding ListadoClientes}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding ClienteSeleccionado, Mode=TwoWay}"
+                            Margin="16,12,16,0">
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
-                            <Grid ColumnDefinitions="Auto,*,Auto"
-                                  Padding="{OnPlatform iOS='10,8', Default='15,8'}"
-                                  ColumnSpacing="10">
+                        <Border Margin="0,0,0,12"
+                                BackgroundColor="White"
+                                StrokeThickness="0"
+                                Padding="14">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="10" Opacity="0.08"/>
+                            </Border.Shadow>
+
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
 
                                 <!-- Icono usuario -->
-                                <Image Grid.Column="0"
-                                       Source="perfil.png"
-                                       WidthRequest="40"
-                                       HeightRequest="40"
-                                       VerticalOptions="Center"/>
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{StaticResource RojoMarca}"
+                                        StrokeThickness="0"
+                                        WidthRequest="48"
+                                        HeightRequest="48">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="14"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="perfil.png"
+                                           WidthRequest="24"
+                                           HeightRequest="24"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                </Border>
 
                                 <!-- Info del cliente -->
                                 <StackLayout Grid.Column="1"
                                              VerticalOptions="Center"
                                              Spacing="2">
-                                    <Label FontFamily="Nunito"
-                                           FontAttributes="Bold"
+                                    <Label FontFamily="Nunito_bold"
                                            FontSize="15"
                                            TextColor="{DynamicResource Negro}"
-                                           LineBreakMode="TailTruncation">
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="1">
                                         <Label.Text>
                                             <MultiBinding StringFormat="{}{0} {1}">
                                                 <Binding Path="nombre"/>
@@ -104,29 +181,80 @@
                                     <Label Text="{Binding email}"
                                            FontFamily="Nunito"
                                            FontSize="12"
-                                           TextColor="#666666"
-                                           LineBreakMode="TailTruncation"/>
+                                           TextColor="#888888"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="1"/>
                                     <Label Text="{Binding telefono}"
                                            FontFamily="Nunito"
                                            FontSize="12"
-                                           TextColor="#666666"
+                                           TextColor="#888888"
                                            IsVisible="{Binding telefono, Converter={StaticResource StringEmptyToBooleanConverter}}"/>
                                 </StackLayout>
 
                                 <!-- Indicador estado -->
-                                <Frame Grid.Column="2"
-                                       WidthRequest="12"
-                                       HeightRequest="12"
-                                       CornerRadius="6"
-                                       Padding="0"
-                                       HasShadow="False"
-                                       VerticalOptions="Center"
-                                       BackgroundColor="{Binding estado, Converter={StaticResource EstadoToColorConverter}}"/>
+                                <Border Grid.Column="2"
+                                        WidthRequest="14"
+                                        HeightRequest="14"
+                                        StrokeThickness="0"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="{Binding estado, Converter={StaticResource EstadoToColorConverter}}">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="7"/>
+                                    </Border.StrokeShape>
+                                </Border>
+
                             </Grid>
-                        </ViewCell>
+                        </Border>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
-    </ContentPage.Content>
+                </CollectionView.ItemTemplate>
+
+                <CollectionView.EmptyView>
+                    <Border BackgroundColor="White"
+                            StrokeThickness="0"
+                            Margin="0,20"
+                            Padding="40">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                        </Border.Shadow>
+                        <StackLayout VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="12">
+                            <Border BackgroundColor="#F5F5F5"
+                                    StrokeThickness="0"
+                                    Padding="16"
+                                    HorizontalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="30"/>
+                                </Border.StrokeShape>
+                                <Image Source="perfil.png"
+                                       WidthRequest="32"
+                                       HeightRequest="32"
+                                       Opacity="0.5"/>
+                            </Border>
+                            <Label Text="Sin clientes"
+                                   TextColor="{DynamicResource Negro}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="18"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="No se encontraron clientes"
+                                   TextColor="#888888"
+                                   FontFamily="Nunito"
+                                   FontSize="14"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </Border>
+                </CollectionView.EmptyView>
+
+                <CollectionView.Footer>
+                    
+                </CollectionView.Footer>
+            </CollectionView>
+
+        </Grid>
+
+    </Grid>
+
 </ContentPage>

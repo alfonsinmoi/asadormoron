@@ -7,407 +7,671 @@
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
     xmlns:templates="clr-namespace:AsadorMoron.Views.Templates"
     x:Name="ViewDetalleArticulos"
-    BackgroundColor="{StaticResource Rojo}">
-    <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
-            <Grid
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,5"
-                HeightRequest="40"
-                HorizontalOptions="FillAndExpand">
-                <Image
-                    Margin="0,0,50,0"
-                    Aspect="AspectFit"
-                    HeightRequest="35"
-                    Source="logomorado.png"
-                    VerticalOptions="StartAndExpand" />
-            </Grid>
-            <badge:SfBadgeView
-                Grid.Column="1"
-                x:Name="badge"
-                Margin="0,0,10,0"
-                BadgeText="{Binding Cantidad, Mode=TwoWay}"
-                HorizontalOptions="End"
-                VerticalOptions="Center">
-                <badge:SfBadgeView.Content>
-                    <ImageButton
-                        BackgroundColor="Transparent"
-                        Command="{Binding IrDetallePedidoCommand}"
-                        HeightRequest="30"
-                        Source="carrito.png"
-                        WidthRequest="30" />
-                </badge:SfBadgeView.Content>
-                <badge:SfBadgeView.BadgeSettings>
-                    <badge:BadgeSettings Background="{DynamicResource Amarillo}" TextColor="Black" FontFamily="Nunito_bold" Type="None" />
-                </badge:SfBadgeView.BadgeSettings>
-            </badge:SfBadgeView>
-        </Grid>
-    </NavigationPage.TitleView>
-    <ContentPage.Content>
-        <Grid RowDefinitions="Auto,*,Auto">
-            <!-- Banner de puntos -->
-            <StackLayout Grid.Row="0" IsVisible="{Binding SistemaPuntos}" BackgroundColor="{DynamicResource Amarillo}" HorizontalOptions="FillAndExpand">
-                <Label Text="{Binding Puntos,StringFormat='Tienes {0} puntos'}" HorizontalTextAlignment="Center"
-                       TextColor="{DynamicResource Negro}" FontSize="20" FontFamily="Nunito_bold"/>
-            </StackLayout>
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="#F5F5F5">
 
-            <!-- Contenido scrolleable -->
-            <ScrollView Grid.Row="1" BackgroundColor="White">
-                <StackLayout Spacing="0" Padding="10">
-                    <!-- Imagen del producto -->
-                    <Border Padding="0" StrokeShape="RoundRectangle 12" StrokeThickness="0" HeightRequest="180">
-                        <Image
-                            Aspect="AspectFill"
-                            Source="{Binding Articulo.imagen}"
-                            VerticalOptions="FillAndExpand"
-                            HorizontalOptions="FillAndExpand"/>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- HEADER MODERNO -->
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="16,12,16,16">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,24,24"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#20000000" Offset="0,4" Radius="8" Opacity="0.15"/>
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                <!-- Botón Menú Hamburguesa (visible cuando es página raíz) -->
+                <Border x:Name="BtnMenu" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" WidthRequest="44" HeightRequest="44" IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2630;" FontSize="22" TextColor="{DynamicResource Negro}" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Botón Atrás (visible cuando hay páginas en el stack) -->
+                <Border x:Name="BtnBack" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" WidthRequest="44" HeightRequest="44" IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2190;" FontSize="22" TextColor="{DynamicResource Negro}" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Título + Chip de Puntos -->
+                <StackLayout Grid.Column="1"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="4">
+                    <Label Text="{Binding Articulo.nombre}"
+                           FontFamily="Nunito_bold"
+                           FontSize="16"
+                           TextColor="#333333"
+                           HorizontalTextAlignment="Center"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="1"/>
+                    <!-- Chip de puntos compacto -->
+                    <Border IsVisible="{Binding SistemaPuntos}"
+                            BackgroundColor="{DynamicResource Amarillo}"
+                            StrokeThickness="0"
+                            Padding="10,4"
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <StackLayout Orientation="Horizontal" Spacing="4">
+                            <Label Text="&#x2B50;" FontSize="10" VerticalOptions="Center"/>
+                            <Label Text="{Binding Puntos, StringFormat='{0} pts'}"
+                                   TextColor="{DynamicResource Negro}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="11"
+                                   VerticalOptions="Center"/>
+                        </StackLayout>
                     </Border>
+                </StackLayout>
 
-                    <!-- Nombre y descripción -->
-                    <Label
-                        Margin="0,15,0,5"
-                        FontFamily="Nunito_bold"
-                        FontSize="22"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding Articulo.nombre}"
-                        TextColor="{DynamicResource Negro}" />
-                    <Label
-                        Margin="0,0,0,15"
-                        FontFamily="Nunito"
-                        FontSize="14"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding Articulo.descripcion}"
-                        TextColor="#666666"/>
+                <!-- Carrito con Badge -->
+                <Grid Grid.Column="2" WidthRequest="48" HeightRequest="48">
+                    <Border BackgroundColor="{StaticResource RojoMarca}"
+                            StrokeThickness="0"
+                            Padding="8">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14"/>
+                        </Border.StrokeShape>
+                        <Image Source="carrito.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border BackgroundColor="{DynamicResource Amarillo}"
+                            StrokeThickness="0"
+                            WidthRequest="22"
+                            HeightRequest="22"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            Margin="0,-4,-4,0"
+                            IsVisible="{Binding Cantidad, Converter={StaticResource StringEmptyToBooleanConverter}}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="11"/>
+                        </Border.StrokeShape>
+                        <Label Text="{Binding Cantidad}"
+                               FontSize="11"
+                               FontFamily="Nunito_bold"
+                               TextColor="{DynamicResource Negro}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
+                    </Grid.GestureRecognizers>
+                </Grid>
+            </Grid>
+        </Border>
 
-                    <!-- OPCIONES (cuando no es combo) -->
-                    <StackLayout IsVisible="{Binding TieneOpciones}" Spacing="0">
-                        <!-- Header Opciones -->
-                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,10,0,5"
-                               IsVisible="{Binding Combo, Converter={StaticResource InverseBoolConverter}}">
-                            <Label FontFamily="Nunito_bold" FontSize="16" TextColor="{DynamicResource Negro}">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="OPCIONES" FontAttributes="Bold"/>
-                                        <Span Text=" (Seleccione una)" FontSize="14"/>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
+        <!-- CONTENIDO SCROLLEABLE -->
+        <ScrollView Grid.Row="1" Padding="16,12">
+            <StackLayout Spacing="12">
+
+                <!-- CARD: Imagen del producto -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,2" Radius="6" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <Grid RowDefinitions="180,Auto">
+                        <!-- Imagen -->
+                        <Border Grid.Row="0" StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20,20,0,0"/>
+                            </Border.StrokeShape>
+                            <Image Aspect="AspectFill"
+                                   Source="{Binding Articulo.imagen}"
+                                   VerticalOptions="FillAndExpand"
+                                   HorizontalOptions="FillAndExpand"/>
                         </Border>
+                        <!-- Info -->
+                        <StackLayout Grid.Row="1" Padding="16,12" Spacing="4">
+                            <Label FontFamily="Nunito_bold"
+                                   FontSize="20"
+                                   Text="{Binding Articulo.nombre}"
+                                   TextColor="#333333"/>
+                            <Label FontFamily="Nunito"
+                                   FontSize="14"
+                                   Text="{Binding Articulo.descripcion}"
+                                   TextColor="#666666"
+                                   LineBreakMode="WordWrap"/>
+                        </StackLayout>
+                    </Grid>
+                </Border>
 
-                        <!-- Lista de Opciones - CollectionView para mejor rendimiento -->
-                        <CollectionView
-                            ItemsSource="{Binding OpcionesLista}"
-                            ItemSizingStrategy="MeasureFirstItem"
-                            VerticalScrollBarVisibility="Never"
-                            IsVisible="{Binding Combo, Converter={StaticResource InverseBoolConverter}}">
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="2"/>
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Padding="8,6" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10" HeightRequest="44">
-                                        <CheckBox
-                                            VerticalOptions="Center"
-                                            IsChecked="{Binding seleccionado}"
-                                            Color="{DynamicResource Rojo}"
-                                            CheckedChanged="CheckBox_CheckedChanged"
-                                            AutomationId="{Binding id}" />
-                                        <Label
-                                            Grid.Column="1"
-                                            FontFamily="Nunito"
-                                            FontSize="16"
-                                            Text="{Binding opcion}"
-                                            TextColor="{DynamicResource Negro}"
-                                            VerticalOptions="Center"/>
-                                        <Label
-                                            Grid.Column="2"
-                                            FontFamily="Nunito_bold"
-                                            FontSize="15"
-                                            IsVisible="{Binding visiblePuntos, Converter={StaticResource InverseBoolConverter}}"
-                                            Text="{Binding precio, StringFormat='{0:N2} €'}"
-                                            TextColor="{DynamicResource Rojo}"
-                                            VerticalOptions="Center" />
-                                    </Grid>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-
-                        <!-- COMBOS (múltiples secciones) -->
-                        <StackLayout IsVisible="{Binding Combo}" Spacing="10">
-                            <!-- Combo 1: Entrantes -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,10,0,5">
-                                <Label Text="1. ENTRANTES" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo1}" Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
+                <!-- CARD: OPCIONES (cuando no es combo) -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="16"
+                        IsVisible="{Binding TieneOpciones}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,2" Radius="6" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="12">
+                        <!-- Header Opciones -->
+                        <StackLayout IsVisible="{Binding Combo, Converter={StaticResource InverseBoolConverter}}" Spacing="10">
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}"
+                                        StrokeThickness="0"
+                                        Padding="10,6">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="OPCIONES"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="12"
+                                           TextColor="White"/>
+                                </Border>
+                                <Label Text="Seleccione una"
+                                       FontFamily="Nunito"
+                                       FontSize="13"
+                                       TextColor="#888888"
+                                       VerticalOptions="Center"/>
                             </StackLayout>
 
-                            <!-- Combo 2 -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
-                                <Label Text="2. PRIMER PLATO 1" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo2}" Spacing="2">
+                            <!-- Lista de Opciones -->
+                            <StackLayout BindableLayout.ItemsSource="{Binding OpcionesLista}" Spacing="6">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-
-                            <!-- Combo 3 -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
-                                <Label Text="3. PRIMER PLATO 2" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo3}" Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-
-                            <!-- Combo 4 -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
-                                <Label Text="4. SEGUNDO PLATO 1" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo4}" Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-
-                            <!-- Combo 5 -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
-                                <Label Text="5. SEGUNDO PLATO 2" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo5}" Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-
-                            <!-- Combo 6: Bebida -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
-                                <Label Text="6. BEBIDA" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo6}" Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-
-                            <!-- Combo 7: Postre 1 -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
-                                <Label Text="7. POSTRE 1" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo7}" Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </StackLayout>
-
-                            <!-- Combo 8: Postre 2 -->
-                            <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}">
-                                <Label Text="8. POSTRE 2" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                            </Border>
-                            <StackLayout BindableLayout.ItemsSource="{Binding Combo8}" Spacing="2">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Padding="8,4" BackgroundColor="#F8F8F8" ColumnDefinitions="Auto,*">
-                                            <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
-                                            <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="16" TextColor="{DynamicResource Negro}" VerticalOptions="Center"/>
-                                        </Grid>
+                                        <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,10">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="12"/>
+                                            </Border.StrokeShape>
+                                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                                <CheckBox VerticalOptions="Center"
+                                                          IsChecked="{Binding seleccionado}"
+                                                          Color="{DynamicResource Rojo}"
+                                                          CheckedChanged="CheckBox_CheckedChanged"
+                                                          AutomationId="{Binding id}"/>
+                                                <Label Grid.Column="1"
+                                                       FontFamily="Nunito"
+                                                       FontSize="15"
+                                                       Text="{Binding opcion}"
+                                                       TextColor="#333333"
+                                                       VerticalOptions="Center"/>
+                                                <Label Grid.Column="2"
+                                                       FontFamily="Nunito_bold"
+                                                       FontSize="14"
+                                                       IsVisible="{Binding visiblePuntos, Converter={StaticResource InverseBoolConverter}}"
+                                                       Text="{Binding precio, StringFormat='{0:N2} €'}"
+                                                       TextColor="{DynamicResource Rojo}"
+                                                       VerticalOptions="Center"/>
+                                            </Grid>
+                                        </Border>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </StackLayout>
                         </StackLayout>
-                    </StackLayout>
 
-                    <!-- CANTIDAD (Modo Tienda) -->
-                    <StackLayout IsVisible="{Binding ModoTienda}" Margin="0,15,0,0">
-                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,10">
-                            <Label Text="CANTIDAD" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                        </Border>
-                        <Border Padding="10" StrokeShape="RoundRectangle 20" StrokeThickness="0" BackgroundColor="#F0F0F0" HorizontalOptions="Center">
-                            <Grid ColumnDefinitions="40,60,40" ColumnSpacing="5">
-                                <ImageButton
-                                    Grid.Column="0"
-                                    BackgroundColor="Transparent"
-                                    Command="{Binding Path=BindingContext.ClickMenosCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                    CommandParameter="{Binding id}"
-                                    HeightRequest="40"
-                                    WidthRequest="40"
-                                    Source="btnmenos.png" />
-                                <Label
-                                    Grid.Column="1"
-                                    FontFamily="Nunito_bold"
-                                    FontSize="20"
-                                    HorizontalTextAlignment="Center"
-                                    Text="{Binding CantidadOpcion, Mode=TwoWay}"
-                                    TextColor="Black"
-                                    VerticalTextAlignment="Center" />
-                                <ImageButton
-                                    Grid.Column="2"
-                                    BackgroundColor="Transparent"
-                                    Command="{Binding Path=BindingContext.ClickMasCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                    CommandParameter="{Binding id}"
-                                    HeightRequest="40"
-                                    WidthRequest="40"
-                                    Source="nuevo.png" />
+                        <!-- COMBOS (múltiples secciones) -->
+                        <StackLayout IsVisible="{Binding Combo}" Spacing="16">
+                            <!-- Combo 1: Entrantes -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="1. ENTRANTES" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo1}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <!-- Combo 2 -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="2. PRIMER PLATO 1" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo2}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <!-- Combo 3 -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="3. PRIMER PLATO 2" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo3}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <!-- Combo 4 -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="4. SEGUNDO PLATO 1" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo4}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <!-- Combo 5 -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="5. SEGUNDO PLATO 2" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo5}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <!-- Combo 6: Bebida -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="6. BEBIDA" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo6}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <!-- Combo 7: Postre 1 -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="7. POSTRE 1" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo7}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+
+                            <!-- Combo 8: Postre 2 -->
+                            <StackLayout Spacing="8">
+                                <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="8. POSTRE 2" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                                </Border>
+                                <StackLayout BindableLayout.ItemsSource="{Binding Combo8}" Spacing="4">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,8">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="Auto,*">
+                                                    <CheckBox IsChecked="{Binding Seleccionado}" Color="{DynamicResource Rojo}" CheckedChanged="CheckBox_CheckedChanged" AutomationId="{Binding id}"/>
+                                                    <Label Grid.Column="1" Text="{Binding nombre}" FontFamily="Nunito" FontSize="14" TextColor="#333333" VerticalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </Border>
+
+                <!-- CARD: CANTIDAD (Modo Tienda) -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="16"
+                        IsVisible="{Binding ModoTienda}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,2" Radius="6" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="12">
+                        <StackLayout Orientation="Horizontal" Spacing="8">
+                            <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Label Text="CANTIDAD" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                            </Border>
+                        </StackLayout>
+                        <Border BackgroundColor="#F5F5F5" StrokeThickness="0" Padding="8" HorizontalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="44,60,44" ColumnSpacing="4">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="White"
+                                        StrokeThickness="0"
+                                        HeightRequest="44"
+                                        WidthRequest="44">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.ClickMenosCommand, Source={x:Reference Name=ViewDetalleArticulos}}" CommandParameter="{Binding id}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="−" FontSize="24" FontFamily="Nunito_bold" TextColor="{DynamicResource Rojo}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
+                                <Label Grid.Column="1"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="20"
+                                       HorizontalTextAlignment="Center"
+                                       Text="{Binding CantidadOpcion, Mode=TwoWay}"
+                                       TextColor="#333333"
+                                       VerticalTextAlignment="Center"/>
+                                <Border Grid.Column="2"
+                                        BackgroundColor="{DynamicResource Rojo}"
+                                        StrokeThickness="0"
+                                        HeightRequest="44"
+                                        WidthRequest="44">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.ClickMasCommand, Source={x:Reference Name=ViewDetalleArticulos}}" CommandParameter="{Binding id}"/>
+                                    </Border.GestureRecognizers>
+                                    <Label Text="+" FontSize="24" FontFamily="Nunito_bold" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
                             </Grid>
                         </Border>
                     </StackLayout>
+                </Border>
 
-                    <!-- INGREDIENTES/EXTRAS - CollectionView para mejor rendimiento -->
-                    <StackLayout IsVisible="{Binding TieneIngredientes}" Margin="0,15,0,0">
-                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,5">
-                            <Label Text="{Binding TextoIngredientes}" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}" TextTransform="Uppercase"/>
+                <!-- CARD: INGREDIENTES/EXTRAS -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="16"
+                        IsVisible="{Binding TieneIngredientes}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,2" Radius="6" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="12">
+                        <Border BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <Label Text="{Binding TextoIngredientes}" FontFamily="Nunito_bold" FontSize="12" TextColor="White" TextTransform="Uppercase"/>
                         </Border>
-                        <CollectionView
-                            ItemsSource="{Binding ListadoIngredientes}"
-                            ItemSizingStrategy="MeasureFirstItem"
-                            VerticalScrollBarVisibility="Never">
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Vertical" ItemSpacing="4"/>
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid Padding="10,8" BackgroundColor="#F8F8F8" ColumnDefinitions="*,Auto" HeightRequest="50">
-                                        <StackLayout Spacing="0" VerticalOptions="Center">
-                                            <Label FontFamily="Nunito_bold" FontSize="15" Text="{Binding nombre}" TextColor="{DynamicResource Negro}"/>
-                                            <Label FontFamily="Nunito" FontSize="13" Text="{Binding precio, StringFormat='{0:N2} €'}" TextColor="{DynamicResource Rojo}"/>
-                                        </StackLayout>
-                                        <Grid Grid.Column="1" Padding="5" BackgroundColor="#E8E8E8" VerticalOptions="Center" ColumnDefinitions="32,40,32" ColumnSpacing="0">
-                                            <ImageButton
-                                                Grid.Column="0"
-                                                BackgroundColor="Transparent"
-                                                Command="{Binding Path=BindingContext.ClickMenosIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                                CommandParameter="{Binding idIngrediente}"
-                                                HeightRequest="32"
-                                                WidthRequest="32"
-                                                Source="btnmenos.png" />
-                                            <Label
-                                                Grid.Column="1"
-                                                FontFamily="Nunito_bold"
-                                                FontSize="16"
-                                                HorizontalTextAlignment="Center"
-                                                Text="{Binding Cantidad, Mode=TwoWay}"
-                                                TextColor="Black"
-                                                VerticalTextAlignment="Center" />
-                                            <ImageButton
-                                                Grid.Column="2"
-                                                BackgroundColor="Transparent"
-                                                Command="{Binding Path=BindingContext.ClickMasIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}"
-                                                CommandParameter="{Binding idIngrediente}"
-                                                HeightRequest="32"
-                                                WidthRequest="32"
-                                                Source="nuevo.png" />
-                                        </Grid>
-                                    </Grid>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </StackLayout>
-
-                    <!-- ALÉRGENOS -->
-                    <StackLayout IsVisible="{Binding TieneAlergenos}" Margin="0,15,0,0">
-                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,5">
-                            <Label Text="ALÉRGENOS" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
-                        </Border>
-                        <FlexLayout
-                            x:Name="HLAlergenos"
-                            Margin="0,5"
-                            BindableLayout.ItemsSource="{Binding AlergenosLista}"
-                            Direction="Row"
-                            JustifyContent="Center"
-                            Wrap="Wrap">
+                        <StackLayout BindableLayout.ItemsSource="{Binding ListadoIngredientes}" Spacing="8">
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
-                                    <templates:AlergenosItemTemplate />
+                                    <Border BackgroundColor="#FAFAFA" StrokeThickness="0" Padding="12,10">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12"/>
+                                        </Border.StrokeShape>
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <StackLayout Spacing="2" VerticalOptions="Center">
+                                                <Label FontFamily="Nunito_bold" FontSize="14" Text="{Binding nombre}" TextColor="#333333"/>
+                                                <Label FontFamily="Nunito" FontSize="13" Text="{Binding precio, StringFormat='{0:N2} €'}" TextColor="{DynamicResource Rojo}"/>
+                                            </StackLayout>
+                                            <Border Grid.Column="1" BackgroundColor="#EEEEEE" StrokeThickness="0" Padding="4" VerticalOptions="Center">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="10"/>
+                                                </Border.StrokeShape>
+                                                <Grid ColumnDefinitions="36,36,36" ColumnSpacing="2">
+                                                    <Border Grid.Column="0" BackgroundColor="White" StrokeThickness="0" HeightRequest="36" WidthRequest="36">
+                                                        <Border.StrokeShape>
+                                                            <RoundRectangle CornerRadius="8"/>
+                                                        </Border.StrokeShape>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.ClickMenosIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}" CommandParameter="{Binding idIngrediente}"/>
+                                                        </Border.GestureRecognizers>
+                                                        <Label Text="−" FontSize="18" TextColor="{DynamicResource Rojo}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                    </Border>
+                                                    <Label Grid.Column="1"
+                                                           FontFamily="Nunito_bold"
+                                                           FontSize="14"
+                                                           HorizontalTextAlignment="Center"
+                                                           Text="{Binding Cantidad, Mode=TwoWay}"
+                                                           TextColor="#333333"
+                                                           VerticalTextAlignment="Center"/>
+                                                    <Border Grid.Column="2" BackgroundColor="{DynamicResource Rojo}" StrokeThickness="0" HeightRequest="36" WidthRequest="36">
+                                                        <Border.StrokeShape>
+                                                            <RoundRectangle CornerRadius="8"/>
+                                                        </Border.StrokeShape>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.ClickMasIngCommand, Source={x:Reference Name=ViewDetalleArticulos}}" CommandParameter="{Binding idIngrediente}"/>
+                                                        </Border.GestureRecognizers>
+                                                        <Label Text="+" FontSize="18" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                    </StackLayout>
+                </Border>
+
+                <!-- CARD: ALÉRGENOS -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="16"
+                        IsVisible="{Binding TieneAlergenos}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,2" Radius="6" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="12">
+                        <Border BackgroundColor="#FF9800" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Horizontal" Spacing="6">
+                                <Label Text="&#x26A0;" FontSize="12" TextColor="White" VerticalOptions="Center"/>
+                                <Label Text="ALÉRGENOS" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                            </StackLayout>
+                        </Border>
+                        <FlexLayout x:Name="HLAlergenos"
+                                    BindableLayout.ItemsSource="{Binding AlergenosLista}"
+                                    Direction="Row"
+                                    JustifyContent="Start"
+                                    Wrap="Wrap">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <templates:AlergenosItemTemplate/>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </FlexLayout>
                     </StackLayout>
+                </Border>
 
-                    <!-- COMENTARIO -->
-                    <StackLayout Margin="0,15,0,20">
-                        <Border Padding="12,8" StrokeShape="RoundRectangle 8" StrokeThickness="0" BackgroundColor="{StaticResource Amarillo}" Margin="0,0,0,5">
-                            <Label Text="COMENTARIO" FontFamily="Nunito_bold" FontSize="14" TextColor="{DynamicResource Negro}"/>
+                <!-- CARD: COMENTARIO -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="16"
+                        Margin="0,0,0,20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,2" Radius="6" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="12">
+                        <Border BackgroundColor="#607D8B" StrokeThickness="0" Padding="10,6" HorizontalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Horizontal" Spacing="6">
+                                <Label Text="&#x270E;" FontSize="12" TextColor="White" VerticalOptions="Center"/>
+                                <Label Text="COMENTARIO" FontFamily="Nunito_bold" FontSize="12" TextColor="White"/>
+                            </StackLayout>
                         </Border>
-                        <Border StrokeThickness="1" Stroke="#E0E0E0" StrokeShape="RoundRectangle 8" Padding="0">
-                            <Editor
-                                Text="{Binding Comentario}"
-                                HeightRequest="100"
-                                Placeholder="Escribe aquí tus comentarios..."
-                                PlaceholderColor="#AAAAAA"
-                                BackgroundColor="White"
-                                TextColor="{DynamicResource Negro}"/>
+                        <Border StrokeThickness="1" Stroke="#E8E8E8" BackgroundColor="#FAFAFA" Padding="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Editor Text="{Binding Comentario}"
+                                    HeightRequest="80"
+                                    Placeholder="Escribe aquí tus comentarios..."
+                                    PlaceholderColor="#AAAAAA"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#333333"
+                                    FontFamily="Nunito"/>
                         </Border>
                     </StackLayout>
-                </StackLayout>
-            </ScrollView>
+                </Border>
+            </StackLayout>
+        </ScrollView>
 
-            <!-- Botón Añadir -->
-            <Button
-                Grid.Row="2"
-                Margin="16,10,16,20"
-                BackgroundColor="{DynamicResource Rojo}"
-                Command="{Binding cmdActualizarCaja}"
-                CornerRadius="25"
-                FontFamily="Nunito_bold"
-                FontSize="18"
-                HeightRequest="55"
-                HorizontalOptions="FillAndExpand"
-                IsVisible="{Binding Path=BindingContext.ModoTienda, Source={x:Reference Name=ViewDetalleArticulos}}"
-                Text="{Binding TextoCaja}"
-                TextColor="{DynamicResource Blanco}" />
-            <Button
-                Grid.Row="2"
-                Margin="16,10,16,20"
-                BackgroundColor="{DynamicResource Rojo}"
-                Command="{Binding cmdActualizarCajaPuntos}"
-                CornerRadius="25"
-                FontFamily="Nunito_bold"
-                FontSize="18"
-                HeightRequest="55"
-                HorizontalOptions="FillAndExpand"
-                IsVisible="{Binding Path=BindingContext.VisiblePuntos, Source={x:Reference Name=ViewDetalleArticulos}}"
-                Text="{Binding TextoCajaPuntos}"
-                TextColor="{DynamicResource Blanco}" />
-        </Grid>
-    </ContentPage.Content>
+        <!-- BOTÓN AÑADIR FLOTANTE -->
+        <Border Grid.Row="2"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="16,12,16,20">
+            <Border.Shadow>
+                <Shadow Brush="#30000000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <!-- Botón Normal (Modo Tienda) -->
+                <Button Grid.ColumnSpan="2"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        Command="{Binding cmdActualizarCaja}"
+                        CornerRadius="16"
+                        FontFamily="Nunito_bold"
+                        FontSize="16"
+                        HeightRequest="52"
+                        HorizontalOptions="FillAndExpand"
+                        IsVisible="{Binding Path=BindingContext.ModoTienda, Source={x:Reference Name=ViewDetalleArticulos}}"
+                        Text="{Binding TextoCaja}"
+                        TextColor="White"/>
+                <!-- Botón Puntos -->
+                <Button Grid.ColumnSpan="2"
+                        BackgroundColor="{DynamicResource Rojo}"
+                        Command="{Binding cmdActualizarCajaPuntos}"
+                        CornerRadius="16"
+                        FontFamily="Nunito_bold"
+                        FontSize="16"
+                        HeightRequest="52"
+                        HorizontalOptions="FillAndExpand"
+                        IsVisible="{Binding Path=BindingContext.VisiblePuntos, Source={x:Reference Name=ViewDetalleArticulos}}"
+                        Text="{Binding TextoCajaPuntos}"
+                        TextColor="White"/>
+            </Grid>
+        </Border>
+    </Grid>
 </ContentPage>

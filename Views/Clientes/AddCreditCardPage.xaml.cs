@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using Microsoft.Maui.Devices;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AsadorMoron.Recursos;
 using CommunityToolkit.Mvvm.Messaging;
 
@@ -33,6 +34,27 @@ namespace AsadorMoron.Views.Clientes
             {
                 webView.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>().EnableZoomControls(true);
                 webView.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>().DisplayZoomControls(true);
+            }
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            UpdateNavigationButton();
+        }
+
+        private void UpdateNavigationButton()
+        {
+            bool isRootPage = Navigation.NavigationStack.Count <= 1;
+            BtnMenu.IsVisible = isRootPage;
+            BtnBack.IsVisible = !isRootPage;
+        }
+
+        private void OnMenuTapped(object sender, EventArgs e)
+        {
+            if (Microsoft.Maui.Controls.Application.Current?.MainPage is FlyoutPage flyoutPage)
+            {
+                flyoutPage.IsPresented = true;
             }
         }
 
@@ -90,13 +112,13 @@ namespace AsadorMoron.Views.Clientes
                         WeakReferenceMessenger.Default.Send(new Messages.AddCardMessage(tarjeta));
                     }
                 }
-                await Navigation.PopAsync(true);
+                await ClosePage();
             }
             else if (resultado.StartsWith("Proceso Incorrecto") || resultado.StartsWith("Error, no se ha obtenido token"))
             {
                 webView.Reload();
                 await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
-                await Navigation.PopAsync(true);
+                await ClosePage();
             }
         }
 
@@ -114,13 +136,39 @@ namespace AsadorMoron.Views.Clientes
                     await App.ResponseWS.nuevaTarjeta(tarjeta);
                     WeakReferenceMessenger.Default.Send(new Messages.AddCardMessage(tarjeta));
                 }
-                await Navigation.PopAsync(true);
+                await ClosePage();
             }
             else if (resultado.StartsWith("Proceso Incorrecto") || resultado.StartsWith("Error, no se ha obtenido token"))
             {
                 webView.Reload();
                 await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
-                await Navigation.PopAsync(true);
+                await ClosePage();
+            }
+        }
+
+        private async void OnBackTapped(object sender, EventArgs e)
+        {
+            await ClosePage();
+        }
+
+        private async Task ClosePage()
+        {
+            try
+            {
+                // Intentar navegación normal primero
+                if (Navigation.NavigationStack.Count > 1)
+                {
+                    await Navigation.PopAsync();
+                }
+                else if (Navigation.ModalStack.Count > 0)
+                {
+                    await Navigation.PopModalAsync();
+                }
+            }
+            catch
+            {
+                // Fallback
+                try { await Navigation.PopModalAsync(); } catch { }
             }
         }
     }

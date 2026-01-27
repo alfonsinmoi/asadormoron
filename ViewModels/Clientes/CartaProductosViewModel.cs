@@ -74,6 +74,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 if (_categoria == null)
                 {
                     _categoria = (Categoria)navigationData;
+                    NombreCategoria = _categoria?.nombre ?? "";
                     EsPorPuntos = esKiosko ? false : _categoria.esPuntos; // Kiosko nunca usa puntos
                     App.esPorPuntos = EsPorPuntos;
                     System.Diagnostics.Debug.WriteLine($"[CP] Categoria: {_categoria?.nombre} ({sw.ElapsedMilliseconds}ms)");
@@ -243,23 +244,6 @@ namespace AsadorMoron.ViewModels.Clientes
             finally
             {
                 _navegando = false;
-            }
-        }
-        private void IrDetalleEstablecimiento()
-        {
-            try
-            {
-                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    App.DAUtil.Idioma = "ES";
-                    await App.DAUtil.NavigationService.NavigateToAsync<DetalleEstablecimientoParaClienteViewModel>(App.EstActual);
-                });
-            }
-            catch (Exception ex)
-            {
-                App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
-                // 
             }
         }
         /// <summary>
@@ -585,9 +569,9 @@ namespace AsadorMoron.ViewModels.Clientes
 
         #region Comandos
         public ICommand IrDetallePedidoCommand { get { return new Command(IrDetallePedido); } }
-        public ICommand cmdDetalleEstablecimiento { get { return new Command(IrDetalleEstablecimiento); } }
         public ICommand btnFiltrar { get { return new DelegateCommandAsync(Filtrar); } }
         public ICommand ArticuloSeleccionado { get { return new Command(articuloSeleccionado); } }
+        public ICommand LimpiarBusquedaCommand { get { return new Command(() => TextoBusqueda = ""); } }
         public ICommand ClickMasCommand { get { return new Command((parametro) => Add(parametro)); } }
         public ICommand ClickPorPuntosCommand { get { return new Command((parametro) => AddPorPuntos(parametro)); } }
         public ICommand ClickMenosCommand { get { return new Command((parametro) => remove(parametro)); } }
@@ -728,6 +712,19 @@ namespace AsadorMoron.ViewModels.Clientes
                 {
                     esPorPuntos = value;
                     OnPropertyChanged(nameof(EsPorPuntos));
+                }
+            }
+        }
+        private string nombreCategoria = "";
+        public string NombreCategoria
+        {
+            get { return nombreCategoria; }
+            set
+            {
+                if (nombreCategoria != value)
+                {
+                    nombreCategoria = value;
+                    OnPropertyChanged(nameof(NombreCategoria));
                 }
             }
         }

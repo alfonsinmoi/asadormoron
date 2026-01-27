@@ -1,21 +1,224 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.PaginaEspera"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    BackgroundColor="{DynamicResource Rojo}"
     NavigationPage.HasNavigationBar="False">
-    <ContentPage.Content>
-        <StackLayout
-            BackgroundColor="Transparent"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="CenterAndExpand">
-            <Image
-                Margin="20,0,20,0"
-                Aspect="AspectFit"
-                HorizontalOptions="CenterAndExpand"
-                Source="logoqoorder.png"
-                VerticalOptions="Center" />
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+            <Color x:Key="RojoOscuro">#8B0020</Color>
+            <Color x:Key="RojoProfundo">#5C0015</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- FONDO CON GRADIENTE PREMIUM -->
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="{StaticResource RojoMarca}" Offset="0.0"/>
+                <GradientStop Color="{StaticResource RojoOscuro}" Offset="0.5"/>
+                <GradientStop Color="{StaticResource RojoProfundo}" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Patrón decorativo superior -->
+        <BoxView VerticalOptions="Start"
+                 HeightRequest="300"
+                 Opacity="0.08">
+            <BoxView.Background>
+                <RadialGradientBrush Center="0.5,0" Radius="1.5">
+                    <GradientStop Color="White" Offset="0.0"/>
+                    <GradientStop Color="Transparent" Offset="1.0"/>
+                </RadialGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- Patrón decorativo inferior -->
+        <BoxView VerticalOptions="End"
+                 HeightRequest="250"
+                 Opacity="0.05">
+            <BoxView.Background>
+                <RadialGradientBrush Center="0.5,1" Radius="1.2">
+                    <GradientStop Color="White" Offset="0.0"/>
+                    <GradientStop Color="Transparent" Offset="1.0"/>
+                </RadialGradientBrush>
+            </BoxView.Background>
+        </BoxView>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <Grid RowDefinitions="0.7*,Auto,*" Padding="40,20,40,40">
+
+            <!-- PARTE SUPERIOR: Branding -->
+            <StackLayout Grid.Row="0"
+                         VerticalOptions="End"
+                         HorizontalOptions="Center"
+                         Spacing="8"
+                         Margin="0,0,0,20">
+                <Label Text="ASADOR"
+                       FontFamily="Nunito_bold"
+                        FontSize="36"
+                        TextColor="White"
+                        CharacterSpacing="6"
+                        HorizontalOptions="Center"/>
+            </StackLayout>
+
+            <!-- PARTE CENTRAL: Logo Principal con efectos -->
+            <Grid Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center">
+
+                <!-- Efecto glow exterior grande -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        WidthRequest="220"
+                        HeightRequest="220"
+                        Opacity="0.08"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="110"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <!-- Efecto glow medio -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        WidthRequest="190"
+                        HeightRequest="190"
+                        Opacity="0.12"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="95"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <!-- Anillo decorativo -->
+                <Border BackgroundColor="Transparent"
+                        StrokeThickness="2"
+                        Stroke="#FFFFFF30"
+                        WidthRequest="170"
+                        HeightRequest="170"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="85"/>
+                    </Border.StrokeShape>
+                </Border>
+
+                <!-- Contenedor del logo -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        WidthRequest="150"
+                        HeightRequest="150"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="75"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000"
+                                Offset="0,8"
+                                Radius="30"
+                                Opacity="0.4"/>
+                    </Border.Shadow>
+                    <Image Source="logo_morado.png"
+                           Aspect="AspectFit"
+                           WidthRequest="100"
+                           HeightRequest="100"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Border>
+            </Grid>
+
+            <!-- PARTE INFERIOR: Texto y Carga -->
+            <StackLayout Grid.Row="2"
+                         VerticalOptions="Start"
+                         HorizontalOptions="Center"
+                         Spacing="20"
+                         Margin="0,24,0,0">
+
+                <!-- Nombre de la app -->
+                <StackLayout Spacing="4" HorizontalOptions="Center">
+                    <Label Text="MORÓN"
+                           FontFamily="Nunito_bold"
+                           FontSize="36"
+                           TextColor="White"
+                           CharacterSpacing="6"
+                           HorizontalOptions="Center">
+                        <Label.Shadow>
+                            <Shadow Brush="#000000"
+                                    Offset="0,2"
+                                    Radius="4"
+                                    Opacity="0.3"/>
+                        </Label.Shadow>
+                    </Label>
+                    <BoxView HeightRequest="3"
+                             WidthRequest="80"
+                             CornerRadius="2"
+                             BackgroundColor="White"
+                             Opacity="0.5"
+                             HorizontalOptions="Center"/>
+                </StackLayout>
+
+                <!-- Slogan -->
+                <Label Text="La mejor comida a domicilio"
+                       FontFamily="Nunito"
+                       FontSize="15"
+                       TextColor="#FFFFFFBB"
+                       HorizontalOptions="Center"/>
+
+                <!-- Indicador de carga elegante -->
+                <StackLayout Spacing="16" Margin="0,20,0,0">
+                    <!-- Barra de progreso custom -->
+                    <Border BackgroundColor="#FFFFFF20"
+                            StrokeThickness="0"
+                            HeightRequest="4"
+                            WidthRequest="120"
+                            HorizontalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="2"/>
+                        </Border.StrokeShape>
+                        <Border BackgroundColor="White"
+                                StrokeThickness="0"
+                                HeightRequest="4"
+                                WidthRequest="40"
+                                HorizontalOptions="Start">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="2"/>
+                            </Border.StrokeShape>
+                        </Border>
+                    </Border>
+
+                    <!-- Texto de carga -->
+                    <Label Text="Cargando..."
+                           FontFamily="Nunito"
+                           FontSize="12"
+                           TextColor="#FFFFFF80"
+                           HorizontalOptions="Center"/>
+                </StackLayout>
+
+            </StackLayout>
+
+        </Grid>
+
+        <!-- Footer con versión -->
+        <StackLayout VerticalOptions="End"
+                     HorizontalOptions="Center"
+                     Padding="0,0,0,30"
+                     Spacing="4">
+            <Label Text="powered by"
+                   FontFamily="Nunito"
+                   FontSize="10"
+                   TextColor="#FFFFFF50"
+                   HorizontalOptions="Center"/>
+            <Label Text="Asador Morón"
+                   FontFamily="Nunito_bold"
+                   FontSize="11"
+                   TextColor="#FFFFFF70"
+                   HorizontalOptions="Center"/>
         </StackLayout>
-    </ContentPage.Content>
+
+    </Grid>
+
 </ContentPage>

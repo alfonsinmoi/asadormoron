@@ -1,13 +1,5 @@
 using AsadorMoron.Interfaces;
 using AsadorMoron.Services;
-using AsadorMoron.ViewModels.Administrador;
-using AsadorMoron.ViewModels.Clientes;
-using AsadorMoron.ViewModels.Contabilidad;
-using AsadorMoron.ViewModels.Establecimientos;
-using AsadorMoron.ViewModels.Informes;
-using AsadorMoron.ViewModels.Repartidores;
-using System;
-using System.Collections.Generic;
 
 namespace AsadorMoron.ViewModels.Base
 {

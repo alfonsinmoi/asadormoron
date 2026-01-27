@@ -40,7 +40,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appicon.svg" Color="#FFFFFF" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Images\logoqoorder.png" Color="#000000" BaseSize="256,256" />
+		<MauiSplashScreen Include="Resources\Images\logo_morado.png" Color="#C41E3A" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />

@@ -1,178 +1,339 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.Administrador.UsuariosView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Name="Usuarios"
-    BackgroundColor="{DynamicResource Rojo}">
-    <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
-            <Label
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,50,0"
-                FontFamily="Syne"
-                FontSize="25"
-                HorizontalTextAlignment="Center"
-                Text="Usuarios"
-                TextColor="{DynamicResource Amarillo}"
-                VerticalOptions="Center" />
-        </Grid>
-    </NavigationPage.TitleView>
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
+
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style x:Key="miLabel" TargetType="Label">
-                <Setter Property="FontSize" Value="{OnPlatform Android=10, iOS=12, UWP=14}" />
-                <Setter Property="TextColor" Value="{DynamicResource Rojo}" />
-                <Setter Property="FontFamily" Value="Syne_Regular" />
-            </Style>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <ContentPage.Content>
-        <ScrollView VerticalOptions="FillAndExpand" BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,0,0,0',
-                                UWP='0'}">
 
-            <StackLayout Margin="{OnPlatform iOS='15,0',
-                                Android='15,0',
-                                UWP='25,0,25,0'}" VerticalOptions="FillAndExpand">
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ============================================ -->
+        <!-- HEADER FIJO -->
+        <!-- ============================================ -->
+        <Border Grid.Row="0"
+                StrokeThickness="0"
+                BackgroundColor="White"
+                Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <!-- Botón Menú -->
+                <Border BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Image Source="menu.png"
+                           WidthRequest="22"
+                           HeightRequest="22"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Título -->
+                <Label Grid.Column="1"
+                       Text="Usuarios"
+                       FontFamily="Nunito_bold"
+                       FontSize="20"
+                       TextColor="{DynamicResource Negro}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+
+                <!-- Espaciador -->
+                <BoxView Grid.Column="2" WidthRequest="44" Color="White"/>
+
+            </Grid>
+        </Border>
+
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL -->
+        <!-- ============================================ -->
+        <ScrollView Grid.Row="1" Padding="16,12">
+            <StackLayout Spacing="16">
+
+                <!-- ============================================ -->
+                <!-- CARD: BUSCAR USUARIO -->
+                <!-- ============================================ -->
+                <Border BackgroundColor="White" StrokeThickness="0" Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="16">
+                        <Label Text="Buscar usuario"
+                               FontFamily="Nunito_bold"
+                               FontSize="16"
+                               TextColor="{DynamicResource Negro}"/>
+
+                        <Label Text="Introduce el email del usuario para buscarlo"
+                               FontFamily="Nunito"
+                               FontSize="13"
+                               TextColor="#888888"/>
+
+                        <!-- Campo Email -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Email"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Email}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"
+                                       BackgroundColor="Transparent"
+                                       Keyboard="Email"
+                                       Placeholder="usuario@ejemplo.com"/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Botón Buscar -->
+                        <Border BackgroundColor="{StaticResource RojoMarca}"
+                                StrokeThickness="0"
+                                Padding="16,14"
+                                HorizontalOptions="Fill">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="{StaticResource RojoMarca}" Offset="0,4" Radius="12" Opacity="0.3"/>
+                            </Border.Shadow>
+                            <Label Text="Buscar usuario"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="15"
+                                   TextColor="White"
+                                   HorizontalTextAlignment="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding cmdBuscarUsuario}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </StackLayout>
+                </Border>
+
+                <!-- ============================================ -->
+                <!-- CARD: DETALLE USUARIO (Solo visible cuando hay resultado) -->
+                <!-- ============================================ -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="20"
+                        IsVisible="{Binding VisibleCliente}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="16">
+                        <Label Text="Detalle usuario"
+                               FontFamily="Nunito_bold"
+                               FontSize="16"
+                               TextColor="{DynamicResource Negro}"/>
+
+                        <!-- Nombre -->
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource RojoMarca}"
+                                    StrokeThickness="0"
+                                    WidthRequest="44"
+                                    HeightRequest="44"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Image Source="usuario.png"
+                                       WidthRequest="22"
+                                       HeightRequest="22"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="Nombre"
+                                       FontFamily="Nunito"
+                                       FontSize="12"
+                                       TextColor="#888888"/>
+                                <Label Text="{Binding Nombre}"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"/>
+                            </StackLayout>
+                        </Grid>
+
+                        <!-- Apellidos -->
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="#F5F5F5"
+                                    StrokeThickness="0"
+                                    WidthRequest="44"
+                                    HeightRequest="44"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Image Source="usuario.png"
+                                       WidthRequest="22"
+                                       HeightRequest="22"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       Opacity="0.5"/>
+                            </Border>
+                            <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                <Label Text="Apellidos"
+                                       FontFamily="Nunito"
+                                       FontSize="12"
+                                       TextColor="#888888"/>
+                                <Label Text="{Binding Apellidos}"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"/>
+                            </StackLayout>
+                        </Grid>
+
+                        <!-- Separador -->
+                        <BoxView HeightRequest="1" Color="#F0F0F0" Margin="0,4"/>
+
+                        <!-- Rol -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Rol"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Picker Title="Selecciona un rol"
+                                        FontFamily="Nunito"
+                                        FontSize="15"
+                                        TextColor="{DynamicResource Negro}"
+                                        ItemDisplayBinding="{Binding nombre}"
+                                        ItemsSource="{Binding Roles}"
+                                        SelectedItem="{Binding RolSeleccionado}"/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Repartidor (condicional) -->
+                        <StackLayout Spacing="6" IsVisible="{Binding VisibleRepartidor}">
+                            <Label Text="Repartidor"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Picker Title="Selecciona repartidor"
+                                        FontFamily="Nunito"
+                                        FontSize="15"
+                                        TextColor="{DynamicResource Negro}"
+                                        ItemDisplayBinding="{Binding nombre}"
+                                        ItemsSource="{Binding Repartidores}"
+                                        SelectedItem="{Binding Path=BindingContext.RepartidorSeleccionado, Source={x:Reference Name=Usuarios}, Mode=TwoWay}"/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Estado -->
+                        <Border BackgroundColor="#F5F5F5"
+                                StrokeThickness="0"
+                                Padding="14">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#E8F5E9"
+                                        StrokeThickness="0"
+                                        WidthRequest="40"
+                                        HeightRequest="40">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="check.png"
+                                           WidthRequest="20"
+                                           HeightRequest="20"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+                                <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="Estado"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="14"
+                                           TextColor="{DynamicResource Negro}"/>
+                                    <Label Text="Activo o inactivo"
+                                           FontFamily="Nunito"
+                                           FontSize="12"
+                                           TextColor="#888888"/>
+                                </StackLayout>
+                                <Switch Grid.Column="2"
+                                        IsToggled="{Binding Estado}"
+                                        OnColor="{StaticResource RojoMarca}"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Botón Modificar -->
+                        <Border BackgroundColor="{StaticResource RojoMarca}"
+                                StrokeThickness="0"
+                                Padding="16,14"
+                                Margin="0,8,0,0"
+                                HorizontalOptions="Fill">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="{StaticResource RojoMarca}" Offset="0,4" Radius="12" Opacity="0.3"/>
+                            </Border.Shadow>
+                            <Label Text="Modificar usuario"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="15"
+                                   TextColor="White"
+                                   HorizontalTextAlignment="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding cmdModificar}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </StackLayout>
+                </Border>
+
+                <!-- Espaciado final -->
                 
-                <Label
-                    Margin="0,20,0,0"
-                    BackgroundColor="Transparent"
-                    FontFamily="Syne"
-                    FontSize="20"
-                    HorizontalTextAlignment="Center"
-                    Text="Introduce el email del usuario"
-                    TextColor="{StaticResource Negro}" />
-                <Entry
-                    BackgroundColor="White"
-                    FontFamily="Nunito"
-                    Keyboard="Email"
-                    Placeholder="Email"
-                    Text="{Binding Email}"
-                    TextColor="Black" />
-                <Button
-                    BackgroundColor="{DynamicResource Rojo}"
-                    Command="{Binding cmdBuscarUsuario}"
-                    CornerRadius="20"
-                    FontFamily="Syne"
-                    HeightRequest="50"
-                    Text="Buscar usuario"
-                    TextColor="{DynamicResource Blanco}" />
-                <Grid
-                    Margin="0,20,0,0"
-                    ColumnDefinitions="Auto,*"
-                    IsVisible="{Binding VisibleCliente}"
-                    RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto">
-                    <Label
-                        Grid.Row="0"
-                        Grid.ColumnSpan="2"
-                        BackgroundColor="Transparent"
-                        FontFamily="Syne"
-                        FontSize="18"
-                        HorizontalTextAlignment="Center"
-                        Text="Detalle usuario"
-                        TextColor="{DynamicResource Negro}" />
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        BackgroundColor="Transparent"
-                        FontFamily="Syne"
-                        FontSize="14"
-                        Text="Nombre"
-                        TextColor="{StaticResource Negro}"
-                        VerticalTextAlignment="Center" />
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        BackgroundColor="White"
-                        FontFamily="Nunito"
-                        Text="{Binding Nombre}"
-                        TextColor="Black" />
-                    <Label
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        BackgroundColor="Transparent"
-                        FontFamily="Syne"
-                        FontSize="14"
-                        Text="Apellidos"
-                        TextColor="{StaticResource Negro}"
-                        VerticalTextAlignment="Center" />
-                    <Label
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        BackgroundColor="White"
-                        FontFamily="Nunito"
-                        Text="{Binding Apellidos}"
-                        TextColor="Black" />
-                    <Label
-                        Grid.Row="3"
-                        Grid.Column="0"
-                        BackgroundColor="Transparent"
-                        FontFamily="Syne"
-                        FontSize="14"
-                        Text="Rol"
-                        TextColor="{StaticResource Negro}"
-                        VerticalTextAlignment="Center" />
-                    <Picker
-                        Title="Rol"
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        BackgroundColor="White"
-                        FontFamily="Nunito"
-                        FontSize="18"
-                        ItemDisplayBinding="{Binding nombre}"
-                        ItemsSource="{Binding Roles}"
-                        SelectedItem="{Binding RolSeleccionado}"
-                        TextColor="{DynamicResource Negro}" />
-                    <Label
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        BackgroundColor="Transparent"
-                        FontFamily="Syne"
-                        FontSize="14"
-                        IsVisible="{Binding VisibleRepartidor}"
-                        Text="Repartidor"
-                        TextColor="{StaticResource Negro}"
-                        VerticalTextAlignment="Center" />
-                    <Picker
-                        Title="Repartidor"
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        BackgroundColor="White"
-                        FontFamily="Nunito"
-                        FontSize="18"
-                        IsVisible="{Binding VisibleRepartidor}"
-                        ItemDisplayBinding="{Binding nombre}"
-                        ItemsSource="{Binding Repartidores}"
-                        SelectedItem="{Binding Path=BindingContext.RepartidorSeleccionado, Source={x:Reference Name=Usuarios}, Mode=TwoWay}"
-                        TextColor="{DynamicResource Negro}" />
-                    <Label
-                        Grid.Row="6"
-                        Grid.Column="0"
-                        BackgroundColor="Transparent"
-                        FontFamily="Syne"
-                        FontSize="14"
-                        Text="Estado"
-                        TextColor="{StaticResource Negro}"
-                        VerticalTextAlignment="Center" />
-                    <Switch
-                        Grid.Row="6"
-                        Grid.Column="1"
-                        IsToggled="{Binding Estado}" />
-                    <Button
-                        Grid.Row="7"
-                        Grid.ColumnSpan="2"
-                        BackgroundColor="{DynamicResource Rojo}"
-                        Command="{Binding cmdModificar}"
-                        CornerRadius="10"
-                        FontFamily="Syne"
-                        HeightRequest="50"
-                        Text="Modificar usuario"
-                        TextColor="{DynamicResource Blanco}" />
-                </Grid>
+
             </StackLayout>
         </ScrollView>
-    </ContentPage.Content>
+
+    </Grid>
+
 </ContentPage>

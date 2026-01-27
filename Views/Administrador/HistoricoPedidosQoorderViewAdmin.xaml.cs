@@ -11,5 +11,13 @@ namespace AsadorMoron.Views.Administrador
         {
             InitializeComponent();
         }
+
+        private void OnMenuTapped(object sender, EventArgs e)
+        {
+            if (Application.Current?.MainPage is FlyoutPage flyoutPage)
+            {
+                flyoutPage.IsPresented = true;
+            }
+        }
     }
 }

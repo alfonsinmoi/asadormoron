@@ -51,7 +51,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         App.listaProductos = await App.ResponseWS.getListadoProductosEstablecimiento(Carrito2[0].idEstablecimiento, false);
                     if (!cargado)
                     {
-                        if (App.DAUtil.Usuario.rol==1)
+                        if (App.DAUtil.Usuario.rol == 1)
                             TieneCodigoAmigo = App.promocionAmigo != null;
 
                         if (TieneCodigoAmigo)
@@ -67,13 +67,13 @@ namespace AsadorMoron.ViewModels.Clientes
                                 if (Saldo > 0)
                                     TextoPromocion += Environment.NewLine + "Tiene un saldo acumulado de " + Saldo.ToString("C2");
                             }
-                                    
+
                         }
                         cadmin = ResponseServiceWS.getConfiguracionAdmin();
                         cargado = true;
                         App.DAUtil.EnTimer = false;
                         est = App.EstActual;
-                        EsComercio = est.esComercio;
+
                         Logo = "logocabeceraazul.png";
                         Carrito2 = navigationData as List<CarritoModel>;
                         TieneEncargo = Carrito2.Where(p => p.porEncargo == true).ToList().Count >= 1;
@@ -90,7 +90,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         TieneEfectivo = cadmin.efectivo;
                         TieneBizum = cadmin.bizum;
                         TieneDatafono = cadmin.datafono;
-                            
+
                         TieneRecogida = est.recogida == 1;
                         TieneEnvio = est.envio == 1;
 
@@ -255,10 +255,10 @@ namespace AsadorMoron.ViewModels.Clientes
                                 if (item.porPuntos == 0)
                                     PrecioTotalPedido += item.precioTotal;
                             }
-                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas))+1) * App.EstActual.configuracion.precioBolsa;
+                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) + 1) * App.EstActual.configuracion.precioBolsa;
                             if (Bolsa == 0)
                                 Bolsa = App.EstActual.configuracion.precioBolsa;
-                            PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos+Bolsa;
+                            PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos + Bolsa;
                             if (pu != null)
                                 Poblacion = pu.nombre;
                             else
@@ -286,7 +286,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                 c.precioTotal = ca.precioTotal;
                                 Carrito.Add(c);
                             }
-                                    
+
                         }
                         else
                         {
@@ -300,7 +300,7 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     Gastos = Envio ? ZonaSeleccionda.gastos : 0;
 
-                    Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas))+1) * App.EstActual.configuracion.precioBolsa;
+                    Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) + 1) * App.EstActual.configuracion.precioBolsa;
                     if (Bolsa == 0)
                         Bolsa = App.EstActual.configuracion.precioBolsa;
                     PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos + Bolsa;
@@ -349,32 +349,32 @@ namespace AsadorMoron.ViewModels.Clientes
                     if (cup != null)
                     {
                         CuponAplicado = true;
-                        
-                            if (cup.gastosEnvio)
+
+                        if (cup.gastosEnvio)
+                        {
+                            if (Gastos > 0)
                             {
-                                if (Gastos > 0)
-                                {
-                                    if (cup.tipoDescuento == 0)
-                                        Descuento = Gastos * (cup.descuento / 100);
-                                    else if (cup.tipoDescuento == 1)
-                                        Descuento = cup.descuento;
-                                }
-                                else
-                                {
-                                    App.userdialog.HideLoading();
-                                    await App.customDialog.ShowDialogAsync("Este cupón no es aplicable", "PolloAndaluz", "Cerrar");
-                                }
+                                if (cup.tipoDescuento == 0)
+                                    Descuento = Gastos * (cup.descuento / 100);
+                                else if (cup.tipoDescuento == 1)
+                                    Descuento = cup.descuento;
                             }
                             else
                             {
-                                if (cup.tipoDescuento == 0)
-                                    Descuento = PrecioTotalPedido * (cup.descuento / 100);
-                                else if (cup.tipoDescuento == 1)
-                                    Descuento = cup.descuento;
-
+                                App.userdialog.HideLoading();
+                                await App.customDialog.ShowDialogAsync("Este cupón no es aplicable", "PolloAndaluz", "Cerrar");
                             }
-                            PrecioTotalPedidoGastos -= Descuento;
-                        
+                        }
+                        else
+                        {
+                            if (cup.tipoDescuento == 0)
+                                Descuento = PrecioTotalPedido * (cup.descuento / 100);
+                            else if (cup.tipoDescuento == 1)
+                                Descuento = cup.descuento;
+
+                        }
+                        PrecioTotalPedidoGastos -= Descuento;
+
                     }
                     else
                     {
@@ -435,7 +435,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 List<Establecimiento> idEstablecimientos = new List<Establecimiento>();
                 cadmin = ResponseServiceWS.getConfiguracionAdmin();
 
-                
+
                 if (idEstablecimientos.Count >= 1)
                 {
                     if (string.IsNullOrEmpty(Direccion) && Envio)
@@ -471,7 +471,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         continuar = false;
                         await App.customDialog.ShowDialogAsync(App.MensajesGlobal.Where(p => p.clave.Equals("registrado")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", Environment.NewLine), AppResources.Informacion, AppResources.Cerrar);
                     }
-                    else if (Tarjeta && App.TarjetaSeleccionada==null)
+                    else if (Tarjeta && App.TarjetaSeleccionada == null)
                     {
                         continuar = false;
                         await App.customDialog.ShowDialogAsync(App.MensajesGlobal.Where(p => p.clave.Equals("sin_tarjeta")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", Environment.NewLine), AppResources.Informacion, AppResources.Cerrar);
@@ -562,21 +562,11 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     MainThread.BeginInvokeOnMainThread(async () =>
                     {
-                        if (!TieneEncargo)
+                        App.Descuento = Descuento;
+                        await App.DAUtil.NavigationService.NavigateToAsync<FranjasHorariasViewModel>(Carrito2).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() =>
                         {
-                            App.Descuento = Descuento;
-                            await App.DAUtil.NavigationService.NavigateToAsync<FranjasHorariasViewModel>(Carrito2).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() =>
-                            {
-                                App.userdialog.HideLoading();
-                            }));
-                        }
-                        else
-                        {
-                            await App.DAUtil.NavigationService.NavigateToAsync<FranjasHorariasEncargoViewModel>(Carrito2).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() =>
-                            {
-                                App.userdialog.HideLoading();
-                            }));
-                        }
+                            App.userdialog.HideLoading();
+                        }));
                     });
                 }
             }
@@ -584,351 +574,7 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 // 
                 App.userdialog.HideLoading();
-                await App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje +ex.Message + Environment.NewLine + AppResources.Perdon,AppResources.SoloError, AppResources.Cerrar);
-            }
-        }
-        private async Task HacerPedidoTarjera(bool hacer)
-        {
-            try
-            {
-                if (hacer)
-                {
-                    App.userdialog.ShowLoading(AppResources.Cargando);
-                    await Task.Delay(200);
-                    double total = 0;
-                    if (string.IsNullOrEmpty(Carrito2[0].observaciones))
-                        Carrito2[0].observaciones = "";
-                    codigoPedido = App.DAUtil.GetCodigo();
-                    List<LineasPedido> l = new List<LineasPedido>();
-                    int punt = 0;
-
-                    double Bolsa = ((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) * App.EstActual.configuracion.precioBolsa;
-                    if (Bolsa == 0)
-                        Bolsa = App.EstActual.configuracion.precioBolsa;
-                    LineasPedido l2 = new LineasPedido();
-                    l2.cantidad = ((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas));
-                    l2.idProducto = 0;
-                    l2.precio = Bolsa / l2.cantidad;
-                    l2.nombreProducto = "Bolsa";
-                    l2.tipoComida = 4;
-                    l2.pagadoConPuntos = 0;
-                    l.Add(l2);
-                    total += Bolsa;
-                    foreach (var item in Carrito2)
-                    {
-                        if (item.cantidad > 0)
-                        {
-                            LineasPedido l20 = new LineasPedido();
-                            l20.cantidad = item.cantidad;
-                            l20.idProducto = item.idArticulo;
-                            l20.precio = item.precio;
-                            l20.tipoComida = 0;
-                            l20.nombreProducto = item.comida;
-                            l20.pagadoConPuntos = item.porPuntos;
-                            if (item.porPuntos == 1)
-                                punt += item.puntos;
-                            l.Add(l20);
-                            total += l20.cantidad * l20.precio;
-                        }
-                    }
-                    l2 = new LineasPedido();
-                    l2.cantidad = 1;
-                    l2.idProducto = 0;
-                    l2.precio = Gastos;
-                    l2.nombreProducto = "";
-                    l2.tipoComida = 1;
-                    l.Add(l2);
-                    total += l2.cantidad * l2.precio;
-                    if (Descuento > 0)
-                    {
-                        l2 = new LineasPedido();
-                        l2.cantidad = 1;
-                        l2.idProducto = 0;
-                        l2.precio = Descuento * -1;
-                        l2.nombreProducto = "";
-                        l2.tipoComida = 3;
-                        l2.pagadoConPuntos = 0;
-                        l.Add(l2);
-                        total -= Descuento;
-                    }
-
-                    string tipoVenta = "Envío";
-                    if (Recogida)
-                        tipoVenta = "Recogida";
-
-                    CabeceraPedido p = new CabeceraPedido();
-                    p.idUsuario = App.DAUtil.Usuario.idUsuario;
-                    p.idEstablecimiento = Carrito2[0].idEstablecimiento;
-                    p.horaEntrega = fecha.ToString("yyyy-MM-dd HH:mm:ss");
-                    p.codigoPedido = codigoPedido;
-                    p.idZona = Carrito2[0].idZona;
-                    p.direccionUsuario = Carrito2[0].direccion;
-                    p.tipo = 1;
-                    p.idZonaEstablecimiento = 0;
-                    p.mesa = "";
-                    p.zonaEstablecimiento = "";
-                    p.tipoVenta = tipoVenta;
-                    p.transaccion = codigoPedido;
-                    p.comentario = Carrito2[0].observaciones;
-                    p.tipoPago = "Tarjeta";
-                    p.nombreUsuario = App.DAUtil.Usuario.nombre + " " + App.DAUtil.Usuario.apellidos.Substring(0, 1) + ".";
-                    p.pagado = 1;
-                    foreach (LineasPedido ll in l)
-                        ll.tipoVenta = tipoVenta;
-
-                    p.lineasPedidos = new ObservableCollection<LineasPedido>(l);
-                    p.idCuenta = 0;
-                    App.pedidoEnCurso = p;
-                    App.carritoEnCurso = Carrito2;
-                    await PagoConTarjeta(total,punt);
-                }
-            }
-            catch (Exception ex)
-            {
-                // 
-                App.userdialog.HideLoading();
-                await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
-            }
-            finally
-            {
-                App.userdialog.HideLoading();
-            }
-        }
-
-        private async Task PagoConTarjeta(double total, int punt)
-        {
-            Preferences.Set("EsPedidoLocal", false);
-            Preferences.Set("EsPedidoComercio", true);
-            Preferences.Set("dia", dia);
-            Preferences.Set("totalPedido", ((int)(total * 100)).ToString());
-            App.urlChallengue = await App.ResponseWS.realizaPagoTarjeta(App.TarjetaSeleccionada.idUser, App.TarjetaSeleccionada.tokenUser, ((int)(total * 100)).ToString(), App.pedidoEnCurso.codigoPedido);
-            if (App.urlChallengue.StartsWith("http"))
-                await App.DAUtil.NavigationService.NavigateToAsyncWithoutMenu<WebViewModel>();
-            else if (App.urlChallengue.Equals(""))
-            {
-                string tipoVenta = "Envío";
-                if (Recogida)
-                    tipoVenta = "Recogida";
-
-                if (tipoVenta.Equals("Envío"))
-                {
-                    if (App.EstActual.configuracion == null)
-                        App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
-                    
-                }
-                int idCodigoPedido = ResponseServiceWS.NuevoPedido(punt);
-                if (idCodigoPedido > 0)
-                {
-                    if (!App.pedidoEnCurso.tipoVenta.StartsWith("Local"))
-                    {
-                        List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(1);
-                        foreach (TokensModel to in tokens)
-                            App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
-                    }
-                    if (App.pedidoEnCurso.tipoVenta.StartsWith("Envío"))
-                    {
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(App.EstActual.idEstablecimiento);
-                        foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
-                    }
-
-                    List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(App.EstActual.idEstablecimiento);
-                    foreach (TokensModel to in tokens3)
-                        App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido: " + App.pedidoEnCurso.codigoPedido, to.token);
-
-                    List<PedidoModel> pedidosModel = new List<PedidoModel>();
-                    DateTime fechaPedido = DateTime.Now;
-                    foreach (var item in App.carritoEnCurso)
-                    {
-                        PedidoModel p = new PedidoModel();
-                        p.idArticulo = item.idArticulo;
-                        p.idPedido = App.pedidoEnCurso.idPedido;
-                        p.idEstablecimiento = item.idEstablecimiento;
-                        p.imagen = item.imagen;
-                        p.nombreCantidad = item.nombreCantidad;
-                        p.observaciones = item.observaciones.Trim();
-                        p.precio = item.precio;
-                        p.cantidad = item.cantidad;
-                        p.comida = item.comida;
-                        p.precioTotal = item.precioTotal;
-                        p.fechaPedido = fechaPedido;
-                        p.nombreEstablecimiento = App.EstActual.nombre;
-                        p.horaEntrega = App.pedidoEnCurso.horaEntrega;
-                        pedidosModel.Add(p);
-                    }
-                    App.DAUtil.GuardarPedido(pedidosModel);
-                    App.DAUtil.VaciaCarrito();
-                    if (App.promocionAmigo != null) {
-                        if (PendientePromocion && App.promocionAmigo.pedidoMinimo <= PrecioTotalPedidoGastos) {
-                            if (await ResponseServiceWS.RealizaPromocionAmigo(amigos)){
-                                Preferences.Set("promocionAplicada", true);
-                                Preferences.Set("textoPromocion", $"Enhorabuena!!!. Ha desbloqueado su código amigo, se le han sumado {amigos.saldoAmigo.ToString("C2")} a su saldo.");
-                                App.ResponseWS.enviaNotificacion("PolloAndaluz", $"Enhorabuena!!!. Su amigo {App.DAUtil.Usuario.nombre} {App.DAUtil.Usuario.apellidos}, ha realizado su pedido, se le han sumado {amigos.saldoCliente.ToString("C2")} a su saldo." , App.ResponseWS.getTokenUsuario(amigos.idCliente));
-                            }
-                        }
-                    }
-
-                    await App.DAUtil.NavigationService.NavigateToAsyncWithoutMenu<PedidoConfirmadoComercioViewModel>(App.pedidoEnCurso.codigoPedido + ";" + Preferences.Get("dia", ""));
-                }
-                else
-                {
-                    if (await App.ResponseWS.cambiaEstadoPedido(App.pedidoEnCurso.idPedido, 99))
-                    {
-                        OperationInfoModel info = await App.ResponseWS.infoTransactionPaycomet(App.pedidoEnCurso.codigoPedido);
-                        await App.ResponseWS.refundPaycomet(App.pedidoEnCurso.codigoPedido, App.TarjetaSeleccionada.idUser, App.TarjetaSeleccionada.tokenUser, ((int)(total * 100)).ToString(), info.payment.authCode);
-                        App.userdialog.HideLoading();
-                    }
-                    await App.DAUtil.NavigationService.NavigateToAsyncWithoutMenu<PagoErroneoViewModel>(App.pedidoEnCurso.codigoPedido + ";" + Preferences.Get("dia", ""));
-                }
-            }
-            else
-            {
-                //await ResponseServiceWS.eliminaPedido(App.pedidoEnCurso.idPedido);
-                App.userdialog.HideLoading();
-                await App.customDialog.ShowDialogAsync(App.urlChallengue, "PolloAndaluz", AppResources.OK);
-            }
-        }
-
-        private async Task HacerPedido(bool hacer)
-        {
-            try
-            {
-                if (hacer)
-                {
-                    App.userdialog.ShowLoading(AppResources.Cargando);
-                    await Task.Delay(200);
-                    ConfiguracionAdmin conf = ResponseServiceWS.getConfiguracionAdmin();
-                    if (string.IsNullOrEmpty(Carrito2[0].observaciones))
-                        Carrito2[0].observaciones = "";
-                    codigoPedido = App.DAUtil.GetCodigo();
-                    List<LineasPedido> l = new List<LineasPedido>();
-                    int punt = 0;
-                    foreach (var item in Carrito2)
-                    {
-                        if (item.cantidad > 0)
-                        {
-                            LineasPedido l20 = new LineasPedido();
-                            l20.cantidad = item.cantidad;
-                            l20.idProducto = item.idArticulo;
-                            l20.precio = item.precio;
-                            l20.tipoComida = 0;
-                            l20.pagadoConPuntos = item.porPuntos;
-                            if (item.porPuntos == 1)
-                                punt += item.puntos;
-                            l20.nombreProducto = item.comida;
-                            l.Add(l20);
-                        }
-                    }
-                    LineasPedido l2 = new LineasPedido();
-                    l2.cantidad = 1;
-                    l2.idProducto = 0;
-                    l2.precio = Gastos;
-                    l2.nombreProducto = "";
-                    l2.tipoComida = 1;
-                    l2.pagadoConPuntos = 0;
-                    l.Add(l2);
-                    if (Descuento > 0)
-                    {
-                        l2 = new LineasPedido();
-                        l2.cantidad = 1;
-                        l2.idProducto = 0;
-                        l2.precio = Descuento * -1;
-                        l2.nombreProducto = "";
-                        l2.tipoComida = 3;
-                        l2.pagadoConPuntos = 0;
-                        l.Add(l2);
-                    }
-                    string tipoVenta = "Envío";
-                    if (Recogida)
-                        tipoVenta = "Recogida";
-                    string tipoPago = "Efectivo";
-                    if (Bizum)
-                        tipoPago = "Bizum";
-                    else if (Datafono)
-                        tipoPago = "Datafono";
-
-                    if (tipoVenta.Equals("Envío"))
-                    {
-                        if (App.EstActual.configuracion == null)
-                            App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
-                        
-                    }
-
-                    int idCodigoPedido = ResponseServiceWS.NuevoPedido("0", 0, "", tipoVenta, App.DAUtil.Usuario.idUsuario, Carrito2[0].idEstablecimiento, codigoPedido, Carrito2[0].idZona, Carrito2[0].direccion, Carrito2[0].observaciones, fecha.ToString("yyyy-MM-dd HH:mm:ss"), l, "", 1, tipoPago,punt);
-
-                    if (idCodigoPedido > 0)
-                    {
-                        string pedido = string.Empty;
-                        if (tipoVenta.StartsWith("Local"))
-                        {
-                            List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(1);
-                            foreach (TokensModel to in tokens)
-                                App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + codigoPedido, to.token);
-                        }
-                        if (tipoVenta.StartsWith("Envío"))
-                        {
-                            List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(App.EstActual.idEstablecimiento);
-                            foreach (TokensModel to in tokens2)
-                                App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + codigoPedido, to.token);
-                        }
-
-                        List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(App.EstActual.idEstablecimiento);
-                        foreach (TokensModel to in tokens3)
-                            await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido: " + codigoPedido, to.token);
-
-
-                        List<PedidoModel> pedidosModel = new List<PedidoModel>();
-                        DateTime fechaPedido = DateTime.Now;
-                        foreach (var item in Carrito2)
-                        {
-                            PedidoModel p = new PedidoModel();
-                            p.idArticulo = item.idArticulo;
-                            p.idPedido = idCodigoPedido;
-                            p.idEstablecimiento = item.idEstablecimiento;
-                            p.imagen = item.imagen;
-                            p.nombreCantidad = item.nombreCantidad;
-                            p.observaciones = item.observaciones;
-                            p.precio = item.precio;
-                            p.cantidad = item.cantidad;
-                            p.comida = item.comida;
-                            p.precioTotal = item.precioTotal;
-                            p.fechaPedido = fechaPedido;
-                            p.nombreEstablecimiento = App.EstActual.nombre;
-                            p.horaEntrega = conf.inicioComercio.ToString();
-                            pedidosModel.Add(p);
-                        }
-                        App.DAUtil.GuardarPedido(pedidosModel);
-                        App.DAUtil.VaciaCarrito();
-                        if (App.promocionAmigo != null)
-                        {
-                            if (PendientePromocion && App.promocionAmigo.pedidoMinimo <= PrecioTotalPedidoGastos)
-                            {
-                                if (await ResponseServiceWS.RealizaPromocionAmigo(amigos))
-                                {
-                                    Preferences.Set("promocionAplicada", true);
-                                    Preferences.Set("textoPromocion", $"Enhorabuena!!!. Ha desbloqueado su código amigo, se le han sumado {amigos.saldoAmigo.ToString("C2")} a su saldo.");
-                                    App.ResponseWS.enviaNotificacion("PolloAndaluz", $"Enhorabuena!!!. Su amigo {App.DAUtil.Usuario.nombre} {App.DAUtil.Usuario.apellidos}, ha realizado su pedido, se le han sumado {amigos.saldoCliente.ToString("C2")} a su saldo.", App.ResponseWS.getTokenUsuario(amigos.idCliente));
-                                }
-                            }
-                        }
-                        await App.DAUtil.NavigationService.NavigateToAsyncMenu<PedidoConfirmadoComercioViewModel>(codigoPedido + ";" + dia);
-                    }
-                    else
-                    {
-                        App.userdialog.HideLoading();
-                        await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // 
-                App.userdialog.HideLoading();
-                await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
-            }
-            finally
-            {
-                App.userdialog.HideLoading();
+                await App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message + Environment.NewLine + AppResources.Perdon, AppResources.SoloError, AppResources.Cerrar);
             }
         }
 
@@ -962,7 +608,7 @@ namespace AsadorMoron.ViewModels.Clientes
                             precioPedido += item.precioTotal;
                         }
 
-                        Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas))+1) * App.EstActual.configuracion.precioBolsa;
+                        Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) + 1) * App.EstActual.configuracion.precioBolsa;
                         if (Bolsa == 0)
                             Bolsa = App.EstActual.configuracion.precioBolsa;
                         PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos + Bolsa;
@@ -1007,7 +653,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                 item.precioTotal = item.cantidad * item.precio;
                             }
 
-                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas))+1) * App.EstActual.configuracion.precioBolsa;
+                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) + 1) * App.EstActual.configuracion.precioBolsa;
                             if (Bolsa == 0)
                                 Bolsa = App.EstActual.configuracion.precioBolsa;
                             PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos + Bolsa;
@@ -1032,7 +678,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                 item.precioTotal = item.cantidad * item.precio;
                             }
 
-                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas))+1) * App.EstActual.configuracion.precioBolsa;
+                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) + 1) * App.EstActual.configuracion.precioBolsa;
                             if (Bolsa == 0)
                                 Bolsa = App.EstActual.configuracion.precioBolsa;
                             PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos + Bolsa;
@@ -1047,7 +693,7 @@ namespace AsadorMoron.ViewModels.Clientes
             }
         }
 
-        private async void EliminarTarjeta(object parametro) 
+        private async void EliminarTarjeta(object parametro)
         {
             try
             {
@@ -1084,14 +730,32 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 Debug.WriteLine(ex.Message);
             }
-            
+
         }
         private async void ExecuteNavigateToAddCreditCardPageCommand()
         {
             if (Cards == null)
                 Cards = new ObservableCollection<TarjetaBindableModel>();
-            // AddCreditCardPage is now a ContentPage, use regular navigation
-            await Application.Current.MainPage.Navigation.PushModalAsync(new AddCreditCardPage(ref cards));
+
+            // Obtener el NavigationPage correctamente
+            var mainPage = Application.Current.MainPage;
+            if (mainPage is NavigationPage navPage)
+            {
+                await navPage.PushAsync(new AddCreditCardPage(ref cards));
+            }
+            else if (mainPage is FlyoutPage flyout && flyout.Detail is NavigationPage detailNav)
+            {
+                await detailNav.PushAsync(new AddCreditCardPage(ref cards));
+            }
+            else if (mainPage is TabbedPage tabbed && tabbed.CurrentPage is NavigationPage currentNav)
+            {
+                await currentNav.PushAsync(new AddCreditCardPage(ref cards));
+            }
+            else
+            {
+                // Fallback a modal si no hay NavigationPage
+                await mainPage.Navigation.PushModalAsync(new AddCreditCardPage(ref cards));
+            }
         }
 
         public void SubscribeAddCard()
@@ -1329,10 +993,10 @@ namespace AsadorMoron.ViewModels.Clientes
                         {
                             item.nombreCantidad = string.Format("{0} x{1}", item.comida, item.cantidad);
                             item.precioTotal = item.cantidad * item.precio;
-                            if (item.porPuntos==0)
+                            if (item.porPuntos == 0)
                                 PrecioTotalPedido += item.precioTotal;
                         }
-                        Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas))+1) * App.EstActual.configuracion.precioBolsa;
+                        Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) + 1) * App.EstActual.configuracion.precioBolsa;
                         if (Bolsa == 0)
                             Bolsa = App.EstActual.configuracion.precioBolsa;
                         PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos + Bolsa;
@@ -1399,7 +1063,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                 if (item.porPuntos == 0)
                                     PrecioTotalPedido += item.precioTotal;
                             }
-                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas))+1) * App.EstActual.configuracion.precioBolsa;
+                            Bolsa = (((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) + 1) * App.EstActual.configuracion.precioBolsa;
                             if (Bolsa == 0)
                                 Bolsa = App.EstActual.configuracion.precioBolsa;
                             PrecioTotalPedidoGastos = PrecioTotalPedido + Gastos + Bolsa;
@@ -1617,7 +1281,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 }
             }
         }
-        private string textoPromocion="";
+        private string textoPromocion = "";
         public string TextoPromocion
         {
             get { return textoPromocion; }
@@ -1671,22 +1335,6 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 bolsa = value;
                 OnPropertyChanged(nameof(Bolsa));
-            }
-        }
-        private bool esComercio;
-        public bool EsComercio
-        {
-            get
-            {
-                return esComercio;
-            }
-            set
-            {
-                if (esComercio != value)
-                {
-                    esComercio = value;
-                    OnPropertyChanged(nameof(EsComercio));
-                }
             }
         }
         private UsuarioModel usuario;

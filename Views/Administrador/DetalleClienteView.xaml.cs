@@ -8,5 +8,10 @@ namespace AsadorMoron.Views.Administrador
         {
             InitializeComponent();
         }
+
+        private async void OnBackTapped(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
+        }
     }
 }

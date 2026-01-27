@@ -1,7 +1,8 @@
-﻿using AsadorMoron.Models;
+using AsadorMoron.Models;
 using Mopups.Pages;
-using System.Collections.ObjectModel;
+using Mopups.Services;
 using Microsoft.Maui.Controls.Xaml;
+using System;
 
 namespace AsadorMoron.Views.Clientes
 {
@@ -12,30 +13,25 @@ namespace AsadorMoron.Views.Clientes
         {
             InitializeComponent();
         }
+
         public PopupPageInfoPedidoCliente(CabeceraPedido cabeceraPedido)
         {
             InitializeComponent();
-            lista.ItemsSource = cabeceraPedido.lineasPedidos;
-            if (!string.IsNullOrEmpty(cabeceraPedido.codigoPedido)) 
+
+            // Configurar lista de productos con BindableLayout
+            BindableLayout.SetItemsSource(ProductosList, cabeceraPedido.lineasPedidos);
+
+            // Código de pedido en el header
+            if (!string.IsNullOrEmpty(cabeceraPedido.codigoPedido))
             {
-                CodigoPedidoStack.IsVisible = true;
-                CodigoPedido.Text = cabeceraPedido.codigoPedido;
+                LbCodigoPedido.Text = $"Pedido #{cabeceraPedido.codigoPedido}";
             }
             else
             {
-                CodigoPedidoStack.IsVisible = false;
+                LbCodigoPedido.IsVisible = false;
             }
 
-            if (!string.IsNullOrEmpty(cabeceraPedido.zona))
-            {
-                ZonaStack.IsVisible = true;
-                Zona.Text = cabeceraPedido.zona;
-            }
-            else
-            {
-                ZonaStack.IsVisible = false;
-            }
-
+            // Establecimiento
             if (!string.IsNullOrEmpty(cabeceraPedido.nombreEstablecimiento))
             {
                 EstablecimientoStack.IsVisible = true;
@@ -43,29 +39,10 @@ namespace AsadorMoron.Views.Clientes
             }
             else
             {
-                Establecimiento.IsVisible = false;
+                EstablecimientoStack.IsVisible = false;
             }
 
-            if (!string.IsNullOrEmpty(cabeceraPedido.tipoPago))
-            {
-                TipoPagoStack.IsVisible = true;
-                TipoPago.Text = cabeceraPedido.tipoPago;
-            }
-            else
-            {
-                TipoPagoStack.IsVisible = false;
-            }
-
-            if (cabeceraPedido.precioTotalPedido > 0)
-            {
-                TotalStack.IsVisible = true;
-                Total.Text = string.Format("{0:N2} €",cabeceraPedido.precioTotalPedido);
-            }
-            else
-            {
-                TotalStack.IsVisible = false;
-            }
-
+            // Dirección
             if (!string.IsNullOrEmpty(cabeceraPedido.direccionUsuario))
             {
                 DireccionStack.IsVisible = true;
@@ -76,6 +53,40 @@ namespace AsadorMoron.Views.Clientes
                 DireccionStack.IsVisible = false;
             }
 
+            // Zona
+            if (!string.IsNullOrEmpty(cabeceraPedido.zona))
+            {
+                ZonaStack.IsVisible = true;
+                Zona.Text = cabeceraPedido.zona;
+            }
+            else
+            {
+                ZonaStack.IsVisible = false;
+            }
+
+            // Tipo de Pago
+            if (!string.IsNullOrEmpty(cabeceraPedido.tipoPago))
+            {
+                TipoPagoStack.IsVisible = true;
+                TipoPago.Text = cabeceraPedido.tipoPago;
+            }
+            else
+            {
+                TipoPagoStack.IsVisible = false;
+            }
+
+            // Total
+            if (cabeceraPedido.precioTotalPedido > 0)
+            {
+                TotalStack.IsVisible = true;
+                Total.Text = string.Format("{0:N2} €", cabeceraPedido.precioTotalPedido);
+            }
+            else
+            {
+                TotalStack.IsVisible = false;
+            }
+
+            // Comentario/Observaciones
             if (!string.IsNullOrEmpty(cabeceraPedido.comentario))
             {
                 ComentarioStack.IsVisible = true;
@@ -85,6 +96,11 @@ namespace AsadorMoron.Views.Clientes
             {
                 ComentarioStack.IsVisible = false;
             }
+        }
+
+        private async void OnCloseTapped(object sender, EventArgs e)
+        {
+            await MopupService.Instance.PopAsync();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Microsoft.Maui;
@@ -12,6 +12,31 @@ namespace AsadorMoron.Views.Clientes
         {
             InitializeComponent();
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            UpdateNavigationButton();
+        }
+
+        private void UpdateNavigationButton()
+        {
+            bool isRootPage = Navigation.NavigationStack.Count <= 1;
+            BtnMenu.IsVisible = isRootPage;
+            BtnBack.IsVisible = !isRootPage;
+        }
+
+        private void OnMenuTapped(object sender, EventArgs e)
+        {
+            if (Application.Current?.MainPage is FlyoutPage flyoutPage)
+            {
+                flyoutPage.IsPresented = true;
+            }
+        }
+
+        private async void OnBackTapped(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
+        }
     }
 }
-

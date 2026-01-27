@@ -102,5 +102,7 @@
 	<string>No usamos la ubicación, necesaria para librerias de terceros</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>UIDesignRequiresCompatibility</key>
+	<true/>
 </dict>
 </plist>

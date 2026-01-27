@@ -118,7 +118,7 @@ namespace AsadorMoron.ViewModels.Clientes
                             if (co.articulo.idArticulo == 11806)
                                 co.noTieneOpciones = false;
 
-                            if (co.articulo.puntos > 0 && SistemaPuntos && co.articulo.puntos<Puntos)
+                            if (co.articulo.puntos > 0 && SistemaPuntos && co.articulo.puntos < Puntos)
                                 co.articulo.visiblePuntos = true;
                             originalComidas.Add(co);
                         }
@@ -163,23 +163,6 @@ namespace AsadorMoron.ViewModels.Clientes
                         await App.DAUtil.NavigationService.NavigateToAsync<DetallePedidoViewModel>(carrito);
                     });
                 }
-            }
-            catch (Exception ex)
-            {
-                App.customDialog.ShowDialogAsync(AppResources.ErrorMensaje + ex.Message, AppResources.SoloError, AppResources.Cerrar);
-                // 
-            }
-        }
-        private void IrDetalleEstablecimiento()
-        {
-            try
-            {
-                try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                MainThread.BeginInvokeOnMainThread(async () =>
-                {
-                    App.DAUtil.Idioma = "ES";
-                    await App.DAUtil.NavigationService.NavigateToAsync<DetalleEstablecimientoParaClienteViewModel>(App.EstActual);
-                });
             }
             catch (Exception ex)
             {
@@ -233,7 +216,7 @@ namespace AsadorMoron.ViewModels.Clientes
                             {
                                 Comidas = new ObservableCollection<Comida>(originalComidas);
                             }
-                            
+
                         });
                     }
                     catch (Exception)
@@ -258,7 +241,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 {
                     App.DAUtil.Idioma = "ES";
                     await App.DAUtil.NavigationService.NavigateToAsync<DetalleArticuloNavidadViewModel>(articulo.articulo);
-                    
+
                 });
             }
             catch (Exception ex)
@@ -509,9 +492,9 @@ namespace AsadorMoron.ViewModels.Clientes
 
         #region Comandos
         public ICommand IrDetallePedidoCommand { get { return new Command(IrDetallePedido); } }
-        public ICommand cmdDetalleEstablecimiento { get { return new Command(IrDetalleEstablecimiento); } }
         public ICommand btnFiltrar { get { return new DelegateCommandAsync(Filtrar); } }
         public ICommand ArticuloSeleccionado { get { return new Command(articuloSeleccionado); } }
+        public ICommand LimpiarBusquedaCommand { get { return new Command(() => TextoBusqueda = ""); } }
         public ICommand ClickMasCommand { get { return new Command((parametro) => Add(parametro)); } }
         public ICommand ClickPorPuntosCommand { get { return new Command((parametro) => AddPorPuntos(parametro)); } }
         public ICommand ClickMenosCommand { get { return new Command((parametro) => remove(parametro)); } }

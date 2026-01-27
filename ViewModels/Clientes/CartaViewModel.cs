@@ -269,8 +269,6 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 ArticuloModel articulo = (ArticuloModel)parametro;
                 bool continuar = true;
-                if (articulo.porEncargo && carrito.Where(p => p.porEncargo == true).ToList().Count == 0)
-                    continuar = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaEncargo, AppResources.No, AppResources.Si);
                 if (continuar)
                 {
                     if (string.IsNullOrEmpty(Cantidad))
@@ -297,7 +295,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         c.imagen = articulo.imagen;
                         c.comentario = articulo.comentario == null ? "" : articulo.comentario;
                         c.observaciones = "";
-                        c.porEncargo = articulo.porEncargo;
+                        c.porEncargo = false;
                         NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
                         c.precio = articulo.precio;
                         c.opcion = 0;
@@ -345,7 +343,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         c.idArticulo = articulo.idArticulo;
                         c.imagen = articulo.imagen;
                         c.observaciones = "";
-                        c.porEncargo = articulo.porEncargo;
+                        c.porEncargo = false;
                         NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
                         c.precio = articulo.precio;
                         c.opcion = 0;

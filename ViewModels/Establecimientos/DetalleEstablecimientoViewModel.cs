@@ -48,13 +48,13 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             Logo = "logocuadrado.png";
                             EsAdmin = App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador;
                             EnableBtnGuardar = false;
-                                
+
                             VisibleFuera = _establecimiento.visibleFuera;
                             Nombre = _establecimiento.nombre;
                             Provincia = _establecimiento.provincia;
                             Direccion = _establecimiento.direccion.ToString();
                             Poblacion = _establecimiento.poblacion;
-                                
+
                             EsAdmin = App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador;
                             try
                             {
@@ -76,11 +76,10 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             Longitud = _establecimiento.longitud.ToString();
                             NumeroCategorias = _establecimiento.numeroCategorias;
                             Productos = _establecimiento.numeroProductos;
-                            EsComercio = _establecimiento.esComercio;
-                            Estado = _establecimiento.estado==1;
-                            Envio = _establecimiento.envio==1;
-                            Recogida = _establecimiento.recogida==1;
-                            Reserva = _establecimiento.puedeReservar==1;
+                            Estado = _establecimiento.estado == 1;
+                            Envio = _establecimiento.envio == 1;
+                            Recogida = _establecimiento.recogida == 1;
+                            Reserva = _establecimiento.puedeReservar == 1;
                             RecogeEnBarra = _establecimiento.recogeEnBarra;
                             LlevaAMesa = _establecimiento.llevaAMesa;
                             /*try
@@ -123,11 +122,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
             try
             {
                 try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        await App.DAUtil.NavigationService.NavigateToAsync<ArticulosBajaViewModel>(App.EstActual);
-                    });
+
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await App.DAUtil.NavigationService.NavigateToAsync<ArticulosBajaViewModel>(App.EstActual);
+                });
             }
             catch (Exception ex)
             {
@@ -139,12 +138,12 @@ namespace AsadorMoron.ViewModels.Establecimientos
             try
             {
                 try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        await App.DAUtil.NavigationService.NavigateToAsync<ConfiguracionEstablecimientoViewModel>(App.EstActual);
-                    });
-               
+
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await App.DAUtil.NavigationService.NavigateToAsync<ConfiguracionEstablecimientoViewModel>(App.EstActual);
+                });
+
             }
             catch (Exception ex)
             {
@@ -186,11 +185,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
             try
             {
                 try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        await App.DAUtil.NavigationService.NavigateToAsync<CategoriasViewModel>(App.EstActual);
-                    });
+
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await App.DAUtil.NavigationService.NavigateToAsync<CategoriasViewModel>(App.EstActual);
+                });
             }
             catch (Exception ex)
             {
@@ -203,11 +202,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
             try
             {
                 try { App.userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { App.userdialog.HideLoading(); }
-                
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        await App.DAUtil.NavigationService.NavigateToAsync<ArticulosViewModel>(App.EstActual);
-                    });
+
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await App.DAUtil.NavigationService.NavigateToAsync<ArticulosViewModel>(App.EstActual);
+                });
             }
             catch (Exception ex)
             {
@@ -260,7 +259,8 @@ namespace AsadorMoron.ViewModels.Establecimientos
             CodPostales = new ObservableCollection<CodigosPostales>();
             foreach (PueblosModel p in poblaciones.Where(n => n.Provincia.ToUpper().Equals(Provincia.ToUpper()) && n.nombre.ToUpper().Equals(Poblacion.ToUpper())).OrderBy(pr => pr.codPostal))
             {
-                foreach (string a in p.codPostal.Split(',')) {
+                foreach (string a in p.codPostal.Split(','))
+                {
                     CodigosPostales c = new CodigosPostales();
                     c.codPostal = a;
                     c.idPueblo = p.id;
@@ -514,122 +514,122 @@ namespace AsadorMoron.ViewModels.Establecimientos
             try
             {
                 if (_establecimiento == null)
-                    {
-                        _establecimiento = new Establecimiento();
-                        _establecimiento.imagen = $"{ResponseServiceWS.urlPro}images/establecimientos/" + NombreFoto;
-                        _establecimiento.nombre = Nombre;
-                        _establecimiento.direccion = Direccion;
-                        _establecimiento.visibleFuera = VisibleFuera;
-                        _establecimiento.poblacion = Poblacion;
-                        _establecimiento.provincia = Provincia;
-                        _establecimiento.llevaAMesa = LlevaAMesa;
-                        _establecimiento.tieneMenuDiario = false;
-                        _establecimiento.recogeEnBarra = RecogeEnBarra;
-                        _establecimiento.local = 0;
-                        _establecimiento.idPueblo = Pueblo.id;
-                        _establecimiento.idGrupo = Pueblo.idGrupo;
-                        _establecimiento.codPostal = CodPostal.codPostal;
-                        _establecimiento.longitud = double.Parse(Longitud.Replace(".", ","));
-                        _establecimiento.latitud = double.Parse(Latitud.Replace(".", ","));
-                        //_establecimiento.idZona = ZonaSeleccionada.idZona;
-                        _establecimiento.idZona = 1;
-                        cargarcamposBoolEstablecimiento();
-                        _establecimiento.idTipo = 3;// TipoSeleccionado.Id;
-                        _establecimiento.telefono = Telefono;
-                        _establecimiento.telefono2 = Telefono2;
-                        _establecimiento.whatsapp = Whatsapp;
-                        _establecimiento.web = Web;
-                        _establecimiento.tipoImpresora =1;
-                        _establecimiento.emailContacto = EmailContacto;
-                        _establecimiento.email = Email;
+                {
+                    _establecimiento = new Establecimiento();
+                    _establecimiento.imagen = $"{ResponseServiceWS.urlPro}images/establecimientos/" + NombreFoto;
+                    _establecimiento.nombre = Nombre;
+                    _establecimiento.direccion = Direccion;
+                    _establecimiento.visibleFuera = VisibleFuera;
+                    _establecimiento.poblacion = Poblacion;
+                    _establecimiento.provincia = Provincia;
+                    _establecimiento.llevaAMesa = LlevaAMesa;
+                    _establecimiento.tieneMenuDiario = false;
+                    _establecimiento.recogeEnBarra = RecogeEnBarra;
+                    _establecimiento.local = 0;
+                    _establecimiento.idPueblo = Pueblo.id;
+                    _establecimiento.idGrupo = Pueblo.idGrupo;
+                    _establecimiento.codPostal = CodPostal.codPostal;
+                    _establecimiento.longitud = double.Parse(Longitud.Replace(".", ","));
+                    _establecimiento.latitud = double.Parse(Latitud.Replace(".", ","));
+                    //_establecimiento.idZona = ZonaSeleccionada.idZona;
+                    _establecimiento.idZona = 1;
+                    cargarcamposBoolEstablecimiento();
+                    _establecimiento.idTipo = 3;// TipoSeleccionado.Id;
+                    _establecimiento.telefono = Telefono;
+                    _establecimiento.telefono2 = Telefono2;
+                    _establecimiento.whatsapp = Whatsapp;
+                    _establecimiento.web = Web;
+                    _establecimiento.tipoImpresora = 1;
+                    _establecimiento.emailContacto = EmailContacto;
+                    _establecimiento.email = Email;
                     _establecimiento.idCategoria = 1;
-                        cargarImagenLogoEstablecimiento();
-                        _establecimiento.orden = Orden;
-                        if (_establecimiento.latitud >= -90 && _establecimiento.latitud <= 90 && _establecimiento.longitud >= -180 && _establecimiento.longitud <= 180)
+                    cargarImagenLogoEstablecimiento();
+                    _establecimiento.orden = Orden;
+                    if (_establecimiento.latitud >= -90 && _establecimiento.latitud <= 90 && _establecimiento.longitud >= -180 && _establecimiento.longitud <= 180)
+                    {
+                        if (App.ResponseWS.nuevoEstablecimiento(_establecimiento, "adm" + Email.Split('@')[0]) != -1)
                         {
-                            if (App.ResponseWS.nuevoEstablecimiento(_establecimiento, "adm" + Email.Split('@')[0]) != -1)
+                            if (subirFoto)
                             {
-                                if (subirFoto)
-                                {
-                                    ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", "");
-                                }
-                                if (subirFotoLogo)
-                                {
-                                    ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", "");
-                                }
-                                App.userdialog.HideLoading();
-                                await App.customDialog.ShowDialogAsync(AppResources.EstablecimientoOK, AppResources.App, AppResources.Aceptar);
+                                ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", "");
                             }
-                            else
+                            if (subirFotoLogo)
                             {
-                                App.userdialog.HideLoading();
-                                await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.SoloError, AppResources.Aceptar);
+                                ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", "");
                             }
+                            App.userdialog.HideLoading();
+                            await App.customDialog.ShowDialogAsync(AppResources.EstablecimientoOK, AppResources.App, AppResources.Aceptar);
                         }
                         else
                         {
                             App.userdialog.HideLoading();
-                            await App.customDialog.ShowDialogAsync("La latitud y la longitud el establecimiento no son correctas", AppResources.SoloError, AppResources.Aceptar);
+                            await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.SoloError, AppResources.Aceptar);
                         }
                     }
                     else
                     {
-                        _establecimiento.nombre = Nombre;
-                        _establecimiento.direccion = Direccion;
-                        _establecimiento.poblacion = Poblacion;
-                        _establecimiento.idPueblo = Pueblo.id;
-                        _establecimiento.idGrupo = Pueblo.idGrupo;
-                        _establecimiento.provincia = Provincia;
-                        _establecimiento.visibleFuera = VisibleFuera;
-                        _establecimiento.llevaAMesa = LlevaAMesa;
-                        _establecimiento.recogeEnBarra = RecogeEnBarra;
-                        _establecimiento.tieneMenuDiario = false;
-                        _establecimiento.tipoImpresora = 1;
-                        _establecimiento.local = 0;
-                        _establecimiento.codPostal = CodPostal.codPostal;
-                        //_establecimiento.idZona = ZonaSeleccionada.idZona;
-                        _establecimiento.idZona = 1;
-                        cargarcamposBoolEstablecimiento();
-                        _establecimiento.idTipo = 3;// TipoSeleccionado.Id;
-                        _establecimiento.telefono = Telefono;
-                        _establecimiento.telefono2 = Telefono2;
-                        _establecimiento.whatsapp = Whatsapp;
-                        _establecimiento.web = Web;
-                        _establecimiento.emailContacto = EmailContacto;
-                        _establecimiento.email = Email;
-                        _establecimiento.orden = Orden;
-                        _establecimiento.imagen = Imagen;
-                        _establecimiento.longitud = double.Parse(Longitud.Replace(".", ","));
-                        _establecimiento.latitud = double.Parse(Latitud.Replace(".", ","));
-                        _establecimiento.idCategoria = 1;
-                        cargarImagenLogoEstablecimiento();
-                        if (_establecimiento.latitud >= -90 && _establecimiento.latitud <= 90 && _establecimiento.longitud >= -180 && _establecimiento.longitud <= 180)
+                        App.userdialog.HideLoading();
+                        await App.customDialog.ShowDialogAsync("La latitud y la longitud el establecimiento no son correctas", AppResources.SoloError, AppResources.Aceptar);
+                    }
+                }
+                else
+                {
+                    _establecimiento.nombre = Nombre;
+                    _establecimiento.direccion = Direccion;
+                    _establecimiento.poblacion = Poblacion;
+                    _establecimiento.idPueblo = Pueblo.id;
+                    _establecimiento.idGrupo = Pueblo.idGrupo;
+                    _establecimiento.provincia = Provincia;
+                    _establecimiento.visibleFuera = VisibleFuera;
+                    _establecimiento.llevaAMesa = LlevaAMesa;
+                    _establecimiento.recogeEnBarra = RecogeEnBarra;
+                    _establecimiento.tieneMenuDiario = false;
+                    _establecimiento.tipoImpresora = 1;
+                    _establecimiento.local = 0;
+                    _establecimiento.codPostal = CodPostal.codPostal;
+                    //_establecimiento.idZona = ZonaSeleccionada.idZona;
+                    _establecimiento.idZona = 1;
+                    cargarcamposBoolEstablecimiento();
+                    _establecimiento.idTipo = 3;// TipoSeleccionado.Id;
+                    _establecimiento.telefono = Telefono;
+                    _establecimiento.telefono2 = Telefono2;
+                    _establecimiento.whatsapp = Whatsapp;
+                    _establecimiento.web = Web;
+                    _establecimiento.emailContacto = EmailContacto;
+                    _establecimiento.email = Email;
+                    _establecimiento.orden = Orden;
+                    _establecimiento.imagen = Imagen;
+                    _establecimiento.longitud = double.Parse(Longitud.Replace(".", ","));
+                    _establecimiento.latitud = double.Parse(Latitud.Replace(".", ","));
+                    _establecimiento.idCategoria = 1;
+                    cargarImagenLogoEstablecimiento();
+                    if (_establecimiento.latitud >= -90 && _establecimiento.latitud <= 90 && _establecimiento.longitud >= -180 && _establecimiento.longitud <= 180)
+                    {
+                        if (App.ResponseWS.actualizaEstablecimiento(_establecimiento))
                         {
-                            if (App.ResponseWS.actualizaEstablecimiento(_establecimiento))
+                            if (subirFoto)
                             {
-                                if (subirFoto)
-                                {
-                                    ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", antiguo);
-                                }
-                                if (subirFotoLogo)
-                                {
-                                    ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", antiguoLogo);
-                                }
-                                App.userdialog.HideLoading();
-                                await App.customDialog.ShowDialogAsync(AppResources.mEstablecimientoOK, AppResources.App, AppResources.Aceptar);
+                                ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", antiguo);
                             }
-                            else
+                            if (subirFotoLogo)
                             {
-                                App.userdialog.HideLoading();
-                                await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.SoloError, AppResources.Aceptar);
+                                ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", antiguoLogo);
                             }
+                            App.userdialog.HideLoading();
+                            await App.customDialog.ShowDialogAsync(AppResources.mEstablecimientoOK, AppResources.App, AppResources.Aceptar);
                         }
                         else
                         {
                             App.userdialog.HideLoading();
-                            await App.customDialog.ShowDialogAsync("La latitud y la longitud el establecimiento no son correctas", AppResources.SoloError, AppResources.Aceptar);
+                            await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.SoloError, AppResources.Aceptar);
                         }
                     }
+                    else
+                    {
+                        App.userdialog.HideLoading();
+                        await App.customDialog.ShowDialogAsync("La latitud y la longitud el establecimiento no son correctas", AppResources.SoloError, AppResources.Aceptar);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -641,11 +641,9 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private void cargarcamposBoolEstablecimiento()
         {
             if (Estado)
-            _establecimiento.estado = 1;
+                _establecimiento.estado = 1;
             else
                 _establecimiento.estado = 0;
-
-            _establecimiento.esComercio = EsComercio;
 
             if (Envio)
                 _establecimiento.envio = 1;
@@ -1026,23 +1024,6 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 }
             }
         }
-        private bool esComercio;
-        public bool EsComercio
-        {
-            get
-            {
-                return esComercio;
-            }
-            set
-            {
-                if (esComercio != value)
-                {
-                    esComercio = value;
-                    OnPropertyChanged(nameof(EsComercio));
-                    checkEnableBtnGuardar();
-                }
-            }
-        }
         private string latitud;
         public string Latitud
         {
@@ -1202,7 +1183,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
         public ICommand VerCategorias { get { return new Command(VerCategoriasExecute); } }
         public ICommand VerProductosBaja { get { return new Command(VerProductosBajaExecute); } }
         public ICommand VerProductos { get { return new Command(VerProductosExecute); } }
-        public ICommand /*IAsyncRelayCommand*/ CommandGuardar { get { return new AsyncRelayCommand(async()=>await Guardar()); } }
+        public ICommand /*IAsyncRelayCommand*/ CommandGuardar { get { return new AsyncRelayCommand(async () => await Guardar()); } }
         public ICommand CommandAjustes { get { return new Command(Ajustes); } }
         public ICommand CommandHorarios { get { return new Command(Horarios); } }
         #endregion

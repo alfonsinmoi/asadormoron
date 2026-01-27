@@ -1,344 +1,598 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    x:Class="AsadorMoron.Views.Administrador.DetalleClienteView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:converters="clr-namespace:AsadorMoron.Converters"
-    x:Class="AsadorMoron.Views.Administrador.DetalleClienteView"
     x:Name="viewDetalleCliente"
-    BackgroundColor="{StaticResource Rojo}">
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
-            <Label
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,50,0"
-                FontFamily="Syne"
-                FontSize="25"
-                HorizontalTextAlignment="Center"
-                Text="{Binding Nombre}"
-                TextColor="{DynamicResource Amarillo}"
-                VerticalOptions="Center" />
-            <ImageButton
-                Grid.Column="1"
-                Margin="0,0,10,0"
-                BackgroundColor="Transparent"
-                Command="{Binding GuardarCommand}"
-                HeightRequest="30"
-                HorizontalOptions="End"
-                Source="save.png"
-                WidthRequest="30" />
-        </Grid>
-    </NavigationPage.TitleView>
+    <Grid RowDefinitions="Auto,*">
 
-    <ContentPage.Content>
-        <ScrollView
-            BackgroundColor="White"
-            Margin="{OnPlatform iOS='0,90,0,0',
-                                Android='0,0,0,0',
-                                UWP='0,0,0,0'}">
-            <StackLayout
-                Margin="{OnPlatform iOS='15,10',
-                                    Android='15,10',
-                                    UWP='25,10,25,10'}"
-                Spacing="15">
+        <!-- ============================================ -->
+        <!-- HEADER FIJO -->
+        <!-- ============================================ -->
+        <Border Grid.Row="0"
+                StrokeThickness="0"
+                BackgroundColor="White"
+                Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
 
-                <!-- SECCIÓN DATOS PERSONALES -->
-                <Label Text="Datos Personales"
-                       FontFamily="Syne"
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <!-- Botón Volver -->
+                <Border BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2190;"
+                           FontSize="22"
+                           TextColor="White"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Título -->
+                <Label Grid.Column="1"
+                       Text="{Binding Nombre}"
+                       FontFamily="Nunito_bold"
                        FontSize="18"
-                       TextColor="{DynamicResource Rojo}"
-                       Margin="0,10,0,0"/>
+                       TextColor="{DynamicResource Negro}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"/>
 
-                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
-                    <!-- Nombre -->
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Text="Nombre"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="0" Grid.Column="1"
-                           Text="{Binding Nombre}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           BackgroundColor="White"/>
+                <!-- Botón Guardar -->
+                <Border Grid.Column="2"
+                        BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource RojoMarca}" Offset="0,2" Radius="8" Opacity="0.3"/>
+                    </Border.Shadow>
+                    <Image Source="save.png"
+                           WidthRequest="22"
+                           HeightRequest="22"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GuardarCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
 
-                    <!-- Apellidos -->
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Text="Apellidos"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="1" Grid.Column="1"
-                           Text="{Binding Apellidos}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           BackgroundColor="White"/>
+            </Grid>
+        </Border>
 
-                    <!-- Email -->
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Text="Email"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="2" Grid.Column="1"
-                           Text="{Binding Email}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           Keyboard="Email"
-                           BackgroundColor="White"/>
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL -->
+        <!-- ============================================ -->
+        <ScrollView Grid.Row="1" Padding="16,12">
+            <StackLayout Spacing="16">
 
-                    <!-- Teléfono -->
-                    <Label Grid.Row="3" Grid.Column="0"
-                           Text="Teléfono"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="3" Grid.Column="1"
-                           Text="{Binding Telefono}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           Keyboard="Telephone"
-                           BackgroundColor="White"/>
-                </Grid>
-
-                <!-- SECCIÓN DIRECCIÓN -->
-                <Label Text="Dirección"
-                       FontFamily="Syne"
-                       FontSize="18"
-                       TextColor="{DynamicResource Rojo}"
-                       Margin="0,10,0,0"/>
-
-                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
-                    <!-- Dirección -->
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Text="Dirección"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="0" Grid.Column="1"
-                           Text="{Binding Direccion}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           BackgroundColor="White"/>
-
-                    <!-- Población -->
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Text="Población"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="1" Grid.Column="1"
-                           Text="{Binding Poblacion}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           BackgroundColor="White"/>
-
-                    <!-- Provincia -->
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Text="Provincia"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="2" Grid.Column="1"
-                           Text="{Binding Provincia}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           BackgroundColor="White"/>
-
-                    <!-- C.P. -->
-                    <Label Grid.Row="3" Grid.Column="0"
-                           Text="C.P."
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Entry Grid.Row="3" Grid.Column="1"
-                           Text="{Binding CodigoPostal}"
-                           FontFamily="Nunito"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           Keyboard="Numeric"
-                           BackgroundColor="White"/>
-                </Grid>
-
-                <!-- SECCIÓN CONFIGURACIÓN -->
-                <Label Text="Configuración"
-                       FontFamily="Syne"
-                       FontSize="18"
-                       TextColor="{DynamicResource Rojo}"
-                       Margin="0,10,0,0"/>
-
-                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" RowSpacing="10">
-                    <!-- Estado -->
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Text="Estado"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Switch Grid.Row="0" Grid.Column="1"
-                            IsToggled="{Binding Estado}"/>
-
-                    <!-- Kiosko -->
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Text="Modo Kiosko"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"
-                           VerticalTextAlignment="Center"/>
-                    <Switch Grid.Row="1" Grid.Column="1"
-                            IsToggled="{Binding Kiosko, Converter={StaticResource IntToBoolConverter}}"/>
-                </Grid>
-
-                <!-- SECCIÓN PUNTOS -->
-                <Frame BackgroundColor="{DynamicResource Rojo}"
-                       CornerRadius="15"
-                       Padding="20"
-                       Margin="0,15,0,0"
-                       HasShadow="True">
-                    <Frame.GestureRecognizers>
+                <!-- ============================================ -->
+                <!-- CARD: PUNTOS DEL CLIENTE -->
+                <!-- ============================================ -->
+                <Border BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        Padding="24">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource RojoMarca}" Offset="0,6" Radius="20" Opacity="0.4"/>
+                    </Border.Shadow>
+                    <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding EditarPuntosDirectoCommand}"/>
-                    </Frame.GestureRecognizers>
-                    <Grid RowDefinitions="Auto,Auto,Auto">
-                        <Label Grid.Row="0"
-                               Text="Puntos del Cliente"
-                               FontFamily="Syne"
-                               FontSize="16"
+                    </Border.GestureRecognizers>
+                    <StackLayout Spacing="8" HorizontalOptions="Center">
+                        <Label Text="Puntos del Cliente"
+                               FontFamily="Nunito"
+                               FontSize="14"
+                               TextColor="White"
+                               HorizontalTextAlignment="Center"
+                               Opacity="0.9"/>
+                        <Label Text="{Binding TotalPuntos}"
+                               FontFamily="Nunito_bold"
+                               FontSize="52"
                                TextColor="White"
                                HorizontalTextAlignment="Center"/>
-                        <Label Grid.Row="1"
-                               Text="{Binding TotalPuntos}"
-                               FontFamily="Syne"
-                               FontSize="48"
-                               FontAttributes="Bold"
-                               TextColor="{DynamicResource Amarillo}"
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               Margin="0,10,0,0"/>
-                        <Label Grid.Row="2"
-                               Text="Toca para editar"
+                        <Label Text="Toca para editar"
                                FontFamily="Nunito"
                                FontSize="12"
                                TextColor="White"
                                HorizontalTextAlignment="Center"
                                Opacity="0.7"/>
-                    </Grid>
-                </Frame>
+                    </StackLayout>
+                </Border>
 
-                <!-- SECCIÓN ESTADÍSTICAS -->
-                <Label Text="Estadísticas"
-                       FontFamily="Syne"
-                       FontSize="18"
-                       TextColor="{DynamicResource Rojo}"
-                       Margin="0,10,0,0"/>
-
-                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="5">
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Text="Pedidos:"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"/>
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Text="{Binding TotalPedidos}"
-                           FontFamily="Nunito"
-                           FontAttributes="Bold"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"/>
-
-                    <Label Grid.Row="1" Grid.Column="0"
-                           Text="Total Gastado:"
-                           FontFamily="Syne"
-                           FontSize="14"
-                           TextColor="{DynamicResource Negro}"/>
-                    <Label Grid.Row="1" Grid.Column="1"
-                           Text="{Binding TotalGastado, StringFormat='{0:F2} €'}"
-                           FontFamily="Nunito"
-                           FontAttributes="Bold"
-                           FontSize="14"
-                           TextColor="{DynamicResource Rojo}"/>
+                <!-- ============================================ -->
+                <!-- CARD: ESTADÍSTICAS -->
+                <!-- ============================================ -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Border Grid.Column="0"
+                            BackgroundColor="White"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="10" Opacity="0.08"/>
+                        </Border.Shadow>
+                        <StackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="{Binding TotalPedidos}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="28"
+                                   TextColor="{StaticResource RojoMarca}"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Pedidos"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </Border>
+                    <Border Grid.Column="1"
+                            BackgroundColor="White"
+                            StrokeThickness="0"
+                            Padding="16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="10" Opacity="0.08"/>
+                        </Border.Shadow>
+                        <StackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="{Binding TotalGastado, StringFormat='{0:F2}€'}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="28"
+                                   TextColor="{StaticResource RojoMarca}"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Total gastado"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </Border>
                 </Grid>
 
-                <!-- SECCIÓN HISTÓRICO PEDIDOS -->
-                <Label Text="Histórico de Pedidos"
-                       FontFamily="Syne"
-                       FontSize="18"
-                       TextColor="{DynamicResource Rojo}"
-                       Margin="0,10,0,0"/>
+                <!-- ============================================ -->
+                <!-- CARD: DATOS PERSONALES -->
+                <!-- ============================================ -->
+                <Border BackgroundColor="White" StrokeThickness="0" Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="16">
+                        <Label Text="Datos Personales"
+                               FontFamily="Nunito_bold"
+                               FontSize="16"
+                               TextColor="{DynamicResource Negro}"/>
 
-                <ListView ItemsSource="{Binding HistoricoPedidos}"
-                          SelectedItem="{Binding PedidoSeleccionado, Mode=TwoWay}"
-                          HasUnevenRows="True"
-                          SeparatorVisibility="Default"
-                          SeparatorColor="#E0E0E0"
-                          HeightRequest="300"
-                          VerticalOptions="Start">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid ColumnDefinitions="*,Auto" Padding="5,10" RowDefinitions="Auto,Auto" RowSpacing="3">
-                                    <Label Grid.Row="0" Grid.Column="0"
-                                           Text="{Binding codigoPedido, StringFormat='Pedido #{0}'}"
+                        <!-- Nombre -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Nombre"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Nombre}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"
+                                       BackgroundColor="Transparent"
+                                       Placeholder="Nombre"/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Apellidos -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Apellidos"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Apellidos}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"
+                                       BackgroundColor="Transparent"
+                                       Placeholder="Apellidos"/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Email -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Email"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Email}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"
+                                       BackgroundColor="Transparent"
+                                       Keyboard="Email"
+                                       Placeholder="email@ejemplo.com"/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Teléfono -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Teléfono"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Telefono}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"
+                                       BackgroundColor="Transparent"
+                                       Keyboard="Telephone"
+                                       Placeholder="600 000 000"/>
+                            </Border>
+                        </StackLayout>
+                    </StackLayout>
+                </Border>
+
+                <!-- ============================================ -->
+                <!-- CARD: DIRECCIÓN -->
+                <!-- ============================================ -->
+                <Border BackgroundColor="White" StrokeThickness="0" Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="16">
+                        <Label Text="Dirección"
+                               FontFamily="Nunito_bold"
+                               FontSize="16"
+                               TextColor="{DynamicResource Negro}"/>
+
+                        <!-- Dirección -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Dirección"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Direccion}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"
+                                       BackgroundColor="Transparent"
+                                       Placeholder="Calle, número, piso..."/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Población y C.P. en una fila -->
+                        <Grid ColumnDefinitions="2*,*" ColumnSpacing="12">
+                            <StackLayout Grid.Column="0" Spacing="6">
+                                <Label Text="Población"
+                                       FontFamily="Nunito"
+                                       FontSize="13"
+                                       TextColor="#888888"/>
+                                <Border BackgroundColor="#FAFAFA"
+                                        StrokeThickness="1"
+                                        Stroke="#E0E0E0"
+                                        Padding="14,10">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Entry Text="{Binding Poblacion}"
                                            FontFamily="Nunito"
-                                           FontAttributes="Bold"
+                                           FontSize="15"
+                                           TextColor="{DynamicResource Negro}"
+                                           BackgroundColor="Transparent"
+                                           Placeholder="Población"/>
+                                </Border>
+                            </StackLayout>
+                            <StackLayout Grid.Column="1" Spacing="6">
+                                <Label Text="C.P."
+                                       FontFamily="Nunito"
+                                       FontSize="13"
+                                       TextColor="#888888"/>
+                                <Border BackgroundColor="#FAFAFA"
+                                        StrokeThickness="1"
+                                        Stroke="#E0E0E0"
+                                        Padding="14,10">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Entry Text="{Binding CodigoPostal}"
+                                           FontFamily="Nunito"
+                                           FontSize="15"
+                                           TextColor="{DynamicResource Negro}"
+                                           BackgroundColor="Transparent"
+                                           Keyboard="Numeric"
+                                           Placeholder="00000"/>
+                                </Border>
+                            </StackLayout>
+                        </Grid>
+
+                        <!-- Provincia -->
+                        <StackLayout Spacing="6">
+                            <Label Text="Provincia"
+                                   FontFamily="Nunito"
+                                   FontSize="13"
+                                   TextColor="#888888"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Text="{Binding Provincia}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="{DynamicResource Negro}"
+                                       BackgroundColor="Transparent"
+                                       Placeholder="Provincia"/>
+                            </Border>
+                        </StackLayout>
+                    </StackLayout>
+                </Border>
+
+                <!-- ============================================ -->
+                <!-- CARD: CONFIGURACIÓN -->
+                <!-- ============================================ -->
+                <Border BackgroundColor="White" StrokeThickness="0" Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="16">
+                        <Label Text="Configuración"
+                               FontFamily="Nunito_bold"
+                               FontSize="16"
+                               TextColor="{DynamicResource Negro}"/>
+
+                        <!-- Estado -->
+                        <Border BackgroundColor="#F5F5F5"
+                                StrokeThickness="0"
+                                Padding="14">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#E8F5E9"
+                                        StrokeThickness="0"
+                                        WidthRequest="40"
+                                        HeightRequest="40">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="check.png"
+                                           WidthRequest="20"
+                                           HeightRequest="20"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+                                <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="Estado"
+                                           FontFamily="Nunito_bold"
                                            FontSize="14"
                                            TextColor="{DynamicResource Negro}"/>
-                                    <Label Grid.Row="0" Grid.Column="1"
-                                           Text="{Binding precioTotalPedido, StringFormat='{0:F2} €'}"
-                                           FontFamily="Syne"
-                                           FontSize="16"
-                                           TextColor="{DynamicResource Rojo}"
-                                           HorizontalTextAlignment="End"/>
-
-                                    <Label Grid.Row="1" Grid.Column="0"
-                                           Text="{Binding horaPedido, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                    <Label Text="Activo o inactivo"
                                            FontFamily="Nunito"
                                            FontSize="12"
-                                           TextColor="#666666"/>
-                                    <Label Grid.Row="1" Grid.Column="1"
-                                           Text="{Binding estadoPedido}"
+                                           TextColor="#888888"/>
+                                </StackLayout>
+                                <Switch Grid.Column="2"
+                                        IsToggled="{Binding Estado}"
+                                        OnColor="{StaticResource RojoMarca}"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Modo Kiosko -->
+                        <Border BackgroundColor="#F5F5F5"
+                                StrokeThickness="0"
+                                Padding="14">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="#FFF3E0"
+                                        StrokeThickness="0"
+                                        WidthRequest="40"
+                                        HeightRequest="40">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="tienda.png"
+                                           WidthRequest="20"
+                                           HeightRequest="20"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+                                <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="Modo Kiosko"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="14"
+                                           TextColor="{DynamicResource Negro}"/>
+                                    <Label Text="Cliente de kiosko"
                                            FontFamily="Nunito"
                                            FontSize="12"
-                                           TextColor="#666666"
-                                           HorizontalTextAlignment="End"/>
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                           TextColor="#888888"/>
+                                </StackLayout>
+                                <Switch Grid.Column="2"
+                                        IsToggled="{Binding Kiosko, Converter={StaticResource IntToBoolConverter}}"
+                                        OnColor="{StaticResource RojoMarca}"
+                                        VerticalOptions="Center"/>
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+                </Border>
 
+                <!-- ============================================ -->
+                <!-- CARD: HISTÓRICO DE PEDIDOS -->
+                <!-- ============================================ -->
+                <Border BackgroundColor="White" StrokeThickness="0" Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="12">
+                        <Label Text="Histórico de Pedidos"
+                               FontFamily="Nunito_bold"
+                               FontSize="16"
+                               TextColor="{DynamicResource Negro}"/>
+
+                        <CollectionView ItemsSource="{Binding HistoricoPedidos}"
+                                        SelectionMode="Single"
+                                        SelectedItem="{Binding PedidoSeleccionado, Mode=TwoWay}"
+                                        HeightRequest="280">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,0,0,10"
+                                            BackgroundColor="#F5F5F5"
+                                            StrokeThickness="0"
+                                            Padding="14">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12"/>
+                                        </Border.StrokeShape>
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="4">
+                                            <Label Grid.Row="0" Grid.Column="0"
+                                                   Text="{Binding codigoPedido, StringFormat='Pedido #{0}'}"
+                                                   FontFamily="Nunito_bold"
+                                                   FontSize="14"
+                                                   TextColor="{DynamicResource Negro}"/>
+                                            <Label Grid.Row="0" Grid.Column="1"
+                                                   Text="{Binding precioTotalPedido, StringFormat='{0:F2}€'}"
+                                                   FontFamily="Nunito_bold"
+                                                   FontSize="16"
+                                                   TextColor="{StaticResource RojoMarca}"
+                                                   HorizontalTextAlignment="End"/>
+
+                                            <Label Grid.Row="1" Grid.Column="0"
+                                                   Text="{Binding horaPedido, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
+                                                   FontFamily="Nunito"
+                                                   FontSize="12"
+                                                   TextColor="#888888"/>
+                                            <Label Grid.Row="1" Grid.Column="1"
+                                                   Text="{Binding estadoPedido}"
+                                                   FontFamily="Nunito"
+                                                   FontSize="12"
+                                                   TextColor="#888888"
+                                                   HorizontalTextAlignment="End"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                            <CollectionView.EmptyView>
+                                <StackLayout Padding="20" HorizontalOptions="Center">
+                                    <Label Text="Sin pedidos"
+                                           FontFamily="Nunito"
+                                           FontSize="14"
+                                           TextColor="#888888"
+                                           HorizontalTextAlignment="Center"/>
+                                </StackLayout>
+                            </CollectionView.EmptyView>
+                        </CollectionView>
+                    </StackLayout>
+                </Border>
+
+                <!-- ============================================ -->
                 <!-- BOTÓN GUARDAR -->
-                <Button Text="Guardar Cambios"
-                        Command="{Binding GuardarCommand}"
-                        BackgroundColor="{DynamicResource Rojo}"
-                        TextColor="White"
-                        FontFamily="Syne"
-                        FontSize="16"
-                        CornerRadius="10"
-                        HeightRequest="50"
-                        Margin="0,20,0,30"/>
+                <!-- ============================================ -->
+                <Border BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        Padding="18"
+                        Margin="0,8,0,0"
+                        HorizontalOptions="Fill">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource RojoMarca}" Offset="0,4" Radius="12" Opacity="0.3"/>
+                    </Border.Shadow>
+                    <Label Text="Guardar Cambios"
+                           FontFamily="Nunito_bold"
+                           FontSize="16"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GuardarCommand}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Espaciado final -->
+                
 
             </StackLayout>
         </ScrollView>
-    </ContentPage.Content>
+
+    </Grid>
+
 </ContentPage>

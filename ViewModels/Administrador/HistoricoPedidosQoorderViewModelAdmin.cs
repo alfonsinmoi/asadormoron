@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AsadorMoron.Models;
@@ -30,6 +31,8 @@ namespace AsadorMoron.ViewModels.Administrador
     {
         #region Properties
         private bool todoCargado = false;
+        private CancellationTokenSource _filterCts;
+        private System.Timers.Timer _debounceTimer;
         public ICommand ToggleDetailCommand { get; private set; }
         int numeroDias = 1;
         public List<CabeceraPedido> ListPedidosTemp;
@@ -579,106 +582,143 @@ namespace AsadorMoron.ViewModels.Administrador
         }
         private void Filtro()
         {
+            if (!todoCargado)
+                return;
+
+            // Debounce: esperar 150ms antes de ejecutar el filtro
+            _debounceTimer?.Stop();
+            _debounceTimer?.Dispose();
+            _debounceTimer = new System.Timers.Timer(150);
+            _debounceTimer.AutoReset = false;
+            _debounceTimer.Elapsed += async (s, e) =>
+            {
+                await MainThread.InvokeOnMainThreadAsync(() => EjecutarFiltro());
+            };
+            _debounceTimer.Start();
+        }
+
+        private async void EjecutarFiltro()
+        {
+            // Cancelar filtro anterior si existe
+            _filterCts?.Cancel();
+            _filterCts = new CancellationTokenSource();
+            var token = _filterCts.Token;
+
             try
             {
-                if (todoCargado)
+                // Capturar valores ANTES del Task.Run para evitar problemas de threading
+                var desdeDate = Desde.Date;
+                var hastaDate = Hasta.Date;
+                var zona = ZonaSeleccionada;
+                var repartidor = RepartidorSeleccionado;
+                var tiempo = TiempoSeleccionado;
+                var tipo = TipoSeleccionado;
+                var auto = AutoSeleccionado;
+                var pago = TipoPago;
+                var pedidosTemp = ListPedidosTemp;
+                var gastosTemp = ListGastosTemp;
+
+                if (pedidosTemp == null)
+                    return;
+
+                // Ejecutar el filtrado en un hilo secundario
+                var resultado = await Task.Run(() =>
                 {
-                    Total = 0;
-                    if ((ZonaSeleccionada == null || ZonaSeleccionada.nombre.Equals("Todas")) && (TiempoSeleccionado.Equals("Todos")) && (RepartidorSeleccionado == null || RepartidorSeleccionado.nombre.Equals("Todos")) && (string.IsNullOrEmpty(TipoSeleccionado) || TipoSeleccionado.Equals("Todos")) && (string.IsNullOrEmpty(AutoSeleccionado) || AutoSeleccionado.Equals("Todos")) && (string.IsNullOrEmpty(TipoPago) || TipoPago.Equals("Todos")))
-                    {
-                        if (ListPedidosTemp != null)
-                        {
-                            Total = 0;
-                            List<CabeceraPedido> l = ListPedidosTemp.FindAll(p => ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date));
-                            List<GastoModel> l2 = new List<GastoModel>();
-                            if (ListGastosTemp != null)
-                            {
-                                l2 = ListGastosTemp.FindAll(p => ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date));
-                            }
+                    if (token.IsCancellationRequested)
+                        return (new List<CabeceraPedido>(), new List<GastoModel>(), 0.0, 0.0, 0.0, 0);
 
-                            if (l != null)
-                            {
-                                Listado = new List<CabeceraPedido>(l);
-                                Total = Listado.Sum(p => p.precioTotalPedido);
-                                TotalPedidosE = Listado.Sum(p => p.precioTotalPedido);
-                            }
-                            if (l2 != null && l2.Count > 0)
-                            {
-                                Gastos = new ObservableCollection<GastoModel>(l2);
-                                Total += Gastos.Sum(p => p.precio);
-                                TotalGastos = Gastos.Sum(p => p.precio);
-                            }
-                            TotalPedidos = Listado.Count;
-                        }
-                    }
-                    else
+                    // Filtrar pedidos - construir query
+                    var listaPedidos = pedidosTemp.Where(p =>
                     {
-                        if (ListPedidosTemp != null)
-                        {
-                            Total = 0;
-                            List<CabeceraPedido> l = new List<CabeceraPedido>(ListPedidosTemp).Where(p => ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                            List<GastoModel> l2 = new List<GastoModel>(ListGastosTemp).Where(p => ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date)).ToList();
-                            if (!ZonaSeleccionada.nombre.Equals("Todas"))
-                                l = l.Where(p => p.idZona.Equals(ZonaSeleccionada.idZona) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                            if (!RepartidorSeleccionado.nombre.Equals("Todos"))
-                            {
-                                l = l.Where(p => p.idRepartidor.Equals(RepartidorSeleccionado.id) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                                l2 = l2.Where(p => p.idRepartidor.Equals(RepartidorSeleccionado.id) && ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date)).ToList();
-                            }
-                            if (!TiempoSeleccionado.Equals("Todos"))
-                            {
-                                if (TiempoSeleccionado.Equals("Por la mañana"))
-                                {
-                                    l = l.Where(p => ((DateTime)p.horaPedido).Hour <= 17 && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                                    l2 = l2.Where(p => ((DateTime)p.fecha).Hour <= 17 && ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date)).ToList();
-                                }
-                                else if (TiempoSeleccionado.Equals("Por la noche"))
-                                {
-                                    l = l.Where(p => ((DateTime)p.horaPedido).Hour > 17 && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                                    l2 = l2.Where(p => ((DateTime)p.fecha).Hour > 17 && ((DateTime)p.fecha).Date >= (Desde.Date) && ((DateTime)p.fecha).Date <= (Hasta.Date)).ToList();
-                                }
-                            }
-                            if (!TipoSeleccionado.Equals("Todos"))
-                            {
-                                string tipoVenta = "Local";
-                                if (TipoSeleccionado.Equals("Recogida Local"))
-                                    tipoVenta = "Recogida";
-                                else if (TipoSeleccionado.Equals("Envío Domicilio"))
-                                    tipoVenta = "Envío";
-                                l = l.Where(p => p.tipoVenta.Equals(tipoVenta) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                            }
-                            if (!AutoSeleccionado.Equals("Todas"))
-                            {
-                                if (AutoSeleccionado.Equals("Auto Pedido"))
-                                    l = l.Where(p => p.nombreUsuario.Equals(AutoSeleccionado) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                                else
-                                    l = l.Where(p => !p.nombreUsuario.Equals("Auto Pedido") && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
-                            }
-                            if (!TipoPago.Equals("Todos"))
-                                l = l.Where(p => p.tipoPago.Equals(TipoPago) && ((DateTime)p.horaPedido).Date >= (Desde.Date) && ((DateTime)p.horaPedido).Date <= (Hasta.Date)).ToList();
+                        if (p.horaPedido == null) return false;
+                        var fecha = ((DateTime)p.horaPedido).Date;
+                        if (fecha < desdeDate || fecha > hastaDate) return false;
 
-                            if (l != null)
-                            {
-                                Listado = new List<CabeceraPedido>(l);
-                                Total = Listado.Sum(p => p.precioTotalPedido);
-                                TotalPedidosE = Listado.Sum(p => p.precioTotalPedido);
-                            }
-                            if (l2 != null)
-                            {
-                                Gastos = new ObservableCollection<GastoModel>(l2);
-                                Total += Gastos.Sum(p => p.precio);
-                                TotalGastos = Gastos.Sum(p => p.precio);
-                            }
-                            TotalPedidos = Listado.Count;
+                        if (zona != null && !zona.nombre.Equals("Todas") && !p.idZona.Equals(zona.idZona))
+                            return false;
+
+                        if (repartidor != null && !repartidor.nombre.Equals("Todos") && !p.idRepartidor.Equals(repartidor.id))
+                            return false;
+
+                        if (!string.IsNullOrEmpty(tiempo) && !tiempo.Equals("Todos"))
+                        {
+                            var hora = ((DateTime)p.horaPedido).Hour;
+                            if (tiempo.Equals("Por la mañana") && hora > 17) return false;
+                            if (tiempo.Equals("Por la noche") && hora <= 17) return false;
                         }
-                    }
-                }
+
+                        if (!string.IsNullOrEmpty(tipo) && !tipo.Equals("Todos"))
+                        {
+                            string tipoVenta = tipo.Equals("Recogida Local") ? "Recogida"
+                                             : tipo.Equals("Envío Domicilio") ? "Envío" : "Local";
+                            if (p.tipoVenta == null || !p.tipoVenta.Equals(tipoVenta)) return false;
+                        }
+
+                        if (!string.IsNullOrEmpty(auto) && !auto.Equals("Todos") && !auto.Equals("Todas"))
+                        {
+                            if (auto.Equals("Auto Pedido") && (p.nombreUsuario == null || !p.nombreUsuario.Equals("Auto Pedido")))
+                                return false;
+                            if (!auto.Equals("Auto Pedido") && p.nombreUsuario != null && p.nombreUsuario.Equals("Auto Pedido"))
+                                return false;
+                        }
+
+                        if (!string.IsNullOrEmpty(pago) && !pago.Equals("Todos"))
+                        {
+                            if (p.tipoPago == null || !p.tipoPago.Equals(pago)) return false;
+                        }
+
+                        return true;
+                    }).ToList();
+
+                    if (token.IsCancellationRequested)
+                        return (new List<CabeceraPedido>(), new List<GastoModel>(), 0.0, 0.0, 0.0, 0);
+
+                    // Filtrar gastos
+                    var listaGastos = gastosTemp != null ? gastosTemp.Where(p =>
+                    {
+                        if (p.fecha == null) return false;
+                        var fecha = ((DateTime)p.fecha).Date;
+                        if (fecha < desdeDate || fecha > hastaDate) return false;
+
+                        if (repartidor != null && !repartidor.nombre.Equals("Todos") && !p.idRepartidor.Equals(repartidor.id))
+                            return false;
+
+                        if (!string.IsNullOrEmpty(tiempo) && !tiempo.Equals("Todos"))
+                        {
+                            var hora = ((DateTime)p.fecha).Hour;
+                            if (tiempo.Equals("Por la mañana") && hora > 17) return false;
+                            if (tiempo.Equals("Por la noche") && hora <= 17) return false;
+                        }
+
+                        return true;
+                    }).ToList() : new List<GastoModel>();
+
+                    // Calcular totales
+                    double totalPedidosE = listaPedidos.Sum(p => p.precioTotalPedido);
+                    double totalGastos = listaGastos.Sum(p => p.precio);
+
+                    return (listaPedidos, listaGastos, totalPedidosE + totalGastos, totalPedidosE, totalGastos, listaPedidos.Count);
+                }, token);
+
+                if (token.IsCancellationRequested)
+                    return;
+
+                // Actualizar UI
+                Listado = resultado.Item1;
+                Gastos = new ObservableCollection<GastoModel>(resultado.Item2);
+                Total = resultado.Item3;
+                TotalPedidosE = resultado.Item4;
+                TotalGastos = resultado.Item5;
+                TotalPedidos = resultado.Item6;
+            }
+            catch (OperationCanceledException)
+            {
+                // Ignorar
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"Error en Filtro: {ex.Message}");
             }
-
         }
         private void CargarTiempos()
         {

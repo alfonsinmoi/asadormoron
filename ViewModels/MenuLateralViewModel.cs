@@ -13,8 +13,6 @@ using Microsoft.Maui.Storage;
 using Microsoft.Maui.ApplicationModel;
 using AsadorMoron.Recursos;
 using AsadorMoron.Messages;
-// 
-using AsadorMoron.ViewModels.Informes;
 using AsadorMoron.ViewModels.Establecimientos;
 using AsadorMoron.ViewModels.Administrador;
 using AsadorMoron.ViewModels.Clientes;
@@ -266,6 +264,8 @@ namespace AsadorMoron.ViewModels
                         foreach (MenuModel m2 in hijos)
                         {
                             nombreMenu = m2.nombre;
+                            m2.viewmodel = m2.viewmodel.Replace("PolloAndaluz", "AsadorMoron");
+                            m2.imagen = m2.imagen.Replace("Images/", "");
                             ml.Hijos.Add(new ItemMenuLateralModel
                             {
                                 Title = nombreMenu,

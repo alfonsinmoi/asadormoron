@@ -5,272 +5,379 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
     x:Name="ViewArticulosBaja"
-    BackgroundColor="{StaticResource Rojo}"
-    IconImageSource="menu.png">
-    <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
-            <Label
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,50,0"
-                FontFamily="Syne"
-                FontSize="25"
-                HorizontalTextAlignment="Center"
-                Text="Prod. Baja"
-                TextColor="{DynamicResource Negro}"
-                VerticalOptions="Center" />
-            <ImageButton
-                Grid.Column="1"
-                Margin="0,0,10,0"
-                BackgroundColor="Transparent"
-                Command="{Binding NuevoProductoCommand}"
-                HeightRequest="30"
-                HorizontalOptions="End"
-                Source="export_excel.png"
-                WidthRequest="30" />
-        </Grid>
-    </NavigationPage.TitleView>
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
 
-    <Grid
-        Margin="{OnPlatform Default='0,90,0,0', Android='0,0,0,0', WinUI='0'}"
-        HorizontalOptions="FillAndExpand"
-        RowDefinitions="Auto,Auto,*"
-        RowSpacing="0"
-        VerticalOptions="FillAndExpand">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+            <Color x:Key="GrisInactivo">#6D6D6D</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-        <!-- Barra de búsqueda -->
-        <Grid Grid.Row="0" Margin="{OnPlatform Android='20,10,20,10', Default='20,5'}">
-            <Border
-                BackgroundColor="White"
-                StrokeShape="RoundRectangle 8"
-                Stroke="LightGray"
-                StrokeThickness="1"
-                Padding="0">
-                <Entry
-                    x:Name="TextoBusqueda"
-                    BackgroundColor="Transparent"
-                    FontFamily="Syne_Regular"
-                    FontSize="14"
-                    Keyboard="Plain"
-                    Placeholder="Buscar producto..."
-                    PlaceholderColor="Gray"
-                    Text="{Binding TextoBusqueda}"
-                    TextColor="{DynamicResource Negro}"
-                    Margin="10,0,50,0"/>
-            </Border>
-            <ImageButton
-                Padding="7"
-                BackgroundColor="{DynamicResource Amarillo}"
-                Command="{Binding btnFiltrar}"
-                HeightRequest="40"
-                HorizontalOptions="End"
-                Source="lupa.png"
-                WidthRequest="45"
-                CornerRadius="8"/>
-        </Grid>
+    <Grid RowDefinitions="Auto,*">
 
-        <!-- Seleccionar todo + Activar -->
-        <Border Grid.Row="1"
-                BackgroundColor="White"
-                Margin="{OnPlatform WinUI='20,5', Default='0'}"
+        <!-- ============================================ -->
+        <!-- HEADER FIJO -->
+        <!-- ============================================ -->
+        <Border Grid.Row="0"
                 StrokeThickness="0"
-                Padding="10,5">
-            <Grid ColumnDefinitions="Auto,*,Auto">
-                <HorizontalStackLayout Grid.Column="0" Spacing="5">
-                    <CheckBox
-                        IsChecked="{Binding TodoSeleccionado}"
-                        Color="{DynamicResource Rojo}"/>
-                    <Label
-                        Text="Seleccionar todo"
-                        TextColor="{DynamicResource Negro}"
-                        FontFamily="Syne_Regular"
-                        FontSize="14"
-                        VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                BackgroundColor="White"
+                Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
 
-                <Button
-                    Grid.Column="2"
-                    Text="Activar seleccionados"
-                    Command="{Binding cmdActivar}"
-                    BackgroundColor="{DynamicResource Amarillo}"
-                    TextColor="{DynamicResource Negro}"
-                    FontFamily="Syne_Regular"
-                    FontSize="12"
-                    HeightRequest="35"
-                    CornerRadius="8"
-                    Padding="15,0"/>
+            <Grid RowDefinitions="Auto,Auto" RowSpacing="12">
+
+                <!-- Barra superior -->
+                <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+
+                    <!-- Botón Volver -->
+                    <Border BackgroundColor="{StaticResource RojoMarca}"
+                            StrokeThickness="0"
+                            WidthRequest="44"
+                            HeightRequest="44">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Label Text="&#x2190;"
+                               FontSize="22"
+                               TextColor="White"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped"/>
+                        </Border.GestureRecognizers>
+                    </Border>
+
+                    <!-- Título -->
+                    <Label Grid.Column="1"
+                           Text="Productos Inactivos"
+                           FontFamily="Nunito_bold"
+                           FontSize="18"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                           <!-- Espacio -->
+                <BoxView Grid.Column="2" WidthRequest="44" Color="White"/>
+                </Grid>
+
+                <!-- Buscador -->
+                <Border Grid.Row="1"
+                        BackgroundColor="#FAFAFA"
+                        StrokeThickness="1"
+                        Stroke="#E0E0E0"
+                        HeightRequest="50">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="14,0">
+                        <Image Grid.Column="0"
+                               Source="lupa.png"
+                               WidthRequest="20"
+                               HeightRequest="20"
+                               VerticalOptions="Center"
+                               Opacity="0.6"/>
+                        <Entry Grid.Column="1"
+                               x:Name="TextoBusqueda"
+                               Placeholder="Buscar productos..."
+                               PlaceholderColor="#999999"
+                               Text="{Binding TextoBusqueda}"
+                               TextColor="{DynamicResource Negro}"
+                               FontFamily="Nunito"
+                               FontSize="15"
+                               BackgroundColor="Transparent"
+                               Margin="12,0,0,0"
+                               ReturnType="Search"
+                               ReturnCommand="{Binding btnFiltrar}"
+                               VerticalOptions="Center"/>
+                        <Border Grid.Column="2"
+                                BackgroundColor="{StaticResource GrisInactivo}"
+                                StrokeThickness="0"
+                                Padding="14,8"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <Label Text="Buscar"
+                                   TextColor="White"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="13"
+                                   VerticalOptions="Center"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding btnFiltrar}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+                    </Grid>
+                </Border>
+
             </Grid>
         </Border>
 
-        <!-- Lista de categorías con productos -->
-        <CollectionView
-            Grid.Row="2"
-            BackgroundColor="White"
-            IsGrouped="True"
-            ItemsSource="{Binding ListadoCategorias}"
-            SelectionMode="None"
-            ItemSizingStrategy="MeasureFirstItem">
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL -->
+        <!-- ============================================ -->
+        <Grid Grid.Row="1" RowDefinitions="Auto,*">
 
-            <CollectionView.GroupHeaderTemplate>
-                <DataTemplate>
-                    <Border
-                        BackgroundColor="{StaticResource Amarillo}"
-                        StrokeThickness="0"
-                        Margin="0,10,0,0"
-                        Padding="0">
-                        <Grid
-                            HeightRequest="50"
-                            ColumnDefinitions="*,Auto"
-                            Padding="15,0">
-                            <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Path=BindingContext.HeaderTapped, Source={x:Reference Name=ViewArticulosBaja}}"
-                                    CommandParameter="{Binding Categoria}" />
-                            </Grid.GestureRecognizers>
+            <!-- Barra de acciones -->
+            <Border Grid.Row="0"
+                    BackgroundColor="White"
+                    StrokeThickness="0"
+                    Margin="16,12,16,0"
+                    Padding="12,8">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.08"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
+                    <!-- Checkbox Todo -->
+                    <CheckBox Grid.Column="0"
+                              IsChecked="{Binding TodoSeleccionado}"
+                              Color="{StaticResource GrisInactivo}"
+                              VerticalOptions="Center"/>
+                    <Label Grid.Column="1"
+                           Text="Seleccionar todo"
+                           FontFamily="Nunito"
+                           FontSize="14"
+                           TextColor="{DynamicResource Negro}"
+                           VerticalOptions="Center"/>
 
-                            <Label
-                                Grid.Column="0"
-                                FontFamily="Syne"
-                                FontSize="16"
-                                FontAttributes="Bold"
-                                Text="{Binding Categoria}"
-                                TextColor="{DynamicResource Negro}"
-                                VerticalOptions="Center"/>
-
-                            <HorizontalStackLayout Grid.Column="1" Spacing="10" VerticalOptions="Center">
-                                <Label
-                                    Text="{Binding EventosCount, StringFormat='({0})'}"
-                                    TextColor="{DynamicResource Negro}"
-                                    FontFamily="Syne_Regular"
-                                    FontSize="14"
-                                    VerticalOptions="Center"/>
-                                <Image
-                                    Source="{Binding StateIcon}"
-                                    HeightRequest="20"
-                                    WidthRequest="20"
-                                    VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                        </Grid>
+                    <!-- Botón Activar -->
+                    <Border Grid.Column="3"
+                            BackgroundColor="#E8F5E9"
+                            StrokeThickness="0"
+                            Padding="16,10">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <StackLayout Orientation="Horizontal" Spacing="8">
+                            <Image Source="check.png"
+                                   WidthRequest="18"
+                                   HeightRequest="18"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Activar"
+                                   TextColor="#4CAF50"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="13"
+                                   VerticalOptions="Center"/>
+                        </StackLayout>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding cmdActivar}"/>
+                        </Border.GestureRecognizers>
                     </Border>
-                </DataTemplate>
-            </CollectionView.GroupHeaderTemplate>
+                </Grid>
+            </Border>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border
-                        BackgroundColor="White"
-                        StrokeThickness="0"
-                        Margin="0,0,0,1"
-                        Padding="5,8">
-                        <Grid
-                            ColumnDefinitions="40,80,*,40"
-                            ColumnSpacing="10"
-                            RowDefinitions="Auto,Auto"
-                            RowSpacing="2">
-
-                            <!-- CheckBox -->
-                            <CheckBox
-                                Grid.Row="0"
-                                Grid.RowSpan="2"
-                                Grid.Column="0"
-                                Color="{DynamicResource Rojo}"
-                                IsChecked="{Binding articulo.seleccionado}"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center"/>
-
-                            <!-- Imagen del producto -->
-                            <Border
-                                Grid.Row="0"
-                                Grid.RowSpan="2"
-                                Grid.Column="1"
-                                StrokeShape="RoundRectangle 8"
+            <!-- Lista de productos agrupada -->
+            <CollectionView Grid.Row="1"
+                            ItemsSource="{Binding ListadoCategorias}"
+                            IsGrouped="True"
+                            SelectionMode="None"
+                            Margin="0,12,0,0">
+                <CollectionView.GroupHeaderTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="White"
                                 StrokeThickness="0"
-                                BackgroundColor="#F5F5F5"
-                                HeightRequest="70"
-                                WidthRequest="70"
-                                VerticalOptions="Center">
-                                <ff:CachedImage
-                                    Aspect="AspectFill"
-                                    Source="{Binding articulo.imagen}"
-                                    HeightRequest="70"
-                                    WidthRequest="70">
-                                    <ff:CachedImage.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Path=BindingContext.ArticuloSeleccionado, Source={x:Reference Name=ViewArticulosBaja}}"
-                                            CommandParameter="{Binding articulo.idArticulo}" />
-                                    </ff:CachedImage.GestureRecognizers>
-                                </ff:CachedImage>
+                                Margin="16,4,16,4"
+                                Padding="16,12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.08"/>
+                            </Border.Shadow>
+                            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{StaticResource GrisInactivo}"
+                                        StrokeThickness="0"
+                                        WidthRequest="40"
+                                        HeightRequest="40">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="categoria.png"
+                                           WidthRequest="20"
+                                           HeightRequest="20"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+                                <Label Grid.Column="1"
+                                       Text="{Binding Categoria}"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="16"
+                                       TextColor="{DynamicResource Negro}"
+                                       VerticalOptions="Center"
+                                       Margin="12,0,0,0"/>
+                                <Label Grid.Column="2"
+                                       Text="{Binding EventosCount, StringFormat='({0})'}"
+                                       FontFamily="Nunito"
+                                       FontSize="13"
+                                       TextColor="#888888"
+                                       VerticalOptions="Center"
+                                       Margin="0,0,8,0"/>
+                                <Image Grid.Column="3"
+                                       Source="{Binding StateIcon}"
+                                       WidthRequest="24"
+                                       HeightRequest="24"
+                                       VerticalOptions="Center"/>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.HeaderTapped, Source={x:Reference Name=ViewArticulosBaja}}"
+                                                          CommandParameter="{Binding Categoria}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.GroupHeaderTemplate>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="16,0,16,12"
+                                Padding="0"
+                                BackgroundColor="White"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20"/>
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                            </Border.Shadow>
+                            <Grid ColumnDefinitions="Auto,90,*,Auto" HeightRequest="100" Padding="8,8,12,8" ColumnSpacing="10">
+
+                                <!-- Checkbox -->
+                                <CheckBox Grid.Column="0"
+                                          IsChecked="{Binding articulo.seleccionado}"
+                                          Color="{StaticResource GrisInactivo}"
+                                          VerticalOptions="Center"/>
+
+                                <!-- Imagen producto con badge -->
+                                <Grid Grid.Column="1">
+                                    <Border StrokeThickness="0"
+                                            HeightRequest="84"
+                                            WidthRequest="84">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="14"/>
+                                        </Border.StrokeShape>
+                                        <ff:CachedImage Aspect="AspectFill"
+                                                        Source="{Binding articulo.imagen}"
+                                                        DownsampleToViewSize="True"
+                                                        LoadingPlaceholder="logo_producto.png"
+                                                        ErrorPlaceholder="logo_producto.png"
+                                                        Opacity="0.5"/>
+                                    </Border>
+                                    <!-- Badge INACTIVO -->
+                                    <Border BackgroundColor="{StaticResource GrisInactivo}"
+                                            StrokeThickness="0"
+                                            Padding="6,3"
+                                            HorizontalOptions="Center"
+                                            VerticalOptions="End"
+                                            Margin="0,0,0,4">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="4"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="INACTIVO"
+                                               TextColor="White"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="8"/>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Info producto -->
+                                <StackLayout Grid.Column="2"
+                                             VerticalOptions="Center"
+                                             Spacing="4">
+                                    <Label Text="{Binding articulo.nombre}"
+                                           TextColor="#888888"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="15"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2"/>
+                                    <Label Text="{Binding articulo.precio, StringFormat='{0:N2}€'}"
+                                           TextColor="{StaticResource GrisInactivo}"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="17"/>
+                                </StackLayout>
+
+                                <!-- Botón eliminar -->
+                                <Border Grid.Column="3"
+                                        BackgroundColor="#FFEBEE"
+                                        StrokeThickness="0"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        VerticalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="eliminar.png"
+                                           WidthRequest="18"
+                                           HeightRequest="18"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.EliminarProductoCommand, Source={x:Reference Name=ViewArticulosBaja}}"
+                                                              CommandParameter="{Binding articulo}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.ArticuloSeleccionado, Source={x:Reference Name=ViewArticulosBaja}}"
+                                                          CommandParameter="{Binding articulo.idArticulo}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Border BackgroundColor="White"
+                            StrokeThickness="0"
+                            Margin="16"
+                            Padding="40">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                        </Border.Shadow>
+                        <StackLayout VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="12">
+                            <Border BackgroundColor="#F5F5F5"
+                                    StrokeThickness="0"
+                                    Padding="16"
+                                    HorizontalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="30"/>
+                                </Border.StrokeShape>
+                                <Image Source="check.png"
+                                       WidthRequest="32"
+                                       HeightRequest="32"
+                                       Opacity="0.5"/>
                             </Border>
-
-                            <!-- Nombre del producto -->
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="2"
-                                FontFamily="Syne_Medium"
-                                FontSize="15"
-                                FontAttributes="Bold"
-                                LineBreakMode="TailTruncation"
-                                MaxLines="2"
-                                Text="{Binding articulo.nombre}"
-                                TextColor="{DynamicResource Negro}"
-                                VerticalOptions="End">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Path=BindingContext.ArticuloSeleccionado, Source={x:Reference Name=ViewArticulosBaja}}"
-                                        CommandParameter="{Binding articulo.idArticulo}" />
-                                </Label.GestureRecognizers>
-                            </Label>
-
-                            <!-- Precio -->
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="2"
-                                FontFamily="Nunito_bold"
-                                FontSize="16"
-                                Text="{Binding articulo.precio, StringFormat='{0:N2}€'}"
-                                TextColor="{DynamicResource Rojo}"
-                                VerticalOptions="Start">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Path=BindingContext.ArticuloSeleccionado, Source={x:Reference Name=ViewArticulosBaja}}"
-                                        CommandParameter="{Binding articulo.idArticulo}" />
-                                </Label.GestureRecognizers>
-                            </Label>
-
-                            <!-- Botón eliminar -->
-                            <ImageButton
-                                Grid.Row="0"
-                                Grid.RowSpan="2"
-                                Grid.Column="3"
-                                VerticalOptions="Center"
-                                HorizontalOptions="Center"
-                                HeightRequest="35"
-                                WidthRequest="35"
-                                Source="eliminar.png"
-                                BackgroundColor="Transparent"
-                                Command="{Binding Path=BindingContext.EliminarProductoCommand, Source={x:Reference Name=ViewArticulosBaja}}"
-                                CommandParameter="{Binding articulo}"/>
-                        </Grid>
+                            <Label Text="Sin productos inactivos"
+                                   TextColor="{DynamicResource Negro}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="18"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Todos los productos están activos"
+                                   TextColor="#888888"
+                                   FontFamily="Nunito"
+                                   FontSize="14"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
                     </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                </CollectionView.EmptyView>
+                <CollectionView.Footer>
+                    
+                </CollectionView.Footer>
+            </CollectionView>
 
-        </CollectionView>
+        </Grid>
 
-        <!-- Mensaje cuando no hay productos (fuera del CollectionView para evitar problemas con grupos colapsados) -->
-        <StackLayout
-            Grid.Row="2"
-            IsVisible="{Binding SinProductos}"
-            VerticalOptions="Center"
-            HorizontalOptions="Center"
-            Padding="20"
-            BackgroundColor="White">
-            <Label
-                Text="No hay productos dados de baja"
-                FontFamily="Syne_Regular"
-                FontSize="16"
-                TextColor="Gray"
-                HorizontalOptions="Center"/>
-        </StackLayout>
     </Grid>
+
 </ContentPage>

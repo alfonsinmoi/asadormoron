@@ -1,15 +1,8 @@
 ﻿using AsadorMoron.Interfaces;
 using AsadorMoron.ViewModels;
 using AsadorMoron.ViewModels.Base;
-using AsadorMoron.ViewModels.Informes;
 using AsadorMoron.Views;
-using AsadorMoron.Views.Informes;
 using AsadorMoron.Views.Base;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Maui;
-using Microsoft.Maui.Controls;
 using AsadorMoron.ViewModels.Establecimientos;
 using AsadorMoron.Views.Establecimientos;
 using AsadorMoron.ViewModels.Clientes;
@@ -18,8 +11,6 @@ using AsadorMoron.ViewModels.Repartidores;
 using AsadorMoron.Views.Administrador;
 using AsadorMoron.Views.Clientes;
 using AsadorMoron.Views.Repartidores;
-using AsadorMoron.ViewModels.Contabilidad;
-using AsadorMoron.Views.Contabilidad;
 using AppMainPage = AsadorMoron.Views.MainPage;
 
 namespace AsadorMoron.Services
@@ -42,7 +33,7 @@ namespace AsadorMoron.Services
 
         public NavigationService()
         {
-            if(_mappings == null || !_mappings.IsValueCreated)
+            if (_mappings == null || !_mappings.IsValueCreated)
                 _mappings = CreatePageViewModelMappings();
         }
 
@@ -85,17 +76,17 @@ namespace AsadorMoron.Services
 
         public Task NavigateToAsyncWithoutMenu<TViewModel>() where TViewModel : ViewModelBase
         {
-            return NavigateToAsync(typeof(TViewModel), null,false);
+            return NavigateToAsync(typeof(TViewModel), null, false);
         }
 
         public Task NavigateToAsyncWithoutMenu<TViewModel>(object parameter) where TViewModel : ViewModelBase
         {
-            return NavigateToAsync(typeof(TViewModel), parameter,false);
+            return NavigateToAsync(typeof(TViewModel), parameter, false);
         }
 
         public Task NavigateToAsyncWithoutMenu(Type viewModelType)
         {
-            return NavigateToAsync(viewModelType, null,false);
+            return NavigateToAsync(viewModelType, null, false);
         }
 
         public Task NavigateToAsyncMenu<TViewModel>() where TViewModel : ViewModelBase
@@ -123,9 +114,9 @@ namespace AsadorMoron.Services
             return LogOutAppAsync(typeof(TViewModel), parameter);
         }
 
-        
 
-        protected virtual async Task NavigateToAsync(Type viewModelType, object parameter,bool visibleMenu=true)
+
+        protected virtual async Task NavigateToAsync(Type viewModelType, object parameter, bool visibleMenu = true)
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
             System.Diagnostics.Debug.WriteLine($"[PERF] NavigateToAsync INICIO: {viewModelType.Name}");
@@ -306,7 +297,6 @@ namespace AsadorMoron.Services
             _mappings.Value.Add(typeof(DetalleComidaViewModel), typeof(DetalleComidaView));
             _mappings.Value.Add(typeof(CategoriasViewModel), typeof(CategoriasView));
             _mappings.Value.Add(typeof(DetalleEstablecimientoViewModel), typeof(DetalleEstablecimientoView));
-            _mappings.Value.Add(typeof(DetalleEstablecimientoParaClienteViewModel), typeof(DetalleEstablecimientoParaClienteView));
             _mappings.Value.Add(typeof(DetalleCategoriaViewModel), typeof(DetalleCategoriaView));
             _mappings.Value.Add(typeof(DetalleArticuloViewModel), typeof(DetalleArticulosView));
             _mappings.Value.Add(typeof(CartaViewModel), typeof(CartaView));
@@ -315,54 +305,25 @@ namespace AsadorMoron.Services
             _mappings.Value.Add(typeof(DetallePedidoViewModel), typeof(DetallePedidoView));
             _mappings.Value.Add(typeof(HistoricoPedidosViewModelClient), typeof(HistoricoPedidosView));
             _mappings.Value.Add(typeof(HistoricoPedidosViewModelAdmin), typeof(HistoricoPedidosViewAdmin));
-            _mappings.Value.Add(typeof(HistoricoPedidosViewModelEst), typeof(HistoricoPedidosPolloAndaluzEstView));
             _mappings.Value.Add(typeof(ConfiguracionEstablecimientoViewModel), typeof(ConfiguracionEstablecimientoView));
             _mappings.Value.Add(typeof(ArticulosViewModel), typeof(ArticulosView));
             _mappings.Value.Add(typeof(RecoveryViewModel), typeof(RecoveryView));
             _mappings.Value.Add(typeof(PedidoConfirmadoViewModel), typeof(PedidoConfirmadoView));
             _mappings.Value.Add(typeof(VersionMinimaViewModel), typeof(VersionMinimaPopUp));
             _mappings.Value.Add(typeof(FranjasHorariasViewModel), typeof(FranjasHorariasView));
-            _mappings.Value.Add(typeof(ZonasViewModel), typeof(ZonasView));
-            _mappings.Value.Add(typeof(DetalleZonaViewModel), typeof(DetalleZonaView));
             _mappings.Value.Add(typeof(IngredientesViewModel), typeof(IngredientesView));
             _mappings.Value.Add(typeof(DetalleIngredienteViewModel), typeof(DetalleIngredienteView));
             _mappings.Value.Add(typeof(HomeViewModelRepartidor), typeof(HomeViewRepartidor));
             _mappings.Value.Add(typeof(DetalleRepartidorViewModel), typeof(DetalleRepartidorView));
             _mappings.Value.Add(typeof(RepartidoresViewModel), typeof(RepartidoresView));
-            _mappings.Value.Add(typeof(PopupPageRepartidoresViewModel), typeof(PopupPageRepartidores));
             _mappings.Value.Add(typeof(UsuariosViewModel), typeof(UsuariosView));
             _mappings.Value.Add(typeof(EnviarNotificacionViewModel), typeof(EnviarNotificacionView));
-            _mappings.Value.Add(typeof(PedidoConfirmadoComercioViewModel), typeof(PedidoConfirmadoComercioView));
-            _mappings.Value.Add(typeof(MisTarjetasViewModel), typeof(TarjetasView));
             _mappings.Value.Add(typeof(AddCreditCardPageViewModel), typeof(AddCreditCardPage));
             _mappings.Value.Add(typeof(ArticulosBajaViewModel), typeof(ArticulosBajaView));
-            _mappings.Value.Add(typeof(InformeBeneficiosViewModel), typeof(InformeBeneficiosView));
-            _mappings.Value.Add(typeof(InformeTicketMedioViewModel), typeof(InformeTicketMedioView));
-            _mappings.Value.Add(typeof(ClientesInactivosViewModel), typeof(ClientesInactivosView));
-            _mappings.Value.Add(typeof(MejoresClientesViewModel), typeof(MejoresClientesView));
-            _mappings.Value.Add(typeof(ProductosMasVendidosViewModel), typeof(ProductosMasVendidosView));
-            _mappings.Value.Add(typeof(InformesViewModel), typeof(informesView));
             _mappings.Value.Add(typeof(RegistroViewModel), typeof(RegistroView));
-            _mappings.Value.Add(typeof(ValorarPedidoViewModel), typeof(ValorarPedidoView));
             _mappings.Value.Add(typeof(WebViewModel), typeof(MyWebView));
             _mappings.Value.Add(typeof(PagoErroneoViewModel), typeof(PagoErroneoView));
-            _mappings.Value.Add(typeof(DatosFiscalesEstablecimientoViewModel), typeof(DatosFiscalesEstablecimientosView));
-            _mappings.Value.Add(typeof(AutoPedidoViewModel), typeof(AutoPedidoView));
-            _mappings.Value.Add(typeof(FranjasHorariasEncargoViewModel), typeof(FranjasHorariasEncargoView));
-            _mappings.Value.Add(typeof(CuentasEstablecimientoViewModel), typeof(CuentasEstablecimientoView));
-            _mappings.Value.Add(typeof(CuentasAdministradorViewModel), typeof(CuentasAdministradorView));
-            _mappings.Value.Add(typeof(HomeContabilidadViewModel), typeof(HomeContabilidadView));
             _mappings.Value.Add(typeof(HorariosEstablecimientoViewModel), typeof(HorariosEstablecimientoView));
-            _mappings.Value.Add(typeof(CuponesViewModel), typeof(CuponesView));
-            _mappings.Value.Add(typeof(CuponesEstViewModel), typeof(CuponesEstView));
-            _mappings.Value.Add(typeof(DetalleCuponViewModel), typeof(DetalleCuponView));
-            _mappings.Value.Add(typeof(DetalleCuponesEstViewModel), typeof(DetalleCuponesEstView));
-            _mappings.Value.Add(typeof(AutoPedidoMinViewModel), typeof(AutoPedidoMinView));
-            _mappings.Value.Add(typeof(HistoricoPedidosPuntosPolloAndaluzViewModelAdmin), typeof(HistoricoPedidosPuntosPolloAndaluzViewAdmin));
-            _mappings.Value.Add(typeof(FacturasEstablecimientoViewModel), typeof(FacturasEstablecimientoView));
-            _mappings.Value.Add(typeof(AutoPedidoAdminViewModel), typeof(AutoPedidoAdminView));
-            _mappings.Value.Add(typeof(FacturasAdministradorViewModel), typeof(FacturasAdministradorView));
-            _mappings.Value.Add(typeof(InvitaAmigoViewModel), typeof(InvitaAmigoView));
             _mappings.Value.Add(typeof(CartaProductosViewModel), typeof(CartaProductosView));
             _mappings.Value.Add(typeof(CartaProductosNavidadViewModel), typeof(CartaProductosNavidadView));
             _mappings.Value.Add(typeof(GastoViewModel), typeof(GastoView));

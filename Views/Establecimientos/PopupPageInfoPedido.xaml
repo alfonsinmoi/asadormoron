@@ -1,69 +1,118 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <popup:PopupPage
     x:Class="AsadorMoron.Views.Establecimientos.PopupPageInfoPedido"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:popup="clr-namespace:Mopups.Pages;assembly=Mopups"
-    BackgroundColor="Transparent">
+    BackgroundColor="#80000000">
+
     <popup:PopupPage.Content>
-        <Frame
-            Margin="20,0"
-            Padding="10"
-            BackgroundColor="{StaticResource Rojo}"
-            HeightRequest="350"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
-            <StackLayout>
-                <Label
-                    FontAttributes="Bold"
-                    FontFamily="Syne"
-                    FontSize="Title"
-                    HorizontalOptions="CenterAndExpand"
-                    HorizontalTextAlignment="Center"
-                    Text="Datos Pedido"
-                    TextTransform="Uppercase"
-                    TextColor="White"
-                    VerticalTextAlignment="Center" />
-                <ListView
-                    x:Name="lista"
-                    BackgroundColor="Transparent"
-                    HasUnevenRows="True"
-                    SeparatorVisibility="None">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Grid
-                                    Margin="0,3"
-                                    ColumnDefinitions="30,*,Auto"
-                                    RowDefinitions="*">
-                                    <Label
-                                        Grid.Column="0"
-                                        Margin="10,0"
-                                        FontFamily="Nunito"
-                                        FontSize="15"
-                                        Text="{Binding cantidad}"
-                                        TextColor="White" />
-                                    <Label
-                                        Grid.Column="1"
-                                        FontFamily="Nunito"
-                                        FontSize="15"
-                                        LineBreakMode="WordWrap"
-                                        Text="{Binding nombreProducto}"
-                                        TextColor="White" />
-                                    <Label
-                                        Grid.Column="2"
-                                        Margin="10,0"
-                                        FontFamily="Nunito"
-                                        FontSize="15"
-                                        HorizontalTextAlignment="End"
-                                        Text="{Binding importe, StringFormat='{0:N2} €'}"
-                                        TextColor="White" />
-                                </Grid>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-        </Frame>
+        <Border Margin="24"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                MaximumWidthRequest="400"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="24"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#40000000" Offset="0,8" Radius="24" Opacity="0.3"/>
+            </Border.Shadow>
+
+            <Grid RowDefinitions="Auto,*" Padding="0">
+
+                <!-- HEADER -->
+                <Border Grid.Row="0"
+                        BackgroundColor="#C41E3A"
+                        StrokeThickness="0"
+                        Padding="20,16">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="24,24,0,0"/>
+                    </Border.StrokeShape>
+
+                    <StackLayout Spacing="4" HorizontalOptions="Center">
+                        <Label Text="&#x1F4CB;"
+                               FontSize="32"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Detalle del Pedido"
+                               FontFamily="Nunito_bold"
+                               FontSize="20"
+                               TextColor="White"
+                               HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+                </Border>
+
+                <!-- CONTENIDO: Lista de productos -->
+                <Border Grid.Row="1"
+                        BackgroundColor="#F5F5F5"
+                        StrokeThickness="0"
+                        Padding="16">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="0,0,24,24"/>
+                    </Border.StrokeShape>
+
+                    <ListView x:Name="lista"
+                              BackgroundColor="Transparent"
+                              HasUnevenRows="True"
+                              SeparatorVisibility="None"
+                              VerticalScrollBarVisibility="Default">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Border BackgroundColor="White"
+                                            StrokeThickness="0"
+                                            Margin="0,0,0,8"
+                                            Padding="14,12">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12"/>
+                                        </Border.StrokeShape>
+                                        <Border.Shadow>
+                                            <Shadow Brush="#000000" Offset="0,1" Radius="4" Opacity="0.06"/>
+                                        </Border.Shadow>
+
+                                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                            <!-- Cantidad -->
+                                            <Border BackgroundColor="#C41E3A"
+                                                    StrokeThickness="0"
+                                                    WidthRequest="32"
+                                                    HeightRequest="32">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="8"/>
+                                                </Border.StrokeShape>
+                                                <Label Text="{Binding cantidad}"
+                                                       FontFamily="Nunito_bold"
+                                                       FontSize="14"
+                                                       TextColor="White"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+
+                                            <!-- Nombre producto -->
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding nombreProducto}"
+                                                   FontFamily="Nunito"
+                                                   FontSize="14"
+                                                   TextColor="#333333"
+                                                   LineBreakMode="WordWrap"
+                                                   VerticalOptions="Center"/>
+
+                                            <!-- Importe -->
+                                            <Label Grid.Column="2"
+                                                   Text="{Binding importe, StringFormat='{0:N2}€'}"
+                                                   FontFamily="Nunito_bold"
+                                                   FontSize="15"
+                                                   TextColor="#C41E3A"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+
+            </Grid>
+        </Border>
     </popup:PopupPage.Content>
 </popup:PopupPage>

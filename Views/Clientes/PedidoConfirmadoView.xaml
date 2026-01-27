@@ -1,67 +1,242 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.Clientes.PedidoConfirmadoView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="PedidoOKView"
     NavigationPage.HasNavigationBar="False"
-    BackgroundColor="{StaticResource Rojo}">
-    <StackLayout
-        Margin="15,0"
-        Orientation="Vertical"
-        VerticalOptions="CenterAndExpand">
-        <Image
-            Aspect="AspectFit"
-            HeightRequest="150"
-            HorizontalOptions="Center"
-            Source="logo_morado.png"
-            VerticalOptions="End" />
-        <Label
-                FontFamily="Nunito_bold"
-                FontSize="20"
-                HorizontalTextAlignment="Center"
-                Text="{Binding TextoPromocion}"
-                TextColor="{DynamicResource Blanco}" />
-        <Label
-            FontFamily="Nunito"
-            FontSize="22"
-            HorizontalTextAlignment="Center"
-            Text="Gracias por realizar su pedido en "
-            TextColor="{DynamicResource Blanco}" />
-        <Label
-            FontFamily="Syne"
-            FontSize="25"
-            HorizontalTextAlignment="Center"
-            Text="{Binding NombreEst}"
-            TextColor="{DynamicResource Blanco}" />
-        <Label
-            Margin="20,15,20,0"
-            FontFamily="Nunito"
-            FontSize="22"
-            HorizontalTextAlignment="Center"
-            Text="{Binding Texto}"
-            TextColor="{DynamicResource Blanco}" />
-        <Label
-            FontFamily="Syne"
-            FontSize="28"
-            HorizontalTextAlignment="Center"
-            Text="{Binding FechaEntrega}"
-            TextColor="{DynamicResource Blanco}" />
-        <Label
-            Margin="0,15,0,0"
-            FontFamily="Syne"
-            FontSize="30"
-            HorizontalTextAlignment="Center"
-            Text="Buen Provecho"
-            TextColor="{DynamicResource Blanco}" />
-        <Button
-            Margin="20,10,20,0"
-            BackgroundColor="{DynamicResource Amarillo}"
-            Command="{Binding VolverCommand}"
-            CornerRadius="20"
-            FontFamily="Nunito_bold"
-            HeightRequest="60"
-            Text="Aceptar"
-            TextColor="Black"
-            VerticalOptions="End" />
-    </StackLayout>
+    BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+            <Color x:Key="VerdeExito">#4CAF50</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- HEADER MODERNO -->
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="16,12,16,16">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,24,24"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#20000000" Offset="0,4" Radius="8" Opacity="0.15"/>
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Botón Menú Hamburguesa (visible cuando es página raíz) -->
+                <Border x:Name="BtnMenu" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" WidthRequest="44" HeightRequest="44" IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2630;" FontSize="22" TextColor="{DynamicResource Negro}" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Botón Atrás (visible cuando hay páginas en el stack) -->
+                <Border x:Name="BtnBack" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" WidthRequest="44" HeightRequest="44" IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2190;" FontSize="22" TextColor="{DynamicResource Negro}" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Título -->
+                <StackLayout Grid.Column="1"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="2">
+                    <Label Text="Pedido Confirmado"
+                           FontFamily="Nunito_bold"
+                           FontSize="18"
+                           TextColor="#333333"
+                           HorizontalOptions="Center"/>
+                </StackLayout>
+
+                <!-- Espacio -->
+                <BoxView Grid.Column="2" WidthRequest="44" Color="White"/>
+            </Grid>
+        </Border>
+
+        <!-- CONTENIDO -->
+        <ScrollView Grid.Row="1" Padding="16,12">
+            <StackLayout Spacing="16" VerticalOptions="Center">
+
+                <!-- CARD: Confirmación -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="24">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="24"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,4" Radius="12" Opacity="0.15"/>
+                    </Border.Shadow>
+
+                    <StackLayout Spacing="20" HorizontalOptions="Center">
+                        <!-- Icono de Éxito -->
+                        <Border BackgroundColor="#E8F5E9"
+                                StrokeThickness="0"
+                                WidthRequest="100"
+                                HeightRequest="100"
+                                HorizontalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="50"/>
+                            </Border.StrokeShape>
+                            <Label Text="&#x2714;"
+                                   FontSize="48"
+                                   TextColor="{StaticResource VerdeExito}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+
+                        <!-- Logo -->
+                        <Image Source="logo_morado.png"
+                               HeightRequest="60"
+                               Aspect="AspectFit"
+                               HorizontalOptions="Center"/>
+
+                        <!-- Promoción (si existe) -->
+                        <Border BackgroundColor="#FFF8E1"
+                                StrokeThickness="0"
+                                Padding="12,8"
+                                HorizontalOptions="Center"
+                                IsVisible="{Binding TextoPromocion, Converter={StaticResource StringEmptyToBooleanConverter}}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Horizontal" Spacing="8">
+                                <Label Text="&#x1F381;"
+                                       FontSize="16"
+                                       VerticalOptions="Center"/>
+                                <Label Text="{Binding TextoPromocion}"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="14"
+                                       TextColor="#333333"
+                                       VerticalOptions="Center"/>
+                            </StackLayout>
+                        </Border>
+
+                        <!-- Mensaje de Gracias -->
+                        <Label Text="Gracias por realizar su pedido en"
+                               FontFamily="Nunito"
+                               FontSize="16"
+                               TextColor="#666666"
+                               HorizontalTextAlignment="Center"/>
+
+                        <!-- Nombre del Establecimiento -->
+                        <Label Text="{Binding NombreEst}"
+                               FontFamily="Nunito_bold"
+                               FontSize="24"
+                               TextColor="{StaticResource RojoMarca}"
+                               HorizontalTextAlignment="Center"/>
+
+                        <!-- Separador -->
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="#E0E0E0"
+                                 HorizontalOptions="FillAndExpand"
+                                 Margin="20,0"/>
+
+                        <!-- Información de Entrega -->
+                        <Border BackgroundColor="#F5F5F5"
+                                StrokeThickness="0"
+                                Padding="16">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14"/>
+                            </Border.StrokeShape>
+                            <StackLayout Spacing="8">
+                                <Label Text="{Binding Texto}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       TextColor="#333333"
+                                       HorizontalTextAlignment="Center"
+                                       LineBreakMode="WordWrap"/>
+                                <Border BackgroundColor="{StaticResource RojoMarca}"
+                                        StrokeThickness="0"
+                                        Padding="16,10"
+                                        HorizontalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="10"/>
+                                    </Border.StrokeShape>
+                                    <StackLayout Orientation="Horizontal" Spacing="8">
+                                        <Label Text="&#x1F4C5;"
+                                               FontSize="18"
+                                               VerticalOptions="Center"/>
+                                        <Label Text="{Binding FechaEntrega}"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="18"
+                                               TextColor="White"
+                                               VerticalOptions="Center"/>
+                                    </StackLayout>
+                                </Border>
+                            </StackLayout>
+                        </Border>
+
+                        <!-- Buen Provecho -->
+                        <StackLayout HorizontalOptions="Center" Spacing="4">
+                            <Label Text="&#x1F37D;"
+                                   FontSize="32"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="¡Buen Provecho!"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="22"
+                                   TextColor="#333333"
+                                   HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Border>
+
+            </StackLayout>
+        </ScrollView>
+
+        <!-- BOTÓN ACEPTAR -->
+        <Border Grid.Row="2"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="16,12,16,20">
+            <Border.Shadow>
+                <Shadow Brush="#30000000" Offset="0,-2" Radius="8" Opacity="0.1"/>
+            </Border.Shadow>
+
+            <Border BackgroundColor="{StaticResource VerdeExito}"
+                    StrokeThickness="0"
+                    Padding="0"
+                    HeightRequest="52">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#404CAF50" Offset="0,4" Radius="8" Opacity="0.3"/>
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding VolverCommand}"/>
+                </Border.GestureRecognizers>
+                <StackLayout Orientation="Horizontal"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="10">
+                    <Label Text="&#x2714;"
+                           FontSize="18"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                    <Label Text="Aceptar"
+                           FontFamily="Nunito_bold"
+                           FontSize="16"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </StackLayout>
+            </Border>
+        </Border>
+
+    </Grid>
 </ContentPage>

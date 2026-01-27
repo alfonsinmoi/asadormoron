@@ -18,16 +18,25 @@ namespace AsadorMoron.Services.AlertDialogService
             InitializeComponent();
             LbTitle.Text = title;
             LbMessage.Text = message;
-            BtCancel.IsVisible = !string.IsNullOrWhiteSpace(cancel);
+
+            // Si no hay botón cancelar, ocultar y hacer el OK de ancho completo
+            if (string.IsNullOrWhiteSpace(cancel))
+            {
+                BorderCancel.IsVisible = false;
+                BorderOk.SetValue(Grid.ColumnProperty, 0);
+                BorderOk.SetValue(Grid.ColumnSpanProperty, 2);
+            }
+            else
+            {
+                BtCancel.Text = cancel;
+            }
+
             BtOk.Text = ok;
-            BtCancel.Text = cancel;            
         }
 
         protected override void OnSizeAllocated(double width, double height)
         {
             base.OnSizeAllocated(width, height);
-
-            FrContent.HeightRequest = LbMessage.Height + 100 + FrContent.Padding.HorizontalThickness + GrContent.Margin.HorizontalThickness;
             FrContent.Opacity = 1;
         }
 

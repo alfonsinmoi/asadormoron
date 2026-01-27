@@ -64,16 +64,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 {
                     if (es.configuracion == null)
                         es.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(es.idEstablecimiento);
-                    if (es.configuracion.aceptaEncargos)
-                        AceptaEncargos = true;
 
-                    if (AceptaEncargos)
-                        VerSoloHoy = Preferences.Get("VerSoloHoy", true);
-                    else
-                        if (es.esComercio)
-                        VerSoloHoy = true;
-                    if (es.local==1)
-                        TieneLocal = true;
                     nombreImpresora = es.configuracion.nombreImpresora;
                     nombreImpresora2 = es.configuracion.nombreImpresora2;
                     nombreImpresora3 = es.configuracion.nombreImpresora3;
@@ -168,22 +159,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private IUserDialogs dialogHomeAdmin = App.userdialog;
         public List<CabeceraPedido> ListPedidosTemp;
         private readonly IAudioManager _audioManager = AudioManager.Current;
-        private bool esComercio;
-        public bool EsComercio
-        {
-            get
-            {
-                return esComercio;
-            }
-            set
-            {
-                if (esComercio != value)
-                {
-                    esComercio = value;
-                    OnPropertyChanged(nameof(EsComercio));
-                }
-            }
-        }
+
         private bool isVisibleRepartidores;
 
         public bool IsVisibleRepartidores
@@ -549,7 +525,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private void VerClienteExe()
         {
             App.DAUtil.NavigationService.NavigateToAsyncMenu<CartaViewModel>();
-            
+
         }
         public async Task actualizaPedidos()
         {
@@ -712,7 +688,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
             {
                 List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
                 foreach (TokensModel to in tokens)
-                   await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeAdmin, to.token);
+                    await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeAdmin, to.token);
             }
             if (!string.IsNullOrEmpty(mensajeUsuario))
             {
@@ -728,7 +704,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 }
                 else
                 {
-                    List<TokensModel> tokens2 =  App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                    List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                     foreach (TokensModel to in tokens2)
                         await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, to.token); ;
                 }
@@ -801,7 +777,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private async Task PrePrint(string codigo)
         {
             var c = Listado.Where(p => p.codigoPedido == codigo).FirstOrDefault();
-            if(c != null)
+            if (c != null)
                 await Print(codigo, TipoImpresion.Normal);
             else
                 await Print(codigo, TipoImpresion.Mesa);
@@ -810,27 +786,27 @@ namespace AsadorMoron.ViewModels.Establecimientos
         {
             try
             {
-                    if (!string.IsNullOrEmpty(nombreImpresora))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora, alturaLinea, veces, tipo, 1);
-                    if (!string.IsNullOrEmpty(nombreImpresora2))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora2, alturaLinea, veces, tipo, 2);
-                    if (!string.IsNullOrEmpty(nombreImpresora3))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora3, alturaLinea, veces, tipo, 3);
-                    if (!string.IsNullOrEmpty(nombreImpresora4))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora4, alturaLinea, veces, tipo, 4);
-                    if (!string.IsNullOrEmpty(nombreImpresora5))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora5, alturaLinea, veces, tipo, 5);
-                    if (!string.IsNullOrEmpty(nombreImpresora6))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora6, alturaLinea, veces, tipo, 6);
-                    if (!string.IsNullOrEmpty(nombreImpresora7))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora7, alturaLinea, veces, tipo, 7);
-                    if (!string.IsNullOrEmpty(nombreImpresora8))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora8, alturaLinea, veces, tipo, 8);
-                    if (!string.IsNullOrEmpty(nombreImpresora9))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora9, alturaLinea, veces, tipo, 9);
-                    if (!string.IsNullOrEmpty(nombreImpresora10))
-                        ManagerImpresora.ImprimirTicket(codigo, nombreImpresora10, alturaLinea, veces, tipo, 10);
-                
+                if (!string.IsNullOrEmpty(nombreImpresora))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora, alturaLinea, veces, tipo, 1);
+                if (!string.IsNullOrEmpty(nombreImpresora2))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora2, alturaLinea, veces, tipo, 2);
+                if (!string.IsNullOrEmpty(nombreImpresora3))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora3, alturaLinea, veces, tipo, 3);
+                if (!string.IsNullOrEmpty(nombreImpresora4))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora4, alturaLinea, veces, tipo, 4);
+                if (!string.IsNullOrEmpty(nombreImpresora5))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora5, alturaLinea, veces, tipo, 5);
+                if (!string.IsNullOrEmpty(nombreImpresora6))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora6, alturaLinea, veces, tipo, 6);
+                if (!string.IsNullOrEmpty(nombreImpresora7))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora7, alturaLinea, veces, tipo, 7);
+                if (!string.IsNullOrEmpty(nombreImpresora8))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora8, alturaLinea, veces, tipo, 8);
+                if (!string.IsNullOrEmpty(nombreImpresora9))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora9, alturaLinea, veces, tipo, 9);
+                if (!string.IsNullOrEmpty(nombreImpresora10))
+                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora10, alturaLinea, veces, tipo, 10);
+
             }
             catch (Exception ex)
             {

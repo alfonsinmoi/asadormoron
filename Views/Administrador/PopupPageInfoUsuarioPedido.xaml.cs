@@ -32,6 +32,13 @@ namespace AsadorMoron.Views.Administrador
                 lblZona.IsVisible = true;
                 txtZona.Text = cabeceraPedido.zona;
             }
+
+            // Observaciones del pedido
+            if (!string.IsNullOrEmpty(cabeceraPedido.comentario))
+            {
+                borderObservaciones.IsVisible = true;
+                txtObservaciones.Text = cabeceraPedido.comentario;
+            }
         }
     }
 }

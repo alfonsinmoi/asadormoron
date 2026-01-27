@@ -1,15 +1,20 @@
-﻿using Microsoft.Maui;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Xaml;
 
 namespace AsadorMoron.Views.Establecimientos
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DetalleIngredienteView : Microsoft.Maui.Controls.ContentPage
+    public partial class DetalleIngredienteView : ContentPage
     {
         public DetalleIngredienteView()
         {
             InitializeComponent();
+        }
+
+        private async void OnBackTapped(object sender, EventArgs e)
+        {
+            await Navigation.PopAsync();
         }
     }
 }

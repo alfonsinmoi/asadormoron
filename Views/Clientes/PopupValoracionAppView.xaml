@@ -3,129 +3,207 @@
     x:Class="AsadorMoron.Views.Clientes.PopupValoracionAppView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:AsadorMoron.ViewModels.Clientes"
     x:DataType="viewmodels:PopupValoracionAppViewModel"
-    mc:Ignorable="d">
+    BackgroundColor="#80000000">
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Color x:Key="colorGray">Gray</Color>
-            <Style x:Key="frameCancel" TargetType="Border">
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Margin" Value="10,0,0,0" />
-            </Style>
-            <Style x:Key="frameConfirm" TargetType="Border">
-                <Setter Property="BackgroundColor" Value="{DynamicResource Rojo}" />
-                <Setter Property="Padding" Value="0" />
-            </Style>
-            <Style x:Key="btnCancel" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="HeightRequest" Value="50" />
-                <Setter Property="TextColor" Value="{DynamicResource Rojo}" />
-            </Style>
-            <Style x:Key="btnConfirm" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="{DynamicResource Rojo}" />
-                <Setter Property="HeightRequest" Value="50" />
-                <Setter Property="TextColor" Value="White" />
-            </Style>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+            <Color x:Key="Amarillo">#FFD700</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <Border
-        x:Name="pancake"
-        Margin="20,0,20,0"
-        BackgroundColor="White"
-        StrokeShape="RoundRectangle 25"
-        HeightRequest="400"
-        HorizontalOptions="Center"
-        VerticalOptions="Center"
-        WidthRequest="350">
-        <Grid
-            ColumnDefinitions="*, *"
-            ColumnSpacing="0"
-            RowDefinitions="Auto, Auto,Auto,Auto,*, Auto">
-            <Label
-                Grid.Row="0"
-                Grid.ColumnSpan="2"
-                Margin="20,20,20,0"
-                FontAttributes="Bold"
-                FontFamily="Nunito"
-                HorizontalOptions="Center"
-                HorizontalTextAlignment="Center"
-                Text="Valore PolloAndaluz"
-                TextColor="{DynamicResource Rojo}" />
-            <Label
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                Margin="10,0,10,10"
-                FontFamily="Nunito"
-                FontSize="13"
-                HorizontalOptions="Center"
-                HorizontalTextAlignment="Center"
-                Text="Su opinión es importante para nosotros"
-                TextColor="{DynamicResource Rojo}" />
-            <!-- Rating usando Slider como alternativa a SfRating -->
-            <HorizontalStackLayout
-                Grid.Row="2"
-                Grid.ColumnSpan="2"
-                Margin="10,0,10,10"
-                HorizontalOptions="Center"
-                Spacing="5">
-                <Slider
-                    Minimum="0"
-                    Maximum="5"
-                    Value="{Binding Valoracion}"
-                    MinimumTrackColor="{DynamicResource Amarillo}"
-                    MaximumTrackColor="LightGray"
-                    ThumbColor="{DynamicResource Amarillo}"
-                    WidthRequest="200" />
-                <Label
-                    Text="{Binding Valoracion, StringFormat='{0:F1}'}"
-                    FontFamily="Nunito"
-                    FontSize="16"
-                    TextColor="{DynamicResource Rojo}"
-                    VerticalOptions="Center" />
-            </HorizontalStackLayout>
-            <Label
-                Grid.Row="3"
-                Grid.ColumnSpan="2"
-                Margin="10,10,10,0"
-                FontFamily="Nunito"
-                FontSize="13"
-                HorizontalOptions="Center"
-                HorizontalTextAlignment="Center"
-                Text="Déjenos un comentario nos servirá para ofercerle un mejor servicio"
-                TextColor="{DynamicResource Rojo}" />
-            <Editor
-                Grid.Row="4"
-                Grid.ColumnSpan="2"
-                Margin="20,0"
-                BackgroundColor="#eae5e7"
-                FontFamily="Nunito"
-                FontSize="13"
-                Placeholder="Ingrese aquí su comentario"
-                Text="{Binding Comentario}"
-                TextColor="{DynamicResource Rojo}" />
-            <Border
-                Grid.Row="5"
-                Grid.Column="0"
-                Style="{StaticResource frameCancel}">
-                <Button
-                    Command="{Binding ClosePopUpCommand}"
-                    Style="{StaticResource btnCancel}"
-                    Text="Cancelar" />
+
+    <Border Margin="24"
+            BackgroundColor="White"
+            StrokeThickness="0"
+            MaximumWidthRequest="400"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="24"/>
+        </Border.StrokeShape>
+        <Border.Shadow>
+            <Shadow Brush="#40000000" Offset="0,8" Radius="24" Opacity="0.3"/>
+        </Border.Shadow>
+
+        <Grid RowDefinitions="Auto,*,Auto" Padding="0">
+
+            <!-- HEADER -->
+            <Border Grid.Row="0"
+                    BackgroundColor="{StaticResource RojoMarca}"
+                    StrokeThickness="0"
+                    Padding="20,16">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="24,24,0,0"/>
+                </Border.StrokeShape>
+
+                <StackLayout Spacing="4" HorizontalOptions="Center">
+                    <Label Text="&#x2B50;"
+                           FontSize="32"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Valora tu experiencia"
+                           FontFamily="Nunito_bold"
+                           FontSize="20"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="Tu opinión es importante para nosotros"
+                           FontFamily="Nunito"
+                           FontSize="13"
+                           TextColor="#FFFFFFCC"
+                           HorizontalTextAlignment="Center"/>
+                </StackLayout>
             </Border>
-            <Border
-                Grid.Row="5"
-                Grid.Column="1"
-                Style="{StaticResource frameConfirm}">
-                <Button
-                    Command="{Binding AceptarCommand}"
-                    Style="{StaticResource btnConfirm}"
-                    Text="Enviar" />
+
+            <!-- CONTENIDO -->
+            <ScrollView Grid.Row="1" Padding="20,16">
+                <StackLayout Spacing="20">
+
+                    <!-- Rating con Slider -->
+                    <StackLayout Spacing="12">
+                        <Label Text="¿Cómo calificarías la app?"
+                               FontFamily="Nunito_bold"
+                               FontSize="14"
+                               TextColor="#333333"
+                               HorizontalTextAlignment="Center"/>
+
+                        <!-- Estrellas visuales -->
+                        <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                            <Label Text="&#x2B50;" FontSize="28"/>
+                            <Label Text="&#x2B50;" FontSize="28"/>
+                            <Label Text="&#x2B50;" FontSize="28"/>
+                            <Label Text="&#x2B50;" FontSize="28"/>
+                            <Label Text="&#x2B50;" FontSize="28"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Slider -->
+                        <Border BackgroundColor="#F5F5F5"
+                                StrokeThickness="0"
+                                Padding="16,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <Slider Minimum="0"
+                                        Maximum="5"
+                                        Value="{Binding Valoracion}"
+                                        MinimumTrackColor="{StaticResource Amarillo}"
+                                        MaximumTrackColor="#E0E0E0"
+                                        ThumbColor="{StaticResource RojoMarca}"/>
+                                <Border Grid.Column="1"
+                                        BackgroundColor="{StaticResource RojoMarca}"
+                                        StrokeThickness="0"
+                                        WidthRequest="44"
+                                        HeightRequest="32">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8"/>
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding Valoracion, StringFormat='{0:F1}'}"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="14"
+                                           TextColor="White"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Comentario -->
+                    <StackLayout Spacing="8">
+                        <Label Text="Déjanos un comentario"
+                               FontFamily="Nunito_bold"
+                               FontSize="14"
+                               TextColor="#333333"/>
+                        <Label Text="Nos ayudará a mejorar nuestro servicio"
+                               FontFamily="Nunito"
+                               FontSize="12"
+                               TextColor="#888888"/>
+                        <Border BackgroundColor="#FAFAFA"
+                                StrokeThickness="1"
+                                Stroke="#E8E8E8"
+                                Padding="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Editor Text="{Binding Comentario}"
+                                    Placeholder="Escribe tu comentario aquí..."
+                                    PlaceholderColor="#AAAAAA"
+                                    HeightRequest="100"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#333333"
+                                    FontFamily="Nunito"
+                                    FontSize="14"
+                                    Margin="12,8"/>
+                        </Border>
+                    </StackLayout>
+
+                </StackLayout>
+            </ScrollView>
+
+            <!-- BOTONES -->
+            <Border Grid.Row="2"
+                    BackgroundColor="#F5F5F5"
+                    StrokeThickness="0"
+                    Padding="16">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="0,0,24,24"/>
+                </Border.StrokeShape>
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <!-- Cancelar -->
+                    <Border BackgroundColor="White"
+                            StrokeThickness="1"
+                            Stroke="#E0E0E0"
+                            Padding="0"
+                            HeightRequest="48">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ClosePopUpCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="Cancelar"
+                               FontFamily="Nunito_bold"
+                               FontSize="15"
+                               TextColor="#666666"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+
+                    <!-- Enviar -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="{StaticResource RojoMarca}"
+                            StrokeThickness="0"
+                            Padding="0"
+                            HeightRequest="48">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#40C41E3A" Offset="0,4" Radius="8" Opacity="0.3"/>
+                        </Border.Shadow>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AceptarCommand}"/>
+                        </Border.GestureRecognizers>
+                        <StackLayout Orientation="Horizontal"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="8">
+                            <Label Text="&#x2714;"
+                                   FontSize="16"
+                                   TextColor="White"
+                                   VerticalOptions="Center"/>
+                            <Label Text="Enviar"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="15"
+                                   TextColor="White"
+                                   VerticalOptions="Center"/>
+                        </StackLayout>
+                    </Border>
+                </Grid>
             </Border>
+
         </Grid>
     </Border>
 </ContentPage>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.Clientes.DetalleArticuloNavidadView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -7,123 +7,185 @@
     xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
     xmlns:templates="clr-namespace:AsadorMoron.Views.Templates"
     x:Name="ViewDetalleArticulosNavidad"
-    BackgroundColor="{StaticResource Rojo}">
-    <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
-            <Grid
-                Grid.Column="0"
-                 Grid.ColumnSpan="2"
-                Margin="0,0,0,5"
-                HeightRequest="40"
-                HorizontalOptions="FillAndExpand">
-                <Image
-                    Margin="0,0,50,0"
-                    Aspect="AspectFit"
-                    HeightRequest="35"
-                    Source="logomorado.png"
-                    VerticalOptions="StartAndExpand" />
-            </Grid>
-           <ImageButton
-                 IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}"
-                BackgroundColor="Transparent"
-                Command="{Binding IrDetallePedidoCommand}"
-                HeightRequest="40"
-                Grid.Column="2"
-                Margin="0,0,20,0"
-                Source="carrito.png"
-                WidthRequest="40" />
-             <Frame Padding="0" BackgroundColor="{DynamicResource Amarillo}" WidthRequest="30" HeightRequest="30" CornerRadius="15"
-                   VerticalOptions="Start" HorizontalOptions="End" Grid.Column="2" HasShadow="False"
-                    IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
-                <Label Text="{Binding Cantidad, Mode=TwoWay}"
-                       FontSize="15" TextColor="Black" FontAttributes="Bold"
-                       VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                       HorizontalOptions="Center" VerticalOptions="Center"/>
-                <Frame.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
-                </Frame.GestureRecognizers>
-             </Frame>
-        </Grid>
-    </NavigationPage.TitleView>
-    <ContentPage.Content>
-        <Grid Margin="{OnPlatform iOS='0,90,0,0',
-                                    Android='0,0,0,0',
-                                    UWP='0,0,0,0'}"
-              RowDefinitions="*,Auto">
-        <StackLayout  VerticalOptions="FillAndExpand">
-            <ScrollView BackgroundColor="White" VerticalOptions="FillAndExpand">
-            <Grid RowDefinitions="*,Auto,Auto">
-                <Grid
-                    VerticalOptions="FillAndExpand"
-                    Margin="10,10"
-                    ColumnDefinitions="*"
-                    RowDefinitions="Auto,Auto, *">
-                    <Label
-                    FontFamily="Syne"
-                    FontSize="20"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding Articulo.nombre}"
-                    TextColor="{DynamicResource Negro}" >
-                        <Label.Triggers>
-                            <DataTrigger
-                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
-                                TargetType="Label"
-                                Value="EN">
-                                <Setter Property="Text" Value="{Binding Articulo.nombre_eng}" />
-                            </DataTrigger>
-                            <DataTrigger
-                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
-                                TargetType="Label"
-                                Value="DE">
-                                <Setter Property="Text" Value="{Binding Articulo.nombre_ger}" />
-                            </DataTrigger>
-                            <DataTrigger
-                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
-                                TargetType="Label"
-                                Value="FR">
-                                <Setter Property="Text" Value="{Binding Articulo.nombre_fr}" />
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
-                    <Label
-                    Grid.Row="1"
-                    FontFamily="Syne_Medium"
-                    FontSize="14"
-                    HorizontalTextAlignment="Center"
-                    Text="{Binding Articulo.descripcion}"
-                    TextColor="{DynamicResource Negro}" >
-                        <Label.Triggers>
-                            <DataTrigger
-                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
-                                TargetType="Label"
-                                Value="EN">
-                                <Setter Property="Text" Value="{Binding Articulo.descripcion_eng}" />
-                            </DataTrigger>
-                            <DataTrigger
-                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
-                                TargetType="Label"
-                                Value="DE">
-                                <Setter Property="Text" Value="{Binding Articulo.descripcion_ger}" />
-                            </DataTrigger>
-                            <DataTrigger
-                                Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
-                                TargetType="Label"
-                                Value="FR">
-                                <Setter Property="Text" Value="{Binding Articulo.descripcion_fr}" />
-                            </DataTrigger>
-                        </Label.Triggers>
-                    </Label>
-                    <ffimageloading:CachedImage
-                        Margin="0"
-                        Grid.Row="2"
-                        Aspect="AspectFit"
-                        HorizontalOptions="FillAndExpand"
-                        Source="{Binding Articulo.imagen}"
-                        VerticalOptions="FillAndExpand" />
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- HEADER MODERNO -->
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="16,12,16,16">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,24,24"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#20000000" Offset="0,4" Radius="8" Opacity="0.15"/>
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Botón Menú Hamburguesa (visible cuando es página raíz) -->
+                <Border x:Name="BtnMenu" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" WidthRequest="44" HeightRequest="44" IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2630;" FontSize="22" TextColor="{DynamicResource Negro}" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Botón Atrás (visible cuando hay páginas en el stack) -->
+                <Border x:Name="BtnBack" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" WidthRequest="44" HeightRequest="44" IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2190;" FontSize="22" TextColor="{DynamicResource Negro}" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Logo centrado -->
+                <Image Grid.Column="1"
+                       Source="logo_morado.png"
+                       HeightRequest="32"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+
+                <!-- Carrito con Badge (Solo visible cuando NO es modo tienda) -->
+                <Grid Grid.Column="2"
+                      WidthRequest="48"
+                      HeightRequest="48"
+                      IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
+                    <Border BackgroundColor="{StaticResource RojoMarca}"
+                            StrokeThickness="0"
+                            Padding="8">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14"/>
+                        </Border.StrokeShape>
+                        <Image Source="carrito.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" HorizontalOptions="Center"/>
+                    </Border>
+                    <Border BackgroundColor="{DynamicResource Amarillo}"
+                            StrokeThickness="0"
+                            WidthRequest="22"
+                            HeightRequest="22"
+                            HorizontalOptions="End"
+                            VerticalOptions="Start"
+                            Margin="0,-4,-4,0"
+                            IsVisible="{Binding Cantidad, Converter={StaticResource StringEmptyToBooleanConverter}}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="11"/>
+                        </Border.StrokeShape>
+                        <Label Text="{Binding Cantidad}"
+                               FontSize="11"
+                               FontFamily="Nunito_bold"
+                               TextColor="{DynamicResource Negro}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                    <Grid.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
+                    </Grid.GestureRecognizers>
                 </Grid>
             </Grid>
+        </Border>
+
+        <!-- CONTENIDO SCROLLEABLE -->
+        <ScrollView Grid.Row="1" Padding="16,12">
+            <StackLayout Spacing="16">
+
+                <!-- CARD: Imagen y detalles del producto -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#20000000" Offset="0,2" Radius="6" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <Grid RowDefinitions="Auto,*">
+                        <!-- Información del producto arriba -->
+                        <StackLayout Grid.Row="0" Padding="20,20,20,16" Spacing="8">
+                            <!-- Nombre -->
+                            <Label FontFamily="Nunito_bold"
+                                   FontSize="22"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding Articulo.nombre}"
+                                   TextColor="#333333">
+                                <Label.Triggers>
+                                    <DataTrigger Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                                 TargetType="Label"
+                                                 Value="EN">
+                                        <Setter Property="Text" Value="{Binding Articulo.nombre_eng}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                                 TargetType="Label"
+                                                 Value="DE">
+                                        <Setter Property="Text" Value="{Binding Articulo.nombre_ger}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                                 TargetType="Label"
+                                                 Value="FR">
+                                        <Setter Property="Text" Value="{Binding Articulo.nombre_fr}"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <!-- Descripción -->
+                            <Label FontFamily="Nunito"
+                                   FontSize="14"
+                                   HorizontalTextAlignment="Center"
+                                   Text="{Binding Articulo.descripcion}"
+                                   TextColor="#666666"
+                                   LineBreakMode="WordWrap">
+                                <Label.Triggers>
+                                    <DataTrigger Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                                 TargetType="Label"
+                                                 Value="EN">
+                                        <Setter Property="Text" Value="{Binding Articulo.descripcion_eng}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                                 TargetType="Label"
+                                                 Value="DE">
+                                        <Setter Property="Text" Value="{Binding Articulo.descripcion_ger}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Path=BindingContext.Idioma, Source={x:Reference Name=ViewDetalleArticulosNavidad}}"
+                                                 TargetType="Label"
+                                                 Value="FR">
+                                        <Setter Property="Text" Value="{Binding Articulo.descripcion_fr}"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </StackLayout>
+
+                        <!-- Imagen grande del producto -->
+                        <Border Grid.Row="1"
+                                StrokeThickness="0"
+                                Margin="16,0,16,16">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+                            <ffimageloading:CachedImage Aspect="AspectFit"
+                                                         HeightRequest="280"
+                                                         HorizontalOptions="FillAndExpand"
+                                                         Source="{Binding Articulo.imagen}"
+                                                         VerticalOptions="FillAndExpand"/>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Espacio inferior para scroll -->
+                
+
+            </StackLayout>
         </ScrollView>
-        </StackLayout>
-        </Grid>
-    </ContentPage.Content>
+    </Grid>
 </ContentPage>

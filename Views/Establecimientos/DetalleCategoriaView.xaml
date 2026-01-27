@@ -1,183 +1,339 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.Establecimientos.DetalleCategoriaView"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
-    BackgroundColor="{StaticResource Rojo}">
-    <NavigationPage.TitleView>
-        <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,Auto">
-            <Label
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,50,0"
-                FontFamily="Syne"
-                FontSize="25"
-                HorizontalTextAlignment="Center"
-                Text="{Binding Nombre}"
-                TextColor="{DynamicResource Amarillo}"
-                VerticalOptions="Center" />
-            <ImageButton 
-                Grid.Column="1"
-                Margin="0,0,10,0"
-                BackgroundColor="Transparent"
-                Command="{Binding CommandGuardar}"
-                HeightRequest="30"
-                HorizontalOptions="End"
-                VerticalOptions="CenterAndExpand"
-                Source="save.png"
-                WidthRequest="30" />
-        </Grid>
-    </NavigationPage.TitleView>
-        <!--  CONTAINER  -->
-        <Grid BackgroundColor="White" Margin="{OnPlatform iOS='0,90,0,0', Android='0,0,0,0', UWP=0}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="AUTO" />
-            </Grid.RowDefinitions>
-            <ScrollView Grid.Row="0">
-                <StackLayout
-                    HorizontalOptions="FillAndExpand"
-                    Orientation="Vertical"
-                    VerticalOptions="FillAndExpand">
-                    <Grid ColumnSpacing="0" RowSpacing="0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="{OnIdiom Desktop=200, Phone=210, Tablet=350}" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <ffimageloading:CachedImage
-                            Aspect="AspectFill"
-                            BackgroundColor="Transparent"
-                            HorizontalOptions="FillAndExpand"
-                            CacheType="None"
-                            Source="{Binding Imagen}"
-                            VerticalOptions="FillAndExpand">
-                            <ffimageloading:CachedImage.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding CmdCambiaImagen}" />
-                            </ffimageloading:CachedImage.GestureRecognizers>
-                        </ffimageloading:CachedImage>
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
+    x:Name="DetalleCategoria"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
 
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ============================================ -->
+        <!-- HEADER FIJO -->
+        <!-- ============================================ -->
+        <Border Grid.Row="0"
+                StrokeThickness="0"
+                BackgroundColor="White"
+                Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <!-- Botón Volver -->
+                <Border BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Label Text="&#x2190;"
+                           FontSize="22"
+                           TextColor="White"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <!-- Título -->
+                <Label Grid.Column="1"
+                       Text="{Binding Nombre, TargetNullValue='Nueva categoría', FallbackValue='Nueva categoría'}"
+                       FontFamily="Nunito_bold"
+                       FontSize="18"
+                       TextColor="{DynamicResource Negro}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="1"/>
+
+                <!-- Botón Guardar -->
+                <Border Grid.Column="2"
+                        BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource RojoMarca}" Offset="0,2" Radius="8" Opacity="0.3"/>
+                    </Border.Shadow>
+                    <Image Source="save.png"
+                           WidthRequest="22"
+                           HeightRequest="22"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding CommandGuardar}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!-- ============================================ -->
+        <!-- CONTENIDO PRINCIPAL -->
+        <!-- ============================================ -->
+        <ScrollView Grid.Row="1">
+            <StackLayout Spacing="16" Padding="16,16,16,32">
+
+                <!-- CARD: IMAGEN -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <Grid RowDefinitions="200,Auto">
+                        <!-- Imagen de la categoría -->
+                        <Border Grid.Row="0"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20,20,0,0"/>
+                            </Border.StrokeShape>
+                            <ff:CachedImage Source="{Binding Imagen}"
+                                            Aspect="AspectFill"
+                                            CacheType="None"
+                                            LoadingPlaceholder="logo_producto.png"
+                                            ErrorPlaceholder="logo_producto.png"/>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaImagen}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <!-- Overlay para indicar que es clickeable -->
+                        <Border Grid.Row="0"
+                                StrokeThickness="0"
+                                BackgroundColor="#40000000"
+                                VerticalOptions="End"
+                                Padding="12,8">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="0"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Horizontal"
+                                         HorizontalOptions="Center"
+                                         Spacing="8">
+                                <Image Source="camara.png"
+                                       WidthRequest="18"
+                                       HeightRequest="18"
+                                       VerticalOptions="Center"/>
+                                <Label Text="Cambiar imagen"
+                                       TextColor="White"
+                                       FontFamily="Nunito"
+                                       FontSize="13"
+                                       VerticalOptions="Center"/>
+                            </StackLayout>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CmdCambiaImagen}"/>
+                            </Border.GestureRecognizers>
+                        </Border>
+
+                        <!-- Contador de productos -->
+                        <Grid Grid.Row="1" Padding="16,14">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding VerProductos}"/>
+                            </Grid.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Border Grid.Column="0"
+                                        BackgroundColor="{StaticResource RojoMarca}"
+                                        StrokeThickness="0"
+                                        WidthRequest="44"
+                                        HeightRequest="44">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Image Source="caja.png"
+                                           WidthRequest="22"
+                                           HeightRequest="22"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="Center"/>
+                                </Border>
+                                <StackLayout Grid.Column="1"
+                                             Margin="14,0,0,0"
+                                             VerticalOptions="Center"
+                                             Spacing="2">
+                                    <Label Text="Productos"
+                                           FontFamily="Nunito"
+                                           FontSize="13"
+                                           TextColor="#888888"/>
+                                    <Label Text="{Binding Productos}"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="22"
+                                           TextColor="{DynamicResource Negro}"/>
+                                </StackLayout>
+                                <Label Grid.Column="2"
+                                       Text="&#x203A;"
+                                       FontSize="28"
+                                       TextColor="#CCCCCC"
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                    <Grid
-                        Margin="0,20,0,10"
-                        ColumnDefinitions="*"
-                        ColumnSpacing="0"
-                        RowSpacing="0">
+                </Border>
 
-                        <StackLayout>
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding VerProductos}" />
-                            </StackLayout.GestureRecognizers>
-                            <Label
-                                FontFamily="Nunito"
-                                FontSize="30"
-                                HorizontalTextAlignment="Center"
-                                Text="{Binding Productos}"
-                                TextColor="{DynamicResource Negro}" />
-                            <Label
-                                FontFamily="Nunito"
-                                FontSize="14"
-                                HorizontalTextAlignment="Center"
-                                Text="Productos"
-                                TextColor="{DynamicResource Negro}" />
+                <!-- CARD: INFORMACIÓN -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <StackLayout Spacing="20">
+
+                        <!-- Título sección -->
+                        <Label Text="Información"
+                               FontFamily="Nunito_bold"
+                               FontSize="18"
+                               TextColor="{DynamicResource Negro}"/>
+
+                        <!-- Campo Nombre -->
+                        <StackLayout Spacing="8">
+                            <Label Text="Nombre"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="13"
+                                   TextColor="#666666"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="16,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Placeholder="Nombre de la categoría"
+                                       PlaceholderColor="#BBBBBB"
+                                       Text="{Binding Nombre}"
+                                       TextColor="{DynamicResource Negro}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       BackgroundColor="Transparent"
+                                       HeightRequest="48"/>
+                            </Border>
                         </StackLayout>
+
+                        <!-- Campo Tipo -->
+                        <StackLayout Spacing="8">
+                            <Label Text="Tipo"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="13"
+                                   TextColor="#666666"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="16,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Picker x:Name="pickerTipos"
+                                        Title="Seleccione el tipo"
+                                        ItemDisplayBinding="{Binding Nombre}"
+                                        ItemsSource="{Binding ListadoTipos}"
+                                        SelectedItem="{Binding TipoSeleccionado}"
+                                        TextColor="{DynamicResource Negro}"
+                                        TitleColor="#BBBBBB"
+                                        FontFamily="Nunito"
+                                        BackgroundColor="Transparent"
+                                        HeightRequest="48"/>
+                            </Border>
+                        </StackLayout>
+
+                        <!-- Campo Orden -->
+                        <StackLayout Spacing="8">
+                            <Label Text="Orden"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="13"
+                                   TextColor="#666666"/>
+                            <Border BackgroundColor="#FAFAFA"
+                                    StrokeThickness="1"
+                                    Stroke="#E0E0E0"
+                                    Padding="16,0">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12"/>
+                                </Border.StrokeShape>
+                                <Entry Placeholder="0"
+                                       PlaceholderColor="#BBBBBB"
+                                       Text="{Binding Orden}"
+                                       TextColor="{DynamicResource Negro}"
+                                       FontFamily="Nunito"
+                                       FontSize="15"
+                                       Keyboard="Numeric"
+                                       MaxLength="3"
+                                       BackgroundColor="Transparent"
+                                       HeightRequest="48"/>
+                            </Border>
+                        </StackLayout>
+
+                    </StackLayout>
+                </Border>
+
+                <!-- CARD: ESTADO -->
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,4" Radius="16" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="14">
+                        <Border Grid.Column="0"
+                                BackgroundColor="#E8F5E9"
+                                StrokeThickness="0"
+                                WidthRequest="44"
+                                HeightRequest="44">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Image Source="check.png"
+                                   WidthRequest="22"
+                                   HeightRequest="22"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center"/>
+                        </Border>
+                        <StackLayout Grid.Column="1"
+                                     VerticalOptions="Center"
+                                     Spacing="2">
+                            <Label Text="Estado"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="15"
+                                   TextColor="{DynamicResource Negro}"/>
+                            <Label Text="Categoría activa/inactiva"
+                                   FontFamily="Nunito"
+                                   FontSize="12"
+                                   TextColor="#888888"/>
+                        </StackLayout>
+                        <Switch Grid.Column="2"
+                                IsToggled="{Binding ValorEstado}"
+                                OnColor="{StaticResource RojoMarca}"
+                                VerticalOptions="Center"/>
                     </Grid>
+                </Border>
 
-                    <BoxView
-                        Margin="20,10"
-                        BackgroundColor="{DynamicResource Rojo}"
-                        HeightRequest="1" />
-                    <Grid
-                        Margin="20,10"
-                        ColumnDefinitions="AUTO, *"
-                        RowDefinitions="AUTO, AUTO, AUTO, AUTO"
-                        RowSpacing="20">
+            </StackLayout>
+        </ScrollView>
 
-                        <Label
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            FontFamily="Syne"
-                            FontSize="14"
-                            HorizontalTextAlignment="Start"
-                            Text="Nombre"
-                            TextColor="{DynamicResource Negro}"
-                            VerticalTextAlignment="Center" />
-                        <Entry
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            BackgroundColor="White"
-                            FontFamily="Nunito"
-                            FontSize="12"
-                            HorizontalOptions="FillAndExpand"
-                            HorizontalTextAlignment="Start"
-                            Text="{Binding Nombre}"
-                            TextColor="{DynamicResource Negro}" />
+    </Grid>
 
-                        <Label
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            FontFamily="Syne"
-                            FontSize="14"
-                            HorizontalOptions="StartAndExpand"
-                            HorizontalTextAlignment="Center"
-                            Text="Tipo"
-                            TextColor="{DynamicResource Negro}"
-                            VerticalTextAlignment="Center" />
-                        <Picker
-                            x:Name="pickerTipos"
-                            Title="Seleccione el tipo"
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            BackgroundColor="White"
-                            FontFamily="Nunito"
-                            FontSize="12"
-                            HorizontalOptions="FillAndExpand"
-                            ItemDisplayBinding="{Binding Nombre}"
-                            ItemsSource="{Binding ListadoTipos}"
-                            SelectedItem="{Binding TipoSeleccionado}"
-                            TextColor="{DynamicResource Negro}"
-                            TitleColor="{DynamicResource Negro}" />
-
-                        <Label
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            FontFamily="Syne"
-                            FontSize="14"
-                            HorizontalOptions="StartAndExpand"
-                            HorizontalTextAlignment="Center"
-                            Text="Estado"
-                            TextColor="{DynamicResource Negro}"
-                            VerticalTextAlignment="Center" />
-                        <Switch
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            HorizontalOptions="Start"
-                            IsToggled="{Binding ValorEstado}" />
-
-                        <Label
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            FontFamily="Syne"
-                            FontSize="14"
-                            HorizontalTextAlignment="Center"
-                            Text="Orden"
-                            TextColor="{DynamicResource Negro}"
-                            VerticalTextAlignment="Center" />
-                        <Entry
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            BackgroundColor="White"
-                            FontFamily="Nunito"
-                            FontSize="12"
-                            Keyboard="Numeric"
-                            MaxLength="3"
-                            HorizontalOptions="FillAndExpand"
-                            HorizontalTextAlignment="Start"
-                            Text="{Binding Orden}"
-                            TextColor="{DynamicResource Negro}" />
-                    </Grid>
-                </StackLayout>
-            </ScrollView>
-        </Grid>
 </ContentPage>

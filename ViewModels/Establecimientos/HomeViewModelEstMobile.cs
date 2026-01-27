@@ -52,28 +52,20 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 {
                     if (es.configuracion == null)
                         es.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(es.idEstablecimiento);
-                    if (es.configuracion.aceptaEncargos)
-                        AceptaEncargos = true;
-
-                    if (AceptaEncargos)
-                        VerSoloHoy = Preferences.Get("VerSoloHoy", true);
-                    else
-                        if (es.esComercio)
-                        VerSoloHoy = true;
-                    if (es.local==1)
-                        TieneLocal = true;
 
                     if (es.configuracion.visibilidadHoras == 0)
                     {
                         VisibleFechaEntrega = true;
                         VisibleFechaPedido = false;
                         visibleDosFechas = false;
-                    } else if (es.configuracion.visibilidadHoras == 1)
+                    }
+                    else if (es.configuracion.visibilidadHoras == 1)
                     {
                         VisibleFechaEntrega = false;
                         VisibleFechaPedido = true;
                         visibleDosFechas = false;
-                    } else if (es.configuracion.visibilidadHoras == 2)
+                    }
+                    else if (es.configuracion.visibilidadHoras == 2)
                     {
                         VisibleFechaEntrega = false;
                         VisibleFechaPedido = false;
@@ -98,7 +90,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 App.DAUtil.homeEst = this;
                 App.DAUtil.EstoyenHome = true;
                 App.DAUtil.EnTimer = true;
-                ListadoRepartidores = new ObservableCollection<RepartidorModel>(App.DAUtil.GetRepartidores().Where(p => p.activo == 1 && p.idPueblo==App.DAUtil.Usuario.idPueblo).ToList());
+                ListadoRepartidores = new ObservableCollection<RepartidorModel>(App.DAUtil.GetRepartidores().Where(p => p.activo == 1 && p.idPueblo == App.DAUtil.Usuario.idPueblo).ToList());
                 IsVisibleRepartidores = ListadoRepartidores.Count > 0;
                 await initTimer();
 
@@ -114,7 +106,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
 
 
                 App.ResponseWS.RegistraTokenFCM(App.DAUtil.Usuario);
-                
+
                 await base.InitializeAsync(navigationData).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() =>
                 {
                     App.userdialog.HideLoading();
@@ -266,22 +258,6 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 {
                     visibleDosFechas = value;
                     OnPropertyChanged(nameof(VisibleDosFechas));
-                }
-            }
-        }
-        private bool esComercio;
-        public bool EsComercio
-        {
-            get
-            {
-                return esComercio;
-            }
-            set
-            {
-                if (esComercio != value)
-                {
-                    esComercio = value;
-                    OnPropertyChanged(nameof(EsComercio));
                 }
             }
         }
@@ -505,9 +481,10 @@ namespace AsadorMoron.ViewModels.Establecimientos
         }
         private async void VerAutoPedidoExe()
         {
-            try {
+            try
+            {
                 App.userdialog.ShowLoading("Cargando...", MaskType.Black);
-                await App.DAUtil.NavigationService.NavigateToAsyncMenu <CartaViewModel>();
+                await App.DAUtil.NavigationService.NavigateToAsyncMenu<CartaViewModel>();
             }
             catch (Exception ex)
             {
@@ -655,7 +632,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             else
                                 toBeUpdated = new List<CabeceraPedido>();
 
-                            if (toBeAdded.Count > 0 || toBeDeleted.Count > 0 || toBeUpdated.Count > 0 )
+                            if (toBeAdded.Count > 0 || toBeDeleted.Count > 0 || toBeUpdated.Count > 0)
                             {
 
                                 TotalPedidos = ListPedidosTemp.Count();
@@ -739,9 +716,9 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         linea = 5;
                         bool ok = false;
                         if (c.tipoVenta.Equals("Local"))
-                            ok=await App.ResponseWS.cambiaEstadoPedido(idPedido, 3);
+                            ok = await App.ResponseWS.cambiaEstadoPedido(idPedido, 3);
                         else
-                            ok=await App.ResponseWS.cambiaEstadoPedido(idPedido, 2);
+                            ok = await App.ResponseWS.cambiaEstadoPedido(idPedido, 2);
                         if (ok)
                         {
                             linea = 6;
@@ -758,7 +735,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                                     Establecimiento es = App.DAUtil.Usuario.establecimientos.Find(p => p.idEstablecimiento == c.idEstablecimiento);
                                     if (es.configuracion == null)
                                         es.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(es.idEstablecimiento);
-                                    
+
                                 }
                             }
                             catch (Exception)
@@ -809,9 +786,9 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         linea = 17;
                         bool ok = false;
                         if (!c.tipoVenta.StartsWith("Recogida"))
-                            ok=await App.ResponseWS.cambiaEstadoPedido(idPedido, 4);
+                            ok = await App.ResponseWS.cambiaEstadoPedido(idPedido, 4);
                         else
-                           ok=await App.ResponseWS.cambiaEstadoPedido(idPedido, 5);
+                            ok = await App.ResponseWS.cambiaEstadoPedido(idPedido, 5);
                         if (ok)
                         {
                             linea = 18;
@@ -861,7 +838,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
                             return false;
                         }
-                    linea = 24;
+                        linea = 24;
                     }
                     if (!string.IsNullOrEmpty(mensajeAdmin))
                     {
@@ -918,12 +895,12 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         if (c.imagenBoton.Equals("recogido.png"))
                         {
                             if (c.tipoVenta.Equals("Local"))
-                                ok=await App.ResponseWS.cambiaEstadoPedido(idPedido, 3);
+                                ok = await App.ResponseWS.cambiaEstadoPedido(idPedido, 3);
                             else
-                                ok=await App.ResponseWS.cambiaEstadoPedido(idPedido, 2);
+                                ok = await App.ResponseWS.cambiaEstadoPedido(idPedido, 2);
                         }
                         else
-                            ok=await App.ResponseWS.cambiaEstadoPedido(idPedido, 3);
+                            ok = await App.ResponseWS.cambiaEstadoPedido(idPedido, 3);
                         if (ok)
                         {
                             if (c.tipoVenta.StartsWith("Envío"))
@@ -1064,7 +1041,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
         private async Task VerCliente()
         {
             App.userdialog.ShowLoading("Cargando...", MaskType.Black);
-            await App.DAUtil.NavigationService.NavigateToAsyncMenu <CartaViewModel>();
+            await App.DAUtil.NavigationService.NavigateToAsyncMenu<CartaViewModel>();
         }
         private void CerrarPedido(object accion)
         {

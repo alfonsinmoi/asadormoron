@@ -1,405 +1,606 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="AsadorMoron.Views.Establecimientos.HomeViewEst"
     x:Name="HomeViewEstablecimientoLocal"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:badge="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
-    xmlns:ffTransformations="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
     xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Maui"
-     xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    Padding="0"
-    BackgroundColor="{StaticResource Rojo}">
-    <!--Cabecera-->
-    <NavigationPage.TitleView>
-         <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="Auto,*">
-            <Grid
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,5"
-                HeightRequest="40"
-                ColumnDefinitions="*,auto"
-                HorizontalOptions="FillAndExpand">
-                <Image
-                    Aspect="AspectFit"
-                    HeightRequest="35"
-                    Source="logomorado.png"
-                    VerticalOptions="StartAndExpand" />
-                <ImageButton Grid.Column="1"
-                    Margin="0,5,10,0"
-                    BackgroundColor="Transparent"
-                    Command="{Binding cmdAutoPedido}"
-                    HeightRequest="30"
-                    Source="insertar.png"
-                    WidthRequest="30" />
-            </Grid>
-        </Grid>
-    </NavigationPage.TitleView>
-    <!--Resources-->
+    xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="#F5F5F5">
+
     <ContentPage.Resources>
         <ResourceDictionary>
-            <Style x:Key="ExpanderTitleTextStyle" TargetType="Label">
-                <Setter Property="TextColor" Value="{DynamicResource Rojo}" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontFamily" Value="Nunito_bold" />
-                <Setter Property="HorizontalOptions" Value="StartAndExpand" />
-                <Setter Property="VerticalOptions" Value="Center" />
-                <Setter Property="Margin" Value="10, 0" />
-            </Style>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+            <Color x:Key="VerdeExito">#4CAF50</Color>
+            <Color x:Key="Amarillo">#FFD700</Color>
         </ResourceDictionary>
     </ContentPage.Resources>
-    <!--Listado-->
-    <Grid
-        RowDefinitions="Auto,Auto,Auto,Auto,*,Auto"
-        RowSpacing="0"
-        ColumnSpacing="0"
-        ColumnDefinitions="*,*">
-        <Grid ColumnDefinitions="Auto,*,Auto"
-         Grid.Row="0" Grid.ColumnSpan="2" BackgroundColor="{DynamicResource Negro}" HorizontalOptions="FillAndExpand" Margin="0,5,0,0">
-            <CollectionView
-                Grid.Column="1"
-                Margin="0,0,0,0.5"
-                HeightRequest="80"
-                BackgroundColor="{DynamicResource Rojo}"
-                MinimumHeightRequest="80"
-                VerticalOptions="End"
-                ItemsLayout="HorizontalList"
-                IsVisible="{Binding IsVisibleRepartidores}"
-                ItemsSource="{Binding ListadoRepartidores}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout>
-                            <ff:CachedImage
-                                    Margin="7"
-                                        Aspect="AspectFill"
-                                    HeightRequest="60"
-                                    WidthRequest="60"
-                                    HorizontalOptions="CenterAndExpand"
-                                    VerticalOptions="CenterAndExpand"
-                                    Source="{Binding foto}">
-                                <ff:CachedImage.Transformations>
-                                    <!-- Transformation removed -->
-                                </ff:CachedImage.Transformations>
-                            </ff:CachedImage>
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Path=BindingContext.cmdVerRepartidor, Source={x:Reference Name=HomeViewEstablecimientoLocal}}" CommandParameter="{Binding .}"/>
-                            </StackLayout.GestureRecognizers>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
 
-            <!--Contador Pollos Asados-->
-        <Border Grid.Column="2"
-                HorizontalOptions="Fill"
-                Margin="16,8"
-                Stroke="Transparent"
-                StrokeShape="RoundRectangle 12"
-                BackgroundColor="{DynamicResource Rojo}"
-                Padding="16,10">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+        <!-- ============================================ -->
+        <!-- HEADER -->
+        <!-- ============================================ -->
+        <Border Grid.Row="0"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Padding="16,12">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,24,24"/>
+            </Border.StrokeShape>
             <Border.Shadow>
-                <Shadow Brush="Black" Offset="0,4" Radius="8" Opacity="0.3"/>
+                <Shadow Brush="#000000" Offset="0,4" Radius="8" Opacity="0.1"/>
             </Border.Shadow>
-            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" VerticalOptions="Center">
-                <Image Source="pollo.png"
-                       WidthRequest="36"
-                       HeightRequest="36"
-                       VerticalOptions="Center"/>
-                <Label Grid.Column="1"
-                       Text="{Binding ContadorPollos}"
-                       TextColor="White"
-                       FontFamily="Nunito_bold"
-                       FontSize="40"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"/>
-                <Border Grid.Column="2"
-                        BackgroundColor="White"
-                        StrokeShape="RoundRectangle 20"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        Stroke="Transparent">
-                    <Label Text="-"
-                           TextColor="{DynamicResource Rojo}"
-                           FontFamily="Nunito_bold"
-                           FontSize="28"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <!-- Botón Menú -->
+                <Border BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
+                    <Image Source="menu.png"
+                           WidthRequest="22"
+                           HeightRequest="22"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding RestarPolloCommand}"/>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
                     </Border.GestureRecognizers>
                 </Border>
-                <Border Grid.Column="3"
-                        BackgroundColor="White"
-                        StrokeShape="RoundRectangle 20"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        Stroke="Transparent">
-                    <Label Text="+"
-                           TextColor="{DynamicResource Rojo}"
-                           FontFamily="Nunito_bold"
-                           FontSize="28"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+
+                <!-- Título y contador -->
+                <StackLayout Grid.Column="1"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="4">
+                    <StackLayout Orientation="Horizontal"
+                                 HorizontalOptions="Center"
+                                 Spacing="8">
+                        <Label Text="Pedidos"
+                               FontFamily="Nunito_bold"
+                               FontSize="18"
+                               TextColor="#333333"
+                               VerticalOptions="Center"/>
+                        <!-- Badge contador -->
+                        <Border BackgroundColor="{StaticResource RojoMarca}"
+                                StrokeThickness="0"
+                                Padding="10,4"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Label Text="{Binding Listado.Count}"
+                                   FontFamily="Nunito_bold"
+                                   FontSize="14"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                    </StackLayout>
+                    <Label Text="Establecimiento"
+                           FontFamily="Nunito"
+                           FontSize="11"
+                           TextColor="#888888"
+                           HorizontalOptions="Center"/>
+                </StackLayout>
+
+                <!-- Botón AutoPedido -->
+                <Border Grid.Column="2"
+                        BackgroundColor="{StaticResource RojoMarca}"
+                        StrokeThickness="0"
+                        WidthRequest="44"
+                        HeightRequest="44">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="14"/>
+                    </Border.StrokeShape>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding SumarPolloCommand}"/>
+                        <TapGestureRecognizer Command="{Binding cmdAutoPedido}"/>
                     </Border.GestureRecognizers>
+                    <Label Text="+"
+                           FontFamily="Nunito_bold"
+                           FontSize="24"
+                           TextColor="White"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"/>
                 </Border>
             </Grid>
         </Border>
 
-        <!--Listado pedidos para recoger y enviar, visible si no tiene local-->
-        <Button BackgroundColor="Red" TextColor="White" Text="CERRAR TODO"
-                 HeightRequest="40" CornerRadius="0" HorizontalOptions="FillAndExpand"
-                Command="{Binding commandCerrarTodo}"/>
-        </Grid>
-        <!--Boton ver pedidos solo hoy, visible si acepta encargos-->
-        <StackLayout
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            IsVisible="{Binding AceptaEncargos}"
-            Padding="20,5"
-            BackgroundColor="{DynamicResource Rojo}"
-            Orientation="Horizontal">
-            <Switch IsToggled="{Binding VerSoloHoy}" OnColor="{DynamicResource Amarillo}" />
-            <Label
-                FontFamily="Syne_Regular"
-                Text="Ver sólo pedidos para hoy"
-                TextColor="{DynamicResource Negro}"
-                VerticalTextAlignment="Center" />
-        </StackLayout>
-
-        
-        <StackLayout
-            Grid.Row="4"
-            Grid.ColumnSpan="2"
-            Grid.Column="0">
-            <CollectionView
+        <!-- ============================================ -->
+        <!-- REPARTIDORES (Lista horizontal) -->
+        <!-- ============================================ -->
+        <Border Grid.Row="1"
                 BackgroundColor="White"
-                ItemsSource="{Binding Listado}"
-                SelectionMode="None"
-                VerticalOptions="FillAndExpand">
-                <CollectionView.EmptyView>
-                    <StackLayout>
-                        <Label
-                            Margin="15"
-                            FontFamily="Syne"
-                            FontSize="30"
-                            HorizontalOptions="CenterAndExpand"
-                            HorizontalTextAlignment="Center"
-                            Text="No existen pedidos en estos momentos"
-                            TextColor="{StaticResource Negro}"
-                            VerticalOptions="CenterAndExpand"
-                            VerticalTextAlignment="Center" />
-                    </StackLayout>
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid
-                            Margin="0,2"
+                StrokeThickness="0"
+                Margin="16,12,16,0"
+                Padding="12,10"
+                IsVisible="{Binding IsVisibleRepartidores}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.08"/>
+            </Border.Shadow>
+
+            <StackLayout Spacing="8">
+                <Label Text="Repartidores activos"
+                       FontFamily="Nunito_bold"
+                       FontSize="13"
+                       TextColor="#333333"/>
+                <CollectionView HeightRequest="48"
+                                ItemsLayout="HorizontalList"
+                                ItemsSource="{Binding ListadoRepartidores}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="4,0">
+                                <!-- Borde rojo exterior -->
+                                <Border BackgroundColor="Transparent"
+                                        StrokeThickness="2"
+                                        Stroke="{StaticResource RojoMarca}"
+                                        WidthRequest="44"
+                                        HeightRequest="44">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="22"/>
+                                    </Border.StrokeShape>
+                                </Border>
+                                <!-- Imagen recortada -->
+                                <Border BackgroundColor="#F5F5F5"
+                                        StrokeThickness="0"
+                                        WidthRequest="40"
+                                        HeightRequest="40"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="20"/>
+                                    </Border.StrokeShape>
+                                    <ff:CachedImage Aspect="AspectFill"
+                                                    WidthRequest="40"
+                                                    HeightRequest="40"
+                                                    Source="{Binding foto}">
+                                        <ff:CachedImage.Clip>
+                                            <EllipseGeometry Center="20,20" RadiusX="20" RadiusY="20"/>
+                                        </ff:CachedImage.Clip>
+                                    </ff:CachedImage>
+                                </Border>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.cmdVerRepartidor, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
+                                                          CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </Border>
+
+        <!-- ============================================ -->
+        <!-- SWITCH SOLO HOY -->
+        <!-- ============================================ -->
+        <Border Grid.Row="2"
+                BackgroundColor="White"
+                StrokeThickness="0"
+                Margin="16,12,16,0"
+                Padding="14,10"
+                IsVisible="{Binding AceptaEncargos}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="14"/>
+            </Border.StrokeShape>
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,2" Radius="6" Opacity="0.08"/>
+            </Border.Shadow>
+            <StackLayout Orientation="Horizontal" Spacing="10">
+                <Switch IsToggled="{Binding VerSoloHoy}"
+                        OnColor="{StaticResource RojoMarca}"/>
+                <Label Text="Solo pedidos de hoy"
+                       FontFamily="Nunito"
+                       FontSize="14"
+                       TextColor="#333333"
+                       VerticalOptions="Center"/>
+            </StackLayout>
+        </Border>
+
+        <!-- ============================================ -->
+        <!-- CONTADOR DE POLLOS + CERRAR TODO (misma fila) -->
+        <!-- ============================================ -->
+        <Grid Grid.Row="3"
+              ColumnDefinitions="*,Auto"
+              Margin="16,12,16,0"
+              ColumnSpacing="10">
+
+            <!-- Contador de Pollos -->
+            <Border BackgroundColor="{StaticResource RojoMarca}"
+                    StrokeThickness="0"
+                    Padding="12,10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="{StaticResource RojoMarca}" Offset="0,3" Radius="8" Opacity="0.3"/>
+                </Border.Shadow>
+
+                <Grid ColumnDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="10">
+                    <!-- Icono Pollo -->
+                    <Image Source="pollo.png"
+                           WidthRequest="28"
+                           HeightRequest="28"
+                           VerticalOptions="Center"/>
+
+                    <!-- Contador -->
+                    <Label Grid.Column="1"
+                           Text="{Binding ContadorPollos}"
+                           FontFamily="Nunito_bold"
+                           FontSize="28"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+
+                    <!-- Botón Restar -->
+                    <Border Grid.Column="2"
                             BackgroundColor="White"
-                            ColumnDefinitions="65,*,Auto"
-                            ColumnSpacing="0"
-                            RowDefinitions="Auto, Auto,Auto,Auto,Auto,Auto"
-                            RowSpacing="0">
-                            <Grid 
-                                Grid.RowSpan="4"
-                                Grid.Column="0">
-                                <ff:CachedImage
-                                    Margin="5"
-                                    HeightRequest="32"
-                                    HorizontalOptions="Center"
-                                    IsVisible="{Binding repartidor}"
-                                    Source="{Binding FotoRepartidor}">
-                                </ff:CachedImage>
-                                <Image
-                                    Grid.Row="0"
-                                    Grid.Column="0"
-                                    Margin="{OnPlatform  Default=5 ,iOS=0}"
-                                    Aspect="AspectFit"
-                                    HorizontalOptions="End"
-                                    Source="{Binding ColorPedido}">
-                                </Image>
+                            StrokeThickness="0"
+                            WidthRequest="36"
+                            HeightRequest="36">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RestarPolloCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="-"
+                               FontFamily="Nunito_bold"
+                               FontSize="22"
+                               TextColor="{StaticResource RojoMarca}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+
+                    <!-- Botón Sumar -->
+                    <Border Grid.Column="3"
+                            BackgroundColor="White"
+                            StrokeThickness="0"
+                            WidthRequest="36"
+                            HeightRequest="36">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SumarPolloCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="+"
+                               FontFamily="Nunito_bold"
+                               FontSize="22"
+                               TextColor="{StaticResource RojoMarca}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Botón Cerrar Todo -->
+            <Border Grid.Column="1"
+                    BackgroundColor="#E53935"
+                    StrokeThickness="0"
+                    Padding="14,10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#E53935" Offset="0,3" Radius="8" Opacity="0.3"/>
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding commandCerrarTodo}"/>
+                </Border.GestureRecognizers>
+                <StackLayout Orientation="Horizontal" Spacing="6" VerticalOptions="Center">
+                    <Label Text="&#x2716;"
+                           FontSize="16"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                    <Label Text="Cerrar Todo"
+                           FontFamily="Nunito_bold"
+                           FontSize="13"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </StackLayout>
+            </Border>
+        </Grid>
+
+        <!-- ============================================ -->
+        <!-- LISTA DE PEDIDOS -->
+        <!-- ============================================ -->
+        <CollectionView Grid.Row="4"
+                        Margin="16,12,16,16"
+                        ItemsSource="{Binding Listado}"
+                        SelectionMode="None">
+
+            <CollectionView.EmptyView>
+                <Border BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="40"
+                        Margin="0,20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20"/>
+                    </Border.StrokeShape>
+                    <StackLayout Spacing="16" HorizontalOptions="Center">
+                        <Label Text="&#x1F4CB;"
+                               FontSize="48"
+                               HorizontalOptions="Center"/>
+                        <Label Text="No hay pedidos"
+                               FontFamily="Nunito_bold"
+                               FontSize="18"
+                               TextColor="#333333"
+                               HorizontalOptions="Center"/>
+                        <Label Text="No existen pedidos en estos momentos"
+                               FontFamily="Nunito"
+                               FontSize="14"
+                               TextColor="#888888"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+                </Border>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border BackgroundColor="White"
+                            StrokeThickness="0"
+                            Margin="0,0,0,10"
+                            Padding="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.08"/>
+                        </Border.Shadow>
+
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" Padding="14">
+
+                            <!-- Fila 1: Avatar + Nombre + Badges -->
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <!-- Avatar con ColorPedido superpuesto -->
+                                <Grid WidthRequest="50" HeightRequest="50">
+                                    <!-- Foto del repartidor -->
+                                    <Border BackgroundColor="#F5F5F5"
+                                            StrokeThickness="0"
+                                            WidthRequest="50"
+                                            HeightRequest="50">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="25"/>
+                                        </Border.StrokeShape>
+                                        <ff:CachedImage Aspect="AspectFill"
+                                                        WidthRequest="50"
+                                                        HeightRequest="50"
+                                                        IsVisible="{Binding repartidor}"
+                                                        Source="{Binding FotoRepartidor}"/>
+                                    </Border>
+                                    <!-- ColorPedido superpuesto -->
+                                    <Image Source="{Binding ColorPedido}"
+                                           Aspect="AspectFill"
+                                           WidthRequest="60"
+                                           HeightRequest="60"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"/>
                                     <Grid.GestureRecognizers>
-                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.InfoUsuarioPedidoCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}" CommandParameter="{Binding codigoPedido}" />
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.InfoUsuarioPedidoCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
+                                                              CommandParameter="{Binding codigoPedido}"/>
                                     </Grid.GestureRecognizers>
-                            </Grid>
-                            <!-- ROW 0-->
-                            <Label
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="{OnPlatform Android='12,10,0,0',Default='12,0'}"
-                                FontSize="{OnPlatform Default=17, Android=14}"
-                                Style="{StaticResource ExpanderTitleTextStyle}"
-                                Text="{Binding nombreUsuario}"
-                                TextColor="{StaticResource Negro}" />
-                            <Label
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="{OnPlatform Android='12,10,0,0',Default='12,0'}"
-                                FontSize="{OnPlatform Default=17, Android=14}"
-                                Style="{StaticResource ExpanderTitleTextStyle}"
-                                Text="{Binding direccionUsuario}"
-                                FontFamily="Nunito"
-                                TextColor="{StaticResource Negro}" />
-                            <StackLayout Orientation="Horizontal" Grid.Row="0"
-                                Grid.Column="2">
-                                    <Label
-                                    FontFamily="Syne"
-                                    FontSize="13"
-                                    WidthRequest="20"
-                                    HorizontalTextAlignment="Center"
-                                    Text="{Binding tipoPago, Converter={StaticResource SubstringConverter}, ConverterParameter='0,1'}"
-                                    HorizontalOptions="Start"
-                                    BackgroundColor="Black"
-                                        VerticalTextAlignment="Center"
-                                    TextColor="{DynamicResource Blanco}"
-                                    VerticalOptions="FillAndExpand" />
-                                <Label
-                                
-                                Margin="0,0,10,0"
-                                BackgroundColor="{StaticResource Rojo}"
-                                FontAttributes="Bold"
-                                FontFamily="Nunito"
-                                FontSize="{OnPlatform Default=12, Android=11}"
-                                HorizontalOptions="Start"
-                                HorizontalTextAlignment="Center"
-                                Text="{Binding tipoVenta}"
-                                TextColor="{DynamicResource Blanco}"
-                                VerticalTextAlignment="Center"
-                                WidthRequest="{OnPlatform Default=90, Android=70}">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.CambiaReparto, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
-                                                          CommandParameter="{Binding idPedido}"/>
-                                </Label.GestureRecognizers>
-                                <Label.Triggers>
-                                    <DataTrigger
-                                        Binding="{Binding tipoVenta}"
-                                        TargetType="Label"
-                                        Value="Recogida">
-                                        <Setter Property="TextColor" Value="{DynamicResource Negro}" />
-                                        <Setter Property="BackgroundColor" Value="{DynamicResource Amarillo}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding tipoVenta}"
-                                        TargetType="Label"
-                                        Value="Recogida (Enc.)">
-                                        <Setter Property="TextColor" Value="{DynamicResource Negro}" />
-                                        <Setter Property="BackgroundColor" Value="{DynamicResource Gris}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding tipoVenta}"
-                                        TargetType="Label"
-                                        Value="Envío (Enc.)">
-                                        <Setter Property="TextColor" Value="{DynamicResource Blanco}" />
-                                        <Setter Property="BackgroundColor" Value="{DynamicResource Negro}" />
-                                    </DataTrigger>
-                                    <DataTrigger
-                                        Binding="{Binding tipoVenta}"
-                                        TargetType="Label"
-                                        Value="Reparto Propio">
-                                        <Setter Property="TextColor" Value="{DynamicResource Blanco}" />
-                                        <Setter Property="BackgroundColor" Value="{DynamicResource Rojo}" />
-                                    </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
+                                </Grid>
+
+                                <!-- Nombre y dirección -->
+                                <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding nombreUsuario}"
+                                           FontFamily="Nunito_bold"
+                                           FontSize="15"
+                                           TextColor="#333333"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Label Text="{Binding direccionUsuario}"
+                                           FontFamily="Nunito"
+                                           FontSize="13"
+                                           TextColor="#666666"
+                                           LineBreakMode="TailTruncation"/>
                                 </StackLayout>
-                            
-                            
-                            <!-- ROW 1-->
-                            <StackLayout Grid.Row="2"
-                                Grid.Column="1"
-                                Margin="12,0"
-                                Grid.ColumnSpan="2">
-                                <Label
-                                
-                                    FontFamily="Nunito"
-                                    FontSize="{OnPlatform Default=16, Android=13}"
-                                    IsVisible="{Binding Path=BindingContext.VerSoloHoy, Source={x:Reference Name=HomeViewEstablecimientoLocal}, Converter={StaticResource InverseBoolConverter}}"
-                                    Text="{Binding horaPedido, StringFormat='{0:HH:mm}'}"
-                                    TextColor="{StaticResource Negro}" />
-                                <Label
-                                    FontSize="{OnPlatform Default=16, Android=13}"
-                                    FontFamily="Nunito"
-                                    IsVisible="{Binding Path=BindingContext.VerSoloHoy, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
-                                    Text="{Binding horaPedido, StringFormat='{0:dd/MM/yyyy HH:mm}'}"
-                                    TextColor="{StaticResource Negro}" />
-                            </StackLayout>
-                            <!-- ROW 2-->
-                            <Label
-                                Grid.Row="3"
-                                Grid.Column="1"
-                                Margin="12,0,10,0"
-                                BackgroundColor="Transparent"
-                                FontFamily="Nunito_bold"
-                                FontSize="{OnPlatform Default=20,Android=17}"
-                                HorizontalOptions="StartAndExpand"
-                                Text="{Binding precioTotalPedido, StringFormat='{0:N2}€'}"
-                                TextColor="{StaticResource Rojo}"
-                                VerticalTextAlignment="End" />
-                            <!-- ROW 3-->
-                            <Label
-                                Grid.Row="4"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="3"
-                                Margin="12,0,10,0"
-                                FontFamily="Nunito"
-                                FontSize="15"
-                                Text="{Binding comentario}"
-                                TextColor="Black" />
 
-                            <!-- ROW 4-->
-                            <BoxView
-                                Grid.Row="5"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="3"
-                                Margin="0,4,0,0"
-                                BackgroundColor="{StaticResource Negro}"
-                                HeightRequest="0.3"
-                                HorizontalOptions="FillAndExpand"
-                                VerticalOptions="End" />
-                            <Grid Grid.Row="5" ColumnDefinitions="*,*,*" Grid.ColumnSpan="3">
-                                <ImageButton
-                                Grid.Column="0"
-                                Margin="0,0,0,5"
-                                 HorizontalOptions="FillAndExpand"
-                                 VerticalOptions="Center"
-                                 HeightRequest="40"
-                                 Aspect="AspectFit"
-                                BackgroundColor="{DynamicResource Fondo}"
-                                Command="{Binding Path=BindingContext.anularCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
-                                CommandParameter="{Binding codigoPedido}"
-                                Source="anular.png">
-                                </ImageButton>
-                                <ImageButton
-                                Grid.Column="1"
-                                Margin="0,0,0,5"
-                                 HorizontalOptions="FillAndExpand"
-                                 VerticalOptions="Center"
-                                 HeightRequest="40"
-                                 Aspect="AspectFit"
-                                BackgroundColor="{DynamicResource Fondo}"
-                                Command="{Binding Path=BindingContext.cerrarCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
-                                CommandParameter="{Binding codigoPedido}"
-                                Source="cancelar.png">
-                                </ImageButton>
-                            <ImageButton
-                                Grid.Column="2"
-                                Margin="0,0,0,5"
-                                HorizontalOptions="FillAndExpand"
-                                 VerticalOptions="Center"
-                                 HeightRequest="40"
-                                 Aspect="AspectFit"
-                                BackgroundColor="{DynamicResource Fondo}"
-                                Command="{Binding Path=BindingContext.PrintCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
-                                CommandParameter="{Binding codigoPedido}"
-                                Source="printer.png" />
+                                <!-- Badges -->
+                                <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="6">
+                                    <!-- Badge Tipo Pago -->
+                                    <Border BackgroundColor="#333333"
+                                            StrokeThickness="0"
+                                            WidthRequest="24"
+                                            HeightRequest="24">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding tipoPago, Converter={StaticResource SubstringConverter}, ConverterParameter='0,1'}"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="12"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
+
+                                    <!-- Badge Tipo Venta -->
+                                    <Border StrokeThickness="0"
+                                            Padding="10,4"
+                                            BackgroundColor="{StaticResource RojoMarca}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Border.Triggers>
+                                            <DataTrigger Binding="{Binding tipoVenta}" TargetType="Border" Value="Recogida">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Amarillo}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding tipoVenta}" TargetType="Border" Value="Recogida (Enc.)">
+                                                <Setter Property="BackgroundColor" Value="#9E9E9E"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding tipoVenta}" TargetType="Border" Value="Envío (Enc.)">
+                                                <Setter Property="BackgroundColor" Value="#333333"/>
+                                            </DataTrigger>
+                                        </Border.Triggers>
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Path=BindingContext.CambiaReparto, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
+                                                                  CommandParameter="{Binding idPedido}"/>
+                                        </Border.GestureRecognizers>
+                                        <Label Text="{Binding tipoVenta}"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="11"
+                                               TextColor="White">
+                                            <Label.Triggers>
+                                                <DataTrigger Binding="{Binding tipoVenta}" TargetType="Label" Value="Recogida">
+                                                    <Setter Property="TextColor" Value="#333333"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </Border>
+                                </StackLayout>
                             </Grid>
-                             
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
 
-            </CollectionView>
-        </StackLayout>
+                            <!-- Fila 2: Hora y Precio -->
+                            <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label Text="&#x1F552;"
+                                           FontSize="14"
+                                           VerticalOptions="Center"/>
+                                    <Label FontFamily="Nunito"
+                                           FontSize="13"
+                                           TextColor="#666666"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding Path=BindingContext.VerSoloHoy, Source={x:Reference Name=HomeViewEstablecimientoLocal}, Converter={StaticResource InverseBoolConverter}}"
+                                           Text="{Binding horaPedido, StringFormat='{0:HH:mm}'}"/>
+                                    <Label FontFamily="Nunito"
+                                           FontSize="13"
+                                           TextColor="#666666"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding Path=BindingContext.VerSoloHoy, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
+                                           Text="{Binding horaPedido, StringFormat='{0:dd/MM HH:mm}'}"/>
+                                </StackLayout>
+                                <Label Grid.Column="1"
+                                       Text="{Binding precioTotalPedido, StringFormat='{0:N2}€'}"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="20"
+                                       TextColor="{StaticResource RojoMarca}"/>
+                            </Grid>
+
+                            <!-- Fila 3: Comentario -->
+                            <Border Grid.Row="2"
+                                    BackgroundColor="#FFF8E1"
+                                    StrokeThickness="0"
+                                    Padding="10,8"
+                                    Margin="0,10,0,0"
+                                    IsVisible="{Binding comentario, Converter={StaticResource StringEmptyToBooleanConverter}}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10"/>
+                                </Border.StrokeShape>
+                                <StackLayout Orientation="Horizontal" Spacing="8">
+                                    <Label Text="&#x1F4DD;"
+                                           FontSize="14"
+                                           VerticalOptions="Start"/>
+                                    <Label Text="{Binding comentario}"
+                                           FontFamily="Nunito"
+                                           FontSize="13"
+                                           TextColor="#333333"
+                                           LineBreakMode="WordWrap"/>
+                                </StackLayout>
+                            </Border>
+
+                            <!-- Fila 4: Botones de acción -->
+                            <Grid Grid.Row="3" ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,12,0,0">
+                                <!-- Botón Anular -->
+                                <Border BackgroundColor="#FFEBEE"
+                                        StrokeThickness="0"
+                                        Padding="0"
+                                        HeightRequest="44">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.anularCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
+                                                              CommandParameter="{Binding codigoPedido}"/>
+                                    </Border.GestureRecognizers>
+                                    <StackLayout Orientation="Horizontal"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center"
+                                                 Spacing="6">
+                                        <Label Text="&#x1F5D1;"
+                                               FontSize="16"
+                                               VerticalOptions="Center"/>
+                                        <Label Text="Anular"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="14"
+                                               TextColor="#C41E3A"
+                                               VerticalOptions="Center"/>
+                                    </StackLayout>
+                                </Border>
+
+                                <!-- Botón Cerrar -->
+                                <Border Grid.Column="1"
+                                        BackgroundColor="{StaticResource RojoMarca}"
+                                        StrokeThickness="0"
+                                        Padding="0"
+                                        HeightRequest="44">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Border.Shadow>
+                                        <Shadow Brush="{StaticResource RojoMarca}" Offset="0,2" Radius="6" Opacity="0.3"/>
+                                    </Border.Shadow>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.cerrarCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
+                                                              CommandParameter="{Binding codigoPedido}"/>
+                                    </Border.GestureRecognizers>
+                                    <StackLayout Orientation="Horizontal"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center"
+                                                 Spacing="6">
+                                        <Label Text="&#x2714;"
+                                               FontSize="16"
+                                               TextColor="White"
+                                               VerticalOptions="Center"/>
+                                        <Label Text="Cerrar"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="14"
+                                               TextColor="White"
+                                               VerticalOptions="Center"/>
+                                    </StackLayout>
+                                </Border>
+
+                                <!-- Botón Imprimir -->
+                                <Border Grid.Column="2"
+                                        BackgroundColor="#F5F5F5"
+                                        StrokeThickness="0"
+                                        Padding="0"
+                                        HeightRequest="44">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12"/>
+                                    </Border.StrokeShape>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Path=BindingContext.PrintCommand, Source={x:Reference Name=HomeViewEstablecimientoLocal}}"
+                                                              CommandParameter="{Binding codigoPedido}"/>
+                                    </Border.GestureRecognizers>
+                                    <StackLayout Orientation="Horizontal"
+                                                 HorizontalOptions="Center"
+                                                 VerticalOptions="Center"
+                                                 Spacing="6">
+                                        <Image Source="printer.png"
+                                               WidthRequest="18"
+                                               HeightRequest="18"
+                                               VerticalOptions="Center"/>
+                                        <Label Text="Imprimir"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="14"
+                                               TextColor="#333333"
+                                               VerticalOptions="Center"/>
+                                    </StackLayout>
+                                </Border>
+                            </Grid>
+
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
     </Grid>
+
 </ContentPage>

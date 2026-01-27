@@ -10,10 +10,6 @@ using AsadorMoron.ViewModels.Clientes;
 using AsadorMoron.ViewModels.Repartidores;
 using AsadorMoron.ViewModels.Administrador;
 using AsadorMoron.ViewModels.Establecimientos;
-using AsadorMoron.ViewModels.Informes;
-using AsadorMoron.ViewModels.Contabilidad;
-using Microsoft.Maui;
-using Microsoft.Maui.Controls;
 
 namespace AsadorMoron.ViewModels
 {
@@ -58,7 +54,7 @@ namespace AsadorMoron.ViewModels
             Task result;
             try
             {
-                if((DeviceInfo.Platform.ToString() == "Android" && Preferences.Get("VersionMinimaAndroid", 0) <= App.DAUtil.versionAppAndroid) || (DeviceInfo.Platform.ToString() == "iOS" && Preferences.Get("VersionMinimaiOS", 0) <= App.DAUtil.versionAppiOS))
+                if ((DeviceInfo.Platform.ToString() == "Android" && Preferences.Get("VersionMinimaAndroid", 0) <= App.DAUtil.versionAppAndroid) || (DeviceInfo.Platform.ToString() == "iOS" && Preferences.Get("VersionMinimaiOS", 0) <= App.DAUtil.versionAppiOS))
                     versionBuena = true;
 
                 if ((string.IsNullOrEmpty(PIN) && versionBuena) || DeviceInfo.Platform.ToString() == "WinUI")
@@ -80,8 +76,8 @@ namespace AsadorMoron.ViewModels
                                 }
                                 else
                                 {
-                                        result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<CartaViewModel>(App.EstActual));
-                                    
+                                    result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<CartaViewModel>(App.EstActual));
+
                                 }
                                 break;
                             case (int)RolesEnum.Establecimiento: //Restaurante
@@ -92,9 +88,6 @@ namespace AsadorMoron.ViewModels
                                 break;
                             case (int)RolesEnum.Repartidor: //REpartidor
                                 result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<HomeViewModelRepartidor>());
-                                break;
-                            case (int)RolesEnum.Contable: //Contable
-                                result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<HomeContabilidadViewModel>());
                                 break;
                             default:
                                 result = Task.WhenAll(_menuLateralViewModel.InitializeAsync(navigationData), App.DAUtil.NavigationService.NavigateToAsync<CartaViewModel>(App.EstActual));

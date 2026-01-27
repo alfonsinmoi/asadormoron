@@ -27,7 +27,7 @@ namespace AsadorMoron.ViewModels.Clientes
         private int tipo = 0;
         private bool activoHoy;
         private double Gastos;
-        private double Bolsas=0;
+        private double Bolsas = 0;
         static string codigoPedido;
         private List<CarritoModel> Carrito2;
         private string tipoVenta = "Envío";
@@ -273,17 +273,17 @@ namespace AsadorMoron.ViewModels.Clientes
                         inicioMan = DateTime.Now.AddMinutes(1).TimeOfDay;
                     int ultimoMinuto = int.Parse(inicioMan.Minutes.ToString().Substring(inicioMan.Minutes.ToString().Length - 1));
                     if (ultimoMinuto >= 1 && ultimoMinuto <= 4)
-                        inicioMan=inicioMan.Add(new TimeSpan(0, 5 - ultimoMinuto, 0));
+                        inicioMan = inicioMan.Add(new TimeSpan(0, 5 - ultimoMinuto, 0));
                     else if (ultimoMinuto >= 6 && ultimoMinuto <= 9)
-                        inicioMan=inicioMan.Add(new TimeSpan(0, 10 - ultimoMinuto, 0));
+                        inicioMan = inicioMan.Add(new TimeSpan(0, 10 - ultimoMinuto, 0));
 
                     if (inicioTarde < DateTime.Now.TimeOfDay)
                         inicioTarde = DateTime.Now.AddMinutes(1).TimeOfDay;
                     ultimoMinuto = int.Parse(inicioTarde.Minutes.ToString().Substring(inicioTarde.Minutes.ToString().Length - 1));
                     if (ultimoMinuto >= 1 && ultimoMinuto <= 4)
-                        inicioTarde=inicioTarde.Add(new TimeSpan(0, 5 - ultimoMinuto, 0));
+                        inicioTarde = inicioTarde.Add(new TimeSpan(0, 5 - ultimoMinuto, 0));
                     else if (ultimoMinuto >= 6 && ultimoMinuto <= 9)
-                        inicioTarde=inicioTarde.Add(new TimeSpan(0, 10 - ultimoMinuto, 0));
+                        inicioTarde = inicioTarde.Add(new TimeSpan(0, 10 - ultimoMinuto, 0));
                     bool seguir = true;
                     do
                     {
@@ -295,13 +295,13 @@ namespace AsadorMoron.ViewModels.Clientes
                             DateTime d2 = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, ts.Hours, ts.Minutes, 0);
                             if (d >= DateTime.Now)
                             {
-                                    FranjaHorariaModel f = new FranjaHorariaModel();
-                                    f.horaInicioReal = inicioMan;
-                                    f.horaInicio = inicioMan.Add(TimeSpan.FromMinutes(App.EstActual.tiempoEntrega)).ToString(@"hh\:mm");
-                                    f.horaFin = inicioMan.Add(TimeSpan.FromMinutes(App.EstActual.tiempoEntrega)).Add(new TimeSpan(0, 15, 0)).ToString(@"hh\:mm");
-                                    f.Color = "#000000";
-                                    resultado.Add(f);
-                                    activoHoy = true;
+                                FranjaHorariaModel f = new FranjaHorariaModel();
+                                f.horaInicioReal = inicioMan;
+                                f.horaInicio = inicioMan.Add(TimeSpan.FromMinutes(App.EstActual.tiempoEntrega)).ToString(@"hh\:mm");
+                                f.horaFin = inicioMan.Add(TimeSpan.FromMinutes(App.EstActual.tiempoEntrega)).Add(new TimeSpan(0, 15, 0)).ToString(@"hh\:mm");
+                                f.Color = "#000000";
+                                resultado.Add(f);
+                                activoHoy = true;
                             }
                             inicioMan = inicioMan.Add(new TimeSpan(0, 15, 0));
                         }
@@ -636,16 +636,16 @@ namespace AsadorMoron.ViewModels.Clientes
         }
         private async Task EnviarEmail(string puntos)
         {
-                try
-                {
+            try
+            {
                 string body = "Hola " + App.DAUtil.Usuario.nombre + Environment.NewLine + "Gracias por tu pedido. Acabas de ganar " + puntos + " puntos que se sumar a tu cuenta";
                 List<string> lista = new List<string>();
-                    App.DAUtil.EnviaEmail(App.DAUtil.Usuario.email, "Confirmación de tu pedido en ASADOR MORÓN", body);
+                App.DAUtil.EnviaEmail(App.DAUtil.Usuario.email, "Confirmación de tu pedido en ASADOR MORÓN", body);
             }
-                catch (Exception)
-                {
-                    await App.customDialog.ShowDialogAsync(AppResources.ErrorEnvioEmail, AppResources.App, AppResources.Cerrar);
-                }
+            catch (Exception)
+            {
+                await App.customDialog.ShowDialogAsync(AppResources.ErrorEnvioEmail, AppResources.App, AppResources.Cerrar);
+            }
         }
         private async Task HacerPedidoTarjeta(bool hacer)
         {
@@ -659,7 +659,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     {
                         if (App.EstActual.configuracion == null)
                             App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
-                        
+
                     }
 
                     double total = 0;
@@ -749,7 +749,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     p.idCuenta = 0;
                     App.pedidoEnCurso = p;
                     App.carritoEnCurso = Carrito2;
-                    PagoConTarjeta(total,punt,puntosAQuitar);
+                    PagoConTarjeta(total, punt, puntosAQuitar);
                     /*int idCodigoPedido = ResponseServiceWS.NuevoPedido();
                     if (idCodigoPedido > 0)
                     {
@@ -782,10 +782,8 @@ namespace AsadorMoron.ViewModels.Clientes
 
         }
 
-        private async void PagoConTarjeta(double total,int punt,int puntosAQuitar)
+        private async void PagoConTarjeta(double total, int punt, int puntosAQuitar)
         {
-            Preferences.Set("EsPedidoLocal", false);
-            Preferences.Set("EsPedidoComercio", false);
             Preferences.Set("totalPedido", ((int)(total * 100)).ToString());
             App.urlChallengue = await App.ResponseWS.realizaPagoTarjeta(App.TarjetaSeleccionada.idUser, App.TarjetaSeleccionada.tokenUser, ((int)(total * 100)).ToString(), App.pedidoEnCurso.codigoPedido);
             if (App.urlChallengue.StartsWith("http"))
