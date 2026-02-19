@@ -29,6 +29,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
         {
             if (Comidas != null)
                 ActualizaProductos().ConfigureAwait(false);
+
+            MessagingCenter.Subscribe<DetalleComidaViewModel>(this, "ProductoActualizado", async (sender) =>
+            {
+                await ActualizaProductos();
+            });
         }
 
         public override async Task InitializeAsync(object navigationData)
@@ -117,77 +122,67 @@ namespace AsadorMoron.ViewModels.Establecimientos
         {
             try
             {
-                await Task.Run(() =>
+                // Recordar qué categoría estaba expandida
+                string categoriaExpandida = null;
+                if (_allGroups != null)
                 {
+                    var expandida = _allGroups.FirstOrDefault(g => g.Expanded);
+                    if (expandida != null)
+                        categoriaExpandida = expandida.Categoria;
+                }
 
+                _allGroups = new ObservableCollection<CategoriasArticulosGroupModel>();
+                int idCat = 0;
+                int i = 0;
+                CategoriasArticulosGroupModel ev = null;
+                string paraBuscar = TextoBusqueda ?? "";
+
+                foreach (Comida a in Comidas)
+                {
                     try
                     {
-                        MainThread.BeginInvokeOnMainThread(async () =>
+                        if (a.articulo.nombre.ToString().ToUpper().Contains(paraBuscar.ToUpper()) || string.IsNullOrWhiteSpace(paraBuscar)
+                            || a.articulo.descripcion.ToString().ToUpper().Contains(paraBuscar.ToUpper())
+                            || a.articulo.alergenos.ToString().ToUpper().Contains(paraBuscar.ToUpper())
+                            || a.articulo.ingredientes.ToString().ToUpper().Contains(paraBuscar.ToUpper()))
                         {
-                            _allGroups = new ObservableCollection<CategoriasArticulosGroupModel>();
-                            int idCat = 0;
-                            int i = 0;
-                            CategoriasArticulosGroupModel ev = null;
-                            String paraBuscar = "";
-                            if (TextoBusqueda != null)
-                                paraBuscar = TextoBusqueda;
-
-                            foreach (Comida a in Comidas)
+                            if (idCat != a.articulo.idCategoria)
                             {
-                                try
-                                {
-                                    if (a.articulo.nombre.ToString().ToUpper().Contains(paraBuscar.ToUpper()) || string.IsNullOrWhiteSpace(paraBuscar)
-                                        || a.articulo.descripcion.ToString().ToUpper().Contains(paraBuscar.ToUpper())
-                                        || a.articulo.alergenos.ToString().ToUpper().Contains(paraBuscar.ToUpper())
-                                        || a.articulo.ingredientes.ToString().ToUpper().Contains(paraBuscar.ToUpper()))
-                                    {
-                                        if (idCat != a.articulo.idCategoria)
-                                        {
-                                            idCat = a.articulo.idCategoria;
-                                            if (ev != null)
-                                                _allGroups.Add(ev);
-                                            string color = "";
-                                            if (a.articulo.idTipoCategoria == 1)
-                                                color = "#F8C149";
-                                            else
-                                                color = "#FFFFFF";
-                                            if (i == 0)
-                                                ev = new CategoriasArticulosGroupModel(a.articulo.categoria, a.articulo.categoria_eng, a.articulo.categoria_ger, a.articulo.categoria_fr, true, color);
-                                            else
-                                                ev = new CategoriasArticulosGroupModel(a.articulo.categoria, a.articulo.categoria_eng, a.articulo.categoria_ger, a.articulo.categoria_fr, false, color);
-                                            ev.ColorCategoria = color;
-                                            i++;
-                                        }
-
-                                        a.cantidad = 0;
-                                        if (ev != null)
-                                            ev.Add(a);
-                                    }
-                                }
-                                catch (Exception ex2)
-                                {
-                                    Console.WriteLine(ex2.Message);
-                                }
-                            }
-                            if (Comidas.Count > 0)
-                            {
+                                idCat = a.articulo.idCategoria;
                                 if (ev != null)
-                                {
                                     _allGroups.Add(ev);
-                                }
+                                string color = a.articulo.idTipoCategoria == 1 ? "#F8C149" : "#FFFFFF";
+                                bool expanded = categoriaExpandida != null
+                                    ? a.articulo.categoria == categoriaExpandida
+                                    : (i == 0);
+                                ev = new CategoriasArticulosGroupModel(a.articulo.categoria, a.articulo.categoria_eng, a.articulo.categoria_ger, a.articulo.categoria_fr, expanded, color);
+                                ev.ColorCategoria = color;
+                                i++;
                             }
-                            await UpdateListContent();
-                        });
+
+                            a.cantidad = 0;
+                            if (ev != null)
+                                ev.AddItem(a);
+                        }
                     }
-                    catch (Exception)
+                    catch (Exception ex2)
                     {
-                        App.userdialog.HideLoading();
+                        Console.WriteLine(ex2.Message);
                     }
-                });
+                }
+                if (Comidas.Count > 0 && ev != null)
+                {
+                    _allGroups.Add(ev);
+                }
+
+                foreach (var group in _allGroups)
+                    group.EventosCount = group.Count;
+
+                ListadoCategorias = _allGroups;
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[Articulos] Filtrar error: {ex.Message}");
             }
         }
         private async void Activar()
@@ -287,11 +282,12 @@ namespace AsadorMoron.ViewModels.Establecimientos
         {
             try
             {
-                //if (!App.entradoEnCarta)
-                //{
                     List<ArticuloModel> lista;
-                    await App.ResponseWS.getListadoProductosEstablecimiento(_establecimiento.idEstablecimiento, false);
-                    lista = await App.DAUtil.getProductosEstablecimiento(_establecimiento.idEstablecimiento);
+                    var serverList = await App.ResponseWS.getListadoProductosEstablecimiento(_establecimiento.idEstablecimiento, false);
+                    if (serverList != null && serverList.Count > 0)
+                        lista = await App.DAUtil.convertirArticuloEnProducto(serverList);
+                    else
+                        lista = await App.DAUtil.getProductosEstablecimiento(_establecimiento.idEstablecimiento);
                     Comidas = new List<Comida>();
                     int idArt = 0;
                     foreach (ArticuloModel p in lista)
@@ -657,68 +653,22 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 // 
             }
         }
-        public async void headerTapped(Object obj)
+        public void headerTapped(Object obj)
         {
             try
             {
-                int selectedIndex = 0;
-                int i = 0;
-                foreach (CategoriasArticulosGroupModel c in _expandedGroups)
+                string categoryName = obj?.ToString() ?? "";
+                foreach (var group in _allGroups)
                 {
-                    if (c.Categoria.Equals(obj.ToString()))
-                        selectedIndex = i;
+                    if (group.Categoria.Equals(categoryName))
+                        group.Expanded = !group.Expanded;
                     else
-                        _allGroups[i].Expanded = false;
-                    i += 1;
+                        group.Expanded = false;
                 }
-                _allGroups[selectedIndex].Expanded = !_allGroups[selectedIndex].Expanded;
-                await UpdateListContent();
             }
             catch (Exception ex)
             {
-                // 
-            }
-        }
-        private async Task UpdateListContent()
-        {
-            try
-            {
-                await Task.Run(() =>
-                {
-                    MainThread.BeginInvokeOnMainThread(async () =>
-                    {
-                        _expandedGroups = new List<CategoriasArticulosGroupModel>();
-
-                    foreach (CategoriasArticulosGroupModel group in _allGroups)
-                    {
-                        //Create new FoodGroups so we do not alter original list
-                        CategoriasArticulosGroupModel newGroup = new CategoriasArticulosGroupModel(group.Categoria, group.Categoria_eng, group.Categoria_ger, group.Categoria_fr, group.Expanded, group.ColorCategoria);
-                        //Add the count of food items for Lits Header Titles to use
-                        newGroup.EventosCount = group.Count;
-                        if (group.Expanded)
-                        {
-                            foreach (Comida food in group)
-                            {
-                                string color = "";
-                                if (food.articulo.idTipoCategoria == 1)
-                                    color = "#F8C149";
-                                else
-                                    color = "#FFFFFF";
-                                newGroup.ColorCategoria = color;
-                                newGroup.Add(food);
-                            }
-                        }
-                        _expandedGroups.Add(newGroup);
-
-                    }
-                        ListadoCategorias = new ObservableCollection<CategoriasArticulosGroupModel>(_expandedGroups);
-                    });
-                }
-    );
-            }
-            catch (Exception ex)
-            {
-                // 
+                Debug.WriteLine($"[Articulos] headerTapped error: {ex.Message}");
             }
         }
         private async void EliminarProductoCommandExecute(object parametro)
@@ -731,13 +681,10 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 if (App.ResponseWS.actualizaProducto(r.articulo))
                 {
                     r.articulo.eliminado = 0;
-                    var listadoCategoriasTemp = ListadoCategorias;
-                    foreach (List<Comida> item in listadoCategoriasTemp)
+                    foreach (var group in ListadoCategorias)
                     {
-                        item.RemoveAll(a => a.articulo.idArticulo == r.articulo.idArticulo);
+                        group.RemoveItem(r.articulo.idArticulo);
                     }
-                    ListadoCategorias = null;
-                    ListadoCategorias = listadoCategoriasTemp;
                     await App.customDialog.ShowDialogAsync(AppResources.EliminaProductoOK, AppResources.App, AppResources.Cerrar);
                 }
                 else
@@ -769,7 +716,6 @@ namespace AsadorMoron.ViewModels.Establecimientos
         }
 
         private ObservableCollection<CategoriasArticulosGroupModel> _allGroups;
-        private List<CategoriasArticulosGroupModel> _expandedGroups;
 
         Establecimiento _establecimiento;
         Categoria _categoria;

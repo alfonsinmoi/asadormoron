@@ -24,6 +24,7 @@
                 <Image
                     Aspect="AspectFit"
                     HorizontalOptions="CenterAndExpand"
+                    BackgroundColor="Transparent"
                     Source="logo_morado.png" />
                 <Label
                     FontAttributes="Bold"

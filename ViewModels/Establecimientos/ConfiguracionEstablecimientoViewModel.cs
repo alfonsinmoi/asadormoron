@@ -56,8 +56,8 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 estad.id = 3;
                 EstadosPedido.Add(estad);
                 MiEstablecimiento = App.EstActual;
-                CargaConfiguracion();
-                CargaConfiguracionAdmin();
+                await CargaConfiguracionAsync();
+                await CargaConfiguracionAdminAsync();
                 App.DAUtil.EnTimer = false;
 
 
@@ -74,9 +74,9 @@ namespace AsadorMoron.ViewModels.Establecimientos
         }
 
         #region Metodos
-        private void CargaConfiguracionAdmin()
+        private async Task CargaConfiguracionAdminAsync()
         {
-            configuracionAdmin = ResponseServiceWS.getConfiguracionAdmin(App.DAUtil.Usuario.idPueblo);
+            configuracionAdmin = await App.AsyncService.GetConfiguracionAdminAsync(App.DAUtil.Usuario.idPueblo);
             if (configuracionAdmin == null)
             {
                 configuracionAdmin.servicioActivo = false;
@@ -99,15 +99,15 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 TelefonoTicket = configuracionAdmin.telefonoTicket;
             }
         }
-        private void CargaConfiguracion()
+        private async Task CargaConfiguracionAsync()
         {
             try
             {
                 if (MiEstablecimiento.configuracion == null)
-                    MiEstablecimiento.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(MiEstablecimiento.idEstablecimiento);
+                    MiEstablecimiento.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(MiEstablecimiento.idEstablecimiento);
                 if (MiEstablecimiento.configuracion != null)
                 {
-                    ConfiguracionAdmin admin = ResponseServiceWS.getConfiguracionAdmin();
+                    ConfiguracionAdmin admin = await App.AsyncService.GetConfiguracionAdminAsync();
                     RangoBolsa = MiEstablecimiento.configuracion.rangoBolsas.ToString().Replace(",", ".");
                     PrecioBolsa = MiEstablecimiento.configuracion.precioBolsa.ToString().Replace(",", ".");
                     TicketSize = MiEstablecimiento.configuracion.ticketSize;
@@ -264,12 +264,12 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 App.customDialog.ShowDialogAsync(AppResources.DatosModificadosKO, AppResources.SoloError, AppResources.Cerrar);
             }
         }
-        private void GuardarConfiguracionEstablecimiento(object obj)
+        private async void GuardarConfiguracionEstablecimiento(object obj)
         {
             try
             {
 
-                ConfiguracionAdmin conf = ResponseServiceWS.getConfiguracionAdmin();
+                ConfiguracionAdmin conf = await App.AsyncService.GetConfiguracionAdminAsync();
                 MiEstablecimiento.configuracion.textoCerrado = TextoCerrado;
                 MiEstablecimiento.configuracion.cualquierHoraOtroPueblo = CualquierHoraOtroPueblo;
                 MiEstablecimiento.configuracion.pedidoMinimo = double.Parse(PedidoMinimo.ToString().Replace(".", ","));
@@ -364,7 +364,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
             {
                 miEstablecimiento = value;
                 OnPropertyChanged(nameof(MiEstablecimiento));
-                CargaConfiguracion();
+                _ = CargaConfiguracionAsync();
             }
         }
         private string nombreImpresora;

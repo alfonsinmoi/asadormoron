@@ -551,11 +551,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         {
                             if (subirFoto)
                             {
-                                ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", "");
+                                await Task.Run(() => ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", ""));
                             }
                             if (subirFotoLogo)
                             {
-                                ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", "");
+                                await Task.Run(() => ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", ""));
                             }
                             App.userdialog.HideLoading();
                             await App.customDialog.ShowDialogAsync(AppResources.EstablecimientoOK, AppResources.App, AppResources.Aceptar);
@@ -609,11 +609,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         {
                             if (subirFoto)
                             {
-                                ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", antiguo);
+                                await Task.Run(() => ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "establecimientos", antiguo));
                             }
                             if (subirFotoLogo)
                             {
-                                ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", antiguoLogo);
+                                await Task.Run(() => ResponseServiceWS.UploadImage(Logo, gLogo.ToString() + ".jpg", "establecimientos", antiguoLogo));
                             }
                             App.userdialog.HideLoading();
                             await App.customDialog.ShowDialogAsync(AppResources.mEstablecimientoOK, AppResources.App, AppResources.Aceptar);

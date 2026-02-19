@@ -17,6 +17,7 @@ using Microsoft.Maui.Controls;
 using AsadorMoron.Models.PayComet;
 using AsadorMoron.Recursos;
 using System.Data;
+using System.Net;
 
 namespace AsadorMoron.Services
 {
@@ -32,18 +33,55 @@ namespace AsadorMoron.Services
         private static readonly string urlPaycomet = "https://rest.paycomet.com/v1/";
         public static int terminalPaycomet = 0;
         public static string apiKeyPaycomet = "";
-        public static void UploadImage(string path, string nombre, string carpeta, string antiguo)
+        public static void UploadImage(string path, string nombre, string carpeta, string antiguo, int maxSize = 300)
         {
+            string uploadPath = path;
+            string tempPath = null;
             try
             {
+                // Redimensionar imagen si excede maxSize
+                try
+                {
+                    using (var stream = File.OpenRead(path))
+                    {
+                        var image = Microsoft.Maui.Graphics.Platform.PlatformImage.FromStream(stream);
+                        if (image.Width > maxSize || image.Height > maxSize)
+                        {
+                            float ratio = Math.Min((float)maxSize / (float)image.Width, (float)maxSize / (float)image.Height);
+                            int newWidth = (int)(image.Width * ratio);
+                            int newHeight = (int)(image.Height * ratio);
+
+                            var resized = image.Resize(newWidth, newHeight);
+                            tempPath = Path.Combine(Path.GetTempPath(), $"upload_{Guid.NewGuid()}.jpg");
+
+                            using (var outStream = File.Create(tempPath))
+                            {
+                                resized.Save(outStream, Microsoft.Maui.Graphics.ImageFormat.Jpeg, 0.85f);
+                            }
+                            uploadPath = tempPath;
+                            Debug.WriteLine($"[UploadImage] Resized {image.Width}x{image.Height} -> {newWidth}x{newHeight}");
+                        }
+                    }
+                }
+                catch (Exception exResize)
+                {
+                    Debug.WriteLine($"[UploadImage] Resize error, uploading original: {exResize.Message}");
+                    uploadPath = path;
+                }
+
                 System.Net.WebClient Client = new System.Net.WebClient();
                 Client.Headers.Add("Content-Type", "binary/octet-stream");
-                byte[] result = Client.UploadFile(ResponseServiceWS.urlPro + "uploadImagen.php?nombre=" + nombre + "&carpeta=" + carpeta + "&antiguo=" + antiguo, "POST", path);
+                byte[] result = Client.UploadFile(ResponseServiceWS.urlPro + "uploadImagen.php?nombre=" + nombre + "&carpeta=" + carpeta + "&antiguo=" + antiguo, "POST", uploadPath);
                 string s = Encoding.UTF8.GetString(result, 0, result.Length);
             }
             catch (Exception ex)
             {
-                // 
+                Debug.WriteLine($"[UploadImage] Upload error: {ex.Message}");
+            }
+            finally
+            {
+                if (tempPath != null && File.Exists(tempPath))
+                    File.Delete(tempPath);
             }
         }
         public static void UploadPDF(string path, string nombre, string carpeta, string antiguo)
@@ -349,6 +387,7 @@ namespace AsadorMoron.Services
                 DatosConexionModel.uri = App.DAUtil.miURL + "sendNotificationVarios.php?filtro=" + filtro + "&titulo=" + AppResources.App + "&mensaje=" + cuerpo;
                 HttpResponseMessage response = App.Client.GetAsync(DatosConexionModel.uri).Result;
                 string resultJSON = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(resultJSON);
                 return true;
             }
             catch (Exception ex)
@@ -359,19 +398,37 @@ namespace AsadorMoron.Services
         }
         internal async Task enviaNotificacion(string titulo, string mensaje, string token)
         {
-            //#if DEBUG
-            //#else
             try
             {
-                DatosConexionModel.uri = App.DAUtil.miURL + "sendNotification.php?id=" + token + "&titulo=" + titulo + "&mensaje=" + mensaje;
-                HttpResponseMessage response = App.Client.GetAsync(DatosConexionModel.uri).Result;
+                if (string.IsNullOrEmpty(token))
+                {
+                    Debug.WriteLine("[Notificacion] Token vacío, no se envía notificación");
+                    return;
+                }
+
+                var tituloEncoded = Uri.EscapeDataString(titulo);
+                var mensajeEncoded = Uri.EscapeDataString(mensaje);
+                var tokenEncoded = Uri.EscapeDataString(token);
+
+                DatosConexionModel.uri = App.DAUtil.miURL + "sendNotification.php?id=" + tokenEncoded + "&titulo=" + tituloEncoded + "&mensaje=" + mensajeEncoded;
+                Debug.WriteLine($"[Notificacion] Enviando: {DatosConexionModel.uri}");
+
+                HttpResponseMessage response = await App.Client.GetAsync(DatosConexionModel.uri);
                 string resultJSON = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine($"[Notificacion] Enviada correctamente: {resultJSON}");
+                }
+                else
+                {
+                    Debug.WriteLine($"[Notificacion] Error del servidor: {response.StatusCode} - {resultJSON}");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Debug.WriteLine($"[Notificacion] Excepción enviando notificación: {ex.Message}\n{ex.StackTrace}");
             }
-            //#endif
         }
         #endregion
         #region Descuentos
@@ -1041,15 +1098,15 @@ namespace AsadorMoron.Services
             return listadoHome;
         }
 
-        internal List<TokensModel> getTokenEstablecimiento(int id)
+        internal async Task<List<TokensModel>> getTokenEstablecimiento(int id)
         {
             try
             {
                 DatosConexionModel.uri = App.DAUtil.miURL + "establecimientos.php/GET?idEstablecimientoToken=" + id;
                 string requestUri = DatosConexionModel.uri;
 
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                 {
                     return JsonConvert.DeserializeObject<List<TokensModel>>(resultJSON);
@@ -1733,7 +1790,7 @@ namespace AsadorMoron.Services
             try
             {
                 string requestUri = App.DAUtil.miURL + "productos.php/GET?idEstablecimientoProductoCat=" + id.ToString();
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
                 string resultJSON = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                 {
@@ -1775,7 +1832,7 @@ namespace AsadorMoron.Services
             try
             {
                 string requestUri = App.DAUtil.miURL + "productos.php/GET?all=1";
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
                 string resultJSON = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                 {
@@ -2194,7 +2251,7 @@ namespace AsadorMoron.Services
                 HttpResponseMessage response = App.Client.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(comida), Encoding.UTF8, "application/json")).Result;
 
                 string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
                     eliminaDatosProducto(comida.idArticulo);
                     foreach (AlergenosModel a in comida.listadoAlergenos)
@@ -2236,118 +2293,6 @@ namespace AsadorMoron.Services
                 return false;
             }
         }
-        internal bool actualizaProductoMenu(MenuDiarioProductosModel comida)
-        {
-            try
-            {
-                if (comida.imagen.EndsWith("/"))
-                    comida.imagen = $"{urlPro}images/logo_producto.png";
-
-                DatosConexionModel.uri = urlPro;
-                string requestUri = DatosConexionModel.uri + "menuDiario.php?productos=true";
-                HttpResponseMessage response = App.Client.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(comida), Encoding.UTF8, "application/json")).Result;
-
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
-                {
-                    return true;
-                }
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-        }
-        internal bool actualizaMenuDiario(MenuDiarioModel comida)
-        {
-            try
-            {
-                DatosConexionModel.uri = urlPro;
-                string requestUri = DatosConexionModel.uri + "menuDiario.php";
-                HttpResponseMessage response = App.Client.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(comida), Encoding.UTF8, "application/json")).Result;
-
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
-                {
-                    return true;
-                }
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-        }
-        internal bool actualizaMenuDiarioConfiguracion(MenuDiarioConfiguracionModel comida)
-        {
-            try
-            {
-                DatosConexionModel.uri = urlPro;
-                string requestUri = DatosConexionModel.uri + "menuDiario.php?configuracion=true";
-                HttpResponseMessage response = App.Client.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(comida), Encoding.UTF8, "application/json")).Result;
-
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
-                {
-                    return true;
-                }
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-        }
-        internal MenuDiarioModel nuevoMenuDiario(MenuDiarioModel comida)
-        {
-            try
-            {
-                DatosConexionModel.uri = urlPro;
-                string requestUri = DatosConexionModel.uri + "menuDiario.php";
-                HttpResponseMessage response = App.Client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(comida), Encoding.UTF8, "application/json")).Result;
-
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                MenuDiarioModel menu = JsonConvert.DeserializeObject<MenuDiarioModel>(resultJSON); ;
-                menu.configuracion = getConfiguracionMenuDiario(menu.idEstablecimiento);
-                return menu;
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new MenuDiarioModel();
-            }
-        }
-        internal bool actualizaIngredienteProducto(IngredienteProductoModel ingrediente)
-        {
-            try
-            {
-                DatosConexionModel.uri = urlPro;
-                string requestUri = DatosConexionModel.uri + "productos.php?ingredienteProducto=true";
-                HttpResponseMessage response = App.Client.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(ingrediente), Encoding.UTF8, "application/json")).Result;
-
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
-                {
-                    App.DAUtil.ActualizaIngredienteProducto(ingrediente);
-                    return true;
-                }
-                else
-                    return false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-        }
         internal bool actualizaIngrediente(IngredientesModel ingrediente)
         {
             try
@@ -2357,7 +2302,7 @@ namespace AsadorMoron.Services
                 HttpResponseMessage response = App.Client.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(ingrediente), Encoding.UTF8, "application/json")).Result;
 
                 string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
+                if (resultJSON.Trim().Equals("") || response.StatusCode == HttpStatusCode.OK)
                 {
                     App.DAUtil.ActualizaIngrediente(ingrediente);
                     return true;
@@ -2379,7 +2324,7 @@ namespace AsadorMoron.Services
                 string requestUri = DatosConexionModel.uri + "productos.php?idProducto=" + idProducto;
                 HttpResponseMessage response = App.Client.DeleteAsync(requestUri).Result;
                 string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
+                if (resultJSON.Trim().Equals("") || response.StatusCode == HttpStatusCode.OK)
                     return true;
                 else
                     return false;
@@ -2428,8 +2373,11 @@ namespace AsadorMoron.Services
                                     if (App.DAUtil.Usuario.rol == (int)RolesEnum.Establecimiento || App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador)
                                     {
                                         App.DAUtil.Usuario.establecimientos = getListadoEstablecimientos(App.DAUtil.Usuario.idPueblo);
-                                        App.EstActual = getEstablecimiento(App.DAUtil.Usuario.establecimientos[0].idEstablecimiento);
-                                        App.MiEst = App.EstActual;
+                                        if (App.DAUtil.Usuario.establecimientos?.Count > 0)
+                                        {
+                                            App.EstActual = getEstablecimiento(App.DAUtil.Usuario.establecimientos[0].idEstablecimiento);
+                                            App.MiEst = App.EstActual;
+                                        }
                                     }
                                     else if (App.DAUtil.Usuario.rol == (int)RolesEnum.Repartidor)
                                     {
@@ -2581,8 +2529,11 @@ namespace AsadorMoron.Services
                                     if (App.DAUtil.Usuario.rol == (int)RolesEnum.Establecimiento || App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador)
                                     {
                                         App.DAUtil.Usuario.establecimientos = getListadoEstablecimientos(App.DAUtil.Usuario.idPueblo);
-                                        App.EstActual = getEstablecimiento(App.DAUtil.Usuario.establecimientos[0].idEstablecimiento);
-                                        App.MiEst = App.EstActual;
+                                        if (App.DAUtil.Usuario.establecimientos?.Count > 0)
+                                        {
+                                            App.EstActual = getEstablecimiento(App.DAUtil.Usuario.establecimientos[0].idEstablecimiento);
+                                            App.MiEst = App.EstActual;
+                                        }
                                     }
                                     else if (App.DAUtil.Usuario.rol == (int)RolesEnum.Repartidor)
                                     {
@@ -2876,7 +2827,7 @@ namespace AsadorMoron.Services
                 return 0;
             }
         }
-        internal List<TokensModel> getTokenMultiAdministrador(int idPueblo)
+        internal async Task<List<TokensModel>> getTokenMultiAdministrador(int idPueblo)
         {
             try
             {
@@ -2884,8 +2835,8 @@ namespace AsadorMoron.Services
                 DatosConexionModel.uri = App.DAUtil.miURL + "usuarios.php/GET?tokenMultiAdmin=" + idPueblo;
                 string requestUri = DatosConexionModel.uri;
 
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                 {
                     return JsonConvert.DeserializeObject<List<TokensModel>>(resultJSON);
@@ -2899,15 +2850,15 @@ namespace AsadorMoron.Services
                 return new List<TokensModel>();
             }
         }
-        internal List<TokensModel> getTokenRepartidores(int idEst)
+        internal async Task<List<TokensModel>> getTokenRepartidores(int idEst)
         {
             try
             {
                 DatosConexionModel.uri = App.DAUtil.miURL + "usuarios.php/GET?tokenRepartidoresEst=" + idEst;
                 string requestUri = DatosConexionModel.uri;
 
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                 {
                     return JsonConvert.DeserializeObject<List<TokensModel>>(resultJSON);
@@ -2921,15 +2872,15 @@ namespace AsadorMoron.Services
                 return new List<TokensModel>();
             }
         }
-        internal List<TokensModel> getTokenRepartidores()
+        internal async Task<List<TokensModel>> getTokenRepartidores()
         {
             try
             {
                 DatosConexionModel.uri = App.DAUtil.miURL + "usuarios.php/GET?tokenRepartidores=true&idGrupo=" + Preferences.Get("idGrupo", 0);
                 string requestUri = DatosConexionModel.uri;
 
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                 {
                     return JsonConvert.DeserializeObject<List<TokensModel>>(resultJSON);
@@ -2943,15 +2894,15 @@ namespace AsadorMoron.Services
                 return new List<TokensModel>();
             }
         }
-        internal string getTokenUsuario(int idUsuario)
+        internal async Task<string> getTokenUsuario(int idUsuario)
         {
             try
             {
                 DatosConexionModel.uri = App.DAUtil.miURL + "usuarios.php/GET?idUsuarioToken=" + idUsuario;
                 string requestUri = DatosConexionModel.uri;
 
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<TokensModel>(resultJSON).token.Trim();
             }
             catch (Exception ex)
@@ -3123,7 +3074,7 @@ namespace AsadorMoron.Services
                 HttpResponseMessage response = await App.Client.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(usu), Encoding.UTF8, "application/json"));
 
                 string resultJSON = await response.Content.ReadAsStringAsync();
-                return resultJSON.Trim().Equals("");
+                return resultJSON.Trim().Equals("") || response.StatusCode == HttpStatusCode.OK;
             }
             catch (Exception ex)
             {
@@ -3257,15 +3208,15 @@ namespace AsadorMoron.Services
         }
         #endregion
         #region Puntos
-        internal static int getPuntosEstablecimiento()
+        internal static async Task<int> getPuntosEstablecimientoAsync()
         {
             string result = string.Empty;
             try
             {
                 string requestUri = $"{App.DAUtil.miURL}puntos.php/GET?puntosEstablecimiento=true&idUsuario={App.DAUtil.Usuario.idUsuario}&idEstablecimiento={App.EstActual.idEstablecimiento}";
 
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
                 ResultdadoModel r = JsonConvert.DeserializeObject<ResultdadoModel>(resultJSON);
                 return r.resultado;
             }
@@ -3470,14 +3421,14 @@ namespace AsadorMoron.Services
                 Console.WriteLine(ex.Message);
             }
         }
-        internal string getTokenRepartidor(int idRepartidor)
+        internal async Task<string> getTokenRepartidor(int idRepartidor)
         {
             try
             {
                 DatosConexionModel.uri = App.DAUtil.miURL + "repartidores.php/GET?idTokenRepartidor=" + idRepartidor;
                 string requestUri = DatosConexionModel.uri;
-                HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
-                string resultJSON = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
                 return JsonConvert.DeserializeObject<TokensModel>(resultJSON).token.Trim();
             }
             catch (Exception ex)
@@ -3685,7 +3636,7 @@ namespace AsadorMoron.Services
                     string resultJSON = await response.Content.ReadAsStringAsync();
                     if (resultJSON.Equals(""))
                     {
-                        string token = getTokenRepartidor(idRepartidor);
+                        string token = await getTokenRepartidor(idRepartidor);
                         await App.ResponseWS.enviaNotificacion("Nuevo Mensaje", mensaje, token);
                         return true;
                     }
@@ -3713,15 +3664,15 @@ namespace AsadorMoron.Services
                         string contestacion = mensaje.ok == true ? "SI" : "NO";
                         if (mensaje.admin)
                         {
-                            List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
+                            List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
                             foreach (TokensModel to in tokens)
-                                App.ResponseWS.enviaNotificacion("Contestación", App.DAUtil.Usuario.Repartidor.nombre + " ha contestado " + contestacion, to.token);
+                                await App.ResponseWS.enviaNotificacion("Contestación", App.DAUtil.Usuario.Repartidor.nombre + " ha contestado " + contestacion, to.token);
                         }
                         else
                         {
-                            List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(mensaje.idSender);
+                            List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(mensaje.idSender);
                             foreach (TokensModel to in tokens3)
-                                App.ResponseWS.enviaNotificacion("Contestación", App.DAUtil.Usuario.Repartidor.nombre + " ha contestado " + contestacion, to.token);
+                                await App.ResponseWS.enviaNotificacion("Contestación", App.DAUtil.Usuario.Repartidor.nombre + " ha contestado " + contestacion, to.token);
                         }
                         return true;
                     }
@@ -5109,7 +5060,7 @@ namespace AsadorMoron.Services
                         requestUri = App.DAUtil.miURL + "pedidos.php/GET?idEstablecimientoMulti=" + es;
                     }
 
-                    HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
+                    HttpResponseMessage response = await App.Client.GetAsync(requestUri);
                     string resultJSON = await response.Content.ReadAsStringAsync();
                     if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                     {
@@ -5123,7 +5074,7 @@ namespace AsadorMoron.Services
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                // 
+                //
                 return result;
             }
         }
@@ -5747,7 +5698,7 @@ namespace AsadorMoron.Services
                         QuitaPuntos(puntos);
                     if (App.EstActual.configuracion.sistemaPuntos)
                         AñadirPuntos(total);
-                        
+
                 }
                 return idPedido;
             }
@@ -6758,7 +6709,7 @@ namespace AsadorMoron.Services
                 string requestUri = DatosConexionModel.uri;
                 HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
                 string resultJSON = response.Content.ReadAsStringAsync().Result;
-                if (resultJSON.Trim().Equals(""))
+                if (resultJSON.Trim().Equals("") || response.StatusCode == HttpStatusCode.OK)
                     return true;
                 else
                     return false;

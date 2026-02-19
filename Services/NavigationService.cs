@@ -11,6 +11,7 @@ using AsadorMoron.ViewModels.Repartidores;
 using AsadorMoron.Views.Administrador;
 using AsadorMoron.Views.Clientes;
 using AsadorMoron.Views.Repartidores;
+using Microsoft.Maui.Graphics;
 using AppMainPage = AsadorMoron.Views.MainPage;
 
 namespace AsadorMoron.Services

@@ -48,10 +48,18 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 AceptaEncargos = false;
                 VerSoloHoy = false;
                 TieneLocal = false;
+                // Cargar configuraciones en paralelo para mejor rendimiento
+                var configTasks = App.DAUtil.Usuario.establecimientos
+                    .Where(es => es.configuracion == null)
+                    .Select(async es =>
+                    {
+                        es.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(es.idEstablecimiento);
+                        return es;
+                    });
+                await Task.WhenAll(configTasks);
+
                 foreach (Establecimiento es in App.DAUtil.Usuario.establecimientos)
                 {
-                    if (es.configuracion == null)
-                        es.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(es.idEstablecimiento);
 
                     if (es.configuracion.visibilidadHoras == 0)
                     {
@@ -86,7 +94,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 }
                 App.EstActual = App.MiEst;
                 if (App.EstActual.configuracion == null)
-                    App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
+                    App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
                 App.DAUtil.homeEst = this;
                 App.DAUtil.EstoyenHome = true;
                 App.DAUtil.EnTimer = true;
@@ -458,14 +466,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 // 
             }
         }
-        private void InfoUsuarioPedido(object obj)
+        private async void InfoUsuarioPedido(object obj)
         {
             try
             {
                 if (MopupService.Instance.PopupStack.Count() == 0)
                 {
                     string cod = (string)obj;
-                    CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
+                    CabeceraPedido c2 = await App.AsyncService.TraePedidoPorCodigoAsync(cod);
                     ZonaModel z = App.DAUtil.getZonas().Find(p => p.idZona == c2.idZona);
                     if (z != null)
                         c2.zona = z.nombre;
@@ -502,7 +510,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
             {
                 if (esMensaje)
                 {
-                    await App.customDialog.ShowDialogAsync(mensaje, "PolloAndaluz", "Cerrar");
+                    await App.customDialog.ShowDialogAsync(mensaje, "Asador Morón", "Cerrar");
                 }
                 else
                 {
@@ -734,7 +742,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                                     linea = 11;
                                     Establecimiento es = App.DAUtil.Usuario.establecimientos.Find(p => p.idEstablecimiento == c.idEstablecimiento);
                                     if (es.configuracion == null)
-                                        es.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(es.idEstablecimiento);
+                                        es.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(es.idEstablecimiento);
 
                                 }
                             }
@@ -746,7 +754,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         else
                         {
                             App.userdialog.HideLoading();
-                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                             return false;
                         }
                     }
@@ -777,7 +785,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         else
                         {
                             App.userdialog.HideLoading();
-                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                             return false;
                         }
                     }
@@ -824,7 +832,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         else
                         {
                             App.userdialog.HideLoading();
-                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                             return false;
                         }
                     }
@@ -835,7 +843,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             mensajeUsuario = "Su pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " está en camino.";
                         else
                         {
-                            await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                            await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                             return false;
                         }
                         linea = 24;
@@ -843,21 +851,21 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     if (!string.IsNullOrEmpty(mensajeAdmin))
                     {
                         linea = 25;
-                        List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
+                        List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
                         foreach (TokensModel to in tokens)
                             App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeAdmin, to.token);
                     }
                     if (!string.IsNullOrEmpty(mensajeUsuario))
                     {
                         linea = 26;
-                        string tokenUser = App.ResponseWS.getTokenUsuario(c.idUsuario);
+                        string tokenUser = await App.ResponseWS.getTokenUsuario(c.idUsuario);
                         App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeUsuario, tokenUser);
                     }
                     if (!string.IsNullOrEmpty(mensajeRepartidor))
                     {
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                        List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                         foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, to.token); ;
+                            await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, to.token); ;
                     }
 
                 }
@@ -915,13 +923,13 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         else
                         {
                             App.userdialog.HideLoading();
-                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                            await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                         }
                     }
                     if (!string.IsNullOrEmpty(mensajeAdmin))
                     {
                         linea = 25;
-                        List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
+                        List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
                         foreach (TokensModel to in tokens)
                             App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeAdmin, to.token);
                     }
@@ -930,14 +938,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         linea = 27;
                         if (c.idRepartidor != 0)
                         {
-                            string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
-                            App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, tokenUser);
+                            string tokenUser = await App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                            await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, tokenUser);
                         }
                         else
                         {
-                            List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                            List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                             foreach (TokensModel to in tokens2)
-                                App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, to.token); ;
+                                await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, to.token); ;
                         }
                     }
                 }
@@ -1043,39 +1051,31 @@ namespace AsadorMoron.ViewModels.Establecimientos
             App.userdialog.ShowLoading("Cargando...", MaskType.Black);
             await App.DAUtil.NavigationService.NavigateToAsyncMenu<CartaViewModel>();
         }
-        private void CerrarPedido(object accion)
+        private async void CerrarPedido(object accion)
         {
             string idPedido = (string)accion;
-            CabeceraPedido c = ResponseServiceWS.TraePedidoPorCodigo(idPedido);
+            CabeceraPedido c = await App.AsyncService.TraePedidoPorCodigoAsync(idPedido);
             c.opciones = false;
-            MainThread.BeginInvokeOnMainThread(async () =>
+            bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaCerrarPedido, AppResources.No, AppResources.Si);
+
+            if (result)
             {
-                bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaCerrarPedido, AppResources.No, AppResources.Si);
-
-                if (result)
-                {
-                    await CerrarPedidoexe(c);
-                    await actualizaPedidos();
-                }
-
-            });
+                await CerrarPedidoexe(c);
+                await actualizaPedidos();
+            }
         }
-        private void AnularPedido(object accion)
+        private async void AnularPedido(object accion)
         {
             string idPedido = (string)accion;
-            CabeceraPedido c = ResponseServiceWS.TraePedidoPorCodigo(idPedido);
+            CabeceraPedido c = await App.AsyncService.TraePedidoPorCodigoAsync(idPedido);
             c.opciones = false;
-            MainThread.BeginInvokeOnMainThread(async () =>
+            bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaAnularPedido, AppResources.No, AppResources.Si);
+
+            if (result)
             {
-                bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaAnularPedido, AppResources.No, AppResources.Si);
-
-                if (result)
-                {
-                    await AnularPedidoexe(c);
-                    await actualizaPedidos();
-                }
-
-            });
+                await AnularPedidoexe(c);
+                await actualizaPedidos();
+            }
         }
         private async Task CerrarPedidoexe(CabeceraPedido c)
         {
@@ -1085,26 +1085,26 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 5))
                 {
 
-                    List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                    List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
                     foreach (TokensModel to in tokens3)
                         App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Cancelado: " + c.codigoPedido, to.token);
 
                     if (c.idRepartidor != 0)
                     {
-                        string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
-                        App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, tokenUser);
+                        string tokenUser = await App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                        await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, tokenUser);
                     }
                     else
                     {
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                        List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                         foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, to.token);
+                            await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, to.token);
                     }
                 }
                 else
                 {
                     App.userdialog.HideLoading();
-                    await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                    await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                 }
             }
             catch (Exception ex)
@@ -1119,26 +1119,26 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 99))
                 {
 
-                    List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                    List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
                     foreach (TokensModel to in tokens3)
                         App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Anulado: " + c.codigoPedido, to.token);
 
                     if (c.idRepartidor != 0)
                     {
-                        string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
-                        App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, tokenUser);
+                        string tokenUser = await App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                        await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, tokenUser);
                     }
                     else
                     {
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                        List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                         foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, to.token);
+                            await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, to.token);
                     }
                 }
                 else
                 {
                     App.userdialog.HideLoading();
-                    await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                    await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                 }
             }
             catch (Exception ex)

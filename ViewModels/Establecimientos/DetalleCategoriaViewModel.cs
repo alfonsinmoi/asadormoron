@@ -417,7 +417,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         {
                             if (subirFoto)
                             {
-                                ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "categorias", "");
+                                await Task.Run(() => ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "categorias", ""));
                             }
                             if (App.DAUtil.Usuario.establecimientos != null)
                                 App.DAUtil.Usuario.establecimientos.Find((obj) => obj.idEstablecimiento == IdEstablecimiento).numeroCategorias += 1;
@@ -464,7 +464,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     {
                         if (subirFoto)
                         {
-                            ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "categorias", "");
+                            await Task.Run(() => ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "categorias", ""));
                         }
                         App.userdialog.HideLoading();
                         await App.customDialog.ShowDialogAsync(AppResources.CategoriaOK, AppResources.App, AppResources.Aceptar);

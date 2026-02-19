@@ -345,7 +345,7 @@ namespace AsadorMoron.ViewModels.Administrador
 
                             if (subirFoto)
                             {
-                                ResponseServiceWS.UploadImage(Foto, g.ToString() + ".jpg", "repartidores", "");
+                                await Task.Run(() => ResponseServiceWS.UploadImage(Foto, g.ToString() + ".jpg", "repartidores", ""));
                             }
                             App.userdialog.HideLoading();
                             await App.customDialog.ShowDialogAsync(AppResources.RepartidorOK, AppResources.App, AppResources.Aceptar);
@@ -383,7 +383,7 @@ namespace AsadorMoron.ViewModels.Administrador
                         {
                             if (subirFoto)
                             {
-                                ResponseServiceWS.UploadImage(Foto, g.ToString() + ".jpg", "repartidores", antiguo);
+                                await Task.Run(() => ResponseServiceWS.UploadImage(Foto, g.ToString() + ".jpg", "repartidores", antiguo));
                             }
                             App.userdialog.HideLoading();
                             await App.customDialog.ShowDialogAsync(AppResources.mRepartidorOK, AppResources.App, AppResources.Aceptar);

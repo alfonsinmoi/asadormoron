@@ -34,7 +34,7 @@ namespace AsadorMoron.ViewModels.Clientes
 
         private static Stopwatch _loginStopwatch;
 
-        public override Task InitializeAsync(object navigationData)
+        public async override Task InitializeAsync(object navigationData)
         {
             _loginStopwatch = Stopwatch.StartNew();
             Debug.WriteLine($"[PERF-LOGIN] InitializeAsync INICIO: {_loginStopwatch.ElapsedMilliseconds}ms");
@@ -42,7 +42,7 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 App.DAUtil.EnTimer = false;
                 Debug.WriteLine($"[PERF-LOGIN] getConfiguracionAdmin INICIO: {_loginStopwatch.ElapsedMilliseconds}ms");
-                ConfiguracionAdmin cAdmin = ResponseServiceWS.getConfiguracionAdmin();
+                ConfiguracionAdmin cAdmin = await App.AsyncService.GetConfiguracionAdminAsync();
                 Debug.WriteLine($"[PERF-LOGIN] getConfiguracionAdmin FIN: {_loginStopwatch.ElapsedMilliseconds}ms");
                 VisibleRS = cAdmin.visibleRS;
                 Debug.WriteLine($"[PERF-LOGIN] GetUsuarioSQLite INICIO: {_loginStopwatch.ElapsedMilliseconds}ms");
@@ -65,7 +65,8 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 App.userdialog.HideLoading();
             }
-            return base.InitializeAsync(navigationData).ContinueWith((task) => { App.userdialog.HideLoading(); });
+            await base.InitializeAsync(navigationData);
+            App.userdialog.HideLoading();
         }
 
         #region Metodos
@@ -148,10 +149,10 @@ namespace AsadorMoron.ViewModels.Clientes
                     {
                         try
                         {
-                            Debug.WriteLine($"[PERF-LOGIN] ResponseServiceWS.Login INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
-                            if (ResponseServiceWS.Login(Email, Password))
+                            Debug.WriteLine($"[PERF-LOGIN] AsyncService.LoginAsync INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
+                            if (await App.AsyncService.LoginAsync(Email, Password))
                             {
-                                Debug.WriteLine($"[PERF-LOGIN] ResponseServiceWS.Login FIN (OK): {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
+                                Debug.WriteLine($"[PERF-LOGIN] AsyncService.LoginAsync FIN (OK): {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                                 if (Device.RuntimePlatform != Device.UWP)
                                 {
                                     App.DAUtil.Usuario.platform = Device.RuntimePlatform.ToLower();
@@ -164,7 +165,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                     if (App.DAUtil.InstallId != null)
                                     {
                                         Debug.WriteLine($"[PERF-LOGIN] RegistraTokenFCM INICIO: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
-                                        App.ResponseWS.RegistraTokenFCM(App.DAUtil.Usuario);
+                                        await Task.Run(() => App.ResponseWS.RegistraTokenFCM(App.DAUtil.Usuario));
                                         Debug.WriteLine($"[PERF-LOGIN] RegistraTokenFCM FIN: {_loginStopwatch?.ElapsedMilliseconds ?? 0}ms");
                                     }
                                 }
@@ -199,7 +200,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                 string nuevoPIN = App.DAUtil.GenerateRandomNo().ToString();
                                 Xamarin.Essentials.Preferences.Set("PIN", nuevoPIN);
                                 Preferences.Set("email", Email);
-                                string error = App.ResponseWS.actualizaPIN(nuevoPIN, Email);
+                                string error = await Task.Run(() => App.ResponseWS.actualizaPIN(nuevoPIN, Email));
                                 if (!error.Contains("ERROR"))
                                 {
                                     EnviaEmail(nuevoPIN);

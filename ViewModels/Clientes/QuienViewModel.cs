@@ -24,7 +24,7 @@ namespace AsadorMoron.ViewModels.Clientes
         public async override Task InitializeAsync(object navigationData)
         {
             App.DAUtil.EnTimer = false;
-            configuracionAdmin = ResponseServiceWS.getConfiguracionAdmin();
+            configuracionAdmin = await App.AsyncService.GetConfiguracionAdminAsync();
             NumTelefono = configuracionAdmin.telefono;
             NumWhatsApp = configuracionAdmin.whatsapp;
             await base.InitializeAsync(navigationData).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() => { App.userdialog.HideLoading(); }));

@@ -108,7 +108,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                     }
                     else
                     {
-                        ConfiguracionAdmin configuracionAdmin = ResponseServiceWS.getConfiguracionAdmin();
+                        ConfiguracionAdmin configuracionAdmin = await App.AsyncService.GetConfiguracionAdminAsync();
                         AutoPedidoModel auto = new AutoPedidoModel();
                         auto.apellidos = App.DAUtil.Usuario.apellidos;
                         auto.codigo = App.DAUtil.GetCodigo();
@@ -126,21 +126,21 @@ namespace AsadorMoron.ViewModels.Repartidores
                         auto.provincia = "Sevilla";
                         auto.comentario = Concepto;
                         auto.idUsuario = App.DAUtil.Usuario.idUsuario;
-                        int idCodigoPedido = ResponseServiceWS.NuevoAutoPedidoRep(auto);
+                        int idCodigoPedido = await Task.Run(() => ResponseServiceWS.NuevoAutoPedidoRep(auto));
                         if (idCodigoPedido > 0)
                         {
                             string pedido = string.Empty;
-                            List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(67);
+                            List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(67);
                             foreach (TokensModel to in tokens3)
                                 App.ResponseWS.enviaNotificacion("Asador Morón", "Nuevo Pedido: " + auto.codigo, to.token);
 
-                            List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(1);
+                            List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(1);
                             foreach (TokensModel to in tokens)
                                 App.ResponseWS.enviaNotificacion("Asador Morón", "Nuevo Pedido para " + "Asador Morón" + ": " + auto.codigo, to.token);
 
-                            List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(67);
+                            List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(67);
                             foreach (TokensModel to in tokens2)
-                                App.ResponseWS.enviaNotificacion("Asador Morón", "Nuevo Pedido para " + "Asador Morón" + ": " + auto.codigo, to.token);
+                                await App.ResponseWS.enviaNotificacion("Asador Morón", "Nuevo Pedido para " + "Asador Morón" + ": " + auto.codigo, to.token);
                         }
                         else
                         {

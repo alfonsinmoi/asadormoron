@@ -78,14 +78,14 @@ namespace AsadorMoron.ViewModels
                         if (item.Title.Equals(AppResources.CerrarSesion))
                         {
                             if (App.DAUtil.DoIHaveInternet())
-                                App.ResponseWS.BorraToken(App.DAUtil.Usuario.email);
+                                await Task.Run(() => App.ResponseWS.BorraToken(App.DAUtil.Usuario.email));
                             App.DAUtil.DeleteUsuarioSQLite();
                             App.DAUtil.VaciaConfig();
                             App.DAUtil.VaciaCarrito();
                             if (App.DAUtil.Usuario.rol == (int)RolesEnum.Cliente)
-                                ResponseServiceWS.GuardaOnline(2);
+                                _ = App.AsyncService.GuardaOnlineAsync(2);
                             App.DAUtil.Usuario = null;
-                            GetListByRol();
+                            _ = GetListByRolAsync();
                             Preferences.Set("Social", false);
                             Preferences.Set("RedSocial", "");
                             await App.DAUtil.NavigationService.InitializeAsync();
@@ -138,9 +138,9 @@ namespace AsadorMoron.ViewModels
                 }
             }
         }
-        void ActualizaContador()
+        async void ActualizaContador()
         {
-            TotalUsuarios = ResponseServiceWS.contadorUsuarios();
+            TotalUsuarios = await App.AsyncService.ContadorUsuariosAsync();
         }
         async void IrAPerfil()
         {
@@ -221,19 +221,24 @@ namespace AsadorMoron.ViewModels
             {
                 if (App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador || App.DAUtil.Usuario.rol == (int)RolesEnum.SuperAdmin)
                 {
-                    TotalUsuarios = ResponseServiceWS.contadorUsuarios();
+                    _ = CargarContadorUsuariosAsync();
                     EsAdmin = true;
                 }
                 else
                     EsAdmin = false;
             }
         }
-        public ObservableCollection<ItemMenuLateralModel> GetListByRol()
+
+        private async Task CargarContadorUsuariosAsync()
+        {
+            TotalUsuarios = await App.AsyncService.ContadorUsuariosAsync();
+        }
+        public async Task<ObservableCollection<ItemMenuLateralModel>> GetListByRolAsync()
         {
             int rol = 0;
             if (App.DAUtil.Usuario != null)
                 rol = App.DAUtil.Usuario.rol;
-            var menus = ResponseServiceWS.getMenu(rol);
+            var menus = await App.AsyncService.GetMenuAsync(rol);
 
             var menuItems = new ObservableCollection<ItemMenuLateralModel>();
             try
@@ -300,7 +305,7 @@ namespace AsadorMoron.ViewModels
         private async void CerrarSesion()
         {
             if (App.DAUtil.DoIHaveInternet())
-                App.ResponseWS.BorraToken(App.DAUtil.Usuario.email);
+                await Task.Run(() => App.ResponseWS.BorraToken(App.DAUtil.Usuario.email));
             App.DAUtil.DeleteUsuarioSQLite();
             App.DAUtil.VaciaConfig();
             App.DAUtil.VaciaCarrito();
@@ -367,13 +372,13 @@ namespace AsadorMoron.ViewModels
                     Version = AppResources.Version + ": " + App.DAUtil.versioniOS;
                 else
                     Version = AppResources.Version + ": " + App.DAUtil.versionUWP;
-                ListaMenuByRol = GetListByRol();
+                ListaMenuByRol = await GetListByRolAsync();
                 if (App.DAUtil.Usuario != null)
                 {
                     Logado = true;
                     if (App.DAUtil.Usuario.rol == (int)RolesEnum.Administrador || App.DAUtil.Usuario.rol == (int)RolesEnum.SuperAdmin)
                     {
-                        TotalUsuarios = ResponseServiceWS.contadorUsuarios();
+                        TotalUsuarios = await App.AsyncService.ContadorUsuariosAsync();
                         EsAdmin = true;
                     }
                     else

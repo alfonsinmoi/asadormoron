@@ -1505,7 +1505,7 @@ namespace AsadorMoron.Models
                 return new List<ArticuloModel>();
             }
         }
-        private async Task<List<ArticuloModel>> convertirArticuloEnProducto(List<ArticuloModel> lista)
+        internal async Task<List<ArticuloModel>> convertirArticuloEnProducto(List<ArticuloModel> lista)
         {
             try
             {

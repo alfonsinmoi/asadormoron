@@ -43,11 +43,11 @@ namespace AsadorMoron.ViewModels.Establecimientos
         }
 
         #region Metodos
-        private void CargaHorarios()
+        private async Task CargaHorariosAsync()
         {
             Local = MiEstablecimiento.local==1;
             if (MiEstablecimiento.configuracion == null)
-                MiEstablecimiento.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(MiEstablecimiento.idEstablecimiento);
+                MiEstablecimiento.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(MiEstablecimiento.idEstablecimiento);
             if (Local)
                 NumTabs = 2;
             else
@@ -442,7 +442,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
             {
                 miEstablecimiento = value;
                 OnPropertyChanged(nameof(MiEstablecimiento));
-                CargaHorarios();
+                _ = CargaHorariosAsync();
             }
         }
         private bool visibleEstablecimiento = false;

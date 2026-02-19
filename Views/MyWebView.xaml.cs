@@ -48,21 +48,21 @@ namespace AsadorMoron.Views
             if (e.Url.Contains("url-") && e.Url.Contains("-ok"))
             {
 
-                int idCodigoPedido = ResponseServiceWS.NuevoPedido(0);
+                int idCodigoPedido = await Task.Run(() => ResponseServiceWS.NuevoPedido(0));
                 if (idCodigoPedido > 0)
                 {
-                    List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
+                    List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
                     foreach (TokensModel to in tokens)
                         App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
 
                     if (App.pedidoEnCurso.tipoVenta.StartsWith("Envío"))
                     {
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(App.EstActual.idEstablecimiento);
+                        List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(App.EstActual.idEstablecimiento);
                         foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
+                            await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
                     }
 
-                    List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(App.EstActual.idEstablecimiento);
+                    List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(App.EstActual.idEstablecimiento);
                     foreach (TokensModel to in tokens3)
                         App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido: " + App.pedidoEnCurso.codigoPedido, to.token);
 

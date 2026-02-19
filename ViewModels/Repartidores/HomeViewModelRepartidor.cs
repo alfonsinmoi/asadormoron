@@ -162,7 +162,7 @@ namespace AsadorMoron.ViewModels.Repartidores
         #endregion
         public HomeViewModelRepartidor()
         {
-            
+
         }
         public override async Task InitializeAsync(object navigationData)
         {
@@ -181,7 +181,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                 App.DAUtil.homeRep = this;
                 App.DAUtil.EstoyenHome = true;
                 App.DAUtil.EnTimer = true;
-                ResponseServiceWS.getConfiguracionAdmin();
+                _ = App.AsyncService.GetConfiguracionAdminAsync(); // Fire-and-forget
                 await initTimer();
                 if (DeviceInfo.Platform.ToString().Equals("WinUI"))
                 {
@@ -247,7 +247,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                 });
             }
         }
-        
+
         public ICommand cmdAddNotaGasto { get { return new Command(AddNotaGasto); } }
         public ICommand InfoUsuarioPedidoCommand { get { return new Command(InfoUsuarioPedido); } }
         public ICommand ComandoCoger { get { return new Command((parametro) => BotonCoger(parametro)); } }
@@ -274,7 +274,7 @@ namespace AsadorMoron.ViewModels.Repartidores
             if (Mensajes.Count > 0)
                 Mensaje = Mensajes[0];
             MostrarMensaje = Mensajes.Count > 0;
-            
+
         }
         private async void NoExe()
         {
@@ -302,20 +302,20 @@ namespace AsadorMoron.ViewModels.Repartidores
             }
         }
 
-        private void InfoUsuarioPedido(object codigo)
+        private async void InfoUsuarioPedido(object codigo)
         {
             try
             {
                 if (MopupService.Instance.PopupStack.Count() == 0)
                 {
                     string cod = (string)codigo;
-                    CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
+                    CabeceraPedido c2 = await App.AsyncService.TraePedidoPorCodigoAsync(cod);
                     ZonaModel z = App.DAUtil.getZonas().Find(p => p.idZona == c2.idZona);
                     string nombreZona = string.Empty;
                     if (z != null && !string.IsNullOrEmpty(z.nombre))
                     {
                         nombreZona = z.nombre;
-                        if(string.IsNullOrEmpty(c2.zona))
+                        if (string.IsNullOrEmpty(c2.zona))
                             c2.zona = nombreZona;
                     }
                     MopupService.Instance.PushAsync(new PopupPageInfoUsuarioPedido(c2), true);
@@ -327,13 +327,13 @@ namespace AsadorMoron.ViewModels.Repartidores
             }
         }
 
-        public async Task actualizaPedidos(bool mensaje=false)
+        public async Task actualizaPedidos(bool mensaje = false)
         {
             try
             {
                 if (mensaje)
                 {
-                    Mensajes = ResponseServiceWS.TraeMensajeRepartidor();
+                    Mensajes = await App.AsyncService.TraeMensajeRepartidorAsync();
                     if (Mensajes.Count > 0)
                         Mensaje = Mensajes[0];
                     MostrarMensaje = Mensajes.Count > 0;
@@ -341,7 +341,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                 else
                 {
                     if (App.DAUtil.Usuario.Repartidor == null)
-                        App.DAUtil.Usuario.Repartidor = ResponseServiceWS.GetRepartidorByIdUsuario(App.DAUtil.Usuario.idUsuario);
+                        App.DAUtil.Usuario.Repartidor = await App.AsyncService.GetRepartidorByIdUsuarioAsync(App.DAUtil.Usuario.idUsuario);
                     if (App.DAUtil.Usuario.Repartidor != null)
                     {
                         ListPedidosTemp = new List<CabeceraPedido>(await ResponseServiceWS.getListadoPedidosByIdRepartidor(App.DAUtil.Usuario.Repartidor.id));
@@ -546,7 +546,7 @@ namespace AsadorMoron.ViewModels.Repartidores
             {
                 borra = false;
                 bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, App.MensajesGlobal.Where(p => p.clave.Equals("pregunta_entregado")).FirstOrDefault<MensajesModel>().valor, AppResources.No, AppResources.Si);
-                
+
                 if (result)
                 {
                     borra = true;
@@ -554,23 +554,23 @@ namespace AsadorMoron.ViewModels.Repartidores
                     if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 5))
                     {
 
-                        List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
+                        List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
                         foreach (TokensModel to in tokens)
                             App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido entregado", to.token);
 
-                        List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                        List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
                         foreach (TokensModel to in tokens3)
                             App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido entregado", to.token);
 
 
-                        string tokenUser = App.ResponseWS.getTokenUsuario(c.idUsuario);
+                        string tokenUser = await App.ResponseWS.getTokenUsuario(c.idUsuario);
                         App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido entregado", tokenUser);
                         Listado.Remove(c);
                     }
                     else
                     {
                         App.userdialog.HideLoading();
-                        await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                        await App.customDialog.ShowDialogAsync("Se ha producido un error al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                     }
                 }
             }
@@ -587,12 +587,12 @@ namespace AsadorMoron.ViewModels.Repartidores
             {
                 borra = false;
                 bool result = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaPedidoRecogido, AppResources.No, AppResources.Si);
-                
+
                 if (result)
                 {
                     borra = true;
                     CabeceraPedido c = Listado.Where(p => p.codigoPedido.Equals(idPedido)).FirstOrDefault<CabeceraPedido>();
-                    
+
                     if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 4))
                     {
                         await App.ResponseWS.pedidoConRepartidor(c.codigoPedido, App.DAUtil.Usuario.Repartidor.id);
@@ -603,21 +603,21 @@ namespace AsadorMoron.ViewModels.Repartidores
                         c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
                         c.repartidor = 1;
 
-                        List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
+                        List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
                         foreach (TokensModel to in tokens)
                             App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido recogido", to.token);
 
-                        tokens = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                        tokens = await App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
                         foreach (TokensModel to in tokens)
                             App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido recogido", to.token);
-                        string tokenUser = App.ResponseWS.getTokenUsuario(c.idUsuario);
+                        string tokenUser = await App.ResponseWS.getTokenUsuario(c.idUsuario);
                         App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " ha sido recogido de " + c.nombreEstablecimiento, tokenUser);
                     }
                     else
                     {
                         borra = false;
                         App.userdialog.HideLoading();
-                        await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "PolloAndaluz", "OK");
+                        await App.customDialog.ShowDialogAsync("Se ha producido un errro al cambiar el estado del pedido. Inténtelo de nuevo", "Asador Morón", "OK");
                     }
                 }
             }
@@ -642,7 +642,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                         {
                             MainThread.BeginInvokeOnMainThread(async () =>
                             {
-                                if (c.idRepartidor==App.DAUtil.Usuario.Repartidor.id)
+                                if (c.idRepartidor == App.DAUtil.Usuario.Repartidor.id)
                                     await BotonExecute(idPedido);
                                 else
                                 {
@@ -654,9 +654,9 @@ namespace AsadorMoron.ViewModels.Repartidores
                                     c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
                                     c.repartidor = 1;
 
-                                    List<TokensModel> tokens = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                                    List<TokensModel> tokens = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                                     foreach (TokensModel to in tokens)
-                                        App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido recogido", to.token);
+                                        await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido recogido", to.token);
 
                                 }
                             });
@@ -679,7 +679,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                 {
                     try
                     {
-                        await Task.Run( () =>
+                        await Task.Run(() =>
                         {
                             MainThread.BeginInvokeOnMainThread(async () =>
                             {
@@ -719,15 +719,15 @@ namespace AsadorMoron.ViewModels.Repartidores
             {
                 try { App.userdialog.ShowLoading(AppResources.Procesando); } catch (Exception) { }
                 string idPedido = (string)accion;
-                Task.Run( () =>
+                Task.Run(() =>
                 {
                     MainThread.BeginInvokeOnMainThread(async () =>
                     {
                         await BotonCogerExecute(idPedido);
-                    }); 
+                    });
                 }).ContinueWith(res => MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    
+
                     App.userdialog.HideLoading();
                 }));
             }
@@ -764,10 +764,10 @@ namespace AsadorMoron.ViewModels.Repartidores
             {
                 App.DAUtil.pedidoNuevo = false;
                 if (App.DAUtil.Usuario.Repartidor == null)
-                    App.DAUtil.Usuario.Repartidor = ResponseServiceWS.GetRepartidorByIdUsuario(App.DAUtil.Usuario.idUsuario);
+                    App.DAUtil.Usuario.Repartidor = await App.AsyncService.GetRepartidorByIdUsuarioAsync(App.DAUtil.Usuario.idUsuario);
                 if (App.DAUtil.Usuario.Repartidor != null)
                 {
-                    Mensajes = ResponseServiceWS.TraeMensajeRepartidor();
+                    Mensajes = await App.AsyncService.TraeMensajeRepartidorAsync();
                     if (Mensajes.Count > 0)
                         Mensaje = Mensajes[0];
                     MostrarMensaje = Mensajes.Count > 0;

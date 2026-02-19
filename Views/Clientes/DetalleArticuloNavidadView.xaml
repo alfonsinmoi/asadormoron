@@ -57,6 +57,7 @@
                 <Image Grid.Column="1"
                        Source="logo_morado.png"
                        HeightRequest="32"
+                       BackgroundColor="White"
                        VerticalOptions="Center"
                        HorizontalOptions="Center"/>
 

@@ -51,11 +51,13 @@ namespace AsadorMoron.ViewModels.Clientes
                 // Verificar si es modo Kiosko
                 bool esKiosko = (App.DAUtil.Usuario?.kiosko ?? 0) == 1;
 
-                // KIOSKO: Desactivar sistema de puntos
+                // OPTIMIZADO: Lanzar puntos en paralelo con productos (no bloquear)
+                Task<int> puntosTask = null;
+                SistemaPuntos = false;
+                Puntos = 0;
+
                 if (esKiosko)
                 {
-                    SistemaPuntos = false;
-                    Puntos = 0;
                     System.Diagnostics.Debug.WriteLine($"[CP] KIOSKO - Sistema puntos OFF ({sw.ElapsedMilliseconds}ms)");
                 }
                 else
@@ -63,12 +65,9 @@ namespace AsadorMoron.ViewModels.Clientes
                     SistemaPuntos = App.EstActual.configuracion?.sistemaPuntos ?? false;
                     if (SistemaPuntos)
                     {
-                        System.Diagnostics.Debug.WriteLine($"[CP] Antes getPuntos ({sw.ElapsedMilliseconds}ms)");
-                        Puntos = ResponseServiceWS.getPuntosEstablecimiento() - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
-                        System.Diagnostics.Debug.WriteLine($"[CP] Después getPuntos ({sw.ElapsedMilliseconds}ms)");
+                        System.Diagnostics.Debug.WriteLine($"[CP] Lanzando getPuntos en paralelo ({sw.ElapsedMilliseconds}ms)");
+                        puntosTask = ResponseServiceWS.getPuntosEstablecimientoAsync();
                     }
-                    else
-                        Puntos = 0;
                 }
 
                 if (_categoria == null)
@@ -83,7 +82,7 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     // Primero intentar cargar de SQLite
                     System.Diagnostics.Debug.WriteLine($"[CP] Antes SQLite ({sw.ElapsedMilliseconds}ms)");
-                    var listaSQLite = await App.DAUtil.getProductosEstablecimientoCat(_categoria.id);
+                    var listaSQLite = await Task.Run(async () => await App.DAUtil.getProductosEstablecimientoCat(_categoria.id));
                     System.Diagnostics.Debug.WriteLine($"[CP] SQLite: {listaSQLite?.Count ?? 0} items ({sw.ElapsedMilliseconds}ms)");
 
                     // Usar SQLite si hay datos
@@ -100,6 +99,18 @@ namespace AsadorMoron.ViewModels.Clientes
                         lista = listaServer?.FindAll(p => p.estado == 1 && p.estadoCategoria == 1) ?? new List<ArticuloModel>();
                         System.Diagnostics.Debug.WriteLine($"[CP] Servidor: {lista?.Count ?? 0} items ({sw.ElapsedMilliseconds}ms)");
                     }
+
+                    // Ahora esperar puntos (ya debería haber terminado en paralelo)
+                    if (puntosTask != null)
+                    {
+                        try
+                        {
+                            Puntos = await puntosTask - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                            System.Diagnostics.Debug.WriteLine($"[CP] Puntos resueltos ({sw.ElapsedMilliseconds}ms)");
+                        }
+                        catch { Puntos = 0; }
+                    }
+
                     System.Diagnostics.Debug.WriteLine($"[CP] Productos filtrados: {lista?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
 
                     // Asegurar que configuracion existe para Kiosko
@@ -134,49 +145,54 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     System.Diagnostics.Debug.WriteLine($"[CP] Antes crear originalComidas ({sw.ElapsedMilliseconds}ms)");
 
-                    // OPTIMIZADO: Agrupar carrito por idArticulo (puede haber duplicados con opciones distintas)
-                    var carritoDict = carrito
-                        .GroupBy(c => c.idArticulo)
-                        .ToDictionary(g => g.Key, g => g.Sum(c => c.cantidad));
+                    // OPTIMIZADO: Mover procesamiento pesado fuera del UI thread
+                    var carritoLocal = carrito;
+                    var sistemaPuntosLocal = SistemaPuntos;
+                    var puntosLocal = Puntos;
                     int idEstablecimiento = App.EstActual?.idEstablecimiento ?? 0;
 
-                    // OPTIMIZADO: Pre-dimensionar lista para evitar redimensionamientos
-                    originalComidas = new List<Comida>(lista.Count);
-                    int idArt = 0;
-
-                    foreach (ArticuloModel p in lista)
+                    originalComidas = await Task.Run(() =>
                     {
-                        if (idArt != p.idArticulo)
+                        var carritoDict = carritoLocal
+                            .GroupBy(c => c.idArticulo)
+                            .ToDictionary(g => g.Key, g => g.Sum(c => c.cantidad));
+
+                        var comidas = new List<Comida>(lista.Count);
+                        int idArt = 0;
+
+                        foreach (ArticuloModel p in lista)
                         {
-                            idArt = p.idArticulo;
-
-                            // OPTIMIZADO: Búsqueda O(1) en diccionario
-                            int cantidadCarrito = 0;
-                            if (carritoDict.TryGetValue(idArt, out int cant))
+                            if (idArt != p.idArticulo)
                             {
-                                cantidadCarrito = cant;
+                                idArt = p.idArticulo;
+
+                                int cantidadCarrito = 0;
+                                if (carritoDict.TryGetValue(idArt, out int cant))
+                                {
+                                    cantidadCarrito = cant;
+                                }
+                                p.Cantidad = cantidadCarrito;
+
+                                var co = new Comida
+                                {
+                                    articulo = p,
+                                    cantidad = cantidadCarrito,
+                                    idEstablecimiento = idEstablecimiento,
+                                    noTieneOpciones = string.IsNullOrEmpty(p.opciones) && string.IsNullOrEmpty(p.ingredientes),
+                                    botonesVisibles = false
+                                };
+
+                                if (p.idArticulo == 11806)
+                                    co.noTieneOpciones = false;
+
+                                if (p.puntos > 0 && sistemaPuntosLocal && p.puntos < puntosLocal)
+                                    p.visiblePuntos = true;
+
+                                comidas.Add(co);
                             }
-                            p.Cantidad = cantidadCarrito;
-
-                            var co = new Comida
-                            {
-                                articulo = p,
-                                cantidad = cantidadCarrito,
-                                idEstablecimiento = idEstablecimiento,
-                                noTieneOpciones = string.IsNullOrEmpty(p.opciones) && string.IsNullOrEmpty(p.ingredientes),
-                                botonesVisibles = false
-                            };
-
-                            // Caso especial
-                            if (p.idArticulo == 11806)
-                                co.noTieneOpciones = false;
-
-                            if (p.puntos > 0 && SistemaPuntos && p.puntos < Puntos)
-                                p.visiblePuntos = true;
-
-                            originalComidas.Add(co);
                         }
-                    }
+                        return comidas;
+                    });
                     System.Diagnostics.Debug.WriteLine($"[CP] originalComidas: {originalComidas.Count} ({sw.ElapsedMilliseconds}ms)");
 
                     System.Diagnostics.Debug.WriteLine($"[CP] Antes Filtrar ({sw.ElapsedMilliseconds}ms)");
@@ -225,7 +241,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     await Task.Delay(30);
 
                     App.DAUtil.Idioma = "ES";
-                    if (App.autoPedidoAdmin != null)
+                    if (App.autoPedidoAdmin != null && carrito.Count > 0)
                     {
                         carrito[0].direccion = App.autoPedidoAdmin.direccion;
                         carrito[0].idZona = App.autoPedidoAdmin.idZona;
@@ -572,9 +588,9 @@ namespace AsadorMoron.ViewModels.Clientes
         public ICommand btnFiltrar { get { return new DelegateCommandAsync(Filtrar); } }
         public ICommand ArticuloSeleccionado { get { return new Command(articuloSeleccionado); } }
         public ICommand LimpiarBusquedaCommand { get { return new Command(() => TextoBusqueda = ""); } }
-        public ICommand ClickMasCommand { get { return new Command((parametro) => Add(parametro)); } }
-        public ICommand ClickPorPuntosCommand { get { return new Command((parametro) => AddPorPuntos(parametro)); } }
-        public ICommand ClickMenosCommand { get { return new Command((parametro) => remove(parametro)); } }
+        public ICommand ClickMasCommand { get { return new Command(async (parametro) => await Add(parametro)); } }
+        public ICommand ClickPorPuntosCommand { get { return new Command(async (parametro) => await AddPorPuntos(parametro)); } }
+        public ICommand ClickMenosCommand { get { return new Command((parametro) => remove(parametro)); } } // remove es sync
         #endregion
 
         #region Propiedades

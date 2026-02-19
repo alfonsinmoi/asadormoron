@@ -1,54 +1,54 @@
-﻿using System.IO;
-using System.Net;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace AsadorMoron.Utils
 {
     public class OneSignalPush
     {
+        private const string REST_API_KEY = "os_v2_app_aagpfu46dramtjxgk25p4czzi2taidhu7s6ezbuy25p5od6kq7yzomas6a75dbhjbk5wgzpeqay6v2k3h5epnmtmnfwskeohj5st44q";
+        private const string APP_ID = "000cf2d3-9e1c-40c9-a6e6-56bafe0b3946";
+
         public OneSignalPush()
         {
         }
-        public static bool SendPushToPlayers(string players, string mensaje)
+
+        public static async Task<bool> SendPushToPlayers(string players, string mensaje)
         {
-            var request = WebRequest.Create("https://onesignal.com/api/v1/notifications") as HttpWebRequest;
-
-            request.KeepAlive = true;
-            request.Method = "POST";
-            request.ContentType = "application/json; charset=utf-8";
-
-            byte[] byteArray = Encoding.UTF8.GetBytes("{"
-                                                    + "\"app_id\": \"37b05e73-3b40-4510-a828-9d359a80fcf6\","
-                                                    + "\"contents\": {\"en\": \"" + mensaje + "\"},"
-                                                    + "\"include_player_ids\": [" + players + "]}");
-            //string p = "\"6392d91a-b206-4b7b-a620-cd68e32c3a76\",\"76ece62b-bcfe-468c-8a78-839aeaa8c5fa\",\"8e0f21fa-9a5a-4ae7-a9a6-ca1f24294b86\"";
-            string responseContent = null;
-
             try
             {
-                using (var writer = request.GetRequestStream())
+                var payload = new
                 {
-                    writer.Write(byteArray, 0, byteArray.Length);
+                    app_id = APP_ID,
+                    contents = new { en = mensaje },
+                    include_subscription_ids = players.Replace("\"", "").Split(',').Select(p => p.Trim()).ToArray()
+                };
+
+                var json = System.Text.Json.JsonSerializer.Serialize(payload);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                using var request = new HttpRequestMessage(HttpMethod.Post, "https://onesignal.com/api/v1/notifications");
+                request.Headers.Authorization = new AuthenticationHeaderValue("Key", REST_API_KEY);
+                request.Content = content;
+
+                using var response = await App.Client.SendAsync(request);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine($"[OneSignal] Error enviando push: {response.StatusCode} - {responseContent}");
+                    return false;
                 }
 
-                using (var response = request.GetResponse() as HttpWebResponse)
-                {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        responseContent = reader.ReadToEnd();
-                    }
-                }
-
+                Debug.WriteLine($"[OneSignal] Push enviado correctamente: {responseContent}");
+                return true;
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                System.Diagnostics.Debug.WriteLine(new StreamReader(ex.Response.GetResponseStream()).ReadToEnd());
+                Debug.WriteLine($"[OneSignal] Excepción enviando push: {ex.Message}");
                 return false;
             }
-
-            System.Diagnostics.Debug.WriteLine(responseContent);
-            return true;
         }
     }
 }

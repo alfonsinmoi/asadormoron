@@ -121,6 +121,11 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 App.DAUtil.EnTimer = false;
                 Carrito2 = navigationData as List<CarritoModel>;
+                if (Carrito2 == null || Carrito2.Count == 0)
+                {
+                    await App.DAUtil.NavigationService.NavigateBackAsync();
+                    return;
+                }
                 if (Carrito2[0].tipo == 1)
                     Texto = AppResources.SeleccionHoraRecibir;
                 else if (Carrito2[0].tipo == 2)
@@ -143,8 +148,8 @@ namespace AsadorMoron.ViewModels.Clientes
                         tipo = Carrito2[0].tipo;
                         if (Carrito2[0].tipo == 1)
                         {
-                            ZonaModel z = App.ResponseWS.getListadoZonas(Preferences.Get("idPueblo", 1)).Where(p => p.idZona == Carrito2[0].idZona).FirstOrDefault();
-                            Gastos = z.gastos;
+                            ZonaModel z = (await Task.Run(() => App.ResponseWS.getListadoZonas(Preferences.Get("idPueblo", 1))))?.Where(p => p.idZona == Carrito2[0].idZona).FirstOrDefault();
+                            Gastos = z?.gastos ?? 0;
                         }
                         else
                             Gastos = 0;
@@ -171,14 +176,7 @@ namespace AsadorMoron.ViewModels.Clientes
             }
             finally
             {
-                if (App.userdialog != null)
-                {
-                    App.userdialog.HideLoading();
-                }
-                else
-                {
-                    App.userdialog.HideLoading();
-                }
+                try { App.userdialog?.HideLoading(); } catch { }
             }
 
         }
@@ -454,12 +452,15 @@ namespace AsadorMoron.ViewModels.Clientes
                     await Task.Delay(200);
                     System.Diagnostics.Debug.WriteLine($"[HP] ShowLoading mostrado ({swPedido.ElapsedMilliseconds}ms)");
                     double total = 0;
+                    if (Carrito2 == null || Carrito2.Count == 0) { _enviandoPedido = false; return; }
                     if (string.IsNullOrEmpty(Carrito2[0].observaciones))
                         Carrito2[0].observaciones = "";
                     codigoPedido = App.DAUtil.GetCodigo();
                     List<LineasPedido> l = new List<LineasPedido>();
                     int punt = 0;
                     int puntosAQuitar = 0;
+                    if (App.EstActual?.configuracion == null)
+                        App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
                     double Bolsa = ((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) * App.EstActual.configuracion.precioBolsa;
                     if (Bolsa == 0)
                         Bolsa = App.EstActual.configuracion.precioBolsa;
@@ -520,10 +521,10 @@ namespace AsadorMoron.ViewModels.Clientes
                     if (tipoVenta.Equals("Envío"))
                     {
                         if (App.EstActual.configuracion == null)
-                            App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
+                            App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
                     }
                     System.Diagnostics.Debug.WriteLine($"[HP] Antes de NuevoPedido ({swPedido.ElapsedMilliseconds}ms)");
-                    int idCodigoPedido = ResponseServiceWS.NuevoPedido("0", 0, "", tipoVenta, App.DAUtil.Usuario.idUsuario, Carrito2[0].idEstablecimiento, codigoPedido, Carrito2[0].idZona, Carrito2[0].direccion, Carrito2[0].observaciones.Trim(), DateTime.Today.ToString("yyyy-MM-dd") + " " + FranjaSeleccionada.horaInicioReal.ToString(@"hh\:mm"), l, "", tipo, Preferences.Get("Pago", "Efectivo"), puntosAQuitar);
+                    int idCodigoPedido = await Task.Run(() => ResponseServiceWS.NuevoPedido("0", 0, "", tipoVenta, App.DAUtil.Usuario.idUsuario, Carrito2[0].idEstablecimiento, codigoPedido, Carrito2[0].idZona, Carrito2[0].direccion, Carrito2[0].observaciones.Trim(), DateTime.Today.ToString("yyyy-MM-dd") + " " + FranjaSeleccionada.horaInicioReal.ToString(@"hh\:mm"), l, "", tipo, Preferences.Get("Pago", "Efectivo"), puntosAQuitar));
                     System.Diagnostics.Debug.WriteLine($"[HP] Después de NuevoPedido: idCodigoPedido={idCodigoPedido} ({swPedido.ElapsedMilliseconds}ms)");
 
                     if (idCodigoPedido > 0 || DeviceInfo.Platform.ToString() == "WinUI")
@@ -555,18 +556,18 @@ namespace AsadorMoron.ViewModels.Clientes
                                 if (tipoVentaLocal.Equals("Envío"))
                                 {
                                     // Notificaciones admin
-                                    var tokens = App.ResponseWS.getTokenMultiAdministrador(1);
+                                    var tokens = await App.ResponseWS.getTokenMultiAdministrador(1);
                                     foreach (var to in tokens)
                                         tareasNotificaciones.Add(App.ResponseWS.enviaNotificacion(nombreEstablecimiento, "Nuevo Pedido para " + nombreEstablecimiento + ": " + codigoPedidoLocal, to.token));
 
                                     // Notificaciones repartidores
-                                    var tokens2 = App.ResponseWS.getTokenRepartidores(idEstablecimiento);
+                                    var tokens2 = await App.ResponseWS.getTokenRepartidores(idEstablecimiento);
                                     foreach (var to in tokens2)
                                         tareasNotificaciones.Add(App.ResponseWS.enviaNotificacion(nombreEstablecimiento, "Nuevo Pedido para " + nombreEstablecimiento + ": " + codigoPedidoLocal, to.token));
                                 }
 
                                 // Notificaciones establecimiento
-                                var tokens3 = App.ResponseWS.getTokenEstablecimiento(idEstablecimiento);
+                                var tokens3 = await App.ResponseWS.getTokenEstablecimiento(idEstablecimiento);
                                 foreach (var to in tokens3)
                                     tareasNotificaciones.Add(App.ResponseWS.enviaNotificacion(nombreEstablecimiento, "Nuevo Pedido: " + codigoPedidoLocal, to.token));
 
@@ -658,17 +659,20 @@ namespace AsadorMoron.ViewModels.Clientes
                     if (tipoVenta.Equals("Envío"))
                     {
                         if (App.EstActual.configuracion == null)
-                            App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
+                            App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
 
                     }
 
                     double total = 0;
+                    if (Carrito2 == null || Carrito2.Count == 0) return;
                     if (string.IsNullOrEmpty(Carrito2[0].observaciones))
                         Carrito2[0].observaciones = "";
                     codigoPedido = App.DAUtil.GetCodigo();
                     List<LineasPedido> l = new List<LineasPedido>();
                     int punt = 0;
                     int puntosAQuitar = 0;
+                    if (App.EstActual?.configuracion == null)
+                        App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
                     double Bolsa = ((int)(PrecioTotalPedido / App.EstActual.configuracion.rangoBolsas)) * App.EstActual.configuracion.precioBolsa;
                     if (Bolsa == 0)
                         Bolsa = App.EstActual.configuracion.precioBolsa;
@@ -790,24 +794,24 @@ namespace AsadorMoron.ViewModels.Clientes
                 await App.DAUtil.NavigationService.NavigateToAsyncWithoutMenu<WebViewModel>();
             else if (App.urlChallengue.Equals(""))
             {
-                int idCodigoPedido = ResponseServiceWS.NuevoPedido(puntosAQuitar);
+                int idCodigoPedido = await Task.Run(() => ResponseServiceWS.NuevoPedido(puntosAQuitar));
                 if (idCodigoPedido > 0)
                 {
                     App.pedidoEnCurso.idPedido = idCodigoPedido;
                     if (App.pedidoEnCurso.tipoVenta.StartsWith("Envío"))
                     {
-                        List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(1);
+                        List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(1);
                         foreach (TokensModel to in tokens)
-                            App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
+                            await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
 
-                        List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(App.EstActual.idEstablecimiento);
+                        List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(App.EstActual.idEstablecimiento);
                         foreach (TokensModel to in tokens2)
-                            App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
+                            await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido para " + App.EstActual.nombre + ": " + App.pedidoEnCurso.codigoPedido, to.token);
                     }
 
-                    List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(App.EstActual.idEstablecimiento);
+                    List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(App.EstActual.idEstablecimiento);
                     foreach (TokensModel to in tokens3)
-                        App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido: " + App.pedidoEnCurso.codigoPedido, to.token);
+                        await App.ResponseWS.enviaNotificacion(App.EstActual.nombre, "Nuevo Pedido: " + App.pedidoEnCurso.codigoPedido, to.token);
 
                     if (App.EstActual.configuracion.puntosPorPedido > 0)
                         punt = App.EstActual.configuracion.puntosPorPedido;

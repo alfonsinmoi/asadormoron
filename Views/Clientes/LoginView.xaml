@@ -64,6 +64,7 @@
                     <!-- Logo -->
                     <Image Source="logo_morado.png"
                            HeightRequest="100"
+                           BackgroundColor="Transparent"
                            HorizontalOptions="Center"
                            Margin="0,0,20,10"
                            Aspect="AspectFit"/>

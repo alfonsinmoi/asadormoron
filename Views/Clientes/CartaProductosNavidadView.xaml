@@ -57,7 +57,7 @@
                     <!-- Titulo + Puntos -->
                     <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" Spacing="6">
                         <Label Text="Menu Navidad" FontFamily="Nunito_bold" FontSize="18" TextColor="{DynamicResource Negro}" HorizontalTextAlignment="Center"/>
-                        <Border IsVisible="{Binding SistemaPuntos}" BackgroundColor="{DynamicResource Amarillo}" StrokeThickness="0" Padding="10,4" HorizontalOptions="Center">
+                        <Border IsVisible="{Binding SistemaPuntos}" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" Padding="10,4" HorizontalOptions="Center">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="12"/>
                             </Border.StrokeShape>

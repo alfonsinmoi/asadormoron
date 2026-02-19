@@ -1,4 +1,5 @@
 using ESC_POS_USB_NET.Enums;
+using System.Threading.Tasks;
 
 namespace AsadorMoron.Interfaces
 {
@@ -16,7 +17,8 @@ namespace AsadorMoron.Interfaces
         void Clear();
         void Separator(char speratorChar = '-');
         void AutoTest();
-        void ImprimirTicketPedido(int altura);
+        Task ImprimirTicketPedidoAsync(int altura);
+        Task ImprimirTicketComandaAsync(int numeroImpresora);
         void Font(string value, Fonts state);
         void BoldMode(string value);
         void BoldMode(PrinterModeState state);

@@ -67,6 +67,7 @@
                     <Image Source="logo_morado.png"
                            HeightRequest="60"
                            Aspect="AspectFit"
+                           BackgroundColor="White"
                            HorizontalOptions="Center"/>
 
                     <!-- Mensaje -->

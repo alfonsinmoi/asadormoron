@@ -126,6 +126,7 @@
                            Aspect="AspectFit"
                            WidthRequest="100"
                            HeightRequest="100"
+                           BackgroundColor="White"
                            HorizontalOptions="Center"
                            VerticalOptions="Center"/>
                 </Border>

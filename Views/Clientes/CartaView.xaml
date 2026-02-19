@@ -57,11 +57,12 @@
                     <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" Spacing="6">
                         <Image Source="logo_morado.png"
                                HeightRequest="36"
+                               BackgroundColor="White"
                                VerticalOptions="Center"
                                HorizontalOptions="Center"/>
                         <!-- Chip de puntos compacto -->
                         <Border IsVisible="{Binding SistemaPuntos}"
-                                BackgroundColor="{DynamicResource Amarillo}"
+                                BackgroundColor="{DynamicResource RojoMarca}"
                                 StrokeThickness="0"
                                 Padding="10,4"
                                 HorizontalOptions="Center">
@@ -864,6 +865,7 @@
                              Spacing="20">
                     <Image Source="logo_morado.png"
                            HeightRequest="80"
+                           BackgroundColor="White"
                            HorizontalOptions="Center"/>
                     <Border BackgroundColor="{StaticResource RojoMarca}"
                             StrokeThickness="0"

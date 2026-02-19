@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Maui.Devices;
 
 namespace AsadorMoron.Print
@@ -127,10 +128,10 @@ namespace AsadorMoron.Print
             Append(_command.AutoTest());
         }
 
-        public void ImprimirTicketPedido(int altura)
+        public async Task ImprimirTicketPedidoAsync(int altura)
         {
-            ConfiguracionAdmin cAdmin = ResponseServiceWS.getConfiguracionAdmin();
-            CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
+            ConfiguracionAdmin cAdmin = await App.AsyncService.GetConfiguracionAdminAsync();
+            CabeceraPedido c2 = await App.AsyncService.TraePedidoPorCodigoAsync(cod);
             if (c2.tipoVenta.Equals("Recogida"))
                 c2.direccionUsuario = "";
             //NewLine();
@@ -154,6 +155,8 @@ namespace AsadorMoron.Print
             Append($"{AppResources.Pedido.ToUpper()}: {cod}");
             Append($"FECHA: {c2.horaPedido.ToString("dd/MM/yyyy")}");
             Append($"H. PEDIDO: {c2.horaPedido.ToString("HH:mm")}");
+            if (c2.fechaEntrega != null)
+                Append($"F. ENTREGA: {((DateTime)c2.fechaEntrega).ToString("dd/MM/yyyy")}");
             Append($"H. ENTREGA: {DateTime.Parse(c2.horaEntrega).AddMinutes(App.EstActual.configuracion.tiempoEntrega).ToString("HH:mm")}");
             NormalWidth();
             Append($"{AppResources.Pago.ToUpper()}: {c2.tipoPago}");
@@ -296,7 +299,7 @@ namespace AsadorMoron.Print
             BoldMode($"{AppResources.Total.ToUpper()}".PadRight(42) + string.Format("{0:N2}", (total - totalDescuento + totalBolsas)).PadLeft(6, ' '));
             Separator();
             DoubleWidth2();
-            UsuarioModel usu = ResponseServiceWS.getUsuario(c2.idUsuario);
+            UsuarioModel usu = await Task.Run(() => ResponseServiceWS.getUsuario(c2.idUsuario));
             BoldMode($"{AppResources.Cliente}: {usu.nombre} {usu.apellidos}");
             BoldMode($"{AppResources.Direccion}: {c2.direccionUsuario}");
             ZonaModel z = App.DAUtil.getZonas().Find(p => p.idZona == c2.idZona);
@@ -359,10 +362,10 @@ namespace AsadorMoron.Print
             Separator();
             FullPaperCut();*/
         }
-        public void ImprimirTicketComanda(int numeroImpresora)
+        public async Task ImprimirTicketComandaAsync(int numeroImpresora)
         {
-            ConfiguracionAdmin cAdmin = ResponseServiceWS.getConfiguracionAdmin();
-            CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
+            ConfiguracionAdmin cAdmin = await App.AsyncService.GetConfiguracionAdminAsync();
+            CabeceraPedido c2 = await App.AsyncService.TraePedidoPorCodigoAsync(cod);
             try
             {
                 if (c2.lineasPedidos.Where(p => p.numeroImpresora == numeroImpresora).ToList().Count > 0)

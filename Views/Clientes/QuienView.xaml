@@ -92,6 +92,7 @@
                         <Image Source="logo_morado.png"
                                HeightRequest="80"
                                Aspect="AspectFit"
+                               BackgroundColor="Transparent"
                                HorizontalOptions="Center"/>
 
                         <!-- Texto informativo -->

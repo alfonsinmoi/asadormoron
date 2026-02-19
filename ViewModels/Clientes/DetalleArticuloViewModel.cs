@@ -204,7 +204,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         if (config == null && !esKiosko)
                         {
                             System.Diagnostics.Debug.WriteLine($"[DA] 26 - Cargando config del servidor... ({sw.ElapsedMilliseconds}ms)");
-                            config = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual?.idEstablecimiento ?? 0);
+                            config = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual?.idEstablecimiento ?? 0);
                             System.Diagnostics.Debug.WriteLine($"[DA] 27 - Config del servidor obtenida ({sw.ElapsedMilliseconds}ms)");
                             if (App.EstActual != null)
                                 App.EstActual.configuracion = config;
@@ -230,7 +230,7 @@ namespace AsadorMoron.ViewModels.Clientes
                             if (sistemaPuntos)
                             {
                                 System.Diagnostics.Debug.WriteLine($"[DA] 29 - Cargando puntos... ({sw.ElapsedMilliseconds}ms)");
-                                puntos = ResponseServiceWS.getPuntosEstablecimiento();
+                                puntos = await ResponseServiceWS.getPuntosEstablecimientoAsync();
                                 System.Diagnostics.Debug.WriteLine($"[DA] 30 - Puntos obtenidos: {puntos} ({sw.ElapsedMilliseconds}ms)");
                                 foreach (CarritoModel c in carrito.Where(p => p.porPuntos == 1))
                                     puntos -= c.puntos;

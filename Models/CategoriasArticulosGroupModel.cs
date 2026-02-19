@@ -1,12 +1,15 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace AsadorMoron.Models
 {
-    public class CategoriasArticulosGroupModel : List<Comida>, INotifyPropertyChanged
+    public class CategoriasArticulosGroupModel : ObservableCollection<Comida>, INotifyPropertyChanged
     {
         private bool _expanded;
         private int _eventosCount;
+        private static readonly List<Comida> _empty = new List<Comida>();
 
         public string Categoria { get; set; }
         public string Categoria_eng { get; set; }
@@ -27,17 +30,22 @@ namespace AsadorMoron.Models
                 if (_expanded != value)
                 {
                     _expanded = value;
-                    OnPropertyChanged(nameof(Expanded));
-                    OnPropertyChanged(nameof(StateIcon));
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(Expanded)));
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(StateIcon)));
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(VisibleItems)));
                 }
             }
         }
 
         /// <summary>
-        /// Icono que indica el estado del grupo
-        /// expanded.png = flecha hacia abajo (se puede expandir)
-        /// collapsed.png = flecha hacia arriba (se puede colapsar)
+        /// Items para el BindableLayout: devuelve la colección si expandido, vacía si colapsado.
+        /// Así no se crean views para grupos colapsados (carga lazy).
         /// </summary>
+        public IEnumerable<Comida> VisibleItems
+        {
+            get { return _expanded ? this : _empty; }
+        }
+
         public string StateIcon
         {
             get { return Expanded ? "expanded.png" : "collapsed.png"; }
@@ -51,10 +59,22 @@ namespace AsadorMoron.Models
                 if (_eventosCount != value)
                 {
                     _eventosCount = value;
-                    OnPropertyChanged(nameof(EventosCount));
-                    OnPropertyChanged(nameof(TitleWithItemCount));
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(EventosCount)));
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(TitleWithItemCount)));
                 }
             }
+        }
+
+        public void AddItem(Comida item)
+        {
+            Add(item);
+        }
+
+        public void RemoveItem(int idArticulo)
+        {
+            var item = this.FirstOrDefault(a => a.articulo.idArticulo == idArticulo);
+            if (item != null)
+                Remove(item);
         }
 
         public CategoriasArticulosGroupModel(string title, string title_eng, string title_ger, string title_fr, bool expanded = true, string color = "")
@@ -64,14 +84,7 @@ namespace AsadorMoron.Models
             Categoria_fr = title_fr;
             Categoria_ger = title_ger;
             ColorCategoria = color;
-            Expanded = expanded;
-        }
-#pragma warning disable CS0114 // 'CursosGroup.PropertyChanged' oculta el miembro heredado 'List<CursosModel>.PropertyChanged'. Para hacer que el miembro actual invalide esa implementación, agregue la palabra clave override. Si no, agregue la palabra clave new.
-        public event PropertyChangedEventHandler PropertyChanged;
-#pragma warning restore CS0114 // 'CursosGroup.PropertyChanged' oculta el miembro heredado 'List<CursosModel>.PropertyChanged'. Para hacer que el miembro actual invalide esa implementación, agregue la palabra clave override. Si no, agregue la palabra clave new.
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _expanded = expanded;
         }
     }
 }

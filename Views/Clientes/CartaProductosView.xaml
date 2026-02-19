@@ -57,7 +57,7 @@
                     <!-- Titulo + Puntos -->
                     <StackLayout Grid.Column="1" VerticalOptions="Center" HorizontalOptions="Center" Spacing="6">
                         <Label Text="{Binding NombreCategoria}" FontFamily="Nunito_bold" FontSize="18" TextColor="{DynamicResource Negro}" HorizontalTextAlignment="Center"/>
-                        <Border IsVisible="{Binding SistemaPuntos}" BackgroundColor="{DynamicResource Amarillo}" StrokeThickness="0" Padding="10,4" HorizontalOptions="Center">
+                        <Border IsVisible="{Binding SistemaPuntos}" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" Padding="10,4" HorizontalOptions="Center">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="12"/>
                             </Border.StrokeShape>
@@ -175,7 +175,7 @@
                                 <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto" VerticalOptions="End">
                                     <Label Grid.Column="0" IsVisible="{Binding Path=BindingContext.EsPorPuntos, Source={x:Reference CartaProductos}, Converter={StaticResource InverseBoolConverter}}" Text="{Binding articulo.precio, StringFormat='{0:N2}€'}" TextColor="{StaticResource RojoMarca}" FontFamily="Nunito_bold" FontSize="18" VerticalOptions="Center"/>
                                     <!-- Por Puntos -->
-                                    <Border Grid.Column="0" BackgroundColor="{DynamicResource Amarillo}" StrokeThickness="0" Padding="12,6" IsVisible="{Binding Path=BindingContext.EsPorPuntos, Source={x:Reference CartaProductos}}" VerticalOptions="Center">
+                                    <Border Grid.Column="0" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" Padding="12,6" IsVisible="{Binding Path=BindingContext.EsPorPuntos, Source={x:Reference CartaProductos}}" VerticalOptions="Center">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="12"/>
                                         </Border.StrokeShape>

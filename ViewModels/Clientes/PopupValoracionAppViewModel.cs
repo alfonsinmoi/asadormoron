@@ -81,7 +81,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 v.rechazada = 0;
                 v.tipoValoracion = 3;
                 v.valoracion = Valoracion;
-                ResponseServiceWS.insertaValoracion(v);
+                await Task.Run(() => ResponseServiceWS.insertaValoracion(v));
 
                 await MopupService.Instance.PopAsync(true);
             }

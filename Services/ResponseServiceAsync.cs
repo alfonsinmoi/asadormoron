@@ -845,5 +845,283 @@ namespace AsadorMoron.Services
         }
 
         #endregion
+
+        #region Configuracion Admin
+
+        /// <summary>
+        /// Obtiene la configuración del administrador de forma async
+        /// ANTES: ResponseServiceWS.getConfiguracionAdmin() - BLOQUEANTE
+        /// </summary>
+        public async Task<ConfiguracionAdmin> GetConfiguracionAdminAsync(CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                var url = $"{App.DAUtil.miURL}configuracion.php/GET?idGrupo=1";
+                var result = await _http.GetAsync<ConfiguracionAdmin>(url, ct);
+
+                if (result != null)
+                {
+                    Microsoft.Maui.Storage.Preferences.Set("ServicioActivo", result.servicioActivo);
+                    if (!result.servicioActivo)
+                        Microsoft.Maui.Storage.Preferences.Set("activoHoy", false);
+                }
+
+                return result ?? new ConfiguracionAdmin();
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "GetConfiguracionAdminAsync");
+            }
+        }
+
+        /// <summary>
+        /// Obtiene la configuración del administrador por pueblo de forma async
+        /// ANTES: ResponseServiceWS.getConfiguracionAdmin(int idPueblo) - BLOQUEANTE
+        /// </summary>
+        public async Task<ConfiguracionAdmin> GetConfiguracionAdminAsync(int idPueblo, CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                var url = $"{App.DAUtil.miURL}configuracion.php/GET?idPueblo={idPueblo}";
+                return await _http.GetAsync<ConfiguracionAdmin>(url, ct) ?? new ConfiguracionAdmin();
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "GetConfiguracionAdminByPuebloAsync");
+            }
+        }
+
+        #endregion
+
+        #region Pedidos
+
+        /// <summary>
+        /// Trae un pedido por su código de forma async
+        /// ANTES: ResponseServiceWS.TraePedidoPorCodigo() - BLOQUEANTE
+        /// </summary>
+        public async Task<CabeceraPedido> TraePedidoPorCodigoAsync(string codigoPedido, CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                if (App.DAUtil.Usuario == null)
+                    return new CabeceraPedido();
+
+                var url = $"{App.DAUtil.miURL}pedidos.php/GET?codigoPedido={codigoPedido}";
+                var listPedido = await _http.GetAsync<ObservableCollection<Pedido>>(url, ct);
+
+                if (listPedido != null && listPedido.Count > 0)
+                {
+                    var result = ConvertirToPedidoInterno(listPedido);
+                    return result.FirstOrDefault() ?? new CabeceraPedido();
+                }
+
+                return new CabeceraPedido();
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "TraePedidoPorCodigoAsync");
+            }
+        }
+
+        /// <summary>
+        /// Convierte lista de pedidos a CabeceraPedido (helper)
+        /// </summary>
+        private ObservableCollection<CabeceraPedido> ConvertirToPedidoInterno(ObservableCollection<Pedido> listPedido)
+        {
+            var result = new ObservableCollection<CabeceraPedido>();
+            CabeceraPedido cabeceraPedido;
+
+            foreach (var item in listPedido)
+            {
+                var existing = result.FirstOrDefault(p => p.codigoPedido == item.codigoPedido);
+                if (existing == null)
+                {
+                    cabeceraPedido = GetCabecera(item);
+                    result.Add(cabeceraPedido);
+                }
+            }
+
+            foreach (var item in listPedido)
+            {
+                var cabecera = result.FirstOrDefault(p => p.codigoPedido == item.codigoPedido);
+                if (cabecera != null)
+                {
+                    var lineaPedido = GetLineaPedido(item);
+                    if (cabecera.lineasPedidos == null)
+                        cabecera.lineasPedidos = new ObservableCollection<LineasPedido>();
+                    if (cabecera.lineasPedidosAdd == null)
+                        cabecera.lineasPedidosAdd = new ObservableCollection<LineasPedido>();
+                    cabecera.lineasPedidos.Add(lineaPedido);
+                }
+            }
+
+            return new ObservableCollection<CabeceraPedido>(result.OrderBy(p => p.horaPedido).ToList());
+        }
+
+        private CabeceraPedido GetCabecera(Pedido item)
+        {
+            return new CabeceraPedido
+            {
+                idPedido = item.idPedido,
+                valorado = item.valorado,
+                poblacion = item.poblacion,
+                tipoPago = item.tipoPago,
+                codigoPedido = item.codigoPedido,
+                idEstablecimiento = item.idEstablecimiento,
+                idUsuario = item.idUsuario,
+                idDetalle = item.idDetalle,
+                horaPedido = item.horaPedido,
+                idCuenta = item.idCuenta,
+                tipo = item.tipo,
+                idZonaEstablecimiento = item.idZonaEstablecimiento,
+                zonaEstablecimiento = item.zonaEstablecimiento,
+                mesa = item.mesa,
+                repartidor = item.repartidor,
+                horaEntrega = DateTime.Parse(item.horaEntrega).ToString(@"HH\:mm"),
+                comentario = item.comentario?.Trim() ?? "",
+                fechaEntrega = DateTime.Parse(item.horaEntrega),
+                estadoDetalle = item.estadoDetalle,
+                zona = item.zona,
+                transaccion = item.transaccion,
+                pagado = item.pagado,
+                tipoVenta = item.tipoVenta,
+                idZona = item.idZona,
+                colorZona = item.colorZona,
+                estadoPedido = item.estadoPedido,
+                idEstadoPedido = item.idEstadoPedido,
+                nombreEstablecimiento = item.nombreEstablecimiento,
+                nombreUsuario = item.nombreUsuario,
+                direccionUsuario = item.direccionUsuario,
+                telefonoUsuario = item.telefonoUsuario,
+                emailUsuario = item.emailUsuario,
+                idRepartidor = item.idRepartidor,
+                FotoRepartidor = item.fotoRepartidor,
+                tieneComentario = !string.IsNullOrEmpty(item.comentario?.Trim()) ? 1 : 0
+            };
+        }
+
+        private LineasPedido GetLineaPedido(Pedido item)
+        {
+            return new LineasPedido
+            {
+                nombreProducto = item.nombreProducto,
+                cantidad = item.cantidad,
+                precio = item.precio,
+                importe = item.importe,
+                comentario = item.comentarioProducto,
+                numeroImpresora = item.numeroImpresora,
+                desripcionProducto = item.desripcionProducto,
+                imagenProducto = item.imagenProducto,
+                idProducto = item.idProducto,
+                estadoProducto = item.estadoDetalle,
+                tipoComida = item.tipoProducto,
+                tipoVenta = item.tipoVenta
+            };
+        }
+
+        #endregion
+
+        #region Usuarios y Contadores
+
+        /// <summary>
+        /// Obtiene el contador de usuarios de forma async
+        /// ANTES: ResponseServiceWS.contadorUsuarios() - BLOQUEANTE
+        /// </summary>
+        public async Task<int> ContadorUsuariosAsync(CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                var pueblo = App.DAUtil.GetPueblosSQLite()?.Find(p => p.id == App.DAUtil.Usuario?.idPueblo);
+                if (pueblo == null) return 0;
+
+                var url = $"{App.DAUtil.miURL}usuarios.php/GET?contador=true&idGrupo={pueblo.idGrupo}";
+                var result = await _http.GetAsync<ResultdadoModel>(url, ct);
+                return result?.resultado ?? 0;
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "ContadorUsuariosAsync");
+            }
+        }
+
+        #endregion
+
+        #region Mensajes Repartidor
+
+        /// <summary>
+        /// Obtiene mensajes del repartidor de forma async
+        /// ANTES: ResponseServiceWS.TraeMensajeRepartidor() - BLOQUEANTE
+        /// </summary>
+        public async Task<ObservableCollection<MensajesRepartidorModel>> TraeMensajeRepartidorAsync(CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                if (App.DAUtil.Usuario?.Repartidor == null)
+                    return new ObservableCollection<MensajesRepartidorModel>();
+
+                var url = $"{App.DAUtil.miURL}repartidores.php/GET?idRepartidorMensajesNoLeidos={App.DAUtil.Usuario.Repartidor.id}";
+                return await _http.GetAsync<ObservableCollection<MensajesRepartidorModel>>(url, ct)
+                    ?? new ObservableCollection<MensajesRepartidorModel>();
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "TraeMensajeRepartidorAsync");
+            }
+        }
+
+        #endregion
+
+        #region Guarda Online
+
+        /// <summary>
+        /// Guarda estado online del usuario de forma async
+        /// ANTES: ResponseServiceWS.GuardaOnline() - usa el método original que ya es async
+        /// </summary>
+        public async Task GuardaOnlineAsync(int tipo, CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                if (App.DAUtil.Usuario == null) return;
+
+                // Delegar al método original que ya es async
+                await ResponseServiceWS.GuardaOnline(tipo);
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "GuardaOnlineAsync");
+            }
+        }
+
+        #endregion
+
+        #region Registra Token FCM
+
+        /// <summary>
+        /// Registra el token FCM del usuario de forma async
+        /// ANTES: App.ResponseWS.RegistraTokenFCM() - BLOQUEANTE
+        /// </summary>
+        public async Task RegistraTokenFCMAsync(UsuarioModel usuario, CancellationToken ct = default)
+        {
+            var sw = PerformanceBenchmark.StartTimer();
+            try
+            {
+                if (usuario == null) return;
+
+                var url = $"{App.DAUtil.miURL}usuarios.php/PUT?registraToken=true";
+                await _http.PutAsync(url, usuario, ct);
+            }
+            finally
+            {
+                PerformanceBenchmark.StopAndRecord(sw, "RegistraTokenFCMAsync");
+            }
+        }
+
+        #endregion
     }
 }

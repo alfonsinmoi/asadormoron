@@ -67,7 +67,7 @@
                            MaxLines="1"/>
                     <!-- Chip de puntos compacto -->
                     <Border IsVisible="{Binding SistemaPuntos}"
-                            BackgroundColor="{DynamicResource Amarillo}"
+                            BackgroundColor="{StaticResource RojoMarca}"
                             StrokeThickness="0"
                             Padding="10,4"
                             HorizontalOptions="Center">

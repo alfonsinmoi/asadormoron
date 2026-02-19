@@ -1,35 +1,30 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AsadorMoron.Interfaces;
-
-
-
-using AsadorMoron.Models;
-using AsadorMoron.Interfaces;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Controls.Xaml;
-using AsadorMoron.Views;
-using AsadorMoron.Services;
-using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Storage;
-
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using AsadorMoron.ViewModels.Clientes;
 using System.Net.Http;
-using AsadorMoron.Recursos;
-using Plugin.StoreReview;
-using AsadorMoron.Messages;
 using System.Text;
+using System.Globalization;
+using System.Collections.ObjectModel;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Xaml;
+using Microsoft.Maui.Graphics;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Storage;
+using AsadorMoron.Interfaces;
+using AsadorMoron.Models;
+using AsadorMoron.Views;
+using AsadorMoron.Services;
+using AsadorMoron.ViewModels.Clientes;
+using AsadorMoron.Recursos;
+using AsadorMoron.Messages;
 using AsadorMoron.Utils;
 using AsadorMoron.Models.PayComet;
-using System.Globalization;
-// Device removed in MAUI
-using System.Collections.ObjectModel;
 using System.Security.Authentication;
-// using AsadorMoron.Print; // TODO
+using Plugin.StoreReview;
+using OneSignalSDK.DotNet;
+using OneSignalSDK.DotNet.Core;
 
 [assembly: ExportFont("Syne-Bold.ttf", Alias = "Syne")]
 [assembly: ExportFont("Syne-Medium.ttf", Alias = "Syne_Medium")]
@@ -110,8 +105,7 @@ namespace AsadorMoron
                     BarBackgroundColor = Color.FromArgb("#ffffff")
                 };
                 Debug.WriteLine($"[PERF] MainPage creado: {_appStartStopwatch.ElapsedMilliseconds}ms");
-                // TODO: Initialize OneSignal for MAUI
-                // OneSignal initialization code removed - needs reimplementation
+                // OneSignal se inicializa en OnStart() -> InitNotification()
 
             }
             catch (Exception ex)
@@ -180,6 +174,9 @@ namespace AsadorMoron
                     Debug.WriteLine($"[PERF] InitNavigation FIN: {_appStartStopwatch.ElapsedMilliseconds}ms");
                 }
 
+                // Registrar token de OneSignal DESPUÉS del login (DAUtil.Usuario ya está disponible)
+                RegistrarTokenSiDisponible();
+
                 Connectivity.ConnectivityChanged += HandleConnectivityChanged;
                 var count = Usage;
                 count++;
@@ -203,7 +200,7 @@ namespace AsadorMoron
             if (App.DAUtil.Usuario != null)
             {
                 if (App.DAUtil.Usuario.rol == (int)RolesEnum.Cliente)
-                       ResponseServiceWS.GuardaOnline(2);
+                       _ = Task.Run(() => ResponseServiceWS.GuardaOnline(2));
             }
         }
         protected override void OnResume()
@@ -214,7 +211,7 @@ namespace AsadorMoron
                     if (DAUtil.Usuario.rol == (int)RolesEnum.Cliente)
                     {
                         online = new OnlineModel();
-                        ResponseServiceWS.GuardaOnline(1);
+                        _ = Task.Run(() => ResponseServiceWS.GuardaOnline(1));
                     }
                 }
             }
@@ -259,9 +256,7 @@ namespace AsadorMoron
             }
         }
 
-        // TODO: Implement OneSignal notification handlers for MAUI
-        // private void OnHandleNotificationReceived(...) { }
-        // private void OnHandleNotificationOpened(...) { }
+        // Handlers de notificación implementados en InitNotification() vía WillDisplay y Clicked
         public async void HandleConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
         {
             try
@@ -273,7 +268,7 @@ namespace AsadorMoron
                         tengoConexion = true;
                         using (userdialog.Loading(AppResources.RestableciendoConexion, null, null, true, MaskType.Black))
                         {
-                            if (IsLogin())
+                            if (await IsLoginAsync())
                             {
                                 await InitNotification();
                                     try { userdialog.ShowLoading(AppResources.Cargando); } catch (Exception) { userdialog.HideLoading(); }
@@ -308,8 +303,60 @@ namespace AsadorMoron
 
         private async Task InitNotification()
         {
-            // TODO: Implement OneSignal for MAUI
-            await Task.CompletedTask;
+            try
+            {
+                OneSignal.Initialize("000cf2d3-9e1c-40c9-a6e6-56bafe0b3946");
+
+                // Handler para notificaciones recibidas en primer plano
+                OneSignal.Notifications.WillDisplay += (sender, e) =>
+                {
+                    Debug.WriteLine($"[OneSignal] Notificación recibida en foreground: {e.Notification.Title} - {e.Notification.Body}");
+                    // No llamamos PreventDefault() para que se muestre la notificación
+                };
+
+                // Handler para cuando el usuario toca la notificación
+                OneSignal.Notifications.Clicked += (sender, e) =>
+                {
+                    Debug.WriteLine($"[OneSignal] Notificación abierta: {e.Notification.Title} - {e.Notification.Body}");
+                    var titulo = e.Notification.Title ?? "Notificación";
+                    var mensaje = e.Notification.Body ?? "";
+
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        if (Current?.MainPage != null)
+                        {
+                            await Current.MainPage.DisplayAlert(titulo, mensaje, "OK");
+                        }
+                    });
+                };
+
+                await OneSignal.Notifications.RequestPermissionAsync(true);
+                Debug.WriteLine($"[OneSignal] Permiso de notificaciones concedido: {OneSignal.Notifications.Permission}");
+
+                OneSignal.User.PushSubscription.Changed += (sender, args) =>
+                {
+                    var subscriptionId = OneSignal.User.PushSubscription.Id;
+                    var pushToken = OneSignal.User.PushSubscription.Token;
+                    Debug.WriteLine($"[OneSignal] Subscription changed - ID: {subscriptionId}, Token: {pushToken}");
+                    if (!string.IsNullOrEmpty(subscriptionId))
+                    {
+                        IdsAvailable(subscriptionId, pushToken);
+                    }
+                };
+
+                // Si ya tiene suscripción, registrar token
+                var currentId = OneSignal.User.PushSubscription.Id;
+                var currentToken = OneSignal.User.PushSubscription.Token;
+                Debug.WriteLine($"[OneSignal] Current subscription - ID: {currentId}, Token: {currentToken}");
+                if (!string.IsNullOrEmpty(currentId))
+                {
+                    IdsAvailable(currentId, currentToken);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[OneSignal] Error InitNotification: {ex.Message}\n{ex.StackTrace}");
+            }
         }
         public static async Task<bool> InitNavigation()
         {
@@ -318,13 +365,12 @@ namespace AsadorMoron
                 DAUtil.CreaTablas();
                 bool result;
                 if (!Preferences.Get("Social", false))
-                    result = IsLogin();
+                    result = await IsLoginAsync();
                 else
                 {
-                    result = IsLoginSocial();
+                    result = await IsLoginSocialAsync();
                 }
 
-                //TODO: Mejora tiempo
                 await ResponseWS.getConfiguracionGeneralASync();
                 MensajesGlobal = await ResponseWS.getMensajesAsync();
                 MensajesPredefinidos = ResponseWS.getMensajesPredefinidos();
@@ -366,11 +412,11 @@ namespace AsadorMoron
                     }
                     else if (rol == (int)RolesEnum.Repartidor)
                     {
-                        DAUtil.Usuario.Repartidor = ResponseServiceWS.GetRepartidorByIdUsuario(DAUtil.Usuario.idUsuario);
+                        DAUtil.Usuario.Repartidor = await AsyncService.GetRepartidorByIdUsuarioAsync(DAUtil.Usuario.idUsuario);
                     }
                     else if (rol == (int)RolesEnum.Cliente)
                     {
-                        promocionAmigo = ResponseServiceWS.getPromocionAmigo();
+                        promocionAmigo = await AsyncService.GetPromocionAmigoAsync();
 
                     }
                 }
@@ -520,63 +566,6 @@ namespace AsadorMoron
             }
         }
 
-        private static bool IsLogin()
-        {
-            string Username = string.Empty;
-            string Pass = string.Empty;
-
-            try
-            {
-                UsuarioModel persona = DAUtil.GetUsuarioSQLite();
-                if (persona != null)
-                {
-                    DAUtil.Usuario = persona;
-                    Username = persona.email;
-                    Pass = persona.password;
-                }
-                if (tengoConexion)
-                {
-                    if (!string.IsNullOrEmpty(Username) || !string.IsNullOrEmpty(Pass))
-                    {
-                        try
-                        {
-                            if (ResponseServiceWS.Login(Username, Pass))
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                
-                                DAUtil.Usuario = null;
-                                DAUtil.DeleteUsuarioSQLite();
-                                return false;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("Error isLogin: " + ex.ToString());
-                            Console.WriteLine(ex);
-                            
-                            ex.ToString();
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error isLogin: " + ex.ToString());
-                Console.WriteLine(ex);
-                userdialog.HideLoading();
-                
-                return false;
-            }
-            return true;
-        }
         private void IdsAvailable(string userID, string pushToken)
         {
             try
@@ -600,72 +589,35 @@ namespace AsadorMoron
             {
                 Debug.WriteLine("Error IdsAvailable: " + ex.ToString());
                 Console.WriteLine(ex);
-                
+
             }
         }
 
-        private static bool IsLoginSocial()
+        /// <summary>
+        /// Registra el token de OneSignal en el backend después del login,
+        /// ya que en InitNotification() DAUtil.Usuario aún es null.
+        /// </summary>
+        private void RegistrarTokenSiDisponible()
         {
-            string Username = string.Empty;
-            string Pass = string.Empty;
-
             try
             {
-                UsuarioModel persona = DAUtil.GetUsuarioSQLite();
-                if (persona != null)
-                {
-                    DAUtil.Usuario = persona;
-                    Username = persona.email;
-                    Pass = persona.idSocial;
+                var subscriptionId = OneSignal.User.PushSubscription.Id;
+                var pushToken = OneSignal.User.PushSubscription.Token;
 
+                if (!string.IsNullOrEmpty(subscriptionId) && DAUtil.Usuario != null)
+                {
+                    Debug.WriteLine($"[OneSignal] Registrando token post-login: {subscriptionId}");
+                    IdsAvailable(subscriptionId, pushToken);
                 }
-                if (tengoConexion)
+                else
                 {
-                    if (!string.IsNullOrEmpty(Username) || !string.IsNullOrEmpty(Pass))
-                    {
-                        try
-                        {
-                            AuthNetworkData data = new AuthNetworkData();
-                            data.Id = Pass;
-                            data.Email = Username;
-                            if (ResponseServiceWS.LoginSocial(data))
-                            {
-                                if (Preferences.Get("RedSocial", "").Equals("apple"))
-                                {
-
-                                }
-                                return true;
-                            }
-                            else
-                            {
-                                
-                                return false;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine("Error isLoginSocial: " + ex.ToString());
-                            Console.WriteLine(ex);
-                            
-                            ex.ToString();
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    Debug.WriteLine($"[OneSignal] No se puede registrar token post-login - SubscriptionId: {subscriptionId}, Usuario: {(DAUtil.Usuario != null ? "OK" : "NULL")}");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error isLoginSocial: " + ex.ToString());
-                Console.WriteLine(ex);
-                userdialog.HideLoading();
-                
-                return false;
+                Debug.WriteLine($"[OneSignal] Error RegistrarTokenSiDisponible: {ex.Message}");
             }
-            return true;
         }
 
         /// <summary>

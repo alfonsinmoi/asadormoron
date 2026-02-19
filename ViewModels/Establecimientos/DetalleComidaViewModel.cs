@@ -49,7 +49,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             _articulo = new ArticuloModel();
                             _articulo.idEstablecimiento = _establecimiento.idEstablecimiento;
                             _articulo.idArticulo = 0;
-                            ListadoCategorias = new ObservableCollection<Categoria>(ResponseServiceWS.getListadoCategorias(_articulo.idEstablecimiento));
+                            ListadoCategorias = new ObservableCollection<Categoria>(await App.AsyncService.GetCategoriasAsync(_articulo.idEstablecimiento));
                             ListadoAlergenos = new ObservableCollection<AlergenosModel>();
                             EsComida = true;
                         }
@@ -58,7 +58,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     {
                         TieneLocal = App.EstActual.local==1;
                         if (App.EstActual.configuracion == null)
-                            App.EstActual.configuracion =  ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
+                            App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
                         SistemaPuntos = App.EstActual.configuracion.sistemaPuntos;
                         TieneEncargos = App.EstActual.configuracion.aceptaEncargos;
                         if (_articulo == null)
@@ -80,7 +80,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             NumeroIngredientes = _articulo.numeroIngredientes;
                             FuerzaIngredientes = _articulo.fuerzaIngredientes;
                             antiguo = _articulo.imagen.Replace(ResponseServiceWS.urlPro, "");
-                            ListadoCategorias = new ObservableCollection<Categoria>(ResponseServiceWS.getListadoCategorias(_articulo.idEstablecimiento));
+                            ListadoCategorias = new ObservableCollection<Categoria>(await App.AsyncService.GetCategoriasAsync(_articulo.idEstablecimiento));
                             CategoriaSeleccionada = ListadoCategorias.Where((obj) => obj.id == _articulo.idCategoria).FirstOrDefault();
                             if (CategoriaSeleccionada.idTipo == 0)
                                 EsComida = false;
@@ -149,7 +149,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     {
                         _articulo = new ArticuloModel();
                         _articulo.idEstablecimiento = App.EstActual.idEstablecimiento;
-                        ListadoCategorias = new ObservableCollection<Categoria>(ResponseServiceWS.getListadoCategorias(App.EstActual.idEstablecimiento));
+                        ListadoCategorias = new ObservableCollection<Categoria>(await App.AsyncService.GetCategoriasAsync(App.EstActual.idEstablecimiento));
                         Imagen = "logocuadrado.png";
                     }
                     List<IngredientesListModel> lis = new List<IngredientesListModel>();
@@ -588,11 +588,12 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 await Task.Delay(200);
                 await initGuardar();
                 App.userdialog.HideLoading();
+                MessagingCenter.Send(this, "ProductoActualizado");
                 await App.DAUtil.NavigationService.NavigateBackAsync();
             }
             catch (Exception ex)
             {
-                // 
+                //
             }
         }
         private async void Cancelar()
@@ -755,7 +756,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     if (App.ResponseWS.nuevoProducto(_articulo))
                     {
                         if (subirFotos)
-                            ResponseServiceWS.UploadImage(Imagen, NombreFoto, "productos/establecimiento/" + _articulo.idEstablecimiento, "");
+                            await Task.Run(() => ResponseServiceWS.UploadImage(Imagen, NombreFoto, "productos/establecimiento/" + _articulo.idEstablecimiento, ""));
                         App.userdialog.HideLoading();
                         await App.customDialog.ShowDialogAsync(AppResources.ProductoOK, AppResources.App, AppResources.Aceptar);
                     }
@@ -787,6 +788,19 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     }
                     _articulo.porEncargo = PorEncargo;
                     _articulo.listadoOpciones = ListadoOpciones;
+
+                    // Reconstruir el string opciones para que el PUT envíe datos actualizados
+                    var opcionesStr = new System.Text.StringBuilder();
+                    foreach (var op in ListadoOpciones)
+                    {
+                        if (!string.IsNullOrEmpty(op.opcion))
+                        {
+                            if (opcionesStr.Length > 0) opcionesStr.Append('|');
+                            opcionesStr.Append($"{op.id};{op.opcion};{op.tipoIncremento};{op.precio?.Replace(",", ".")};{op.opcion_eng ?? op.opcion};{op.opcion_ger ?? op.opcion};{op.opcion_fr ?? op.opcion};{op.puntos}");
+                        }
+                    }
+                    _articulo.opciones = opcionesStr.ToString();
+
                     _articulo.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
                     _articulo.listadoAlergenos = new ObservableCollection<AlergenosModel>();
                     _articulo.listadoIngredientes = new ObservableCollection<IngredienteProductoModel>();
@@ -875,6 +889,18 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         AlergenosModel a = alergenos.Where(p => p.id == 14).FirstOrDefault();
                         _articulo.listadoAlergenos.Add(a);
                     }
+                    // Reconstruir el string alergenos para que el PUT envíe datos actualizados
+                    var alergenosStr = new System.Text.StringBuilder();
+                    foreach (var al in _articulo.listadoAlergenos)
+                    {
+                        if (al != null)
+                        {
+                            if (alergenosStr.Length > 0) alergenosStr.Append('|');
+                            alergenosStr.Append($"{al.id};{al.nombre};{al.imagen}");
+                        }
+                    }
+                    _articulo.alergenos = alergenosStr.ToString();
+
                     if (subirFotos)
                     {
                         _articulo.imagen = $"{ResponseServiceWS.urlPro}images/productos/establecimiento/" + _articulo.idEstablecimiento + "/" + NombreFoto;
@@ -882,7 +908,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     if (App.ResponseWS.actualizaProducto(_articulo))
                     {
                         if (subirFotos)
-                            ResponseServiceWS.UploadImage(Imagen, NombreFoto, "productos/establecimiento/" + _articulo.idEstablecimiento, antiguo);
+                            await Task.Run(() => ResponseServiceWS.UploadImage(Imagen, NombreFoto, "productos/establecimiento/" + _articulo.idEstablecimiento, antiguo));
                         App.userdialog.HideLoading();
                         await App.customDialog.ShowDialogAsync(AppResources.ProductoOK, AppResources.App, AppResources.Aceptar);
                     }

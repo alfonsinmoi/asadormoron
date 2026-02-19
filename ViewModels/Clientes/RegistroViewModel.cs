@@ -228,7 +228,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         bool continua = true;
                         if (TieneCodigoAmigo && !string.IsNullOrEmpty(Codigo))
                         {
-                            continua = App.ResponseWS.compruebaCodigoAmigo(CodPostal.idPueblo, Codigo);
+                            continua = await Task.Run(() => App.ResponseWS.compruebaCodigoAmigo(CodPostal.idPueblo, Codigo));
                         }
                         if (continua)
                         {
@@ -262,7 +262,7 @@ namespace AsadorMoron.ViewModels.Clientes
                             usu.username = Email;
                             usu.idPueblo = CodPostal.idPueblo;
                             Preferences.Set("RedSocial", "");
-                            String error = ResponseServiceWS.registroUsuario(usu);
+                            String error = await Task.Run(() => ResponseServiceWS.registroUsuario(usu));
                             if (!error.Contains("ERROR"))
                             {
                                 Preferences.Set("Social", false);
@@ -277,17 +277,17 @@ namespace AsadorMoron.ViewModels.Clientes
                                     amigo2.telefono = Telefono;
                                     amigo2.idPueblo = usu.idPueblo;
                                     amigo2.idPromo = promo.id;
-                                    ResponseServiceWS.guardaPromoAmigo(amigo2, usu.idPueblo);
+                                    await Task.Run(() => ResponseServiceWS.guardaPromoAmigo(amigo2, usu.idPueblo));
                                 }
                                     App.userdialog.HideLoading();
                                 ok = true;
                                 if (subirFoto)
-                                    ResponseServiceWS.UploadImage(NombreFoto, g.ToString() + ".jpg", "clientes", "");
+                                    await Task.Run(() => ResponseServiceWS.UploadImage(NombreFoto, g.ToString() + ".jpg", "clientes", ""));
                                 try
                                 {
                                     //Gestión del PIN
                                     App.DAUtil.SaveConfiguracionUsuarioSQLite(usu);
-                                    App.ResponseWS.verificado(App.DAUtil.Usuario.email);
+                                    await Task.Run(() => App.ResponseWS.verificado(App.DAUtil.Usuario.email));
                                     await App.customDialog.ShowDialogAsync(AppResources.RegistroOK, AppResources.App, AppResources.Cerrar);
                                     /*
                                     if (EnviaEmail())
@@ -317,7 +317,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                     string nuevoPIN = App.DAUtil.GenerateRandomNo().ToString();
                                     Preferences.Set("PIN", nuevoPIN);
                                     Preferences.Set("email", Email);
-                                    error = App.ResponseWS.actualizaPIN(nuevoPIN, Email);
+                                    error = await Task.Run(() => App.ResponseWS.actualizaPIN(nuevoPIN, Email));
                                     if (!error.Contains("ERROR"))
                                     {
                                         EnviaEmail(nuevoPIN);
@@ -1268,13 +1268,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         {
                             Preferences.Set("idPueblo", 1);
                             Preferences.Set("idGrupo", 1);
-                            promo = ResponseServiceWS.getPromocionAmigo(CodPostal.idPueblo);
-                            TieneCodigoAmigo = promo != null;
-                            if (TieneCodigoAmigo)
-                                TextoPromo = promo.descripcion;
-                            else
-                                TextoPromo = "";
-                            Zonas = new ObservableCollection<ZonaModel>(App.ResponseWS.getZonas(CodPostal.idPueblo));
+                            _ = CargarPromocionAsync(CodPostal.idPueblo);
                         }
                     }
                 }
@@ -1282,5 +1276,15 @@ namespace AsadorMoron.ViewModels.Clientes
         }
         #endregion
 
+        private async Task CargarPromocionAsync(int idPueblo)
+        {
+            promo = await Task.Run(() => ResponseServiceWS.getPromocionAmigo(idPueblo));
+            TieneCodigoAmigo = promo != null;
+            if (TieneCodigoAmigo)
+                TextoPromo = promo.descripcion;
+            else
+                TextoPromo = "";
+            Zonas = new ObservableCollection<ZonaModel>(await Task.Run(() => App.ResponseWS.getZonas(idPueblo)));
+        }
     }
 }

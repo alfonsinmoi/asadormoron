@@ -56,7 +56,7 @@ namespace AsadorMoron.ViewModels.Clientes
 
                         if (TieneCodigoAmigo)
                         {
-                            amigos = ResponseServiceWS.TieneActivacionPendiente();
+                            amigos = await Task.Run(() => ResponseServiceWS.TieneActivacionPendiente());
                             App.amigos = amigos;
                             PendientePromocion = amigos != null;
                             Saldo = App.DAUtil.Usuario.saldo;
@@ -69,20 +69,20 @@ namespace AsadorMoron.ViewModels.Clientes
                             }
 
                         }
-                        cadmin = ResponseServiceWS.getConfiguracionAdmin();
+                        cadmin = await App.AsyncService.GetConfiguracionAdminAsync();
                         cargado = true;
                         App.DAUtil.EnTimer = false;
                         est = App.EstActual;
 
                         Logo = "logocabeceraazul.png";
                         Carrito2 = navigationData as List<CarritoModel>;
+                        if (Carrito2 == null)
+                            Carrito2 = new List<CarritoModel>();
                         TieneEncargo = Carrito2.Where(p => p.porEncargo == true).ToList().Count >= 1;
-                        if (App.listaProductos == null)
+                        if (App.listaProductos == null && Carrito2.Count > 0)
                             App.listaProductos = await App.ResponseWS.getListadoProductosEstablecimiento(Carrito2[0].idEstablecimiento, false);
 
                         Carrito = new ObservableCollection<CarritoBindable>();
-                        if (Carrito2 == null)
-                            Carrito2 = new List<CarritoModel>();
                         if (Carrito2.Count > 0)
                             Observaciones = Carrito2[0].observaciones;
 
@@ -172,7 +172,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                 }
                             }
                             //TODO: Multipueblo
-                            Zonas = new List<ZonaModel>(App.ResponseWS.getListadoZonas(1).Where(p => p.activo == 1));
+                            Zonas = new List<ZonaModel>((await Task.Run(() => App.ResponseWS.getListadoZonas(1))).Where(p => p.activo == 1));
                             Usuario = App.DAUtil.GetUsuarioSQLite();
                             if (Usuario != null)
                             {
@@ -189,7 +189,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                     ZonaModel z = Zonas.Where(p => p.idZona == Usuario.idZona).FirstOrDefault();
                                     if (z == null)
                                     {
-                                        ZonaSeleccionda = ResponseServiceWS.GetZonaByIdUsuario();
+                                        ZonaSeleccionda = await Task.Run(() => ResponseServiceWS.GetZonaByIdUsuario());
                                         if (ZonaSeleccionda == null)
                                         {
                                             await App.customDialog.ShowDialogAsync(App.MensajesGlobal.Where(p => p.clave.Equals("no_zona")).FirstOrDefault<MensajesModel>().valor.Replace("{0}", Environment.NewLine), AppResources.App, AppResources.Cerrar);
@@ -296,7 +296,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     }
 
                     if (App.EstActual.configuracion == null)
-                        App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
+                        App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
 
                     Gastos = Envio ? ZonaSeleccionda.gastos : 0;
 
@@ -362,7 +362,7 @@ namespace AsadorMoron.ViewModels.Clientes
                             else
                             {
                                 App.userdialog.HideLoading();
-                                await App.customDialog.ShowDialogAsync("Este cupón no es aplicable", "PolloAndaluz", "Cerrar");
+                                await App.customDialog.ShowDialogAsync("Este cupón no es aplicable", "Asador Morón", "Cerrar");
                             }
                         }
                         else
@@ -379,7 +379,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     else
                     {
                         App.userdialog.HideLoading();
-                        await App.customDialog.ShowDialogAsync("Este cupón no es aplicable", "PolloAndaluz", "Cerrar");
+                        await App.customDialog.ShowDialogAsync("Este cupón no es aplicable", "Asador Morón", "Cerrar");
                     }
                 }
                 catch (Exception ex)
@@ -433,7 +433,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 bool continuar = true;
                 string cerrado = "";
                 List<Establecimiento> idEstablecimientos = new List<Establecimiento>();
-                cadmin = ResponseServiceWS.getConfiguracionAdmin();
+                cadmin = await App.AsyncService.GetConfiguracionAdminAsync();
 
 
                 if (idEstablecimientos.Count >= 1)
@@ -485,7 +485,7 @@ namespace AsadorMoron.ViewModels.Clientes
                                 Establecimiento est = App.DAUtil.GetEstablecimientoSQL(c.idEstablecimiento);
                                 idEstablecimientos.Add(est);
                                 if (est.configuracion == null)
-                                    est.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(c.idEstablecimiento);
+                                    est.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(c.idEstablecimiento);
                                 if (est.configuracion.pedidoMinimo > pedidoMinimo)
                                     pedidoMinimo = est.configuracion.pedidoMinimo;
                                 if (!est.configuracion.servicioActivo)
@@ -584,9 +584,9 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 int articulo = (int)parametro;
 
-                CarritoBindable c = Carrito.Where((obj) => obj.idArticulo == articulo).First();
-                CarritoModel c2 = Carrito2.Where((obj) => obj.idArticulo == articulo).First();
-                if (c != null)
+                CarritoBindable c = Carrito.Where((obj) => obj.idArticulo == articulo).FirstOrDefault();
+                CarritoModel c2 = Carrito2.Where((obj) => obj.idArticulo == articulo).FirstOrDefault();
+                if (c != null && c2 != null)
                 {
                     if (!c2.esMenu)
                     {
@@ -628,9 +628,9 @@ namespace AsadorMoron.ViewModels.Clientes
             {
                 int articulo = (int)parametro;
 
-                CarritoBindable c = Carrito.Where((obj) => obj.idArticulo == articulo).First();
-                CarritoModel c2 = Carrito2.Where((obj) => obj.idArticulo == articulo).First();
-                if (c != null)
+                CarritoBindable c = Carrito.Where((obj) => obj.idArticulo == articulo).FirstOrDefault();
+                CarritoModel c2 = Carrito2.Where((obj) => obj.idArticulo == articulo).FirstOrDefault();
+                if (c != null && c2 != null)
                 {
                     if (!c2.esMenu)
                     {

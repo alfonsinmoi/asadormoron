@@ -13,6 +13,7 @@ using AsadorMoron.Utils;
 using AsadorMoron.Print;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 using Syncfusion.XlsIO;
 using System.IO;
 using AsadorMoron.Interfaces;
@@ -505,7 +506,7 @@ namespace AsadorMoron.ViewModels.Administrador
                 if (App.EstActual != null)
                 {
                     if (App.EstActual.configuracion == null)
-                        App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
+                        App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
                     nombreImpresora = App.EstActual.configuracion.nombreImpresora;
                     alturaLinea = App.EstActual.configuracion.alturaLineaImpresora;
                 }
@@ -539,7 +540,7 @@ namespace AsadorMoron.ViewModels.Administrador
             {
                 App.userdialog?.ShowLoading(AppResources.Cargando);
                 numeroDias++;
-                await Task.Run(() => CargaPedidos());
+                await CargaPedidosAsync();
             }
             finally
             {
@@ -552,7 +553,7 @@ namespace AsadorMoron.ViewModels.Administrador
             {
                 App.userdialog?.ShowLoading(AppResources.Cargando);
                 numeroDias = 1000;
-                await Task.Run(() => CargaPedidos());
+                await CargaPedidosAsync();
             }
             finally
             {
@@ -744,7 +745,7 @@ namespace AsadorMoron.ViewModels.Administrador
                 {
                     App.userdialog?.ShowLoading(AppResources.Cargando);
                     string cod = (string)codigo;
-                    CabeceraPedido c2 = await Task.Run(() => ResponseServiceWS.TraePedidoPorCodigo(cod));
+                    CabeceraPedido c2 = await App.AsyncService.TraePedidoPorCodigoAsync(cod);
                     App.userdialog?.HideLoading();
                     await MopupService.Instance.PushAsync(new PopupPageInfoUsuarioPedido(c2), true);
                 }
@@ -754,24 +755,24 @@ namespace AsadorMoron.ViewModels.Administrador
                 App.userdialog?.HideLoading();
             }
         }
-        private void InitTimer()
+        private async void InitTimer()
         {
             try
             {
                 Desde = DateTime.Now;
                 Hasta = DateTime.Now;
                 App.DAUtil.pedidoNuevo = false;
-                CargaPedidos();
-                CargaGastos();
+                await CargaPedidosAsync();
+                await CargaGastosAsync();
             }
             catch (Exception ex)
             {
-                // 
+                //
             }
         }
-        private void CargaPedidos()
+        private async Task CargaPedidosAsync()
         {
-            ListPedidosTemp = new List<CabeceraPedido>(ResponseServiceWS.getHistoricoPedidosMultiAdmin(numeroDias, "1"));
+            ListPedidosTemp = new List<CabeceraPedido>(await Task.Run(() => ResponseServiceWS.getHistoricoPedidosMultiAdmin(numeroDias, "1")));
             TotalPedidos = 0;
 
             if (ListPedidosTemp != null && ListPedidosTemp.Count > 0)
@@ -789,9 +790,9 @@ namespace AsadorMoron.ViewModels.Administrador
             todoCargado = true;
             Filtro();
         }
-        private void CargaGastos()
+        private async Task CargaGastosAsync()
         {
-            ListGastosTemp = new List<GastoModel>(ResponseServiceWS.getHistoricoGastosMultiAdmin(numeroDias, "1"));
+            ListGastosTemp = new List<GastoModel>(await Task.Run(() => ResponseServiceWS.getHistoricoGastosMultiAdmin(numeroDias, "1")));
 
             if (ListGastosTemp != null && ListGastosTemp.Count > 0)
             {
@@ -872,7 +873,7 @@ namespace AsadorMoron.ViewModels.Administrador
                 else
                 {
                     AsadorMoron.Print.Printer printer = new AsadorMoron.Print.Printer(nombreImpresora, codigo, "ISO-8859-1");
-                    printer.ImprimirTicketPedido(alturaLinea);
+                    await printer.ImprimirTicketPedidoAsync(alturaLinea);
                     printer.PrintDocument();
                 }
             }
@@ -944,7 +945,7 @@ namespace AsadorMoron.ViewModels.Administrador
                         {
                             est = f.nombreEstablecimiento;
 
-                            conf = ResponseServiceWS.getConfiguracionEstablecimiento(f.idEstablecimiento);
+                            conf = await App.AsyncService.GetConfiguracionEstablecimientoAsync(f.idEstablecimiento);
                             if (j > 0)
                                 workbook.Worksheets.Create();
                             worksheet = workbook.Worksheets[j];
@@ -1029,7 +1030,7 @@ namespace AsadorMoron.ViewModels.Administrador
             }
             try
             {
-                ConfiguracionAdmin cadmin = ResponseServiceWS.getConfiguracionAdmin();
+                ConfiguracionAdmin cadmin = await App.AsyncService.GetConfiguracionAdminAsync();
                 App.DAUtil.ExportandoExcel = true;
                 using (ExcelEngine excelEngine = new ExcelEngine())
                 {

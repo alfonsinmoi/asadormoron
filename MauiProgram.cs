@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using Mopups.Hosting;
@@ -13,6 +14,19 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        // Manejador global de excepciones no controladas
+        AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
+        {
+            var ex = args.ExceptionObject as Exception;
+            Debug.WriteLine($"[CRASH] UnhandledException: {ex}");
+        };
+
+        TaskScheduler.UnobservedTaskException += (sender, args) =>
+        {
+            Debug.WriteLine($"[CRASH] UnobservedTaskException: {args.Exception}");
+            args.SetObserved();
+        };
+
         // Registrar licencia de Syncfusion
         Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NDE0NTgxM0AzMjM0MmUzMDJlMzBLTUFsajQ2VnI3VkZGRE1zaGRWWnlzcmQzdjV5THpGNHBoUVpZejMvNXdNPQ==");
 

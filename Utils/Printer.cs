@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using AsadorMoron.Managers;
 
 namespace AsadorMoron.Utils
@@ -51,10 +52,18 @@ namespace AsadorMoron.Utils
             Debug.WriteLine("[PRINTER STUB] OpenDrawer");
         }
 
-        public void ImprimirTicketPedido(int alturaLinea)
+        public Task ImprimirTicketPedidoAsync(int alturaLinea)
         {
-            Debug.WriteLine($"[PRINTER STUB] ImprimirTicketPedido with altura: {alturaLinea}");
+            Debug.WriteLine($"[PRINTER STUB] ImprimirTicketPedidoAsync with altura: {alturaLinea}");
             // TODO: Implementar impresión de ticket real
+            return Task.CompletedTask;
+        }
+
+        public Task ImprimirTicketComandaAsync(int numeroImpresora)
+        {
+            Debug.WriteLine($"[PRINTER STUB] ImprimirTicketComandaAsync with numeroImpresora: {numeroImpresora}");
+            // TODO: Implementar impresión de comanda real
+            return Task.CompletedTask;
         }
     }
 }

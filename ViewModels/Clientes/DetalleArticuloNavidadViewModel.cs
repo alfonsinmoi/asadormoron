@@ -54,14 +54,14 @@ namespace AsadorMoron.ViewModels.Clientes
                         Combo6 = new ObservableCollection<ComboModel>(App.combos.Where(p => p.tipo == 6));
                         Combo7 = new ObservableCollection<ComboModel>(App.combos.Where(p => p.tipo == 7));
                         Combo8 = new ObservableCollection<ComboModel>(App.combos.Where(p => p.tipo == 8));
-                        Combo1.First().Seleccionado = true;
-                        Combo2.First().Seleccionado = true;
-                        Combo3.First().Seleccionado = true;
-                        Combo4.First().Seleccionado = true;
-                        Combo5.First().Seleccionado = true;
-                        Combo6.First().Seleccionado = true;
-                        Combo7.First().Seleccionado = true;
-                        Combo8.First().Seleccionado = true;
+                        if (Combo1.Count > 0) Combo1.First().Seleccionado = true;
+                        if (Combo2.Count > 0) Combo2.First().Seleccionado = true;
+                        if (Combo3.Count > 0) Combo3.First().Seleccionado = true;
+                        if (Combo4.Count > 0) Combo4.First().Seleccionado = true;
+                        if (Combo5.Count > 0) Combo5.First().Seleccionado = true;
+                        if (Combo6.Count > 0) Combo6.First().Seleccionado = true;
+                        if (Combo7.Count > 0) Combo7.First().Seleccionado = true;
+                        if (Combo8.Count > 0) Combo8.First().Seleccionado = true;
                     }
                     carrito = App.DAUtil.Getcarrito();
                     Cantidad = carrito.Count().ToString();
@@ -75,12 +75,12 @@ namespace AsadorMoron.ViewModels.Clientes
                     if (App.DAUtil.Usuario != null)
                     {
                         if (App.EstActual.configuracion == null)
-                            App.EstActual.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(App.EstActual.idEstablecimiento);
+                            App.EstActual.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(App.EstActual.idEstablecimiento);
                         ModoTienda = App.EstActual.configuracion.modoEscaparate;
                         SistemaPuntos = App.EstActual.configuracion.sistemaPuntos;
                         if (SistemaPuntos)
                         {
-                            Puntos = ResponseServiceWS.getPuntosEstablecimiento();
+                            Puntos = await ResponseServiceWS.getPuntosEstablecimientoAsync();
                             foreach (CarritoModel c in carrito.Where(p => p.porPuntos == 1).ToList())
                             {
                                 Puntos -= c.puntos;

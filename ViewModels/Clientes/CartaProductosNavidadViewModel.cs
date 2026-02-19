@@ -48,7 +48,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     SistemaPuntos = App.EstActual.configuracion.sistemaPuntos;
                     if (SistemaPuntos)
                     {
-                        Puntos = ResponseServiceWS.getPuntosEstablecimiento();
+                        Puntos = await ResponseServiceWS.getPuntosEstablecimientoAsync();
                         foreach (CarritoModel c in carrito.Where(p => p.porPuntos == 1).ToList())
                         {
                             Puntos -= c.puntos;

@@ -176,7 +176,14 @@ namespace AsadorMoron.ViewModels.Clientes
                     {
                         Preferences.Set("idPueblo", 1);
                         Preferences.Set("idGrupo", 1);
-                        Zonas = new ObservableCollection<ZonaModel>(App.ResponseWS.getZonas(CodPostal.idPueblo));
+                        _ = Task.Run(() =>
+                        {
+                            var zonas = App.ResponseWS.getZonas(CodPostal.idPueblo);
+                            MainThread.BeginInvokeOnMainThread(() =>
+                            {
+                                Zonas = new ObservableCollection<ZonaModel>(zonas);
+                            });
+                        });
                     }
                 }
             }
@@ -331,7 +338,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     if (await InitEliminar())
                     {
                         if (App.DAUtil.DoIHaveInternet())
-                            App.ResponseWS.BorraToken(App.DAUtil.Usuario.email);
+                            await Task.Run(() => App.ResponseWS.BorraToken(App.DAUtil.Usuario.email));
                         App.DAUtil.DeleteUsuarioSQLite();
                         App.DAUtil.VaciaConfig();
                         App.DAUtil.VaciaCarrito();
@@ -465,7 +472,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     {
                         App.userdialog.HideLoading();
                         if (subirFoto)
-                            ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "clientes", antiguo);
+                            await Task.Run(() => ResponseServiceWS.UploadImage(Imagen, g.ToString() + ".jpg", "clientes", antiguo));
 
                         PueblosModel pu = App.DAUtil.GetPueblosSQLite().Find(p => p.id == usu.idPueblo);
                         Preferences.Set("idGrupo", pu.idGrupo);

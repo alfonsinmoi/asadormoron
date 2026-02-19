@@ -19,6 +19,7 @@ using Microsoft.Maui.Storage;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
 
 namespace AsadorMoron.ViewModels.Clientes
 {
@@ -103,7 +104,7 @@ namespace AsadorMoron.ViewModels.Clientes
             }
         }
 
-        private void RepetirPedido(object obj)
+        private async void RepetirPedido(object obj)
         {
             try
             {
@@ -115,7 +116,7 @@ namespace AsadorMoron.ViewModels.Clientes
                 foreach (var item in lineasPedidos)
                 {
                     int cantidadIngredientes = Regex.Matches(item.nombreProducto, " x ").Count;
-                    int cantidadActual = App.ResponseWS.getCantidadIngredientes(item.idProducto);
+                    int cantidadActual = await Task.Run(() => App.ResponseWS.getCantidadIngredientes(item.idProducto));
                     if (cantidadIngredientes != cantidadActual && cantidadActual > 0)
                     {
                         continuar = false;
@@ -147,7 +148,7 @@ namespace AsadorMoron.ViewModels.Clientes
                             ids += item.idProducto;
                         }
                     }
-                    articulos = ResponseServiceWS.TraePodructosBaja(ids);
+                    articulos = await Task.Run(() => ResponseServiceWS.TraePodructosBaja(ids));
                     foreach (ArticuloModel a in articulos)
                     {
                         carritoModels.Remove(carritoModels.Find(p => p.idArticulo == a.idArticulo));
@@ -216,7 +217,7 @@ namespace AsadorMoron.ViewModels.Clientes
             }
 
         }
-        private void initTimer()
+        private async void initTimer()
         {
             try
             {
@@ -225,7 +226,8 @@ namespace AsadorMoron.ViewModels.Clientes
                 App.DAUtil.pedidoNuevo = false;
                 Listado = new ObservableCollection<CabeceraPedido>();
                 Listado2 = new List<CabeceraPedido>();
-                ListPedidosTemp = new ObservableCollection<CabeceraPedido>(ResponseServiceWS.getPedidoUsuarios().Where(p => !p.tipoVenta.Equals("Local")).OrderByDescending(p => p.horaPedido).ToList());
+                var pedidos = await Task.Run(() => ResponseServiceWS.getPedidoUsuarios());
+                ListPedidosTemp = new ObservableCollection<CabeceraPedido>(pedidos.Where(p => !p.tipoVenta.Equals("Local")).OrderByDescending(p => p.horaPedido).ToList());
                 TotalPedidos = 0;
 
                 string ids = "";
@@ -304,11 +306,11 @@ namespace AsadorMoron.ViewModels.Clientes
 
 
         }
-        private void cargarEstablecimientos()
+        private async void cargarEstablecimientos()
         {
             try
             {
-                List<Establecimiento> l = ResponseServiceWS.getListadoEstablecimientos();
+                List<Establecimiento> l = await App.AsyncService.GetListadoEstablecimientosAsync(App.DAUtil.Usuario.idPueblo);
                 List<string> ests = new List<string>();
                 ests.Add(AppResources.Todos);
                 foreach (Establecimiento e in l)

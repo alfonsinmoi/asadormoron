@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using AsadorMoron.Print;
 
 namespace AsadorMoron.Managers
@@ -16,7 +17,7 @@ namespace AsadorMoron.Managers
 
     public static class ManagerImpresora
     {
-        public static void ImprimirTicket(string codigo, string nombreImpresora, int alturaLinea, int veces, TipoImpresion tipo, int numeroImpresora = 1)
+        public static async Task ImprimirTicketAsync(string codigo, string nombreImpresora, int alturaLinea, int veces, TipoImpresion tipo, int numeroImpresora = 1)
         {
             try
             {
@@ -35,13 +36,13 @@ namespace AsadorMoron.Managers
                     {
                         case TipoImpresion.Normal:
                         case TipoImpresion.Mesa:
-                            printer.ImprimirTicketPedido(alturaLinea);
+                            await printer.ImprimirTicketPedidoAsync(alturaLinea);
                             break;
                         case TipoImpresion.Comanda:
-                            printer.ImprimirTicketComanda(numeroImpresora);
+                            await printer.ImprimirTicketComandaAsync(numeroImpresora);
                             break;
                         default:
-                            printer.ImprimirTicketPedido(alturaLinea);
+                            await printer.ImprimirTicketPedidoAsync(alturaLinea);
                             break;
                     }
 

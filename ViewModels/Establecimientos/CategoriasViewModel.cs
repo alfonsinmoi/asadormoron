@@ -22,7 +22,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
         {
             App.DAUtil.EnTimer = false;
             _establecimiento = (Establecimiento)navigationData;
-            ListadoCategorias = ResponseServiceWS.getListadoCategorias(_establecimiento.idEstablecimiento);
+            ListadoCategorias = await Task.Run(() => ResponseServiceWS.getListadoCategorias(_establecimiento.idEstablecimiento));
 
             await base.InitializeAsync(navigationData).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() => { App.userdialog.HideLoading(); }));
         }

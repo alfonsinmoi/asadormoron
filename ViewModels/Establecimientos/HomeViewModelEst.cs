@@ -60,64 +60,25 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 AceptaEncargos = false;
                 VerSoloHoy = false;
                 TieneLocal = false;
-                foreach (Establecimiento es in App.DAUtil.Usuario.establecimientos)
-                {
-                    if (es.configuracion == null)
-                        es.configuracion = ResponseServiceWS.getConfiguracionEstablecimiento(es.idEstablecimiento);
-
-                    nombreImpresora = es.configuracion.nombreImpresora;
-                    nombreImpresora2 = es.configuracion.nombreImpresora2;
-                    nombreImpresora3 = es.configuracion.nombreImpresora3;
-                    nombreImpresora4 = es.configuracion.nombreImpresora4;
-                    nombreImpresora5 = es.configuracion.nombreImpresora5;
-                    nombreImpresora6 = es.configuracion.nombreImpresora6;
-                    nombreImpresora7 = es.configuracion.nombreImpresora7;
-                    nombreImpresora8 = es.configuracion.nombreImpresora8;
-                    nombreImpresora9 = es.configuracion.nombreImpresora9;
-                    nombreImpresora10 = es.configuracion.nombreImpresora10;
-                    alturaLinea = es.configuracion.alturaLineaImpresora;
-
-                    if (es.configuracion.visibilidadHoras == 0)
-                    {
-                        VisibleFechaEntrega = true;
-                        VisibleFechaPedido = false;
-                        visibleDosFechas = false;
-                    }
-                    else if (es.configuracion.visibilidadHoras == 1)
-                    {
-                        VisibleFechaEntrega = false;
-                        VisibleFechaPedido = true;
-                        visibleDosFechas = false;
-                    }
-                    else if (es.configuracion.visibilidadHoras == 2)
-                    {
-                        VisibleFechaEntrega = false;
-                        VisibleFechaPedido = false;
-                        visibleDosFechas = true;
-                    }
-                }
                 VisibleMulti = App.DAUtil.Usuario.establecimientos.Count > 1;
                 if (VisibleMulti)
                     TextoMulti = "Establecimiento activo: " + App.EstActual.textoMulti;
                 Preferences.Set("idGrupo", 1);
                 Preferences.Set("idPueblo", 1);
-                if (App.userdialog == null)
-                {
-                    try { dialogHomeAdmin.ShowLoading(AppResources.Cargando, MaskType.Black); } catch (Exception) { }
-                }
                 App.EstActual = App.MiEst;
                 App.DAUtil.EstoyenHome = true;
                 App.DAUtil.EnTimer = true;
                 ListadoRepartidores = new ObservableCollection<RepartidorModel>(App.DAUtil.GetRepartidores().Where(p => p.activo == 1 && p.idPueblo == App.DAUtil.Usuario.idPueblo).ToList());
                 IsVisibleRepartidores = ListadoRepartidores.Count > 0;
-                await initTimer();
+
+                // Cargar configs, pedidos y contador en segundo plano sin bloquear la UI
+                _ = CargarConfigsYPedidosAsync();
+                _ = CargarContadorPollosAsync();
+
                 App.timer = new System.Timers.Timer();
                 App.timer.Interval = 5000;
                 App.timer.Elapsed += _timer_Elapsed;
                 App.timer.Start();
-
-                // Cargar contador de pollos asados
-                _ = CargarContadorPollosAsync();
 
                 await base.InitializeAsync(navigationData).ContinueWith(task => MainThread.BeginInvokeOnMainThread(() =>
                 {
@@ -386,6 +347,60 @@ namespace AsadorMoron.ViewModels.Establecimientos
 
         #region Funciones
 
+        private async Task CargarConfigsYPedidosAsync()
+        {
+            try
+            {
+                var configTasks = App.DAUtil.Usuario.establecimientos
+                    .Where(es => es.configuracion == null)
+                    .Select(async es => {
+                        es.configuracion = await App.AsyncService.GetConfiguracionEstablecimientoAsync(es.idEstablecimiento);
+                        return es;
+                    });
+                await Task.WhenAll(configTasks);
+
+                foreach (Establecimiento es in App.DAUtil.Usuario.establecimientos)
+                {
+                    nombreImpresora = es.configuracion.nombreImpresora;
+                    nombreImpresora2 = es.configuracion.nombreImpresora2;
+                    nombreImpresora3 = es.configuracion.nombreImpresora3;
+                    nombreImpresora4 = es.configuracion.nombreImpresora4;
+                    nombreImpresora5 = es.configuracion.nombreImpresora5;
+                    nombreImpresora6 = es.configuracion.nombreImpresora6;
+                    nombreImpresora7 = es.configuracion.nombreImpresora7;
+                    nombreImpresora8 = es.configuracion.nombreImpresora8;
+                    nombreImpresora9 = es.configuracion.nombreImpresora9;
+                    nombreImpresora10 = es.configuracion.nombreImpresora10;
+                    alturaLinea = es.configuracion.alturaLineaImpresora;
+
+                    if (es.configuracion.visibilidadHoras == 0)
+                    {
+                        VisibleFechaEntrega = true;
+                        VisibleFechaPedido = false;
+                        VisibleDosFechas = false;
+                    }
+                    else if (es.configuracion.visibilidadHoras == 1)
+                    {
+                        VisibleFechaEntrega = false;
+                        VisibleFechaPedido = true;
+                        VisibleDosFechas = false;
+                    }
+                    else if (es.configuracion.visibilidadHoras == 2)
+                    {
+                        VisibleFechaEntrega = false;
+                        VisibleFechaPedido = false;
+                        VisibleDosFechas = true;
+                    }
+                }
+
+                await initTimer();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[HomeViewModelEst] Error cargando configs/pedidos: {ex.Message}");
+            }
+        }
+
         private async Task PlaySoundAsync(string soundFile)
         {
             try
@@ -501,14 +516,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 // 
             }
         }
-        private void InfoUsuarioPedido(object obj)
+        private async void InfoUsuarioPedido(object obj)
         {
             try
             {
                 if (MopupService.Instance.PopupStack.Count() == 0)
                 {
                     string cod = (string)obj;
-                    CabeceraPedido c2 = ResponseServiceWS.TraePedidoPorCodigo(cod);
+                    CabeceraPedido c2 = await App.AsyncService.TraePedidoPorCodigoAsync(cod);
                     ZonaModel z = App.DAUtil.getZonas().Find(p => p.idZona == c2.idZona);
                     if (z != null)
                         c2.zona = z.nombre;
@@ -582,14 +597,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
 
                                         if (item.idRepartidor != 0)
                                         {
-                                            string tokenUser = App.ResponseWS.getTokenRepartidor(item.idRepartidor);
-                                            App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido En proceso: " + item.codigoPedido, tokenUser);
+                                            string tokenUser = await App.ResponseWS.getTokenRepartidor(item.idRepartidor);
+                                            await App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido En proceso: " + item.codigoPedido, tokenUser);
                                         }
                                         else
                                         {
-                                            List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(item.idEstablecimiento);
+                                            List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(item.idEstablecimiento);
                                             foreach (TokensModel to in tokens2)
-                                                App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido en proceso: " + item.codigoPedido, to.token);
+                                                await App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido en proceso: " + item.codigoPedido, to.token);
                                         }
                                     }
                                 }
@@ -617,7 +632,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                             {
                                 foreach (var item in toBeUpdated)
                                 {
-                                    Listado.Where(p => p.idPedido == item.idPedido).ToList().ForEach(x =>
+                                    Listado.Where(p => p.idPedido == item.idPedido).ToList().ForEach(async x =>
                                     {
                                         x.idEstadoPedido = item.idEstadoPedido;
                                         x.estadoPedido = item.estadoPedido;
@@ -632,19 +647,19 @@ namespace AsadorMoron.ViewModels.Establecimientos
                                                 Print(item.codigoPedido, TipoImpresion.Normal);
 
                                                 // Cambiar estado a 3 en servidor Y localmente para evitar doble impresión
-                                                App.ResponseWS.cambiaEstadoPedido(item.idPedido, 3);
+                                                await App.ResponseWS.cambiaEstadoPedido(item.idPedido, 3);
                                                 x.idEstadoPedido = 3;
 
                                                 if (item.idRepartidor != 0)
                                                 {
-                                                    string tokenUser = App.ResponseWS.getTokenRepartidor(item.idRepartidor);
-                                                    App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido En proceso: " + item.codigoPedido, tokenUser);
+                                                    string tokenUser = await App.ResponseWS.getTokenRepartidor(item.idRepartidor);
+                                                    await App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido En proceso: " + item.codigoPedido, tokenUser);
                                                 }
                                                 else
                                                 {
-                                                    List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(item.idEstablecimiento);
+                                                    List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(item.idEstablecimiento);
                                                     foreach (TokensModel to in tokens2)
-                                                        App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido en proceso: " + item.codigoPedido, to.token);
+                                                        await App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido en proceso: " + item.codigoPedido, to.token);
                                                 }
                                                 break;
                                             case (int)EstadoPedido.PorRecoger:
@@ -686,25 +701,25 @@ namespace AsadorMoron.ViewModels.Establecimientos
         {
             if (!string.IsNullOrEmpty(mensajeAdmin))
             {
-                List<TokensModel> tokens = App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
+                List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.EstActual.idPueblo);
                 foreach (TokensModel to in tokens)
                     await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeAdmin, to.token);
             }
             if (!string.IsNullOrEmpty(mensajeUsuario))
             {
-                string tokenUser = App.ResponseWS.getTokenUsuario(c.idUsuario);
+                string tokenUser = await App.ResponseWS.getTokenUsuario(c.idUsuario);
                 await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeUsuario, tokenUser);
             }
             if (!string.IsNullOrEmpty(mensajeRepartidor))
             {
                 if (c.idRepartidor != 0)
                 {
-                    string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                    string tokenUser = await App.ResponseWS.getTokenRepartidor(c.idRepartidor);
                     await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, tokenUser);
                 }
                 else
                 {
-                    List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                    List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                     foreach (TokensModel to in tokens2)
                         await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, mensajeRepartidor, to.token); ;
                 }
@@ -738,14 +753,14 @@ namespace AsadorMoron.ViewModels.Establecimientos
 
                                 if (item.idRepartidor != 0)
                                 {
-                                    string tokenUser = App.ResponseWS.getTokenRepartidor(item.idRepartidor);
-                                    App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido En proceso: " + item.codigoPedido, tokenUser);
+                                    string tokenUser = await App.ResponseWS.getTokenRepartidor(item.idRepartidor);
+                                    await App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido En proceso: " + item.codigoPedido, tokenUser);
                                 }
                                 else
                                 {
-                                    List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(item.idEstablecimiento);
+                                    List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(item.idEstablecimiento);
                                     foreach (TokensModel to in tokens2)
-                                        App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido en proceso: " + item.codigoPedido, to.token);
+                                        await App.ResponseWS.enviaNotificacion(item.nombreEstablecimiento, "Pedido en proceso: " + item.codigoPedido, to.token);
                                 }
                                 break;
                             case (int)EstadoPedido.PorRecoger:
@@ -787,25 +802,25 @@ namespace AsadorMoron.ViewModels.Establecimientos
             try
             {
                 if (!string.IsNullOrEmpty(nombreImpresora))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora, alturaLinea, veces, tipo, 1);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora, alturaLinea, veces, tipo, 1);
                 if (!string.IsNullOrEmpty(nombreImpresora2))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora2, alturaLinea, veces, tipo, 2);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora2, alturaLinea, veces, tipo, 2);
                 if (!string.IsNullOrEmpty(nombreImpresora3))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora3, alturaLinea, veces, tipo, 3);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora3, alturaLinea, veces, tipo, 3);
                 if (!string.IsNullOrEmpty(nombreImpresora4))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora4, alturaLinea, veces, tipo, 4);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora4, alturaLinea, veces, tipo, 4);
                 if (!string.IsNullOrEmpty(nombreImpresora5))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora5, alturaLinea, veces, tipo, 5);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora5, alturaLinea, veces, tipo, 5);
                 if (!string.IsNullOrEmpty(nombreImpresora6))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora6, alturaLinea, veces, tipo, 6);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora6, alturaLinea, veces, tipo, 6);
                 if (!string.IsNullOrEmpty(nombreImpresora7))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora7, alturaLinea, veces, tipo, 7);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora7, alturaLinea, veces, tipo, 7);
                 if (!string.IsNullOrEmpty(nombreImpresora8))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora8, alturaLinea, veces, tipo, 8);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora8, alturaLinea, veces, tipo, 8);
                 if (!string.IsNullOrEmpty(nombreImpresora9))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora9, alturaLinea, veces, tipo, 9);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora9, alturaLinea, veces, tipo, 9);
                 if (!string.IsNullOrEmpty(nombreImpresora10))
-                    ManagerImpresora.ImprimirTicket(codigo, nombreImpresora10, alturaLinea, veces, tipo, 10);
+                    await ManagerImpresora.ImprimirTicketAsync(codigo, nombreImpresora10, alturaLinea, veces, tipo, 10);
 
             }
             catch (Exception ex)
@@ -866,7 +881,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     {
                         App.userdialog.ShowLoading("Cerrando pedido...", MaskType.Black);
 
-                        CabeceraPedido c = await Task.Run(() => ResponseServiceWS.TraePedidoPorCodigo(idPedido));
+                        CabeceraPedido c = await App.AsyncService.TraePedidoPorCodigoAsync(idPedido);
                         if (c != null)
                         {
                             c.opciones = false;
@@ -897,7 +912,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     {
                         App.userdialog.ShowLoading("Anulando pedido...", MaskType.Black);
 
-                        CabeceraPedido c = await Task.Run(() => ResponseServiceWS.TraePedidoPorCodigo(idPedido));
+                        CabeceraPedido c = await App.AsyncService.TraePedidoPorCodigoAsync(idPedido);
                         if (c != null)
                         {
                             c.opciones = false;
@@ -922,24 +937,24 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 5))
                 {
                     // Enviar notificaciones en segundo plano para no bloquear
-                    _ = Task.Run(() =>
+                    _ = Task.Run(async () =>
                     {
                         try
                         {
-                            List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                            List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
                             foreach (TokensModel to in tokens3)
-                                App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Cancelado: " + c.codigoPedido, to.token);
+                                await App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Cancelado: " + c.codigoPedido, to.token);
 
                             if (c.idRepartidor != 0)
                             {
-                                string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
-                                App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, tokenUser);
+                                string tokenUser = await App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                                await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, tokenUser);
                             }
                             else
                             {
-                                List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                                List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                                 foreach (TokensModel to in tokens2)
-                                    App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, to.token);
+                                    await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Cancelado: " + c.codigoPedido, to.token);
                             }
                         }
                         catch (Exception ex)
@@ -965,24 +980,24 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 if (await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 99))
                 {
                     // Enviar notificaciones en segundo plano para no bloquear
-                    _ = Task.Run(() =>
+                    _ = Task.Run(async () =>
                     {
                         try
                         {
-                            List<TokensModel> tokens3 = App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                            List<TokensModel> tokens3 = await App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
                             foreach (TokensModel to in tokens3)
-                                App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Anulado: " + c.codigoPedido, to.token);
+                                await App.ResponseWS.enviaNotificacion(AppResources.App, "Pedido Anulado: " + c.codigoPedido, to.token);
 
                             if (c.idRepartidor != 0)
                             {
-                                string tokenUser = App.ResponseWS.getTokenRepartidor(c.idRepartidor);
-                                App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, tokenUser);
+                                string tokenUser = await App.ResponseWS.getTokenRepartidor(c.idRepartidor);
+                                await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, tokenUser);
                             }
                             else
                             {
-                                List<TokensModel> tokens2 = App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
+                                List<TokensModel> tokens2 = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                                 foreach (TokensModel to in tokens2)
-                                    App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, to.token);
+                                    await App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "Pedido Anulado: " + c.codigoPedido, to.token);
                             }
                         }
                         catch (Exception ex)
