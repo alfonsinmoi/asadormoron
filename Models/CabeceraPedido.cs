@@ -148,6 +148,7 @@ namespace AsadorMoron.Models
             }
         }
         public int tipo { get; set; }
+        public int numeroDia { get; set; }
         private int IdEstadoPedido;
         public int idEstadoPedido
         {

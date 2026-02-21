@@ -300,6 +300,7 @@ namespace AsadorMoron.Services
             cabeceraPedido.emailUsuario = item.emailUsuario;
             cabeceraPedido.idRepartidor = item.idRepartidor;
             cabeceraPedido.FotoRepartidor = item.fotoRepartidor;
+            cabeceraPedido.numeroDia = item.numeroDia;
             try
             {
                 cabeceraPedido.precioTotalPedido = item.precioTotalPedido;
@@ -356,6 +357,7 @@ namespace AsadorMoron.Services
             cabeceraPedido.emailUsuario = item.emailUsuario;
             cabeceraPedido.idRepartidor = item.idRepartidor;
             cabeceraPedido.FotoRepartidor = item.fotoRepartidor;
+            cabeceraPedido.numeroDia = item.numeroDia;
             if (!string.IsNullOrEmpty(cabeceraPedido.comentario))
                 cabeceraPedido.tieneComentario = 1;
             else
@@ -7019,6 +7021,29 @@ namespace AsadorMoron.Services
                 Debug.WriteLine($"[GetContadorPollosAsync] Stack: {ex.StackTrace}");
             }
             return new ContadorPollosModel { idEstablecimiento = idEstablecimiento, cantidad = 0, fecha = DateTime.Now.ToString("yyyy-MM-dd") };
+        }
+
+        /// <summary>
+        /// Obtiene el contador diario de pedidos de un establecimiento
+        /// </summary>
+        public static async Task<int> GetContadorPedidosDiaAsync(int idEstablecimiento)
+        {
+            try
+            {
+                string requestUri = App.DAUtil.miURL + "pedidos.php?contadorDiario&idEstablecimiento=" + idEstablecimiento;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string resultJSON = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(resultJSON))
+                {
+                    var result = JsonConvert.DeserializeObject<dynamic>(resultJSON);
+                    return (int)result.total;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[GetContadorPedidosDiaAsync] Error: {ex.Message}");
+            }
+            return 0;
         }
 
         /// <summary>

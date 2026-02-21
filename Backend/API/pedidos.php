@@ -65,6 +65,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     header("Content-Type: application/json; charset=utf-8");
 
     // -------------------------------------------------------------------------
+    // Contador diario de pedidos por establecimiento
+    // -------------------------------------------------------------------------
+    if (isset($_GET['contadorDiario']) && isset($_GET['idEstablecimiento'])) {
+        $idEst = getIntParam('idEstablecimiento');
+        if ($idEst <= 0) {
+            header("HTTP/1.1 400 Bad Request");
+            echo json_encode(['error' => 'ID de establecimiento invalido']);
+            exit();
+        }
+        $sql = $dbConn->prepare("SELECT COUNT(*) as total FROM qo_pedidos WHERE idEstablecimiento = :idEst AND DATE(horaPedido) = CURDATE() AND anulado = 0");
+        $sql->bindValue(':idEst', $idEst, PDO::PARAM_INT);
+        $sql->execute();
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+        header("HTTP/1.1 200 OK");
+        echo json_encode(['total' => (int)$result['total'], 'fecha' => date('Y-m-d'), 'idEstablecimiento' => $idEst]);
+        exit();
+    }
+
+    // -------------------------------------------------------------------------
     // Pedidos por establecimiento
     // -------------------------------------------------------------------------
     if (isset($_GET['idEstablecimiento'])) {
@@ -94,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             COALESCE(NULLIF(p.idZona, 0), u.idZona) as idZona,
             u.email as emailUsuario, u.telefono as telefonoUsuario,
             p.nuevoPedido, esta.nombre as nombreEstablecimiento,
-            p.id as idPedido, p.codigo as codigoPedido, p.idUsuario, p.idEstablecimiento,
+            p.id as idPedido, p.codigo as codigoPedido, p.numeroDia, p.idUsuario, p.idEstablecimiento,
             DATE_ADD(COALESCE(NULLIF(p.horaEntrega, '0000-00-00 00:00:00'), p.horaPedido), INTERVAL conf.tiempoEntrega MINUTE) as horaPedido,
             p.comentario, p.estado as idEstadoPedido, est.nombre as estadoPedido,
             COALESCE(d.total, 0) as precioTotalPedido,
@@ -685,7 +704,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             u.email as emailUsuario, u.telefono as telefonoUsuario,
             p.nuevoPedido, if (isnull(cat.tipo),0,cat.tipo) as tipoProducto,
             esta.nombre as nombreEstablecimiento,
-            p.id as idPedido, p.codigo as codigoPedido, p.idUsuario, p.idEstablecimiento,
+            p.id as idPedido, p.codigo as codigoPedido, p.numeroDia, p.idUsuario, p.idEstablecimiento,
             d.id as idDetalle, d.comentario as comentarioProducto,
             p.horaPedido as horaPedido, d.idProducto,
             if(isnull(pr.nombre),if (d.tipo=1,'GASTOS DE ENVÍO',if(d.tipo=3,'DESCUENTO',d.concepto)),if(isnull(d.concepto),pr.nombre,d.concepto)) as nombreProducto,
@@ -1014,14 +1033,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $miEstado = isset($_GET['estado']) ? intval($_GET['estado']) : 3;
         $miTipoPago = $input['tipoPago'] ?? 'Efectivo';
 
-        $sql = "INSERT INTO `qo_pedidos`(nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado)
-                VALUES (:nombreUsuario, :tipoPago, :idCuenta, :mesa, :idZonaEstablecimiento, :zonaEstablecimiento, :tipoVenta, :codigo, :idEstablecimiento, now(), :idUsuario, :estado, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0)";
+        // Calcular numeroDia
+        $idEstAuto = intval($input['idEstablecimiento'] ?? 0);
+        $sqlNum = $dbConn->prepare("SELECT COALESCE(MAX(numeroDia), 0) + 1 as nextNum FROM qo_pedidos WHERE idEstablecimiento = :idEst AND DATE(horaPedido) = CURDATE() AND anulado = 0");
+        $sqlNum->bindValue(':idEst', $idEstAuto, PDO::PARAM_INT);
+        $sqlNum->execute();
+        $numDia = (int)$sqlNum->fetch(PDO::FETCH_ASSOC)['nextNum'];
+
+        $sql = "INSERT INTO `qo_pedidos`(nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado, numeroDia)
+                VALUES (:nombreUsuario, :tipoPago, :idCuenta, :mesa, :idZonaEstablecimiento, :zonaEstablecimiento, :tipoVenta, :codigo, :idEstablecimiento, now(), :idUsuario, :estado, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0, :numeroDia)";
         $statement = $dbConn->prepare($sql);
         $statement->bindValue(':codigo', $input['codigo'] ?? '');
         $statement->bindValue(':nombreUsuario', ($input['nombre'] ?? '') . ' ' . ($input['apellidos'] ?? ''));
         $statement->bindValue(':tipo', 1, PDO::PARAM_INT);
         $statement->bindValue(':tipoPago', $miTipoPago);
-        $statement->bindValue(':idEstablecimiento', intval($input['idEstablecimiento'] ?? 0), PDO::PARAM_INT);
+        $statement->bindValue(':idEstablecimiento', $idEstAuto, PDO::PARAM_INT);
         $statement->bindValue(':idUsuario', $idUsuario, PDO::PARAM_INT);
         $statement->bindValue(':idZona', $idZona, PDO::PARAM_INT);
         $statement->bindValue(':transaccion', '');
@@ -1035,6 +1061,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $statement->bindValue(':idCuenta', 0, PDO::PARAM_INT);
         $statement->bindValue(':idZonaEstablecimiento', 0, PDO::PARAM_INT);
         $statement->bindValue(':zonaEstablecimiento', '');
+        $statement->bindValue(':numeroDia', $numDia, PDO::PARAM_INT);
         $statement->execute();
         $postId = $dbConn->lastInsertId();
 
@@ -1095,14 +1122,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $miTipoPago = $input['tipoPago'] ?? 'Efectivo';
 
-        $sql = "INSERT INTO `qo_pedidos`(nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado)
-                VALUES (:nombreUsuario, :tipoPago, :idCuenta, :mesa, :idZonaEstablecimiento, :zonaEstablecimiento, :tipoVenta, :codigo, :idEstablecimiento, now(), :idUsuario, :estado, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0)";
+        // Calcular numeroDia
+        $idEstAuto2 = intval($input['idEstablecimiento'] ?? 0);
+        $sqlNum = $dbConn->prepare("SELECT COALESCE(MAX(numeroDia), 0) + 1 as nextNum FROM qo_pedidos WHERE idEstablecimiento = :idEst AND DATE(horaPedido) = CURDATE() AND anulado = 0");
+        $sqlNum->bindValue(':idEst', $idEstAuto2, PDO::PARAM_INT);
+        $sqlNum->execute();
+        $numDia = (int)$sqlNum->fetch(PDO::FETCH_ASSOC)['nextNum'];
+
+        $sql = "INSERT INTO `qo_pedidos`(nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado, numeroDia)
+                VALUES (:nombreUsuario, :tipoPago, :idCuenta, :mesa, :idZonaEstablecimiento, :zonaEstablecimiento, :tipoVenta, :codigo, :idEstablecimiento, now(), :idUsuario, :estado, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0, :numeroDia)";
         $statement = $dbConn->prepare($sql);
         $statement->bindValue(':codigo', $input['codigo'] ?? '');
         $statement->bindValue(':nombreUsuario', ($input['nombre'] ?? '') . ' ' . ($input['apellidos'] ?? ''));
         $statement->bindValue(':tipo', 1, PDO::PARAM_INT);
         $statement->bindValue(':tipoPago', $miTipoPago);
-        $statement->bindValue(':idEstablecimiento', intval($input['idEstablecimiento'] ?? 0), PDO::PARAM_INT);
+        $statement->bindValue(':idEstablecimiento', $idEstAuto2, PDO::PARAM_INT);
         $statement->bindValue(':idUsuario', $idUsuario, PDO::PARAM_INT);
         $statement->bindValue(':idZona', $idZona, PDO::PARAM_INT);
         $statement->bindValue(':transaccion', '');
@@ -1116,6 +1150,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $statement->bindValue(':idCuenta', 0, PDO::PARAM_INT);
         $statement->bindValue(':idZonaEstablecimiento', 0, PDO::PARAM_INT);
         $statement->bindValue(':zonaEstablecimiento', '');
+        $statement->bindValue(':numeroDia', $numDia, PDO::PARAM_INT);
         $statement->execute();
         $postId = $dbConn->lastInsertId();
 
@@ -1157,8 +1192,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_GET['autoPedido3'])) {
         $idRepartidor = getIntParam('idRepartidor');
 
-        $sql = "INSERT INTO `qo_pedidos`(completo, nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado, repartidor, idRepartidor)
-                VALUES (1, :nombreUsuario, 'Efectivo', 0, 0, 0, '', 'Envío', :codigo, 67, now(), :idUsuario, 4, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0, 1, :idRepartidor)";
+        // Calcular numeroDia
+        $idEstAuto3 = 67;
+        $sqlNum = $dbConn->prepare("SELECT COALESCE(MAX(numeroDia), 0) + 1 as nextNum FROM qo_pedidos WHERE idEstablecimiento = :idEst AND DATE(horaPedido) = CURDATE() AND anulado = 0");
+        $sqlNum->bindValue(':idEst', $idEstAuto3, PDO::PARAM_INT);
+        $sqlNum->execute();
+        $numDia = (int)$sqlNum->fetch(PDO::FETCH_ASSOC)['nextNum'];
+
+        $sql = "INSERT INTO `qo_pedidos`(completo, nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado, repartidor, idRepartidor, numeroDia)
+                VALUES (1, :nombreUsuario, 'Efectivo', 0, 0, 0, '', 'Envío', :codigo, 67, now(), :idUsuario, 4, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0, 1, :idRepartidor, :numeroDia)";
         $statement = $dbConn->prepare($sql);
         $statement->bindValue(':nombreUsuario', 'Auto Pedido');
         $statement->bindValue(':codigo', $input['codigo'] ?? '');
@@ -1171,6 +1213,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $statement->bindValue(':comentario', $input['comentario'] ?? '');
         $statement->bindValue(':horaEntrega', $input['hora'] ?? null);
         $statement->bindValue(':idRepartidor', $idRepartidor, PDO::PARAM_INT);
+        $statement->bindValue(':numeroDia', $numDia, PDO::PARAM_INT);
         $statement->execute();
         $postId = $dbConn->lastInsertId();
 
@@ -1196,13 +1239,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // -------------------------------------------------------------------------
     // Pedido normal (con líneas)
     // -------------------------------------------------------------------------
-    $sql = "INSERT INTO `qo_pedidos`(nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado)
-            VALUES ((SELECT concat(nombre,' ',apellidos) from qo_users where id=:idUsuario), :tipoPago, :idCuenta, :mesa, :idZonaEstablecimiento, :zonaEstablecimiento, :tipoVenta, :codigo, :idEstablecimiento, now(), :idUsuario2, 2, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0)";
+    // Calcular numeroDia (contador secuencial diario)
+    $idEstPedido = intval($input['idEstablecimiento'] ?? 0);
+    $sqlNum = $dbConn->prepare("SELECT COALESCE(MAX(numeroDia), 0) + 1 as nextNum FROM qo_pedidos WHERE idEstablecimiento = :idEst AND DATE(horaPedido) = CURDATE() AND anulado = 0");
+    $sqlNum->bindValue(':idEst', $idEstPedido, PDO::PARAM_INT);
+    $sqlNum->execute();
+    $numDia = (int)$sqlNum->fetch(PDO::FETCH_ASSOC)['nextNum'];
+
+    $sql = "INSERT INTO `qo_pedidos`(nombreUsuario, tipoPago, idCuenta, mesa, idZonaEstablecimiento, zonaEstablecimiento, tipoVenta, codigo, idEstablecimiento, horaPedido, idUsuario, estado, idZona, nuevoPedido, direccion, comentario, horaEntrega, transaccion, pagado, tipo, valorado, numeroDia)
+            VALUES ((SELECT concat(nombre,' ',apellidos) from qo_users where id=:idUsuario), :tipoPago, :idCuenta, :mesa, :idZonaEstablecimiento, :zonaEstablecimiento, :tipoVenta, :codigo, :idEstablecimiento, now(), :idUsuario2, 2, :idZona, 1, :direccion, :comentario, :horaEntrega, :transaccion, :pagado, :tipo, 0, :numeroDia)";
     $statement = $dbConn->prepare($sql);
     $statement->bindValue(':codigo', $input['codigoPedido'] ?? '');
     $statement->bindValue(':tipo', intval($input['tipo'] ?? 1), PDO::PARAM_INT);
     $statement->bindValue(':tipoPago', $input['tipoPago'] ?? 'Efectivo');
-    $statement->bindValue(':idEstablecimiento', intval($input['idEstablecimiento'] ?? 0), PDO::PARAM_INT);
+    $statement->bindValue(':idEstablecimiento', $idEstPedido, PDO::PARAM_INT);
     $statement->bindValue(':idUsuario', intval($input['idUsuario'] ?? 0), PDO::PARAM_INT);
     $statement->bindValue(':idUsuario2', intval($input['idUsuario'] ?? 0), PDO::PARAM_INT);
     $statement->bindValue(':idZona', intval($input['idZona'] ?? 0), PDO::PARAM_INT);
@@ -1216,6 +1266,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $statement->bindValue(':idCuenta', intval($input['idCuenta'] ?? 0), PDO::PARAM_INT);
     $statement->bindValue(':idZonaEstablecimiento', intval($input['idZonaEstablecimiento'] ?? 0), PDO::PARAM_INT);
     $statement->bindValue(':zonaEstablecimiento', $input['zonaEstablecimiento'] ?? '');
+    $statement->bindValue(':numeroDia', $numDia, PDO::PARAM_INT);
     $statement->execute();
     $postId = $dbConn->lastInsertId();
 

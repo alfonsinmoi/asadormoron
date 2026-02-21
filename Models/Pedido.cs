@@ -63,6 +63,7 @@ namespace AsadorMoron.Models
         public int idRepartidor { get; set; }
         public string fotoRepartidor { get; set; }
         public int tipo { get; set; }
+        public int numeroDia { get; set; }
 
     }
 }

@@ -153,6 +153,8 @@ namespace AsadorMoron.Print
             AlignLeft();
             DoubleWidth2();
             Append($"{AppResources.Pedido.ToUpper()}: {cod}");
+            if (c2.numeroDia > 0)
+                Append($"N. DIA: {c2.numeroDia}");
             Append($"FECHA: {c2.horaPedido.ToString("dd/MM/yyyy")}");
             Append($"H. PEDIDO: {c2.horaPedido.ToString("HH:mm")}");
             if (c2.fechaEntrega != null)
@@ -373,6 +375,8 @@ namespace AsadorMoron.Print
                     NewLine();
                     AlignLeft();
                     ExpandedMode($"{AppResources.Pedido.ToUpper()}: {cod}");
+                    if (c2.numeroDia > 0)
+                        Font($"N. DIA: {c2.numeroDia}", Fonts.FontB);
                     Font($"{AppResources.Fecha.ToUpper()}: {c2.horaPedido.ToString("dd/MM/yyyy HH:mm:ss")}", Fonts.FontB);
 
                     if (!string.IsNullOrEmpty(c2.comentario.Trim()))

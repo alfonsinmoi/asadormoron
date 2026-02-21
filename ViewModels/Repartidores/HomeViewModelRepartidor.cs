@@ -159,6 +159,21 @@ namespace AsadorMoron.ViewModels.Repartidores
                 OnPropertyChanged(nameof(LineaPedidoAdd));
             }
         }
+
+        // Contador de pedidos del día
+        private int _contadorPedidosDia;
+        public int ContadorPedidosDia
+        {
+            get => _contadorPedidosDia;
+            set
+            {
+                if (_contadorPedidosDia != value)
+                {
+                    _contadorPedidosDia = value;
+                    OnPropertyChanged(nameof(ContadorPedidosDia));
+                }
+            }
+        }
         #endregion
         public HomeViewModelRepartidor()
         {
@@ -183,6 +198,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                 App.DAUtil.EnTimer = true;
                 _ = App.AsyncService.GetConfiguracionAdminAsync(); // Fire-and-forget
                 await initTimer();
+                _ = CargarContadorPedidosDiaAsync();
                 if (DeviceInfo.Platform.ToString().Equals("WinUI"))
                 {
 
@@ -192,6 +208,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                         MainThread.BeginInvokeOnMainThread(async () =>
                         {
                             await actualizaPedidos();
+                            await CargarContadorPedidosDiaAsync();
                         });
 
                         return App.DAUtil.EnTimer; // runs again, or false to stop
@@ -755,6 +772,20 @@ namespace AsadorMoron.ViewModels.Repartidores
             catch (Exception ex)
             {
                 // 
+            }
+        }
+
+        private async Task CargarContadorPedidosDiaAsync()
+        {
+            try
+            {
+                if (App.EstActual == null) return;
+                var total = await ResponseServiceWS.GetContadorPedidosDiaAsync(App.EstActual.idEstablecimiento);
+                MainThread.BeginInvokeOnMainThread(() => ContadorPedidosDia = total);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error cargando contador pedidos dia: {ex.Message}");
             }
         }
 

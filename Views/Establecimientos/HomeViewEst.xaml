@@ -80,6 +80,26 @@
                                    HorizontalOptions="Center"
                                    VerticalOptions="Center"/>
                         </Border>
+                        <!-- Badge pedidos del día -->
+                        <Border BackgroundColor="#2196F3"
+                                StrokeThickness="0"
+                                Padding="10,4"
+                                VerticalOptions="Center"
+                                Margin="4,0,0,0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Horizontal" Spacing="4">
+                                <Label Text="Hoy:"
+                                       FontFamily="Nunito"
+                                       FontSize="12"
+                                       TextColor="White"/>
+                                <Label Text="{Binding ContadorPedidosDia}"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="14"
+                                       TextColor="White"/>
+                            </StackLayout>
+                        </Border>
                     </StackLayout>
                     <Label Text="Establecimiento"
                            FontFamily="Nunito"
@@ -404,6 +424,21 @@
 
                                 <!-- Badges -->
                                 <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="6">
+                                    <!-- Badge Número del Día -->
+                                    <Border BackgroundColor="#2196F3"
+                                            StrokeThickness="0"
+                                            Padding="8,4"
+                                            IsVisible="{Binding numeroDia, Converter={StaticResource IntToBoolConverter}}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="6"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding numeroDia, StringFormat='#{0}'}"
+                                               FontFamily="Nunito_bold"
+                                               FontSize="12"
+                                               TextColor="White"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"/>
+                                    </Border>
                                     <!-- Badge Tipo Pago -->
                                     <Border BackgroundColor="#333333"
                                             StrokeThickness="0"

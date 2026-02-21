@@ -100,11 +100,34 @@
                              VerticalOptions="Center"
                              HorizontalOptions="Center"
                              Spacing="2">
-                    <Label Text="Mis Pedidos"
-                           FontFamily="Nunito_bold"
-                           FontSize="18"
-                           TextColor="#333333"
-                           HorizontalOptions="Center"/>
+                    <StackLayout Orientation="Horizontal"
+                                 Spacing="8"
+                                 HorizontalOptions="Center">
+                        <Label Text="Mis Pedidos"
+                               FontFamily="Nunito_bold"
+                               FontSize="18"
+                               TextColor="#333333"
+                               VerticalOptions="Center"/>
+                        <!-- Badge pedidos del día -->
+                        <Border BackgroundColor="#2196F3"
+                                StrokeThickness="0"
+                                Padding="10,4"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <StackLayout Orientation="Horizontal" Spacing="4">
+                                <Label Text="Hoy:"
+                                       FontFamily="Nunito"
+                                       FontSize="12"
+                                       TextColor="White"/>
+                                <Label Text="{Binding ContadorPedidosDia}"
+                                       FontFamily="Nunito_bold"
+                                       FontSize="14"
+                                       TextColor="White"/>
+                            </StackLayout>
+                        </Border>
+                    </StackLayout>
                     <Label Text="Repartidor"
                            FontFamily="Nunito"
                            FontSize="11"
@@ -332,20 +355,35 @@
                                                LineBreakMode="TailTruncation"/>
                                     </StackLayout>
 
-                                    <!-- Código Pedido -->
-                                    <Border Grid.Column="2"
-                                            BackgroundColor="{StaticResource RojoMarca}"
-                                            StrokeThickness="0"
-                                            Padding="10,6"
-                                            VerticalOptions="Center">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="8"/>
-                                        </Border.StrokeShape>
-                                        <Label Text="{Binding codigoPedido}"
-                                               FontFamily="Nunito_bold"
-                                               FontSize="14"
-                                               TextColor="White"/>
-                                    </Border>
+                                    <!-- Código Pedido + Número Día -->
+                                    <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalOptions="Center">
+                                        <!-- Badge Número del Día -->
+                                        <Border BackgroundColor="#2196F3"
+                                                StrokeThickness="0"
+                                                Padding="8,6"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding numeroDia, Converter={StaticResource IntToBoolConverter}}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding numeroDia, StringFormat='#{0}'}"
+                                                   FontFamily="Nunito_bold"
+                                                   FontSize="14"
+                                                   TextColor="White"/>
+                                        </Border>
+                                        <Border BackgroundColor="{StaticResource RojoMarca}"
+                                                StrokeThickness="0"
+                                                Padding="10,6"
+                                                VerticalOptions="Center">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding codigoPedido}"
+                                                   FontFamily="Nunito_bold"
+                                                   FontSize="14"
+                                                   TextColor="White"/>
+                                        </Border>
+                                    </StackLayout>
 
                                     <!-- Botón Acción -->
                                     <Border Grid.Column="3"

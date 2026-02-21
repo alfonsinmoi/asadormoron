@@ -102,8 +102,9 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 IsVisibleRepartidores = ListadoRepartidores.Count > 0;
                 await initTimer();
 
-                // Cargar contador de pollos
+                // Cargar contador de pollos y pedidos del día
                 _ = CargarContadorPollosAsync();
+                _ = CargarContadorPedidosDiaAsync();
 
                 App.DAUtil.Usuario.platform = DeviceInfo.Platform.ToString().ToLower();
                 App.DAUtil.Usuario.token = App.DAUtil.InstallId.ToString();
@@ -378,8 +379,37 @@ namespace AsadorMoron.ViewModels.Establecimientos
             }
         }
 
+        // Contador de pedidos del día
+        private int _contadorPedidosDia;
+        public int ContadorPedidosDia
+        {
+            get => _contadorPedidosDia;
+            set
+            {
+                if (_contadorPedidosDia != value)
+                {
+                    _contadorPedidosDia = value;
+                    OnPropertyChanged(nameof(ContadorPedidosDia));
+                }
+            }
+        }
+
         public ICommand SumarPolloCommand => new AsyncRelayCommand(SumarPolloAsync);
         public ICommand RestarPolloCommand => new AsyncRelayCommand(RestarPolloAsync);
+
+        private async Task CargarContadorPedidosDiaAsync()
+        {
+            try
+            {
+                if (App.EstActual == null) return;
+                var total = await ResponseServiceWS.GetContadorPedidosDiaAsync(App.EstActual.idEstablecimiento);
+                MainThread.BeginInvokeOnMainThread(() => ContadorPedidosDia = total);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error cargando contador pedidos dia: {ex.Message}");
+            }
+        }
 
         private async Task CargarContadorPollosAsync()
         {
@@ -693,10 +723,12 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         });
                     }
                 }
+                // Refrescar contador de pedidos del día
+                _ = CargarContadorPedidosDiaAsync();
             }
             catch (Exception ex)
             {
-                // 
+                //
             }
         }
         private async Task<bool> BotonExecute(int idPedido)

@@ -74,6 +74,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 // Cargar configs, pedidos y contador en segundo plano sin bloquear la UI
                 _ = CargarConfigsYPedidosAsync();
                 _ = CargarContadorPollosAsync();
+                _ = CargarContadorPedidosDiaAsync();
 
                 App.timer = new System.Timers.Timer();
                 App.timer.Interval = 5000;
@@ -343,6 +344,21 @@ namespace AsadorMoron.ViewModels.Establecimientos
                 }
             }
         }
+
+        // Contador de pedidos del día
+        private int contadorPedidosDia = 0;
+        public int ContadorPedidosDia
+        {
+            get { return contadorPedidosDia; }
+            set
+            {
+                if (contadorPedidosDia != value)
+                {
+                    contadorPedidosDia = value;
+                    OnPropertyChanged(nameof(ContadorPedidosDia));
+                }
+            }
+        }
         #endregion
 
         #region Funciones
@@ -454,6 +470,19 @@ namespace AsadorMoron.ViewModels.Establecimientos
             }
         }
 
+        private async Task CargarContadorPedidosDiaAsync()
+        {
+            try
+            {
+                if (App.EstActual == null) return;
+                ContadorPedidosDia = await ResponseServiceWS.GetContadorPedidosDiaAsync(App.EstActual.idEstablecimiento);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[HomeViewModelEst] Error cargando contador pedidos dia: {ex.Message}");
+            }
+        }
+
         private async Task SumarPolloAsync()
         {
             try
@@ -496,6 +525,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
             {
                 await actualizaPedidos();
                 await CargarContadorPollosAsync();
+                await CargarContadorPedidosDiaAsync();
                 Console.WriteLine(DateTime.Now);
             });
 
