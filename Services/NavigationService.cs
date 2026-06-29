@@ -332,6 +332,10 @@ namespace AsadorMoron.Services
             _mappings.Value.Add(typeof(DetalleArticuloNavidadViewModel), typeof(DetalleArticuloNavidadView));
             _mappings.Value.Add(typeof(ClientesViewModel), typeof(ClientesView));
             _mappings.Value.Add(typeof(DetalleClienteViewModel), typeof(DetalleClienteView));
+            // Agente de voz (Fase 4)
+            _mappings.Value.Add(typeof(LlamadasViewModelAdmin), typeof(LlamadasViewAdmin));
+            _mappings.Value.Add(typeof(DetalleLlamadaViewModelAdmin), typeof(DetalleLlamadaViewAdmin));
+            _mappings.Value.Add(typeof(DashboardAgenteViewModel), typeof(DashboardAgenteView));
             return _mappings;
         }
         public void LogOutApp(Type viewModelType, object parameter)

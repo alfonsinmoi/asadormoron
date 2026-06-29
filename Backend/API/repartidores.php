@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
       $sql->bindValue(':idUsuario', $_GET['idUsuario']);
       $sql->execute();
       header("HTTP/1.1 200 OK");
-      echo json_encode(  $sql->fetch(PDO::FETCH_ASSOC)  );
+      echo json_encode(  $sql->fetchAll(PDO::FETCH_ASSOC)  );
       exit();
 	  }else if (isset($_GET['idTokenRepartidor']))
     {

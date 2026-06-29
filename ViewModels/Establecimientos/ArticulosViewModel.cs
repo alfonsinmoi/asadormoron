@@ -71,7 +71,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                     int idArt = 0;
                     foreach (ArticuloModel p in lista)
                     {
-                        if (idArt != p.idArticulo)
+                        if (idArt != p.idArticulo && p.estado == 1)
                         {
                             idArt = p.idArticulo;
                             Comida co = new Comida();
@@ -296,7 +296,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         {
                             if (_categoria.id == p.idCategoria)
                             {
-                                if (idArt != p.idArticulo)
+                                if (idArt != p.idArticulo && p.estado == 1)
                                 {
                                     idArt = p.idArticulo;
                                     Comida co = new Comida();
@@ -317,7 +317,7 @@ namespace AsadorMoron.ViewModels.Establecimientos
                         }
                         else
                         {
-                            if (idArt != p.idArticulo)
+                            if (idArt != p.idArticulo && p.estado == 1)
                             {
                                 idArt = p.idArticulo;
                                 Comida co = new Comida();

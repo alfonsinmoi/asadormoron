@@ -158,7 +158,18 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20,0,0,20"/>
                                 </Border.StrokeShape>
-                                <ff:CachedImage Aspect="AspectFill" Source="{Binding articulo.imagen}" DownsampleToViewSize="True" LoadingPlaceholder="logo_producto.png" ErrorPlaceholder="logo_producto.png" CacheType="All" FadeAnimationEnabled="False"/>
+                                <Grid>
+                                    <ff:CachedImage Aspect="AspectFill" Source="{Binding articulo.imagen}" DownsampleToViewSize="True" LoadingPlaceholder="logo_producto.png" ErrorPlaceholder="logo_producto.png" CacheType="All" FadeAnimationEnabled="False"/>
+                                    <!-- Overlay oscuro cuando agotado -->
+                                    <BoxView BackgroundColor="#80000000" IsVisible="{Binding articulo.EsAgotado}"/>
+                                    <!-- Badge AGOTADO centrado sobre la imagen -->
+                                    <Border BackgroundColor="#CC000000" StrokeThickness="0" Padding="8,5" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding articulo.EsAgotado}">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="8"/>
+                                        </Border.StrokeShape>
+                                        <Label Text="AGOTADO" TextColor="White" FontFamily="Nunito_bold" FontSize="10"/>
+                                    </Border>
+                                </Grid>
                             </Border>
                             <!-- Badge Encargo -->
                             <Border Grid.Column="0" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" Padding="8,4" Margin="8" VerticalOptions="Start" HorizontalOptions="Start" IsVisible="{Binding articulo.porEncargo}">
@@ -172,7 +183,7 @@
                                 <Label Grid.Row="0" Text="{Binding NombreLocalizado}" TextColor="{DynamicResource Negro}" FontFamily="Nunito_bold" FontSize="15" LineBreakMode="TailTruncation" MaxLines="2"/>
                                 <Label Grid.Row="1" Text="{Binding DescripcionLocalizada}" TextColor="#888888" FontFamily="Nunito" FontSize="11" LineBreakMode="TailTruncation" MaxLines="2"/>
                                 <!-- Precio y controles -->
-                                <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto" VerticalOptions="End">
+                                <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto" VerticalOptions="End" IsEnabled="{Binding articulo.EsAgotado, Converter={StaticResource InverseBoolConverter}}">
                                     <Label Grid.Column="0" IsVisible="{Binding Path=BindingContext.EsPorPuntos, Source={x:Reference CartaProductos}, Converter={StaticResource InverseBoolConverter}}" Text="{Binding articulo.precio, StringFormat='{0:N2}€'}" TextColor="{StaticResource RojoMarca}" FontFamily="Nunito_bold" FontSize="18" VerticalOptions="Center"/>
                                     <!-- Por Puntos -->
                                     <Border Grid.Column="0" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0" Padding="12,6" IsVisible="{Binding Path=BindingContext.EsPorPuntos, Source={x:Reference CartaProductos}}" VerticalOptions="Center">
@@ -194,6 +205,9 @@
                                                 </MultiTrigger.Conditions>
                                                 <Setter Property="IsVisible" Value="True"/>
                                             </MultiTrigger>
+                                            <DataTrigger TargetType="Grid" Binding="{Binding articulo.EsAgotado}" Value="True">
+                                                <Setter Property="IsVisible" Value="False"/>
+                                            </DataTrigger>
                                         </Grid.Triggers>
                                         <Border Grid.Column="0" BackgroundColor="#F0F0F0" StrokeThickness="0" WidthRequest="32" HeightRequest="32">
                                             <Border.StrokeShape>
@@ -228,6 +242,9 @@
                                                 </MultiTrigger.Conditions>
                                                 <Setter Property="IsVisible" Value="True"/>
                                             </MultiTrigger>
+                                            <DataTrigger TargetType="Border" Binding="{Binding articulo.EsAgotado}" Value="True">
+                                                <Setter Property="IsVisible" Value="False"/>
+                                            </DataTrigger>
                                         </Border.Triggers>
                                         <Label Text="Opciones" TextColor="White" FontFamily="Nunito_bold" FontSize="12"/>
                                         <Border.GestureRecognizers>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Administrador.LlamadasViewAdmin"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:AsadorMoron.Models"
+    x:Name="LlamadasPage"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" StrokeThickness="0" BackgroundColor="White" Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0"
+                        WidthRequest="44" HeightRequest="44">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="12"/></Border.StrokeShape>
+                    <Image Source="menu.png" WidthRequest="22" HeightRequest="22"
+                           VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Label Grid.Column="1" Text="Llamadas del agente"
+                       FontFamily="Nunito_bold" FontSize="20"
+                       TextColor="Black"
+                       VerticalOptions="Center" HorizontalOptions="Center"/>
+
+                <Border Grid.Column="2" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0"
+                        WidthRequest="44" HeightRequest="44">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="12"/></Border.StrokeShape>
+                    <Label Text="↻"
+                           FontSize="22" TextColor="White"
+                           VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding cmdRefrescar}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- FILTROS -->
+        <Border Grid.Row="1" StrokeThickness="0" BackgroundColor="White" Margin="12,12,12,0" Padding="12">
+            <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+            <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*" ColumnSpacing="8" RowSpacing="8">
+
+                <DatePicker Grid.Row="0" Grid.Column="0" Date="{Binding Desde}" Format="dd/MM/yyyy"
+                            FontFamily="Nunito_regular" FontSize="13"/>
+                <DatePicker Grid.Row="0" Grid.Column="1" Date="{Binding Hasta}" Format="dd/MM/yyyy"
+                            FontFamily="Nunito_regular" FontSize="13"/>
+
+                <Picker Grid.Row="1" Grid.Column="0"
+                        ItemsSource="{Binding Estados}"
+                        SelectedItem="{Binding EstadoFiltro}"
+                        Title="Estado"
+                        FontFamily="Nunito_regular" FontSize="13"/>
+                <Entry Grid.Row="1" Grid.Column="1"
+                       Text="{Binding TelefonoFiltro}"
+                       Placeholder="Teléfono..."
+                       Keyboard="Telephone"
+                       FontFamily="Nunito_regular" FontSize="13"/>
+
+                <Button Grid.Row="2" Grid.ColumnSpan="2"
+                        Text="Aplicar filtros"
+                        Command="{Binding cmdFiltrar}"
+                        BackgroundColor="{StaticResource RojoMarca}" TextColor="White"
+                        FontFamily="Nunito_bold" CornerRadius="10" HeightRequest="40"/>
+            </Grid>
+        </Border>
+
+        <!-- LISTA -->
+        <ScrollView Grid.Row="2" Margin="12,12,12,0">
+            <VerticalStackLayout Spacing="8">
+
+                <Label Text="{Binding Total, StringFormat='{0} llamadas'}"
+                       FontFamily="Nunito_regular" FontSize="12" TextColor="#888"
+                       HorizontalOptions="End" Margin="0,0,4,0"/>
+
+                <Label IsVisible="{Binding Vacio}"
+                       Text="No hay llamadas en este rango."
+                       FontFamily="Nunito_regular" FontSize="14" TextColor="#888"
+                       HorizontalOptions="Center" Margin="0,30,0,0"/>
+
+                <CollectionView ItemsSource="{Binding Llamadas}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:LlamadaModel">
+                            <Border StrokeThickness="0" BackgroundColor="White" Margin="0,4" Padding="12">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="14"/></Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding BindingContext.cmdVerDetalle, Source={x:Reference LlamadasPage}}"
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="{Binding telefono_origen}"
+                                           FontFamily="Nunito_bold" FontSize="16" TextColor="Black"/>
+                                    <Border Grid.Row="0" Grid.Column="1"
+                                            BackgroundColor="{Binding EstadoColor}"
+                                            Padding="8,3" StrokeThickness="0">
+                                        <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                                        <Label Text="{Binding EstadoTexto}"
+                                               TextColor="White" FontFamily="Nunito_bold" FontSize="11"/>
+                                    </Border>
+
+                                    <Label Grid.Row="1" Grid.ColumnSpan="2"
+                                           Text="{Binding FechaCorta}"
+                                           FontFamily="Nunito_regular" FontSize="12" TextColor="#666"
+                                           Margin="0,2,0,0"/>
+
+                                    <Grid Grid.Row="2" Grid.ColumnSpan="2"
+                                          ColumnDefinitions="*,*,*" Margin="0,6,0,0">
+                                        <VerticalStackLayout Grid.Column="0">
+                                            <Label Text="Duración" FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+                                            <Label Text="{Binding DuracionFormateada}" FontFamily="Nunito_bold" FontSize="13" TextColor="Black"/>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="1">
+                                            <Label Text="Coste" FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+                                            <Label Text="{Binding CosteFormateado}" FontFamily="Nunito_bold" FontSize="13" TextColor="Black"/>
+                                        </VerticalStackLayout>
+                                        <VerticalStackLayout Grid.Column="2">
+                                            <Label Text="Pedido" FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+                                            <Label Text="{Binding pedido_codigo, FallbackValue='—', TargetNullValue='—'}"
+                                                   FontFamily="Nunito_bold" FontSize="13" TextColor="{StaticResource RojoMarca}"/>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- PAGINACIÓN -->
+        <Grid Grid.Row="3" ColumnDefinitions="Auto,*,Auto" Padding="16,8" BackgroundColor="White">
+            <Button Grid.Column="0"
+                    Text="‹ Anterior"
+                    Command="{Binding cmdAnterior}"
+                    BackgroundColor="Transparent" TextColor="{StaticResource RojoMarca}"
+                    FontFamily="Nunito_bold" FontSize="14"/>
+            <Label Grid.Column="1"
+                   Text="{Binding Page, StringFormat='Página {0}'}"
+                   VerticalOptions="Center" HorizontalOptions="Center"
+                   FontFamily="Nunito_regular" FontSize="13" TextColor="#666"/>
+            <Button Grid.Column="2"
+                    Text="Siguiente ›"
+                    Command="{Binding cmdSiguiente}"
+                    BackgroundColor="Transparent" TextColor="{StaticResource RojoMarca}"
+                    FontFamily="Nunito_bold" FontSize="14"/>
+        </Grid>
+    </Grid>
+</ContentPage>

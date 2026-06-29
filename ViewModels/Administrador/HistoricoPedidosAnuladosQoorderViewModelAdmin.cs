@@ -844,19 +844,18 @@ namespace AsadorMoron.ViewModels.Administrador
                     }
                     //worksheet.Im(listaFiltrada, 0, 0, false);
 
-                    //Save the workbook to stream in xlsx format. 
+                    //Save the workbook to stream in xlsx format.
                     MemoryStream stream = new MemoryStream();
                     workbook.SaveAs(stream);
 
                     workbook.Close();
 
-                    //Save the stream as a file in the device and invoke it for viewing
-                    Microsoft.Maui.Controls.DependencyService.Get<ISave>().SaveAndView("Pedidos.xlsx", "application/msexcel", stream);
+                    await ShareExcelStream("Pedidos.xlsx", stream);
                 }
             }
             catch (Exception ex)
             {
-                // 
+                //
             }
         }
         async Task ExportarZona()
@@ -950,20 +949,34 @@ namespace AsadorMoron.ViewModels.Administrador
                     }
                     //worksheet.Im(listaFiltrada, 0, 0, false);
 
-                    //Save the workbook to stream in xlsx format. 
+                    //Save the workbook to stream in xlsx format.
                     MemoryStream stream = new MemoryStream();
                     workbook.SaveAs(stream);
 
                     workbook.Close();
 
-                    //Save the stream as a file in the device and invoke it for viewing
-                    Microsoft.Maui.Controls.DependencyService.Get<ISave>().SaveAndView("Pedidos.xlsx", "application/msexcel", stream);
+                    await ShareExcelStream("Pedidos.xlsx", stream);
                 }
             }
             catch (Exception ex)
             {
-                // 
+                //
             }
+        }
+
+        static async Task ShareExcelStream(string filename, MemoryStream stream)
+        {
+            string filePath = Path.Combine(FileSystem.CacheDirectory, filename);
+            stream.Position = 0;
+            using (var fileStream = File.Create(filePath))
+            {
+                await stream.CopyToAsync(fileStream);
+            }
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = filename,
+                File = new ShareFile(filePath)
+            });
         }
         #endregion
         private void ToggleDetail()

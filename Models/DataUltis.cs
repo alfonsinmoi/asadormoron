@@ -29,11 +29,11 @@ namespace AsadorMoron.Models
 {
     public class DataUltis
     {
-        public string versionAndroid = "1.1.0";
-        public string versioniOS = "1.1.0";
-        public string versionUWP = "1.1.0";
-        public int versionAppAndroid = 40;
-        public int versionAppiOS = 40;
+        public string versionAndroid = "1.2.1";
+        public string versioniOS = "1.2.1";
+        public string versionUWP = "1.2.1";
+        public int versionAppAndroid = 47;
+        public int versionAppiOS = 47;
 
         public DataUltis()
         {
@@ -1288,7 +1288,7 @@ namespace AsadorMoron.Models
         {
             try
             {
-                List<ArticuloModel> list = dbConn.Query<ArticuloModel>("Select * From [ArticuloModel] WHERE idCategoria=" + id + " and estado=1");
+                List<ArticuloModel> list = dbConn.Query<ArticuloModel>("Select * From [ArticuloModel] WHERE idCategoria=" + id);
                 if (list.Count > 0)
                 {
                     if (list.Count > 0)

@@ -1,17 +1,11 @@
 <?php
 /**
  * PAYCOMET JET IFRAME callback
- * Tracking ID: SSX-7MS-JX3J
- *
- * @author PAYCOMET
- * @copyright Copyright (c) 2019, PAYCOMET
- * @version 1.1 2019-11-07
+ * Usa REST API v1 (reemplaza SOAP obsoleto)
  */
 
-$jetID 			= "qeQ0yXMufV3gpdU7acrNT84CFIzonRbh";
-$merchantCode   = "v2gjg7f6";
-$terminal       = "54153";
-$password       = "PcMrIj3Kvq1aFQNeEZH9";
+$jetID        = "qeQ0yXMufV3gpdU7acrNT84CFIzonRbh";
+$terminal     = "54153";
 
 if (isset($_POST["paytpvToken"])) {
     date_default_timezone_set("Europe/Madrid");
@@ -20,61 +14,61 @@ if (isset($_POST["paytpvToken"])) {
 
     if ($token && strlen($token) == 64) {
 
-        $endPoint       			= "https://api.paycomet.com/gateway/xml-bankstore?wsdl";
-        $productDescription         = "TPV Virtual";
-        $owner                      = "El Pollo Andaluz";
+        // Obtener API key de la base de datos
+        include "config.php";
+        include "utils.php";
+        $dbConn = connect($db);
+        $stmt = $dbConn->prepare("SELECT apiPaycomet, terminalPaycomet FROM qo_configuracion_global LIMIT 1");
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $apiKey   = $row ? $row['apiPaycomet']   : "";
+        $terminal = $row ? $row['terminalPaycomet'] : $terminal;
 
-        $signature
-            = hash("sha512",
-                $merchantCode
-                .$token
-                .$jetID
-                .$terminal
-                .$password
-        );
+        $fields = json_encode([
+            "terminal" => (int)$terminal,
+            "jetToken" => $token,
+            "order"    => "ADDCARD" . time()
+        ]);
 
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://rest.paycomet.com/v1/cards");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "PAYCOMET-API-TOKEN: " . $apiKey
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-        $ip				= $_SERVER["REMOTE_ADDR"];
+        $response = curl_exec($ch);
+        curl_close($ch);
 
-        try {
-            $context = stream_context_create(array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            ));
+        $result = json_decode($response, true);
 
-            $clientSOAP = new SoapClient($endPoint, array('stream_context' => $context));
-            $addUserTokenResponse
-                = $clientSOAP->add_user_token(
-                    $merchantCode,
-                    $terminal,
-                    $token,
-                    $jetID,
-                    $signature,
-                    $ip
-				);
-
-			if ($addUserTokenResponse["DS_ERROR_ID"] == "0") {
-				echo "Proceso correcto";
-				$data=array("DS_IDUSER"=>$addUserTokenResponse['DS_IDUSER'],"DS_TOKEN_USER"=>$addUserTokenResponse['DS_TOKEN_USER'],"DS_ERROR_ID"=>$addUserTokenResponse['DS_ERROR_ID']);
-				echo json_encode($data);
-				return true;
-			} else {
-				echo "Proceso Incorrecto";
-				$data=array("DS_IDUSER"=>$addUserTokenResponse['DS_IDUSER'],"DS_TOKEN_USER"=>$addUserTokenResponse['DS_TOKEN_USER'],"DS_ERROR_ID"=>$addUserTokenResponse['DS_ERROR_ID']);
-				echo json_encode($data);
-				return false;
-			}
-        } catch(SoapFault $e){
-			var_dump("Proceso Incorrecto");
+        if ($result && isset($result['errorCode']) && $result['errorCode'] == 0) {
+            $data = [
+                "DS_IDUSER"     => $result['idUser'],
+                "DS_TOKEN_USER" => $result['tokenUser'],
+                "DS_ERROR_ID"   => "0"
+            ];
+            echo "Proceso correcto";
+            echo json_encode($data);
+        } else {
+            $errorCode = isset($result['errorCode']) ? $result['errorCode'] : "999";
+            $data = [
+                "DS_IDUSER"     => "",
+                "DS_TOKEN_USER" => "",
+                "DS_ERROR_ID"   => (string)$errorCode
+            ];
+            echo "Proceso Incorrecto";
+            echo json_encode($data);
         }
-	} else {
-        var_dump("Error, no se ha obtenido token");
-        return false;
+    } else {
+        echo "Error, no se ha obtenido token";
     }
-    return false;
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -111,11 +105,6 @@ if (isset($_POST["paytpvToken"])) {
         .card-header {
             text-align: center;
             margin-bottom: 24px;
-        }
-
-        .card-header img {
-            height: 50px;
-            margin-bottom: 16px;
         }
 
         .card-header h2 {

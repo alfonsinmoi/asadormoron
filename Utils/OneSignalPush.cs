@@ -7,7 +7,7 @@ namespace AsadorMoron.Utils
 {
     public class OneSignalPush
     {
-        private const string REST_API_KEY = "os_v2_app_aagpfu46dramtjxgk25p4czzi2taidhu7s6ezbuy25p5od6kq7yzomas6a75dbhjbk5wgzpeqay6v2k3h5epnmtmnfwskeohj5st44q";
+        private const string REST_API_KEY = "os_v2_app_aagpfu46dramtjxgk25p4czzi2b5tztqre5u5rupmrx223buaxs4l4awhwlsdccw2iala2uttjvndnnva4q26f4gbgywelarzqyruuq";
         private const string APP_ID = "000cf2d3-9e1c-40c9-a6e6-56bafe0b3946";
 
         public OneSignalPush()
@@ -18,18 +18,20 @@ namespace AsadorMoron.Utils
         {
             try
             {
+                var subscriptionIds = players.Replace("\"", "").Split(',').Select(p => p.Trim()).ToArray();
                 var payload = new
                 {
                     app_id = APP_ID,
                     contents = new { en = mensaje },
-                    include_subscription_ids = players.Replace("\"", "").Split(',').Select(p => p.Trim()).ToArray()
+                    include_subscription_ids = subscriptionIds,
+                    target_channel = "push"
                 };
 
                 var json = System.Text.Json.JsonSerializer.Serialize(payload);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                using var request = new HttpRequestMessage(HttpMethod.Post, "https://onesignal.com/api/v1/notifications");
-                request.Headers.Authorization = new AuthenticationHeaderValue("Key", REST_API_KEY);
+                using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.onesignal.com/notifications");
+                request.Headers.Add("Authorization", "Basic " + REST_API_KEY);
                 request.Content = content;
 
                 using var response = await App.Client.SendAsync(request);

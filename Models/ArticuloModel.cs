@@ -87,6 +87,8 @@ namespace AsadorMoron.Models
         [JsonConverter(typeof(BoolToBitJsonConverter))]
         public bool porEncargo { get; set; }
         [Ignore]
+        public bool EsAgotado => estado == 0;
+        [Ignore]
         public int Cantidad
         {
             get { return cantidad; }

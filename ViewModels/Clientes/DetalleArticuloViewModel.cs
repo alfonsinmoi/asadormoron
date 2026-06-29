@@ -259,7 +259,22 @@ namespace AsadorMoron.ViewModels.Clientes
                     cantidadOpcion = 1;
                     textoCaja = AppResources.AñadirCarrito + " (" + total.ToString("N2") + "€)";
                     textoCajaPuntos = AppResources.AñadirCarritoPuntos + " (" + totalPuntos + " p.)";
-                    System.Diagnostics.Debug.WriteLine($"[DA] 34 - Total={total}, TextoCaja asignado ({sw.ElapsedMilliseconds}ms)");
+
+                    // Si el artículo es canjeable por puntos: mostrar SOLO botón de puntos y
+                    // ocultar el botón normal. Si está agotado, ocultar ambos.
+                    // Esto cubre el flujo de búsqueda desde Home, donde App.esPorPuntos = false.
+                    bool esArticuloPuntos = sistemaPuntos && Articulo.puntos > 0;
+                    if (Articulo.estado == 0)
+                    {
+                        modoTienda = false;
+                        VisiblePuntos = false;
+                    }
+                    else if (esArticuloPuntos)
+                    {
+                        modoTienda = false;
+                        VisiblePuntos = true;
+                    }
+                    System.Diagnostics.Debug.WriteLine($"[DA] 34 - Total={total}, esArticuloPuntos={esArticuloPuntos}, EsAgotado={Articulo.estado==0} ({sw.ElapsedMilliseconds}ms)");
 
                     // Seleccionar primera opción - asignar a campo directamente
                     if (Articulo.listadoOpciones.Count > 0)
@@ -383,6 +398,16 @@ namespace AsadorMoron.ViewModels.Clientes
         {
             try
             {
+                if (Articulo.estado == 0)
+                {
+                    App.customDialog.ShowDialogAsync("Producto agotado", AppResources.App, AppResources.Cerrar);
+                    return;
+                }
+                if (SistemaPuntos && Articulo.puntos > 0)
+                {
+                    App.customDialog.ShowDialogAsync("Este producto solo se canjea con puntos", AppResources.App, AppResources.Cerrar);
+                    return;
+                }
                 if (OpcionSeleccionada == null && Articulo.listadoOpciones.Count > 0)
                 {
                     App.customDialog.ShowDialogAsync(AppResources.SeleccioneOpcion, AppResources.App, AppResources.Cerrar);
@@ -469,6 +494,11 @@ namespace AsadorMoron.ViewModels.Clientes
         {
             try
             {
+                if (Articulo.estado == 0)
+                {
+                    App.customDialog.ShowDialogAsync("Producto agotado", AppResources.App, AppResources.Cerrar);
+                    return;
+                }
                 if (TotalPuntos > Puntos)
                 {
                     App.customDialog.ShowDialogAsync("No tiene suficientes puntos", AppResources.App, AppResources.Cerrar);
@@ -532,12 +562,14 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     carrito.Add(c);
                     App.DAUtil.ActualizaCarrito(carrito);
+                    if (TotalPuntos > 0)
+                        Puntos -= TotalPuntos;
                     App.DAUtil.NavigationService.NavigateBackAsync();
                 }
             }
             catch (Exception ex)
             {
-                // 
+                //
             }
         }
 

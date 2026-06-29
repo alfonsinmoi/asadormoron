@@ -2,6 +2,7 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using AndroidX.Core.View;
 
 namespace AsadorMoron;
 
@@ -12,6 +13,10 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
         Window.SetBackgroundDrawable(new Android.Graphics.Drawables.ColorDrawable(Android.Graphics.Color.ParseColor("#F5F5F5")));
+
+        // Fix para Android 15: desactivar edge-to-edge forzado
+        if ((int)Build.VERSION.SdkInt >= 35)
+            WindowCompat.SetDecorFitsSystemWindows(Window, true);
 
         // Evitar que la app se cierre por excepciones no controladas en Android
         AndroidEnvironment.UnhandledExceptionRaiser += (sender, args) =>

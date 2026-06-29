@@ -3548,7 +3548,7 @@ namespace AsadorMoron.Services
                 {
                     PueblosModel pu = App.DAUtil.GetPueblosSQLite().Find(p => p.id == App.DAUtil.Usuario.idPueblo);
                     string requestUri = App.DAUtil.miURL + "repartidores.php/GET?idPedidosRepartidor2=" + idRepartidor + "&idGrupo=" + pu.idGrupo;
-                    HttpResponseMessage response = App.Client.GetAsync(requestUri).Result;
+                    HttpResponseMessage response = await App.Client.GetAsync(requestUri);
                     string resultJSON = await response.Content.ReadAsStringAsync();
                     if (response.IsSuccessStatusCode && !resultJSON.ToLower().Equals("false"))
                     {
@@ -7092,6 +7092,108 @@ namespace AsadorMoron.Services
             catch (Exception ex)
             {
                 Debug.WriteLine("Error RestarPollosAsync: " + ex.Message);
+            }
+            return null;
+        }
+
+        #endregion
+
+        #region Agente de voz
+        /// <summary>
+        /// Listado paginado de llamadas del agente para el dashboard del gestor.
+        /// </summary>
+        public async Task<LlamadasPaginadasModel> GetLlamadasAgenteAsync(
+            DateTime? desde = null,
+            DateTime? hasta = null,
+            string estado = null,
+            string telefono = null,
+            int? idEstablecimiento = null,
+            int page = 1,
+            int perPage = 20)
+        {
+            try
+            {
+                if (!App.DAUtil.DoIHaveInternet()) return new LlamadasPaginadasModel();
+
+                var qs = new System.Collections.Generic.List<string>();
+                if (desde.HasValue) qs.Add($"desde={desde:yyyy-MM-dd}");
+                if (hasta.HasValue) qs.Add($"hasta={hasta:yyyy-MM-dd}");
+                if (!string.IsNullOrWhiteSpace(estado))   qs.Add($"estado={Uri.EscapeDataString(estado)}");
+                if (!string.IsNullOrWhiteSpace(telefono)) qs.Add($"telefono={Uri.EscapeDataString(telefono)}");
+                if (idEstablecimiento.HasValue) qs.Add($"idEstablecimiento={idEstablecimiento.Value}");
+                qs.Add($"page={page}");
+                qs.Add($"per_page={perPage}");
+
+                string requestUri = App.DAUtil.miURL + "api/llamadas.php?" + string.Join("&", qs);
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string json = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(json))
+                {
+                    return JsonConvert.DeserializeObject<LlamadasPaginadasModel>(json)
+                           ?? new LlamadasPaginadasModel();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error GetLlamadasAgenteAsync: " + ex.Message);
+            }
+            return new LlamadasPaginadasModel();
+        }
+
+        /// <summary>
+        /// Detalle de llamada con transcripción completa.
+        /// </summary>
+        public async Task<LlamadaModel> GetLlamadaAgenteDetalleAsync(int id)
+        {
+            try
+            {
+                if (!App.DAUtil.DoIHaveInternet()) return null;
+                string requestUri = App.DAUtil.miURL + "api/llamadas.php?id=" + id;
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string json = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(json) && !json.ToLower().Equals("false"))
+                {
+                    return JsonConvert.DeserializeObject<LlamadaModel>(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error GetLlamadaAgenteDetalleAsync: " + ex.Message);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// KPIs agregados del dashboard del agente.
+        /// </summary>
+        public async Task<MetricasDashboardModel> GetMetricasAgenteAsync(
+            DateTime? desde = null,
+            DateTime? hasta = null,
+            int? idEstablecimiento = null)
+        {
+            try
+            {
+                if (!App.DAUtil.DoIHaveInternet()) return null;
+
+                var qs = new System.Collections.Generic.List<string>();
+                if (desde.HasValue) qs.Add($"desde={desde:yyyy-MM-dd}");
+                if (hasta.HasValue) qs.Add($"hasta={hasta:yyyy-MM-dd}");
+                if (idEstablecimiento.HasValue) qs.Add($"idEstablecimiento={idEstablecimiento.Value}");
+
+                string requestUri = App.DAUtil.miURL + "api/dashboard-metricas.php"
+                    + (qs.Count > 0 ? "?" + string.Join("&", qs) : "");
+
+                HttpResponseMessage response = await App.Client.GetAsync(requestUri);
+                string json = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode && !string.IsNullOrEmpty(json))
+                {
+                    return JsonConvert.DeserializeObject<MetricasDashboardModel>(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error GetMetricasAgenteAsync: " + ex.Message);
             }
             return null;
         }

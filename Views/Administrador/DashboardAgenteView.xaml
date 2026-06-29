@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Administrador.DashboardAgenteView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" StrokeThickness="0" BackgroundColor="White" Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0"
+                        WidthRequest="44" HeightRequest="44">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="12"/></Border.StrokeShape>
+                    <Image Source="menu.png" WidthRequest="22" HeightRequest="22"
+                           VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMenuTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Label Grid.Column="1" Text="Dashboard agente"
+                       FontFamily="Nunito_bold" FontSize="20" TextColor="Black"
+                       VerticalOptions="Center" HorizontalOptions="Center"/>
+
+                <Border Grid.Column="2" BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0"
+                        WidthRequest="44" HeightRequest="44">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="12"/></Border.StrokeShape>
+                    <Label Text="↻"
+                           FontSize="22" TextColor="White"
+                           VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding cmdRefrescar}"/>
+                    </Border.GestureRecognizers>
+                </Border>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1" Padding="12">
+            <VerticalStackLayout Spacing="12">
+
+                <!-- RANGO FECHAS -->
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="12">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="8">
+                        <DatePicker Grid.Column="0" Date="{Binding Desde}" Format="dd/MM/yyyy"
+                                    FontFamily="Nunito_regular" FontSize="13"/>
+                        <DatePicker Grid.Column="1" Date="{Binding Hasta}" Format="dd/MM/yyyy"
+                                    FontFamily="Nunito_regular" FontSize="13"/>
+                        <Button Grid.Column="2"
+                                Text="Filtrar"
+                                Command="{Binding cmdRefrescar}"
+                                BackgroundColor="{StaticResource RojoMarca}" TextColor="White"
+                                FontFamily="Nunito_bold" FontSize="12" CornerRadius="10"/>
+                    </Grid>
+                </Border>
+
+                <!-- KPI 1: Total llamadas -->
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="16">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <Grid RowDefinitions="Auto,Auto">
+                        <Label Grid.Row="0" Text="Llamadas totales"
+                               FontFamily="Nunito_regular" FontSize="12" TextColor="#999"/>
+                        <Label Grid.Row="1"
+                               Text="{Binding Metricas.llamadas_totales}"
+                               FontFamily="Nunito_bold" FontSize="32" TextColor="Black"/>
+                    </Grid>
+                </Border>
+
+                <!-- KPI 2: Conversión a pedidos -->
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="16">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <Label Grid.Row="0" Text="Pedidos creados"
+                               FontFamily="Nunito_regular" FontSize="12" TextColor="#999"/>
+                        <Label Grid.Row="1"
+                               Text="{Binding Metricas.convertidas_en_pedido}"
+                               FontFamily="Nunito_bold" FontSize="32" TextColor="{StaticResource RojoMarca}"/>
+                        <Label Grid.Row="2"
+                               Text="{Binding Metricas.tasa_conversion_pct, StringFormat='{0}% de conversión'}"
+                               FontFamily="Nunito_regular" FontSize="12" TextColor="#666"/>
+                    </Grid>
+                </Border>
+
+                <!-- KPIs por estado -->
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="16">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Por estado" FontFamily="Nunito_bold" FontSize="14" TextColor="Black"/>
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="6">
+                            <Label Grid.Row="0" Grid.Column="0" Text="Completadas" FontSize="12" TextColor="#666"/>
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding Metricas.por_estado.completada}" FontFamily="Nunito_bold" FontSize="13" HorizontalOptions="End" TextColor="#4CAF50"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" Text="Transferidas a humano" FontSize="12" TextColor="#666"/>
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding Metricas.por_estado.transferida}" FontFamily="Nunito_bold" FontSize="13" HorizontalOptions="End" TextColor="#2196F3"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" Text="Fallidas / sin pedido" FontSize="12" TextColor="#666"/>
+                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding Metricas.por_estado.fallida}" FontFamily="Nunito_bold" FontSize="13" HorizontalOptions="End" TextColor="#F44336"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Otras métricas -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <Border Grid.Column="0" StrokeThickness="0" BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="14"/></Border.StrokeShape>
+                        <VerticalStackLayout>
+                            <Label Text="Coste total" FontFamily="Nunito_regular" FontSize="11" TextColor="#999"/>
+                            <Label Text="{Binding Metricas.CosteFormateado}" FontFamily="Nunito_bold" FontSize="20" TextColor="Black"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Column="1" StrokeThickness="0" BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="14"/></Border.StrokeShape>
+                        <VerticalStackLayout>
+                            <Label Text="Duración media" FontFamily="Nunito_regular" FontSize="11" TextColor="#999"/>
+                            <Label Text="{Binding Metricas.DuracionMediaFormateada}" FontFamily="Nunito_bold" FontSize="20" TextColor="Black"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="14">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="14"/></Border.StrokeShape>
+                    <VerticalStackLayout>
+                        <Label Text="Pico llamadas simultáneas" FontFamily="Nunito_regular" FontSize="11" TextColor="#999"/>
+                        <Label Text="{Binding Metricas.pico_concurrencia}" FontFamily="Nunito_bold" FontSize="22" TextColor="Black"/>
+                        <Label Text="Si supera 10, ampliar líneas Vapi" FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- HEATMAP: distribución de llamadas por día y hora -->
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="14">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Distribución por día y hora"
+                               FontFamily="Nunito_bold" FontSize="14" TextColor="Black"/>
+                        <Label Text="Más oscuro = más llamadas. Hora local."
+                               FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+
+                        <!-- Escala horizontal de horas (cada 6h: 0, 6, 12, 18) -->
+                        <Grid ColumnDefinitions="22,*" Margin="0,4,0,0">
+                            <Label Grid.Column="0" Text=" "/>
+                            <Grid Grid.Column="1" ColumnDefinitions="*,*,*,*">
+                                <Label Grid.Column="0" Text="0h"  FontFamily="Nunito_regular" FontSize="9" TextColor="#999"/>
+                                <Label Grid.Column="1" Text="6h"  FontFamily="Nunito_regular" FontSize="9" TextColor="#999"/>
+                                <Label Grid.Column="2" Text="12h" FontFamily="Nunito_regular" FontSize="9" TextColor="#999"/>
+                                <Label Grid.Column="3" Text="18h" FontFamily="Nunito_regular" FontSize="9" TextColor="#999"/>
+                            </Grid>
+                        </Grid>
+
+                        <!-- Mapa de celdas: 7 filas (días) × 24 columnas (horas)
+                             Renderizado con CollectionView en GridItemsLayout. -->
+                        <CollectionView ItemsSource="{Binding CeldasHeatmap}"
+                                        HeightRequest="140"
+                                        SelectionMode="None">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="24" HorizontalItemSpacing="1" VerticalItemSpacing="1"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid HeightRequest="18">
+                                        <BoxView BackgroundColor="{Binding ColorCelda}" CornerRadius="2"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                        <!-- Etiquetas de día a la izquierda (informativas, separadas) -->
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*">
+                            <Label Grid.Column="0" Text="L" FontFamily="Nunito_bold" FontSize="9" TextColor="#666" HorizontalOptions="Center"/>
+                            <Label Grid.Column="1" Text="M" FontFamily="Nunito_bold" FontSize="9" TextColor="#666" HorizontalOptions="Center"/>
+                            <Label Grid.Column="2" Text="X" FontFamily="Nunito_bold" FontSize="9" TextColor="#666" HorizontalOptions="Center"/>
+                            <Label Grid.Column="3" Text="J" FontFamily="Nunito_bold" FontSize="9" TextColor="#666" HorizontalOptions="Center"/>
+                            <Label Grid.Column="4" Text="V" FontFamily="Nunito_bold" FontSize="9" TextColor="#666" HorizontalOptions="Center"/>
+                            <Label Grid.Column="5" Text="S" FontFamily="Nunito_bold" FontSize="9" TextColor="#666" HorizontalOptions="Center"/>
+                            <Label Grid.Column="6" Text="D" FontFamily="Nunito_bold" FontSize="9" TextColor="#666" HorizontalOptions="Center"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- BOTÓN VER LLAMADAS -->
+                <Button Text="Ver todas las llamadas"
+                        Command="{Binding cmdVerLlamadas}"
+                        BackgroundColor="{StaticResource RojoMarca}" TextColor="White"
+                        FontFamily="Nunito_bold" CornerRadius="12" HeightRequest="48"
+                        Margin="0,4,0,16"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

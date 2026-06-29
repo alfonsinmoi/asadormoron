@@ -25,6 +25,9 @@ namespace AsadorMoron.ViewModels.Clientes
     {
         private bool _navegando = false;
         private readonly Debouncer _searchDebouncer = new();
+        // Caché del saldo de puntos del servidor: se restan los puntos consumidos
+        // por el carrito al recalcular en RefreshPuntos() para mantener el UI fresco.
+        private int _puntosServidor = -1;
 
         public CartaProductosViewModel()
         {
@@ -88,7 +91,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     // Usar SQLite si hay datos
                     if (listaSQLite != null && listaSQLite.Count > 0)
                     {
-                        lista = listaSQLite.FindAll(p => p.estado == 1 && p.estadoCategoria == 1);
+                        lista = listaSQLite.FindAll(p => p.estadoCategoria == 1);
                         System.Diagnostics.Debug.WriteLine($"[CP] Usando SQLite ({sw.ElapsedMilliseconds}ms)");
                     }
                     else
@@ -96,7 +99,7 @@ namespace AsadorMoron.ViewModels.Clientes
                         // Solo si no hay datos en SQLite, llamar al servidor
                         System.Diagnostics.Debug.WriteLine($"[CP] SQLite vacío, llamando servidor ({sw.ElapsedMilliseconds}ms)");
                         var listaServer = await App.ResponseWS.getListadoProductosEstablecimientoCat(_categoria.id, false);
-                        lista = listaServer?.FindAll(p => p.estado == 1 && p.estadoCategoria == 1) ?? new List<ArticuloModel>();
+                        lista = listaServer?.FindAll(p => p.estadoCategoria == 1) ?? new List<ArticuloModel>();
                         System.Diagnostics.Debug.WriteLine($"[CP] Servidor: {lista?.Count ?? 0} items ({sw.ElapsedMilliseconds}ms)");
                     }
 
@@ -105,7 +108,8 @@ namespace AsadorMoron.ViewModels.Clientes
                     {
                         try
                         {
-                            Puntos = await puntosTask - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                            _puntosServidor = await puntosTask;
+                            Puntos = _puntosServidor - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
                             System.Diagnostics.Debug.WriteLine($"[CP] Puntos resueltos ({sw.ElapsedMilliseconds}ms)");
                         }
                         catch { Puntos = 0; }
@@ -124,13 +128,13 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     if (aceptaEncargos)
                     {
-                        App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
-                        lista = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
+                        lista = lista.FindAll(p => p.estadoCategoria == 1 && p.vistaEnvios == 1);
+                        App.listaProductos = lista;
                     }
                     else
                     {
-                        App.listaProductos = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
-                        lista = lista.FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
+                        lista = lista.FindAll(p => p.estadoCategoria == 1 && p.vistaEnvios == 1 && p.porEncargo == false);
+                        App.listaProductos = lista;
                     }
                     System.Diagnostics.Debug.WriteLine($"[CP] Filtro vistaEnvios: {lista?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
 
@@ -225,6 +229,23 @@ namespace AsadorMoron.ViewModels.Clientes
         }
 
         #region Métodos
+
+        /// <summary>
+        /// Recalcula Puntos = saldo del servidor - puntos consumidos por el carrito actual.
+        /// Se llama desde OnAppearing para mantener fresca la UI tras añadir desde el detalle.
+        /// </summary>
+        public void RefreshPuntos()
+        {
+            if (!SistemaPuntos || _puntosServidor < 0) return;
+            try
+            {
+                carrito = App.DAUtil.Getcarrito();
+                Puntos = _puntosServidor - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                Cantidad = carrito.Sum(c => c.cantidad).ToString();
+            }
+            catch { }
+        }
+
         private async void IrDetallePedido()
         {
             if (_navegando) return;
@@ -354,6 +375,20 @@ namespace AsadorMoron.ViewModels.Clientes
             try
             {
                 ArticuloModel articulo = (ArticuloModel)parametro;
+                if (articulo.EsAgotado) return;
+
+                // Validar puntos antes de añadir
+                if (articulo.puntos > 0)
+                {
+                    int puntosEnCarrito = carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                    int puntosDisponibles = Puntos;
+                    if (articulo.puntos > puntosDisponibles)
+                    {
+                        await App.customDialog.ShowDialogAsync("No tiene suficientes puntos", AppResources.App, AppResources.Cerrar);
+                        return;
+                    }
+                }
+
                 bool continuar = true;
                 if (articulo.porEncargo && carrito.Where(p => p.porEncargo == true).ToList().Count == 0)
                     continuar = await App.customDialog.ShowDialogConfirmationAsync(AppResources.App, AppResources.PreguntaEncargo, AppResources.No, AppResources.Si);
@@ -366,14 +401,23 @@ namespace AsadorMoron.ViewModels.Clientes
 
                     CarritoModel c = carrito.Find((obj) => obj.idArticulo == articulo.idArticulo && obj.esMenu == false);
                     if (c != null)
+                    {
                         c.cantidad = c.cantidad + 1;
+                        if (articulo.puntos > 0)
+                        {
+                            c.puntos = articulo.puntos * c.cantidad;
+                            Puntos -= articulo.puntos;
+                        }
+                    }
                     else
                     {
                         c = new CarritoModel();
                         c.id = articulo.id;
                         c.cantidad += 1;
-                        c.porPuntos = 0;
-                        c.puntos = 0;
+                        c.porPuntos = articulo.puntos > 0 ? 1 : 0;
+                        c.puntos = articulo.puntos > 0 ? articulo.puntos : 0;
+                        if (articulo.puntos > 0)
+                            Puntos -= articulo.puntos;
                         c.comida = articulo.nombre;
                         c.comida_eng = articulo.nombre_eng;
                         c.comida_ger = articulo.nombre_ger;
@@ -511,7 +555,7 @@ namespace AsadorMoron.ViewModels.Clientes
                     else
                     {
                         // OPTIMIZADO: Solo cargar de SQLite (ya sincronizado previamente)
-                        lista = (await App.DAUtil.getProductosEstablecimientoCat(_categoria.id)).FindAll(p => p.estado == 1 && p.estadoCategoria == 1 && p.vistaEnvios == 1);
+                        lista = (await App.DAUtil.getProductosEstablecimientoCat(_categoria.id)).FindAll(p => p.estadoCategoria == 1 && p.vistaEnvios == 1);
                         if (App.EstActual.configuracion?.aceptaEncargos == true)
                         {
                             App.listaProductos = lista;

@@ -1,0 +1,669 @@
+openapi: 3.0.3
+info:
+  title: Asador Morón API — alcance del agente de voz
+  description: |
+    Subconjunto de la API existente de qoorder.com utilizado por el agente de voz IA,
+    más los endpoints nuevos que se crearán en Fase 1.
+
+    Las rutas marcadas con `[NUEVO]` no existen todavía y se implementan en Fase 1.
+    Las rutas marcadas con `[AMPLIAR]` existen pero requieren campos/columnas adicionales.
+    El resto se reutiliza tal cual.
+  version: 1.0.0
+  contact:
+    name: Asador Morón — proyecto Agente de Voz
+servers:
+  - url: https://qoorder.com/pa_ws
+    description: Producción
+  - url: https://staging.qoorder.com/pa_ws
+    description: Staging (a crear en Fase 0)
+
+tags:
+  - name: Menu
+    description: Catálogo de productos disponibles
+  - name: Cliente
+    description: Identificación de cliente por teléfono
+  - name: Establecimiento
+    description: Estado del local (abierto / saturado)
+  - name: Pedido
+    description: Creación y consulta de pedidos
+  - name: Reparto
+    description: Zonas, repartidores y asignación
+  - name: Llamadas
+    description: [NUEVO] Registro y dashboard de llamadas del agente
+  - name: Webhook
+    description: [NUEVO] Recepción de eventos de Vapi
+  - name: Config
+    description: [NUEVO] Configuración del agente y reglas
+
+paths:
+  # ───────────────────────────────────────────────────────────────
+  # EXISTENTES — Reutilizadas por el agente
+  # ───────────────────────────────────────────────────────────────
+
+  /productos.php/GET:
+    get:
+      tags: [Menu]
+      summary: Lista de productos por establecimiento
+      description: Devuelve productos con sus opciones, ingredientes y alérgenos.
+      parameters:
+        - name: idEstablecimientoProducto
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Lista de productos
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Producto' }
+
+  /zonas.php/GET:
+    get:
+      tags: [Reparto]
+      summary: Zonas de reparto de un pueblo
+      parameters:
+        - name: idPueblo
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Lista de zonas
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Zona' }
+
+  /repartidores.php/GET:
+    get:
+      tags: [Reparto]
+      summary: Repartidores activos de un establecimiento
+      parameters:
+        - name: idEstablecimientoRepartidor
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Lista de repartidores
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Repartidor' }
+
+  /configuracion.php/GET:
+    get:
+      tags: [Establecimiento]
+      summary: Configuración del establecimiento (horarios, datos fiscales, modo)
+      parameters:
+        - name: idEstablecimiento
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Configuración
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ConfiguracionEst' }
+
+  /contador_pollos.php:
+    get:
+      tags: [Establecimiento]
+      summary: Carga actual de cocina (pollos en preparación)
+      parameters:
+        - name: idEstablecimiento
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Estado del contador
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: integer }
+                  cantidad: { type: integer, description: Pollos en horno o cola }
+                  fecha: { type: string, format: date }
+                  idEstablecimiento: { type: integer }
+
+  /sendNotification.php:
+    get:
+      tags: [Establecimiento]
+      summary: Envía push a un destinatario concreto (OneSignal)
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: subscription_id de OneSignal
+          schema: { type: string }
+        - name: titulo
+          in: query
+          required: true
+          schema: { type: string }
+        - name: mensaje
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Push enviado
+
+  # ───────────────────────────────────────────────────────────────
+  # A AMPLIAR — Existen pero necesitan campos nuevos
+  # ───────────────────────────────────────────────────────────────
+
+  /pedidos.php:
+    post:
+      tags: [Pedido]
+      summary: '[AMPLIAR] Crear pedido (acepta campos del agente)'
+      description: |
+        Endpoint existente. Hay que añadir soporte a los campos `origen`,
+        `llamada_id`, `hora_estimada` y `repartidor_id` (ver migración Fase 1).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PedidoCrear' }
+      responses:
+        '200':
+          description: Pedido creado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: integer }
+                  codigoPedido: { type: string }
+
+  # ───────────────────────────────────────────────────────────────
+  # NUEVOS — A crear en Fase 1
+  # ───────────────────────────────────────────────────────────────
+
+  /api/cliente:
+    get:
+      tags: [Cliente]
+      summary: '[NUEVO] Identificar cliente por teléfono'
+      parameters:
+        - name: telefono
+          in: query
+          required: true
+          schema: { type: string, example: '+34600123456' }
+        - name: idPueblo
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Cliente encontrado o vacío
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ClienteIdentificado' }
+
+  /api/estado-local:
+    get:
+      tags: [Establecimiento]
+      summary: '[NUEVO] Estado agregado del local (abierto / cerrado / saturado)'
+      parameters:
+        - name: idEstablecimiento
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Estado actual
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EstadoLocal' }
+
+  /api/slots-recogida:
+    get:
+      tags: [Establecimiento]
+      summary: '[NUEVO] Slots disponibles para recogida'
+      parameters:
+        - name: idEstablecimiento
+          in: query
+          required: true
+          schema: { type: integer }
+        - name: desde
+          in: query
+          schema: { type: string, format: date-time }
+        - name: hasta
+          in: query
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: Lista de slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    hora: { type: string, format: date-time }
+                    capacidad: { type: integer }
+                    libre: { type: integer }
+
+  /api/validar-zona:
+    get:
+      tags: [Reparto]
+      summary: '[NUEVO] Valida si una dirección está en zona de reparto'
+      parameters:
+        - name: direccion
+          in: query
+          required: true
+          schema: { type: string }
+        - name: idPueblo
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Validación
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valida: { type: boolean }
+                  idZona: { type: integer, nullable: true }
+                  nombre: { type: string }
+                  gastos: { type: number, format: float }
+                  pedidoMinimo: { type: number, format: float }
+
+  /api/repartidores/asignar:
+    get:
+      tags: [Reparto]
+      summary: '[NUEVO] Asigna repartidor óptimo según reglas configuradas'
+      parameters:
+        - name: pedido_id
+          in: query
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Repartidor asignado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idRepartidor: { type: integer, nullable: true }
+                  nombre: { type: string }
+                  motivo: { type: string, description: Regla que ha aplicado }
+                  hora_estimada_entrega: { type: string, format: date-time }
+
+  /api/webhook/vapi:
+    post:
+      tags: [Webhook]
+      summary: '[NUEVO] Receptor de eventos de Vapi'
+      description: Valida firma HMAC y procesa eventos call-start, function-call, transcript-final, call-end.
+      security:
+        - VapiHmac: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [call-start, function-call, transcript-final, call-end]
+                call:
+                  type: object
+                  properties:
+                    id: { type: string }
+                    customer:
+                      type: object
+                      properties:
+                        number: { type: string }
+                payload: { type: object }
+      responses:
+        '200':
+          description: Procesado (idempotente)
+        '401':
+          description: Firma HMAC inválida
+
+  /api/llamadas:
+    get:
+      tags: [Llamadas]
+      summary: '[NUEVO] Listado paginado de llamadas para el dashboard'
+      parameters:
+        - name: desde
+          in: query
+          schema: { type: string, format: date }
+        - name: hasta
+          in: query
+          schema: { type: string, format: date }
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [en_curso, completada, transferida, no_pedido, fallida]
+        - name: telefono
+          in: query
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: per_page
+          in: query
+          schema: { type: integer, default: 20 }
+      responses:
+        '200':
+          description: Listado paginado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Llamada' }
+                  total: { type: integer }
+                  page: { type: integer }
+
+  /api/llamadas/{id}:
+    get:
+      tags: [Llamadas]
+      summary: '[NUEVO] Detalle de llamada + transcripción'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Llamada con transcripción
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Llamada'
+                  - type: object
+                    properties:
+                      transcripcion: { $ref: '#/components/schemas/Transcripcion' }
+
+  /api/dashboard/metricas:
+    get:
+      tags: [Llamadas]
+      summary: '[NUEVO] KPIs agregados del agente (cache Redis 5 min)'
+      parameters:
+        - name: desde
+          in: query
+          schema: { type: string, format: date }
+        - name: hasta
+          in: query
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: KPIs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  llamadas_totales: { type: integer }
+                  convertidas_en_pedido: { type: integer }
+                  transferidas: { type: integer }
+                  fallidas: { type: integer }
+                  coste_total_eur: { type: number, format: float }
+                  duracion_media_segundos: { type: integer }
+                  pico_concurrencia: { type: integer }
+
+  /api/blacklist:
+    get:
+      tags: [Config]
+      summary: '[NUEVO] Números bloqueados'
+      responses:
+        '200':
+          description: Lista
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/BlacklistItem' }
+    post:
+      tags: [Config]
+      summary: '[NUEVO] Añadir número a la blacklist'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BlacklistItem' }
+      responses:
+        '200':
+          description: Añadido
+    delete:
+      tags: [Config]
+      summary: '[NUEVO] Quitar número de la blacklist'
+      parameters:
+        - name: telefono
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Eliminado
+
+  /api/reglas-asignacion:
+    get:
+      tags: [Config]
+      summary: '[NUEVO] Reglas de asignación de repartidores'
+      responses:
+        '200':
+          description: Lista ordenada por prioridad
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/ReglaAsignacion' }
+    post:
+      tags: [Config]
+      summary: '[NUEVO] Reemplaza el set de reglas'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items: { $ref: '#/components/schemas/ReglaAsignacion' }
+      responses:
+        '200':
+          description: Guardado
+
+  /api/config-agente:
+    get:
+      tags: [Config]
+      summary: '[NUEVO] Configuración del agente'
+      responses:
+        '200':
+          description: Config actual
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ConfigAgente' }
+    put:
+      tags: [Config]
+      summary: '[NUEVO] Actualizar configuración'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ConfigAgente' }
+      responses:
+        '200':
+          description: Actualizado
+
+components:
+  securitySchemes:
+    VapiHmac:
+      type: apiKey
+      in: header
+      name: X-Vapi-Signature
+      description: HMAC-SHA256 del body con `VAPI_WEBHOOK_SECRET`
+
+  schemas:
+    Producto:
+      type: object
+      properties:
+        idArticulo: { type: integer }
+        nombre: { type: string }
+        descripcion: { type: string }
+        precio: { type: number, format: float }
+        puntos: { type: integer }
+        imagen: { type: string }
+        estado: { type: integer, description: '1=activo, 0=agotado' }
+        idCategoria: { type: integer }
+        opciones: { type: string, nullable: true }
+        ingredientes: { type: string, nullable: true }
+
+    Zona:
+      type: object
+      properties:
+        idZona: { type: integer }
+        nombre: { type: string }
+        activo: { type: integer }
+        gastos: { type: number, format: float }
+        pedidoMinimo: { type: number, format: float }
+        color: { type: string }
+        idPueblo: { type: integer }
+
+    Repartidor:
+      type: object
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        activo: { type: integer }
+        telefono: { type: string }
+        idGrupo: { type: integer }
+
+    ConfiguracionEst:
+      type: object
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        horario: { type: string }
+        terminalPaycomet: { type: integer }
+        apiPaycomet: { type: string }
+        modoSaturacion: { type: integer, description: 'campo a añadir si no existe' }
+
+    PedidoCrear:
+      type: object
+      required: [idEstablecimiento, articulos]
+      properties:
+        idEstablecimiento: { type: integer }
+        idUsuario: { type: integer, nullable: true }
+        codigoPedido: { type: string }
+        articulos:
+          type: array
+          items:
+            type: object
+            properties:
+              idArticulo: { type: integer }
+              cantidad: { type: integer }
+              precio: { type: number, format: float }
+              observaciones: { type: string }
+              opciones: { type: array, items: { type: integer } }
+        # Campos a añadir en Fase 1
+        origen:
+          type: string
+          enum: [app, voz, manual, web]
+          default: manual
+        llamada_id: { type: integer, nullable: true }
+        hora_estimada: { type: string, format: date-time, nullable: true }
+        repartidor_id: { type: integer, nullable: true }
+
+    ClienteIdentificado:
+      type: object
+      properties:
+        idUsuario: { type: integer, nullable: true }
+        nombre: { type: string }
+        apellidos: { type: string }
+        direccion: { type: string }
+        ultimoPedido: { type: string, format: date-time, nullable: true }
+        numeroPedidos: { type: integer }
+
+    EstadoLocal:
+      type: object
+      properties:
+        abierto: { type: boolean }
+        motivo: { type: string, description: 'fuera_horario | cerrado_manual | saturado | ok' }
+        saturado: { type: boolean }
+        cargaCocina: { type: integer }
+        capacidadMaxima: { type: integer }
+        proxima_apertura: { type: string, format: date-time, nullable: true }
+
+    Llamada:
+      type: object
+      properties:
+        id: { type: integer }
+        vapi_call_id: { type: string }
+        telefono_origen: { type: string }
+        cliente_id: { type: integer, nullable: true }
+        estado:
+          type: string
+          enum: [en_curso, completada, transferida, no_pedido, fallida]
+        pedido_id: { type: integer, nullable: true }
+        duracion_segundos: { type: integer }
+        coste_estimado: { type: number, format: float }
+        audio_url: { type: string, nullable: true }
+        fecha_inicio: { type: string, format: date-time }
+        fecha_fin: { type: string, format: date-time, nullable: true }
+
+    Transcripcion:
+      type: object
+      properties:
+        id: { type: integer }
+        llamada_id: { type: integer }
+        texto: { type: string }
+        texto_estructurado:
+          type: array
+          items:
+            type: object
+            properties:
+              rol: { type: string, enum: [agente, cliente] }
+              texto: { type: string }
+              timestamp: { type: string, format: date-time }
+
+    BlacklistItem:
+      type: object
+      properties:
+        telefono: { type: string }
+        motivo: { type: string }
+        fecha: { type: string, format: date-time }
+        bloqueado_por: { type: string }
+
+    ReglaAsignacion:
+      type: object
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        prioridad: { type: integer }
+        tipo:
+          type: string
+          enum: [zona, carga, vehiculo, turno, round_robin]
+        parametros:
+          type: object
+          description: Estructura libre según tipo (ver plan §3)
+        activa: { type: boolean }
+
+    ConfigAgente:
+      type: object
+      properties:
+        saludo_personalizado: { type: string }
+        voz_id: { type: string }
+        tiempo_preparacion_base_minutos: { type: integer }
+        tiempo_extra_por_pollo: { type: integer }
+        velocidad_reparto_kmh: { type: integer }
+        buffer_seguridad_minutos: { type: integer }
+        max_llamadas_hora_por_numero: { type: integer }
+        max_importe_sin_humano_eur: { type: number, format: float }
+        modo_saturacion_umbral: { type: integer }

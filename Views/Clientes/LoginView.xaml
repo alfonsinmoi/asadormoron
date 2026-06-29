@@ -147,7 +147,7 @@
                                 </Border.StrokeShape>
                                 <Grid ColumnDefinitions="Auto, *, Auto">
                                     <Label Grid.Column="0"
-                                           Text="&#x1F512;"
+                                           Text="🔒"
                                            FontSize="18"
                                            TextColor="#999999"
                                            VerticalOptions="Center"
@@ -164,7 +164,7 @@
                                            FontSize="15"/>
                                     <Label Grid.Column="2"
                                            x:Name="TogglePasswordIcon"
-                                           Text="&#x1F441;"
+                                           Text="👁"
                                            FontSize="18"
                                            TextColor="#999999"
                                            VerticalOptions="Center"

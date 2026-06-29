@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Administrador.DetalleLlamadaViewAdmin"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:AsadorMoron.Models"
+    NavigationPage.HasNavigationBar="False"
+    NavigationPage.HasBackButton="False"
+    BackgroundColor="#F5F5F5">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="RojoMarca">#C41E3A</Color>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" StrokeThickness="0" BackgroundColor="White" Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,4" Radius="20" Opacity="0.1"/>
+            </Border.Shadow>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="0,0,20,20"/>
+            </Border.StrokeShape>
+
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Border BackgroundColor="{StaticResource RojoMarca}" StrokeThickness="0"
+                        WidthRequest="44" HeightRequest="44">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="12"/></Border.StrokeShape>
+                    <Image Source="volver.png" WidthRequest="20" HeightRequest="20"
+                           VerticalOptions="Center" HorizontalOptions="Center"/>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
+                    </Border.GestureRecognizers>
+                </Border>
+
+                <Label Grid.Column="1" Text="Detalle llamada"
+                       FontFamily="Nunito_bold" FontSize="20" TextColor="Black"
+                       VerticalOptions="Center" HorizontalOptions="Center"/>
+            </Grid>
+        </Border>
+
+        <ScrollView Grid.Row="1" Padding="12">
+            <VerticalStackLayout Spacing="12">
+
+                <!-- DATOS PRINCIPALES -->
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="14">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6">
+
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="{Binding Llamada.telefono_origen}"
+                               FontFamily="Nunito_bold" FontSize="18" TextColor="Black"/>
+                        <Border Grid.Row="0" Grid.Column="1"
+                                BackgroundColor="{Binding Llamada.EstadoColor}"
+                                Padding="8,3" StrokeThickness="0">
+                            <Border.StrokeShape><RoundRectangle CornerRadius="8"/></Border.StrokeShape>
+                            <Label Text="{Binding Llamada.EstadoTexto}"
+                                   TextColor="White" FontFamily="Nunito_bold" FontSize="11"/>
+                        </Border>
+
+                        <Label Grid.Row="1" Grid.ColumnSpan="2"
+                               Text="{Binding Llamada.fecha_inicio}"
+                               FontFamily="Nunito_regular" FontSize="12" TextColor="#666"/>
+
+                        <Grid Grid.Row="2" Grid.ColumnSpan="2"
+                              ColumnDefinitions="*,*,*" Margin="0,8,0,0">
+                            <VerticalStackLayout Grid.Column="0">
+                                <Label Text="Duración" FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+                                <Label Text="{Binding Llamada.DuracionFormateada}" FontFamily="Nunito_bold" FontSize="14" TextColor="Black"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="Coste" FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+                                <Label Text="{Binding Llamada.CosteFormateado}" FontFamily="Nunito_bold" FontSize="14" TextColor="Black"/>
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2">
+                                <Label Text="Pedido" FontFamily="Nunito_regular" FontSize="10" TextColor="#999"/>
+                                <Label Text="{Binding Llamada.pedido_codigo, FallbackValue='—', TargetNullValue='—'}"
+                                       FontFamily="Nunito_bold" FontSize="14" TextColor="{StaticResource RojoMarca}"/>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                    </Grid>
+                </Border>
+
+                <!-- REPRODUCTOR DE AUDIO custom -->
+                <Border IsVisible="{Binding TieneAudio}"
+                        StrokeThickness="0" BackgroundColor="White" Padding="14">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Grid.Column="0"
+                                   Text="Grabación"
+                                   FontFamily="Nunito_bold" FontSize="16" TextColor="Black"
+                                   VerticalOptions="Center"/>
+                            <Button Grid.Column="1"
+                                    Text="Abrir en navegador"
+                                    Command="{Binding cmdAbrirAudio}"
+                                    BackgroundColor="Transparent" TextColor="{StaticResource RojoMarca}"
+                                    FontFamily="Nunito_bold" FontSize="11"
+                                    Padding="0"/>
+                        </Grid>
+
+                        <!-- Controles del reproductor -->
+                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" VerticalOptions="Center">
+
+                            <!-- Botón Play/Pause -->
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource RojoMarca}"
+                                    StrokeThickness="0"
+                                    WidthRequest="48" HeightRequest="48">
+                                <Border.StrokeShape><RoundRectangle CornerRadius="24"/></Border.StrokeShape>
+                                <Grid HorizontalOptions="Center" VerticalOptions="Center"
+                                      WidthRequest="20" HeightRequest="20">
+                                    <!-- Triángulo de Play (visible por defecto) -->
+                                    <Polygon x:Name="PlayShape"
+                                             Points="3,1 18,10 3,19"
+                                             Fill="White"
+                                             Stroke="White"
+                                             StrokeThickness="1"
+                                             StrokeLineJoin="Round"/>
+                                    <!-- Barras de Pause (ocultas por defecto) -->
+                                    <Grid x:Name="PauseShape" IsVisible="False"
+                                          ColumnDefinitions="5,4,5"
+                                          WidthRequest="14" HeightRequest="16"
+                                          HorizontalOptions="Center" VerticalOptions="Center">
+                                        <BoxView Grid.Column="0" BackgroundColor="White" CornerRadius="1"/>
+                                        <BoxView Grid.Column="2" BackgroundColor="White" CornerRadius="1"/>
+                                    </Grid>
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnPlayPauseTapped"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+
+                            <!-- Barra de progreso + tiempo -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <Slider x:Name="ProgressSlider"
+                                        Minimum="0"
+                                        Maximum="1"
+                                        Value="0"
+                                        MinimumTrackColor="{StaticResource RojoMarca}"
+                                        MaximumTrackColor="#E0E0E0"
+                                        ThumbColor="{StaticResource RojoMarca}"
+                                        DragCompleted="OnProgressDragCompleted"/>
+                                <Grid ColumnDefinitions="*,*">
+                                    <Label x:Name="CurrentTimeLabel" Grid.Column="0"
+                                           Text="0:00"
+                                           FontFamily="Nunito_regular" FontSize="11" TextColor="#666"
+                                           HorizontalOptions="Start"/>
+                                    <Label x:Name="TotalTimeLabel" Grid.Column="1"
+                                           Text="0:00"
+                                           FontFamily="Nunito_regular" FontSize="11" TextColor="#666"
+                                           HorizontalOptions="End"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- TRANSCRIPCIÓN -->
+                <Border StrokeThickness="0" BackgroundColor="White" Padding="14">
+                    <Border.StrokeShape><RoundRectangle CornerRadius="16"/></Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8">
+
+                        <Label Text="Transcripción"
+                               FontFamily="Nunito_bold" FontSize="16" TextColor="Black"/>
+
+                        <Label IsVisible="{Binding TieneTranscripcion, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}"
+                               Text="Sin transcripción disponible."
+                               FontFamily="Nunito_regular" FontSize="13" TextColor="#888"/>
+
+                        <CollectionView ItemsSource="{Binding Turnos}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:TranscripcionTurnoModel">
+                                    <Grid ColumnDefinitions="Auto,*" Margin="0,4">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding FechaHora}"
+                                               FontFamily="Nunito_regular" FontSize="10" TextColor="#999"
+                                               VerticalOptions="Start"
+                                               WidthRequest="60"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding texto}"
+                                               FontFamily="Nunito_regular" FontSize="13" TextColor="Black"
+                                               LineBreakMode="WordWrap"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

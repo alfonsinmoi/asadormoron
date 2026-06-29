@@ -85,6 +85,9 @@ namespace AsadorMoron
             {
                 Debug.WriteLine($"[PERF] App() constructor INICIO: {_appStartStopwatch.ElapsedMilliseconds}ms");
 
+                // Forzar modo claro en toda la app (ignorar el modo del sistema)
+                UserAppTheme = AppTheme.Light;
+
                 // Register SQLite service before anything else
                 DependencyService.Register<ISQLite, SQLiteService>();
                 Debug.WriteLine($"[PERF] DependencyService.Register: {_appStartStopwatch.ElapsedMilliseconds}ms");
@@ -330,8 +333,8 @@ namespace AsadorMoron
                     });
                 };
 
-                await OneSignal.Notifications.RequestPermissionAsync(true);
-                Debug.WriteLine($"[OneSignal] Permiso de notificaciones concedido: {OneSignal.Notifications.Permission}");
+                // No esperamos la respuesta del usuario para no bloquear el inicio de la app
+                _ = OneSignal.Notifications.RequestPermissionAsync(true);
 
                 OneSignal.User.PushSubscription.Changed += (sender, args) =>
                 {

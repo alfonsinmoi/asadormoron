@@ -118,11 +118,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
         exit();
     }
 
+    // SEGURIDAD: Verificar que el usuario tiene suficientes puntos antes de restar
+    $check = $dbConn->prepare("SELECT puntos FROM qo_puntos_usuario
+                               WHERE idEstablecimiento = :idEstablecimiento
+                               AND idUsuario = :idUsuario");
+    $check->bindValue(':idUsuario', $idUsuario);
+    $check->bindValue(':idEstablecimiento', $idEstablecimiento);
+    $check->execute();
+    $row = $check->fetch(PDO::FETCH_ASSOC);
+
+    if (!$row || $row['puntos'] < $puntos) {
+        header("HTTP/1.1 400 Bad Request");
+        echo json_encode(['error' => 'Puntos insuficientes']);
+        exit();
+    }
+
     // SEGURIDAD: Prepared statement con parámetros
     $sql = $dbConn->prepare("UPDATE qo_puntos_usuario
                               SET puntos = puntos - :puntos
                               WHERE idEstablecimiento = :idEstablecimiento
-                              AND idUsuario = :idUsuario");
+                              AND idUsuario = :idUsuario
+                              AND puntos >= :puntos");
     $sql->bindValue(':puntos', $puntos);
     $sql->bindValue(':idUsuario', $idUsuario);
     $sql->bindValue(':idEstablecimiento', $idEstablecimiento);
@@ -161,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql->execute();
     $existe = $sql->fetch(PDO::FETCH_ASSOC)['existe'] > 0;
 
-    // Calcular puntos del último pedido
+    // Calcular puntos del último pedido (excluir artículos pagados con puntos)
     $sql = $dbConn->prepare("SELECT SUM(d.cantidad * d.precio) AS total
                               FROM qo_pedidos_detalle d
                               WHERE d.idPedido = (
@@ -170,7 +186,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                   WHERE p.idUsuario = :idUsuario
                                   ORDER BY p.id DESC
                                   LIMIT 1
-                              )");
+                              )
+                              AND d.pagadoConPuntos = 0");
     $sql->bindValue(':idUsuario', $idUsuario);
     $sql->execute();
 

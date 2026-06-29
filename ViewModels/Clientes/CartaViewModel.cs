@@ -30,6 +30,8 @@ namespace AsadorMoron.ViewModels.Clientes
         private CancellationTokenSource _cts;
         private bool _navegando = false;
         private bool cargado = false;
+        // Saldo de puntos del servidor (sin restar carrito). Se usa en RefrescarCarrito.
+        private int _puntosServidor = -1;
         public CartaViewModel()
         {
             App.entradoEnCarta = false;
@@ -105,7 +107,7 @@ namespace AsadorMoron.ViewModels.Clientes
 
                         var datos = await datosTask;
                         System.Diagnostics.Debug.WriteLine($"[CV] Categorias: {datos.Categorias?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
-                        productos = (await productosTask)?.FindAll(p => p.estado == 1) ?? new List<ArticuloModel>();
+                        productos = (await productosTask) ?? new List<ArticuloModel>();
                         System.Diagnostics.Debug.WriteLine($"[CV] Productos: {productos?.Count ?? 0} ({sw.ElapsedMilliseconds}ms)");
 
                         // Aplicar resultados
@@ -123,11 +125,12 @@ namespace AsadorMoron.ViewModels.Clientes
                             SistemaPuntos = datos.Config?.sistemaPuntos ?? false;
                             if (SistemaPuntos)
                             {
-                                // OPTIMIZADO: Usar LINQ Sum en lugar de foreach
-                                Puntos = datos.Puntos - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
+                                _puntosServidor = datos.Puntos;
+                                Puntos = _puntosServidor - carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
                             }
                             else
                             {
+                                _puntosServidor = -1;
                                 Puntos = 0;
                             }
                         }
@@ -268,42 +271,58 @@ namespace AsadorMoron.ViewModels.Clientes
             try
             {
                 ArticuloModel articulo = (ArticuloModel)parametro;
-                bool continuar = true;
-                if (continuar)
-                {
-                    if (string.IsNullOrEmpty(Cantidad))
-                        Cantidad = "1";
-                    else
-                        Cantidad = (int.Parse(Cantidad) + 1).ToString();
 
-                    CarritoModel c = carrito.Find((obj) => obj.idArticulo == articulo.idArticulo && obj.esMenu == false);
-                    if (c != null)
-                        c.cantidad = c.cantidad + 1;
-                    else
+                // Validación de puntos antes de añadir
+                if (articulo.puntos > 0)
+                {
+                    if (articulo.puntos > Puntos)
                     {
-                        c = new CarritoModel();
-                        c.id = articulo.id;
-                        c.cantidad += 1;
-                        c.porPuntos = 0;
-                        c.puntos = 0;
-                        c.comida = articulo.nombre;
-                        c.comida_eng = articulo.nombre_eng;
-                        c.comida_ger = articulo.nombre_ger;
-                        c.comida_fr = articulo.nombre_fr;
-                        c.idEstablecimiento = articulo.idEstablecimiento;
-                        c.idArticulo = articulo.idArticulo;
-                        c.imagen = articulo.imagen;
-                        c.comentario = articulo.comentario == null ? "" : articulo.comentario;
-                        c.observaciones = "";
-                        c.porEncargo = false;
-                        NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
-                        c.precio = articulo.precio;
-                        c.opcion = 0;
-                        carrito.Add(c);
+                        await App.customDialog.ShowDialogAsync("No tiene suficientes puntos", AppResources.App, AppResources.Cerrar);
+                        return;
                     }
-                    articulo.Cantidad = c.cantidad;
-                    App.DAUtil.ActualizaCarrito(carrito);
                 }
+
+                if (string.IsNullOrEmpty(Cantidad))
+                    Cantidad = "1";
+                else
+                    Cantidad = (int.Parse(Cantidad) + 1).ToString();
+
+                CarritoModel c = carrito.Find((obj) => obj.idArticulo == articulo.idArticulo && obj.esMenu == false);
+                if (c != null)
+                {
+                    c.cantidad = c.cantidad + 1;
+                    if (articulo.puntos > 0)
+                    {
+                        c.puntos = articulo.puntos * c.cantidad;
+                        Puntos -= articulo.puntos;
+                    }
+                }
+                else
+                {
+                    c = new CarritoModel();
+                    c.id = articulo.id;
+                    c.cantidad += 1;
+                    c.porPuntos = articulo.puntos > 0 ? 1 : 0;
+                    c.puntos = articulo.puntos > 0 ? articulo.puntos : 0;
+                    c.comida = articulo.nombre;
+                    c.comida_eng = articulo.nombre_eng;
+                    c.comida_ger = articulo.nombre_ger;
+                    c.comida_fr = articulo.nombre_fr;
+                    c.idEstablecimiento = articulo.idEstablecimiento;
+                    c.idArticulo = articulo.idArticulo;
+                    c.imagen = articulo.imagen;
+                    c.comentario = articulo.comentario == null ? "" : articulo.comentario;
+                    c.observaciones = "";
+                    c.porEncargo = false;
+                    NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
+                    c.precio = articulo.precio;
+                    c.opcion = 0;
+                    if (articulo.puntos > 0)
+                        Puntos -= articulo.puntos;
+                    carrito.Add(c);
+                }
+                articulo.Cantidad = c.cantidad;
+                App.DAUtil.ActualizaCarrito(carrito);
             }
             catch (Exception ex)
             {
@@ -329,26 +348,14 @@ namespace AsadorMoron.ViewModels.Clientes
                     {
                         c.cantidad = c.cantidad - 1;
                         articulo.Cantidad = c.cantidad;
+                        // Restaurar puntos al quitar una unidad
+                        if (articulo.puntos > 0)
+                        {
+                            c.puntos = articulo.puntos * c.cantidad;
+                            Puntos += articulo.puntos;
+                        }
                     }
-                    else
-                    {
-                        c = new CarritoModel();
-                        c.id = articulo.id;
-                        c.cantidad -= 1;
-                        c.comida = articulo.nombre;
-                        c.comida_eng = articulo.nombre_eng;
-                        c.comida_ger = articulo.nombre_ger;
-                        c.comida_fr = articulo.nombre_fr;
-                        c.idEstablecimiento = articulo.idEstablecimiento;
-                        c.idArticulo = articulo.idArticulo;
-                        c.imagen = articulo.imagen;
-                        c.observaciones = "";
-                        c.porEncargo = false;
-                        NumberFormatInfo nfi = CultureInfo.CurrentCulture.NumberFormat;
-                        c.precio = articulo.precio;
-                        c.opcion = 0;
-                        carrito.Add(c);
-                    }
+
                     if (c.cantidad == 0)
                         carrito.Remove(c);
 
@@ -624,14 +631,15 @@ namespace AsadorMoron.ViewModels.Clientes
                 carrito = App.DAUtil.Getcarrito();
                 Cantidad = carrito.Sum(c => c.cantidad).ToString();
 
-                // Actualizar puntos si aplica
-                if (SistemaPuntos && !Kiosko)
+                // Recalcula puntos = saldo del servidor - puntos consumidos por el carrito.
+                // Sin re-hit al servidor: usamos la caché _puntosServidor llenada en init.
+                if (SistemaPuntos && !Kiosko && _puntosServidor >= 0)
                 {
                     var puntosUsados = carrito.Where(p => p.porPuntos == 1).Sum(c => c.puntos);
-                    // Nota: Puntos base se mantiene, solo restamos los usados en carrito
+                    Puntos = _puntosServidor - puntosUsados;
                 }
 
-                System.Diagnostics.Debug.WriteLine($"[CartaViewModel] Carrito refrescado: {carrito.Count} items, cantidad total: {Cantidad}");
+                System.Diagnostics.Debug.WriteLine($"[CartaViewModel] Carrito refrescado: {carrito.Count} items, cantidad total: {Cantidad}, puntos: {Puntos}");
             }
             catch (Exception ex)
             {

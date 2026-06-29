@@ -17,6 +17,9 @@ namespace AsadorMoron.Views.Clientes
         {
             base.OnAppearing();
             UpdateNavigationButton();
+
+            if (BindingContext is ViewModels.Clientes.CartaProductosViewModel vm)
+                vm.RefreshPuntos();
         }
 
         private void UpdateNavigationButton()
