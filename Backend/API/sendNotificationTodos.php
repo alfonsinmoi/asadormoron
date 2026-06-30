@@ -21,7 +21,7 @@ function sendMessage() {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://api.onesignal.com/notifications");
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8',
-                                            'Authorization: Key os_v2_app_aagpfu46dramtjxgk25p4czzi2b5tztqre5u5rupmrx223buaxs4l4awhwlsdccw2iala2uttjvndnnva4q26f4gbgywelarzqyruuq'));
+                                            'Authorization: Key os_v2_app_aagpfu46dramtjxgk25p4czzi342yntwnutew754lzskxy3s452x3g5gagacqqrcxqwfrhlq4q5u7dvtqqjyug3q4ddvy3ce6pjxiti'));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_HEADER, FALSE);
     curl_setopt($ch, CURLOPT_POST, TRUE);

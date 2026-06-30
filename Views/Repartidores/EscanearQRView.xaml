@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="AsadorMoron.Views.Repartidores.EscanearQRView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:scanner="clr-namespace:BarcodeScanning;assembly=BarcodeScanning.Native.Maui"
+    NavigationPage.HasNavigationBar="False"
+    BackgroundColor="Black">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!-- Header con cerrar -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="Auto,*,Auto"
+              BackgroundColor="Black"
+              Padding="16,12">
+            <Border Grid.Column="0"
+                    BackgroundColor="#33FFFFFF"
+                    StrokeThickness="0"
+                    WidthRequest="40"
+                    HeightRequest="40">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Label Text="✕"
+                       FontSize="22"
+                       TextColor="White"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnCerrarTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+            <Label Grid.Column="1"
+                   Text="Escanear QR del ticket"
+                   FontFamily="Nunito_bold"
+                   FontSize="18"
+                   TextColor="White"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"/>
+        </Grid>
+
+        <!-- Cámara nativa con autofocus -->
+        <scanner:CameraView
+            x:Name="Reader"
+            Grid.Row="1"
+            CameraEnabled="True"
+            CaptureQuality="High"
+            VibrationOnDetected="True"
+            TapToFocusEnabled="True"
+            BarcodeSymbologies="QRCode"
+            OnDetectionFinished="OnDetectionFinished"/>
+
+        <!-- Hint inferior -->
+        <Label Grid.Row="2"
+               Text="Encuadra el código QR del ticket dentro del recuadro"
+               TextColor="White"
+               FontSize="14"
+               HorizontalOptions="Center"
+               Padding="20,16,20,24"/>
+    </Grid>
+</ContentPage>

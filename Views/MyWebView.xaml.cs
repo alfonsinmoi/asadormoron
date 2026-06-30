@@ -93,7 +93,8 @@ namespace AsadorMoron.Views
                 else
                 {
                     OperationInfoModel info = await App.ResponseWS.infoTransactionPaycomet(App.pedidoEnCurso.codigoPedido);
-                    await App.ResponseWS.refundPaycomet(App.pedidoEnCurso.codigoPedido, App.TarjetaSeleccionada.idUser, App.TarjetaSeleccionada.tokenUser, Preferences.Get("totalPedido", ""), info.payment.authCode);
+                    string authCode = info?.payment?.authCode ?? "";
+                    await App.ResponseWS.refundPaycomet(App.pedidoEnCurso.codigoPedido, App.TarjetaSeleccionada.idUser, App.TarjetaSeleccionada.tokenUser, Preferences.Get("totalPedido", ""), authCode);
                     App.userdialog.HideLoading();
                     await App.DAUtil.NavigationService.NavigateToAsyncWithoutMenu<PagoErroneoViewModel>(App.pedidoEnCurso.codigoPedido + ";" + Preferences.Get("dia", ""));
                 }

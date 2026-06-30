@@ -1,29 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 // 
 using AsadorMoron.Interfaces;
 using AsadorMoron.Models.PayComet;
 using AsadorMoron.Recursos;
 using AsadorMoron.Services;
-using AsadorMoron.ViewModels.Administrador;
 using AsadorMoron.ViewModels.Base;
-using AsadorMoron.ViewModels.Clientes;
 using AsadorMoron.ViewModels.Establecimientos;
 using AsadorMoron.ViewModels.Repartidores;
 using SQLite;
-using Microsoft.Maui.Devices;
-using Microsoft.Maui;
-using Microsoft.Maui.Controls;
 
 namespace AsadorMoron.Models
 {

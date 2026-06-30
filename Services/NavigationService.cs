@@ -315,6 +315,7 @@ namespace AsadorMoron.Services
             _mappings.Value.Add(typeof(IngredientesViewModel), typeof(IngredientesView));
             _mappings.Value.Add(typeof(DetalleIngredienteViewModel), typeof(DetalleIngredienteView));
             _mappings.Value.Add(typeof(HomeViewModelRepartidor), typeof(HomeViewRepartidor));
+            _mappings.Value.Add(typeof(EscanearQRViewModel), typeof(EscanearQRView));
             _mappings.Value.Add(typeof(DetalleRepartidorViewModel), typeof(DetalleRepartidorView));
             _mappings.Value.Add(typeof(RepartidoresViewModel), typeof(RepartidoresView));
             _mappings.Value.Add(typeof(UsuariosViewModel), typeof(UsuariosView));
