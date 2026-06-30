@@ -7,7 +7,7 @@ namespace AsadorMoron.Utils
 {
     public class OneSignalPush
     {
-        private const string REST_API_KEY = "os_v2_app_aagpfu46dramtjxgk25p4czzi2taidhu7s6ezbuy25p5od6kq7yzomas6a75dbhjbk5wgzpeqay6v2k3h5epnmtmnfwskeohj5st44q";
+        private const string REST_API_KEY = "os_v2_app_aagpfu46dramtjxgk25p4czzi342yntwnutew754lzskxy3s452x3g5gagacqqrcxqwfrhlq4q5u7dvtqqjyug3q4ddvy3ce6pjxiti";
         private const string APP_ID = "000cf2d3-9e1c-40c9-a6e6-56bafe0b3946";
 
         public OneSignalPush()

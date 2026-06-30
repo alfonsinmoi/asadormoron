@@ -51,50 +51,6 @@
                         <TapGestureRecognizer Tapped="OnMenuTapped"/>
                     </Border.GestureRecognizers>
                 </Border>
-
-                <!-- Carrito (visible si no es modo tienda) -->
-                <Grid Grid.Column="1"
-                      Margin="10,0,0,0"
-                      IsVisible="{Binding ModoTienda, Converter={StaticResource InverseBoolConverter}}">
-                    <Border BackgroundColor="#F5F5F5"
-                            StrokeThickness="0"
-                            WidthRequest="44"
-                            HeightRequest="44">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="14"/>
-                        </Border.StrokeShape>
-                        <Image Source="carrito.png"
-                               WidthRequest="24"
-                               HeightRequest="24"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center"/>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                    <!-- Badge cantidad -->
-                    <Border BackgroundColor="{StaticResource Amarillo}"
-                            StrokeThickness="0"
-                            WidthRequest="22"
-                            HeightRequest="22"
-                            HorizontalOptions="End"
-                            VerticalOptions="Start"
-                            Margin="0,-4,-4,0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="11"/>
-                        </Border.StrokeShape>
-                        <Label Text="{Binding Cantidad}"
-                               FontFamily="Nunito_bold"
-                               FontSize="12"
-                               TextColor="#333333"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding IrDetallePedidoCommand}"/>
-                        </Border.GestureRecognizers>
-                    </Border>
-                </Grid>
-
                 <!-- Título -->
                 <StackLayout Grid.Column="2"
                              VerticalOptions="Center"
@@ -120,11 +76,13 @@
                                 <Label Text="Hoy:"
                                        FontFamily="Nunito"
                                        FontSize="12"
-                                       TextColor="White"/>
-                                <Label Text="{Binding ContadorPedidosDia}"
+                                       TextColor="White"
+                                       VerticalOptions="Center"/>
+                                <Label Text="{Binding TotalPedidos}"
                                        FontFamily="Nunito_bold"
                                        FontSize="14"
-                                       TextColor="White"/>
+                                       TextColor="White"
+                                       VerticalOptions="Center"/>
                             </StackLayout>
                         </Border>
                     </StackLayout>
@@ -257,7 +215,38 @@
         <!-- ============================================ -->
         <!-- LISTA DE PEDIDOS -->
         <!-- ============================================ -->
-        <RefreshView Grid.Row="2"
+        <Grid Grid.Row="2" RowDefinitions="Auto,*">
+
+            <!-- Botón Escanear QR (encima de la lista) -->
+            <Border Grid.Row="0"
+                    BackgroundColor="#2196F3"
+                    StrokeThickness="0"
+                    HeightRequest="48"
+                    Margin="16,12,16,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <StackLayout Orientation="Horizontal"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"
+                             Spacing="8">
+                    <Label Text="⌖"
+                           FontFamily="Nunito_bold"
+                           FontSize="20"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                    <Label Text="Escanear QR del ticket"
+                           FontFamily="Nunito_bold"
+                           FontSize="15"
+                           TextColor="White"
+                           VerticalOptions="Center"/>
+                </StackLayout>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding cmdEscanearQR}"/>
+                </Border.GestureRecognizers>
+            </Border>
+
+        <RefreshView Grid.Row="1"
                      Command="{Binding RefreshCommand}"
                      IsRefreshing="{Binding IsRefreshing}"
                      RefreshColor="{StaticResource RojoMarca}"
@@ -341,7 +330,7 @@
                                     </Grid>
 
                                     <!-- Nombre y Zona -->
-                                    <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2" Grid.ColumnSpan="2">
                                         <Label Text="{Binding nombreUsuario}"
                                                FontFamily="Nunito_bold"
                                                FontSize="15"
@@ -355,35 +344,7 @@
                                                LineBreakMode="TailTruncation"/>
                                     </StackLayout>
 
-                                    <!-- Código Pedido + Número Día -->
-                                    <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalOptions="Center">
-                                        <!-- Badge Número del Día -->
-                                        <Border BackgroundColor="#2196F3"
-                                                StrokeThickness="0"
-                                                Padding="8,6"
-                                                VerticalOptions="Center"
-                                                IsVisible="{Binding numeroDia, Converter={StaticResource IntToBoolConverter}}">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="8"/>
-                                            </Border.StrokeShape>
-                                            <Label Text="{Binding numeroDia, StringFormat='#{0}'}"
-                                                   FontFamily="Nunito_bold"
-                                                   FontSize="14"
-                                                   TextColor="White"/>
-                                        </Border>
-                                        <Border BackgroundColor="{StaticResource RojoMarca}"
-                                                StrokeThickness="0"
-                                                Padding="10,6"
-                                                VerticalOptions="Center">
-                                            <Border.StrokeShape>
-                                                <RoundRectangle CornerRadius="8"/>
-                                            </Border.StrokeShape>
-                                            <Label Text="{Binding codigoPedido}"
-                                                   FontFamily="Nunito_bold"
-                                                   FontSize="14"
-                                                   TextColor="White"/>
-                                        </Border>
-                                    </StackLayout>
+                                    
 
                                     <!-- Botón Acción -->
                                     <Border Grid.Column="3"
@@ -438,8 +399,35 @@
                                                VerticalOptions="Center"/>
                                     </Border>
 
-                                    <!-- Espaciador -->
-                                    <BoxView Grid.Column="2" Color="Transparent"/>
+                                    <!-- Código Pedido + Número Día -->
+                                    <StackLayout Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalOptions="Center">
+                                        <!-- Badge Número del Día -->
+                                        <Border BackgroundColor="#2196F3"
+                                                StrokeThickness="0"
+                                                Padding="8,6"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding numeroDia, Converter={StaticResource IntToBoolConverter}}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding numeroDia, StringFormat='#{0}'}"
+                                                   FontFamily="Nunito_bold"
+                                                   FontSize="14"
+                                                   TextColor="White"/>
+                                        </Border>
+                                        <Border BackgroundColor="{StaticResource RojoMarca}"
+                                                StrokeThickness="0"
+                                                Padding="10,6"
+                                                VerticalOptions="Center">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8"/>
+                                            </Border.StrokeShape>
+                                            <Label Text="{Binding codigoPedido}"
+                                                   FontFamily="Nunito_bold"
+                                                   FontSize="14"
+                                                   TextColor="White"/>
+                                        </Border>
+                                    </StackLayout>
 
                                     <!-- Precio -->
                                     <Label Grid.Column="3"
@@ -459,23 +447,28 @@
                                     <Border.StrokeShape>
                                         <RoundRectangle CornerRadius="10"/>
                                     </Border.StrokeShape>
-                                    <StackLayout Orientation="Horizontal" Spacing="8">
-                                        <Label Text="&#x1F4DD;"
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                        <Label Grid.Column="0"
+                                               Text="&#x1F4DD;"
                                                FontSize="14"
                                                VerticalOptions="Start"/>
-                                        <Label FontFamily="Nunito"
+                                        <Label Grid.Column="1"
+                                               FontFamily="Nunito"
                                                FontSize="13"
                                                TextColor="#333333"
-                                               LineBreakMode="WordWrap">
+                                               LineBreakMode="WordWrap"
+                                               HorizontalOptions="Fill">
                                             <Label.FormattedText>
                                                 <FormattedString>
                                                     <Span Text="Observaciones: "
-                                                          FontFamily="Nunito_bold"/>
-                                                    <Span Text="{Binding comentario}"/>
+                                                          FontFamily="Nunito_bold"
+                                                          TextColor="#333333"/>
+                                                    <Span Text="{Binding comentario}"
+                                                          TextColor="#333333"/>
                                                 </FormattedString>
                                             </Label.FormattedText>
                                         </Label>
-                                    </StackLayout>
+                                    </Grid>
                                 </Border>
 
                             </Grid>
@@ -485,6 +478,8 @@
 
             </CollectionView>
         </RefreshView>
+
+        </Grid>
 
     </Grid>
 

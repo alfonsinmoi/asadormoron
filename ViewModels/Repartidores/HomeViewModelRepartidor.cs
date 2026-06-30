@@ -179,6 +179,33 @@ namespace AsadorMoron.ViewModels.Repartidores
         {
 
         }
+
+        // Devuelve la imagen del estado "Recogido" según si el pedido lo lleva el
+        // repartidor activo (verde "entregado") o cualquier otro (rojo "recogido").
+        private string ColorRecogido(int idRepartidor)
+        {
+            int myId = App.DAUtil.Usuario?.Repartidor?.id ?? -1;
+            return idRepartidor == myId && myId > 0 ? "pedidoentregado.png" : "pedidorecogido.png";
+        }
+
+        // Coloca al principio los pedidos Recogidos por el repartidor activo,
+        // dejando el resto en su orden actual (por horaEntrega).
+        private void ReordenarListado()
+        {
+            int myId = App.DAUtil.Usuario?.Repartidor?.id ?? -1;
+            if (myId <= 0 || Listado == null || Listado.Count < 2) return;
+            var sorted = Listado
+                .Select((p, i) => (p, i))
+                .OrderBy(t => (t.p.idRepartidor == myId && t.p.idEstadoPedido == (int)Utils.EstadoPedido.Recogido) ? 0 : 1)
+                .ThenBy(t => t.i)
+                .Select(t => t.p)
+                .ToList();
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                int currentIndex = Listado.IndexOf(sorted[i]);
+                if (currentIndex >= 0 && currentIndex != i) Listado.Move(currentIndex, i);
+            }
+        }
         public override async Task InitializeAsync(object navigationData)
         {
             try
@@ -272,6 +299,7 @@ namespace AsadorMoron.ViewModels.Repartidores
         public ICommand cmdVerCliente { get { return new Command(VerClienteExe); } }
         public ICommand cmdSi { get { return new Command(SiExe); } }
         public ICommand cmdNo { get { return new Command(NoExe); } }
+        public ICommand cmdEscanearQR { get { return new Command(async () => await EscanearQRExe()); } }
         #endregion
         #region Métodos
         private void VerClienteExe()
@@ -393,7 +421,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                                                     item.ColorPedido = "pedidoporrecoger.png";
                                                     break;
                                                 case (int)EstadoPedido.Recogido:
-                                                    item.ColorPedido = "pedidorecogido.png";
+                                                    item.ColorPedido = ColorRecogido(item.idRepartidor);
                                                     break;
                                                 case (int)EstadoPedido.Entregado:
                                                     item.ColorPedido = "pedidoentregado.png";
@@ -472,7 +500,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                                                         x.ColorPedido = "pedidoporrecoger.png";
                                                         break;
                                                     case (int)EstadoPedido.Recogido:
-                                                        x.ColorPedido = "pedidorecogido.png";
+                                                        x.ColorPedido = ColorRecogido(x.idRepartidor);
                                                         break;
                                                     case (int)EstadoPedido.Entregado:
                                                         x.ColorPedido = "pedidoentregado.png";
@@ -499,7 +527,7 @@ namespace AsadorMoron.ViewModels.Repartidores
 
                                 if (toBeAdded.Count > 0 || toBeDeleted.Count > 0 || toBeUpdated.Count > 0)
                                 {
-
+                                    ReordenarListado();
                                     TotalPedidos = ListPedidosTemp.Count();
                                     if (toBeAdded.Count > 0)
                                     {
@@ -557,6 +585,71 @@ namespace AsadorMoron.ViewModels.Repartidores
                 // 
             }
         }
+        // Abre el scanner. Cuando se lee un QR válido, busca el pedido en el listado;
+        // si existe y está pendiente (estados 1,2,3) lo asigna a este repartidor y lo
+        // marca como Recogido (estado 4).
+        private async Task EscanearQRExe()
+        {
+            try
+            {
+                EscanearQRViewModel.OnCodigoLeido = async (codigo) =>
+                {
+                    await MainThread.InvokeOnMainThreadAsync(async () => await ProcesarQRLeido(codigo));
+                };
+                await App.DAUtil.NavigationService.NavigateToAsyncWithoutMenu<EscanearQRViewModel>();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[QR] Error abriendo scanner: {ex.Message}");
+            }
+        }
+
+        private async Task ProcesarQRLeido(string codigo)
+        {
+            if (string.IsNullOrWhiteSpace(codigo)) return;
+            try
+            {
+                CabeceraPedido c = Listado.FirstOrDefault(p => p.codigoPedido != null && p.codigoPedido.Equals(codigo, StringComparison.OrdinalIgnoreCase));
+                if (c == null)
+                {
+                    await App.customDialog.ShowDialogAsync($"Pedido {codigo} no está en tu listado.", AppResources.App, AppResources.Cerrar);
+                    return;
+                }
+                if (c.idEstadoPedido >= (int)EstadoPedido.Recogido)
+                {
+                    await App.customDialog.ShowDialogAsync($"Pedido {codigo} ya está recogido.", AppResources.App, AppResources.Cerrar);
+                    return;
+                }
+                if (!await App.ResponseWS.cambiaEstadoPedido(c.idPedido, 4))
+                {
+                    await App.customDialog.ShowDialogAsync("Error cambiando el estado del pedido.", AppResources.App, AppResources.Cerrar);
+                    return;
+                }
+                await App.ResponseWS.pedidoConRepartidor(c.codigoPedido, App.DAUtil.Usuario.Repartidor.id);
+                c.idEstadoPedido = 4;
+                c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
+                c.ColorPedido = ColorRecogido(c.idRepartidor);
+                c.imagenBoton = "entregado.png";
+                c.FotoRepartidor = App.DAUtil.Usuario.Repartidor.foto;
+                c.repartidor = 1;
+                ReordenarListado();
+
+                // Notificaciones (mismo patrón que BotonExecute2)
+                var tokens = await App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
+                foreach (TokensModel to in tokens)
+                    App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido recogido", to.token);
+                tokens = await App.ResponseWS.getTokenEstablecimiento(c.idEstablecimiento);
+                foreach (TokensModel to in tokens)
+                    App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " de " + c.nombreEstablecimiento + " ha sido recogido", to.token);
+                string tokenUser = await App.ResponseWS.getTokenUsuario(c.idUsuario);
+                App.ResponseWS.enviaNotificacion(c.nombreEstablecimiento, "El pedido " + c.codigoPedido + " ha sido recogido de " + c.nombreEstablecimiento, tokenUser);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[QR] Error procesando código {codigo}: {ex.Message}");
+            }
+        }
+
         private async Task BotonExecute(string idPedido)
         {
             try
@@ -614,11 +707,12 @@ namespace AsadorMoron.ViewModels.Repartidores
                     {
                         await App.ResponseWS.pedidoConRepartidor(c.codigoPedido, App.DAUtil.Usuario.Repartidor.id);
                         c.idEstadoPedido = 4;
-                        c.ColorPedido = "pedidorecogido.png";
+                        c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
+                        c.ColorPedido = ColorRecogido(c.idRepartidor);
                         c.imagenBoton = "entregado.png";
                         c.FotoRepartidor = App.DAUtil.Usuario.Repartidor.foto;
-                        c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
                         c.repartidor = 1;
+                        ReordenarListado();
 
                         List<TokensModel> tokens = await App.ResponseWS.getTokenMultiAdministrador(App.DAUtil.Usuario.idPueblo);
                         foreach (TokensModel to in tokens)
@@ -665,11 +759,12 @@ namespace AsadorMoron.ViewModels.Repartidores
                                 {
                                     await App.ResponseWS.pedidoConRepartidor(c.codigoPedido, App.DAUtil.Usuario.Repartidor.id);
                                     c.idEstadoPedido = 4;
-                                    c.ColorPedido = "pedidorecogido.png";
+                                    c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
+                                    c.ColorPedido = ColorRecogido(c.idRepartidor);
                                     c.imagenBoton = "entregado.png";
                                     c.FotoRepartidor = App.DAUtil.Usuario.Repartidor.foto;
-                                    c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
                                     c.repartidor = 1;
+                                    ReordenarListado();
 
                                     List<TokensModel> tokens = await App.ResponseWS.getTokenRepartidores(c.idEstablecimiento);
                                     foreach (TokensModel to in tokens)
@@ -707,11 +802,12 @@ namespace AsadorMoron.ViewModels.Repartidores
                             if (borra)
                             {
                                 c.idEstadoPedido = 4;
-                                c.ColorPedido = "pedidorecogido.png";
+                                c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
+                                c.ColorPedido = ColorRecogido(c.idRepartidor);
                                 c.imagenBoton = "entregado.png";
                                 c.FotoRepartidor = App.DAUtil.Usuario.Repartidor.foto;
-                                c.idRepartidor = App.DAUtil.Usuario.Repartidor.id;
                                 c.repartidor = 1;
+                                ReordenarListado();
                             }
                             App.userdialog.HideLoading();
                         }));
@@ -822,7 +918,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                                     item.ColorPedido = "pedidoporrecoger.png";
                                     break;
                                 case (int)EstadoPedido.Recogido:
-                                    item.ColorPedido = "pedidorecogido.png";
+                                    item.ColorPedido = ColorRecogido(item.idRepartidor);
                                     break;
                                 case (int)EstadoPedido.Entregado:
                                     item.ColorPedido = "pedidoentregado.png";
@@ -844,6 +940,7 @@ namespace AsadorMoron.ViewModels.Repartidores
                             {
                                 Listado = new ObservableCollection<CabeceraPedido>(ListPedidosTemp);
                                 TotalPedidos = ListPedidosTemp.Count();
+                                ReordenarListado();
                             }
                         });
                     }

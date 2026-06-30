@@ -340,7 +340,7 @@ namespace AsadorMoron.ViewModels.Clientes
             }
             catch (Exception ex)
             {
-                // 
+                //
             }
             return resultado;
         }
@@ -849,7 +849,8 @@ namespace AsadorMoron.ViewModels.Clientes
                     if (await App.ResponseWS.cambiaEstadoPedido(App.pedidoEnCurso.idPedido, 99))
                     {
                         OperationInfoModel info = await App.ResponseWS.infoTransactionPaycomet(App.pedidoEnCurso.codigoPedido);
-                        await App.ResponseWS.refundPaycomet(App.pedidoEnCurso.codigoPedido, App.TarjetaSeleccionada.idUser, App.TarjetaSeleccionada.tokenUser, ((int)(total * 100)).ToString(), info.payment.authCode);
+                        string authCode = info?.payment?.authCode ?? "";
+                        await App.ResponseWS.refundPaycomet(App.pedidoEnCurso.codigoPedido, App.TarjetaSeleccionada.idUser, App.TarjetaSeleccionada.tokenUser, ((int)(total * 100)).ToString(), authCode);
                         App.userdialog.HideLoading();
                     }
                     await App.DAUtil.NavigationService.NavigateToAsyncWithoutMenu<PagoErroneoViewModel>(App.pedidoEnCurso.codigoPedido + ";" + Preferences.Get("dia", ""));

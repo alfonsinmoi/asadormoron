@@ -20,6 +20,8 @@ using Mopups.Services;
 using AsadorMoron.Views.Clientes;
 using System.Diagnostics;
 using AsadorMoron.Models.PayComet;
+using CommunityToolkit.Mvvm.Messaging;
+using AsadorMoron.Messages;
 
 namespace AsadorMoron.ViewModels.Clientes
 {
@@ -760,18 +762,34 @@ namespace AsadorMoron.ViewModels.Clientes
 
         public void SubscribeAddCard()
         {
-            MessagingCenter.Subscribe<AddCreditCardPageViewModel, TarjetaBindableModel>(this, "addCard", (s, param) =>
+            // La página de añadir tarjeta notifica vía WeakReferenceMessenger (AddCardMessage).
+            WeakReferenceMessenger.Default.Register<AddCardMessage>(this, (r, m) =>
             {
-                Cards.Add(param);
-                TarjetaSeleccionada = param;
-                App.TarjetaSeleccionada = param.tarjeta;
-                Preferences.Set("TarjetaSeleccionada", App.TarjetaSeleccionada.pan);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    try
+                    {
+                        if (m?.Tarjeta == null) return;
+                        if (Cards == null)
+                            Cards = new ObservableCollection<TarjetaBindableModel>();
+                        // Evitar duplicados por PAN
+                        if (Cards.Any(c => c.tarjeta?.pan == m.Tarjeta.pan)) return;
+
+                        var tar = new TarjetaBindableModel { tarjeta = m.Tarjeta, fondo = "#000000", Seleccionada = true };
+                        foreach (var c in Cards) c.Seleccionada = false;
+                        Cards.Add(tar);
+                        TarjetaSeleccionada = tar;
+                        App.TarjetaSeleccionada = tar.tarjeta;
+                        Preferences.Set("TarjetaSeleccionada", tar.tarjeta.pan ?? "");
+                    }
+                    catch { }
+                });
             });
         }
 
         public void UnsubscribedAddCard()
         {
-            MessagingCenter.Unsubscribe<AddCreditCardPageViewModel>(this, "addCard");
+            WeakReferenceMessenger.Default.Unregister<AddCardMessage>(this);
         }
         private void SeleccionaTarjetaExe(object tarjeta)
         {

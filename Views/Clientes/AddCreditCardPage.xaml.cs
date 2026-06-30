@@ -75,17 +75,41 @@ namespace AsadorMoron.Views.Clientes
             }
         }
 
+        // Android devuelve el resultado de EvaluateJavaScriptAsync envuelto en comillas y
+        // con las comillas internas escapadas: "Proceso correcto{\"DS_IDUSER\":...}".
+        // Normalizamos a texto plano para que StartsWith/parse funcione igual que en iOS.
+        private static string NormalizarResultadoJs(string raw)
+        {
+            if (string.IsNullOrEmpty(raw)) return "";
+            string r = raw.Trim();
+            if (r.StartsWith("\"") && r.EndsWith("\"") && r.Length >= 2)
+                r = r.Substring(1, r.Length - 2);
+            // Unescape de comillas y barras
+            r = r.Replace("\\\"", "\"").Replace("\\/", "/").Replace("\\\\", "\\");
+            return r;
+        }
+
+        // Extrae el objeto JSON ({...}) que viene tras "Proceso correcto".
+        private static string ExtraerJson(string resultado)
+        {
+            int ini = resultado.IndexOf('{');
+            int fin = resultado.LastIndexOf('}');
+            if (ini >= 0 && fin > ini) return resultado.Substring(ini, fin - ini + 1);
+            return "{}";
+        }
+
         private async void WebView_Navigated(object sender, WebNavigatedEventArgs e)
         {
-            string resultado = await webView.EvaluateJavaScriptAsync("document.body.innerHTML");
-            if (resultado.StartsWith("Proceso correcto"))
+            string resultado = NormalizarResultadoJs(await webView.EvaluateJavaScriptAsync("document.body.innerHTML"));
+            if (resultado.Contains("Proceso correcto"))
             {
-                ResponseAddCardModel info = JsonConvert.DeserializeObject<ResponseAddCardModel>(resultado.Replace("Proceso correcto", "").Replace("\\", ""));
+                ResponseAddCardModel info = JsonConvert.DeserializeObject<ResponseAddCardModel>(ExtraerJson(resultado));
                 TarjetaModel tarjeta = await App.ResponseWS.infoTarjetaPaycomet(info.DS_IDUSER, info.DS_TOKEN_USER);
-                App.TarjetaSeleccionada = tarjeta;
-                Preferences.Set("TarjetaSeleccionada", App.TarjetaSeleccionada.pan);
                 if (tarjeta != null)
                 {
+                    App.TarjetaSeleccionada = tarjeta;
+                    Preferences.Set("TarjetaSeleccionada", tarjeta.pan ?? "");
+
                     bool tarjetaRepetida = false;
                     foreach (var item in _listTarjetas)
                     {
@@ -112,9 +136,13 @@ namespace AsadorMoron.Views.Clientes
                         WeakReferenceMessenger.Default.Send(new Messages.AddCardMessage(tarjeta));
                     }
                 }
+                else
+                {
+                    await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
+                }
                 await ClosePage();
             }
-            else if (resultado.StartsWith("Proceso Incorrecto") || resultado.StartsWith("Error, no se ha obtenido token"))
+            else if (resultado.Contains("Proceso Incorrecto") || resultado.Contains("Error, no se ha obtenido token"))
             {
                 webView.Reload();
                 await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
@@ -124,21 +152,25 @@ namespace AsadorMoron.Views.Clientes
 
         private async void WebView_Navigated2(object sender, WebNavigatedEventArgs e)
         {
-            string resultado = await webView.EvaluateJavaScriptAsync("document.body.innerHTML");
-            if (resultado.StartsWith("Proceso correcto"))
+            string resultado = NormalizarResultadoJs(await webView.EvaluateJavaScriptAsync("document.body.innerHTML"));
+            if (resultado.Contains("Proceso correcto"))
             {
-                ResponseAddCardModel info = JsonConvert.DeserializeObject<ResponseAddCardModel>(resultado.Replace("Proceso correcto", "").Replace("\\", ""));
+                ResponseAddCardModel info = JsonConvert.DeserializeObject<ResponseAddCardModel>(ExtraerJson(resultado));
                 TarjetaModel tarjeta = await App.ResponseWS.infoTarjetaPaycomet(info.DS_IDUSER, info.DS_TOKEN_USER);
-                App.TarjetaSeleccionada = tarjeta;
-                Preferences.Set("TarjetaSeleccionada", App.TarjetaSeleccionada.pan);
                 if (tarjeta != null)
                 {
+                    App.TarjetaSeleccionada = tarjeta;
+                    Preferences.Set("TarjetaSeleccionada", tarjeta.pan ?? "");
                     await App.ResponseWS.nuevaTarjeta(tarjeta);
                     WeakReferenceMessenger.Default.Send(new Messages.AddCardMessage(tarjeta));
                 }
+                else
+                {
+                    await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);
+                }
                 await ClosePage();
             }
-            else if (resultado.StartsWith("Proceso Incorrecto") || resultado.StartsWith("Error, no se ha obtenido token"))
+            else if (resultado.Contains("Proceso Incorrecto") || resultado.Contains("Error, no se ha obtenido token"))
             {
                 webView.Reload();
                 await App.customDialog.ShowDialogAsync(AppResources.Error, AppResources.App, AppResources.Cerrar);

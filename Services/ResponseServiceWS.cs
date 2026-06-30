@@ -33,6 +33,15 @@ namespace AsadorMoron.Services
         private static readonly string urlPaycomet = "https://rest.paycomet.com/v1/";
         public static int terminalPaycomet = 0;
         public static string apiKeyPaycomet = "";
+
+        // Cliente HTTP para las llamadas al proxy PayComet (qoorder.com).
+        // Reutiliza App.Client, que es el que el resto de la app usa contra qoorder.com
+        // y que SÍ valida el certificado en el dispositivo (un HttpClient "fresco" no
+        // llegaba al servidor en iOS).
+        private static HttpClient NewSecureClient()
+        {
+            return App.Client;
+        }
         public static void UploadImage(string path, string nombre, string carpeta, string antiguo, int maxSize = 300)
         {
             string uploadPath = path;
@@ -5894,19 +5903,14 @@ namespace AsadorMoron.Services
             {
                 if (App.DAUtil.DoIHaveInternet())
                 {
-                    InfoCardModel tarjeta = new InfoCardModel();
-                    tarjeta.idUser = idUser;
-                    tarjeta.terminal = terminalPaycomet;
-                    tarjeta.tokenUser = tokenUser;
+                    // Proxy server-side: la API key de PayComet nunca viaja al cliente.
+                    var payload = new { action = "card_info", idUser, tokenUser };
+                    string requestUri = urlPro + "pago-paycomet.php";
 
-                    DatosConexionModel.uri = urlPaycomet;
-                    string requestUri = DatosConexionModel.uri + "cards/info";
-
-                    HttpClient client = new HttpClient(new LoggingHandler(new HttpClientHandler()));
-                    client.DefaultRequestHeaders.Add("PAYCOMET-API-TOKEN", apiKeyPaycomet);
+                    HttpClient client = NewSecureClient();
                     HttpResponseMessage response = new HttpResponseMessage();
 
-                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(tarjeta), Encoding.UTF8, "application/json"));
+                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json"));
 
 
                     string resultJSON = await response.Content.ReadAsStringAsync();
@@ -5945,18 +5949,13 @@ namespace AsadorMoron.Services
             {
                 if (App.DAUtil.DoIHaveInternet())
                 {
-                    PurchaseModel tarjeta = new PurchaseModel();
-                    tarjeta.payment = new Payment();
-                    tarjeta.payment.terminal = terminalPaycomet;
+                    var payload = new { action = "payment_info", order };
+                    string requestUri = urlPro + "pago-paycomet.php";
 
-                    DatosConexionModel.uri = urlPaycomet;
-                    string requestUri = DatosConexionModel.uri + "payments/" + order + "/info";
-
-                    HttpClient client = new HttpClient(new LoggingHandler(new HttpClientHandler()));
-                    client.DefaultRequestHeaders.Add("PAYCOMET-API-TOKEN", apiKeyPaycomet);
+                    HttpClient client = NewSecureClient();
                     HttpResponseMessage response = new HttpResponseMessage();
 
-                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(tarjeta), Encoding.UTF8, "application/json"));
+                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json"));
 
 
                     string resultJSON = await response.Content.ReadAsStringAsync();
@@ -5986,23 +5985,14 @@ namespace AsadorMoron.Services
             {
                 if (App.DAUtil.DoIHaveInternet())
                 {
-                    //Required: amount,authCode,currency,originalIp,terminal
-                    PurchaseModel tarjeta = new PurchaseModel();
-                    tarjeta.payment = new Payment();
-                    tarjeta.payment.terminal = terminalPaycomet;
-                    tarjeta.payment.amount = amount;
-                    tarjeta.payment.authCode = autnCode;
-                    tarjeta.payment.currency = "EUR";
-                    tarjeta.payment.originalIp = "127.0.0.1";
+                    // amount/authCode/order al proxy; terminal+IP los pone el servidor
+                    var payload = new { action = "refund", order, amount, authCode = autnCode };
+                    string requestUri = urlPro + "pago-paycomet.php";
 
-                    DatosConexionModel.uri = urlPaycomet;
-                    string requestUri = DatosConexionModel.uri + "payments/" + order + "/refund";
-
-                    HttpClient client = new HttpClient(new LoggingHandler(new HttpClientHandler()));
-                    client.DefaultRequestHeaders.Add("PAYCOMET-API-TOKEN", apiKeyPaycomet);
+                    HttpClient client = NewSecureClient();
                     HttpResponseMessage response = new HttpResponseMessage();
 
-                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(tarjeta), Encoding.UTF8, "application/json"));
+                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json"));
 
 
                     string resultJSON = await response.Content.ReadAsStringAsync();
@@ -6032,19 +6022,13 @@ namespace AsadorMoron.Services
             {
                 if (App.DAUtil.DoIHaveInternet())
                 {
-                    InfoCardModel tarjeta = new InfoCardModel();
-                    tarjeta.idUser = idUser;
-                    tarjeta.terminal = terminalPaycomet;
-                    tarjeta.tokenUser = tokenUser;
+                    var payload = new { action = "card_delete", idUser, tokenUser };
+                    string requestUri = urlPro + "pago-paycomet.php";
 
-                    DatosConexionModel.uri = urlPaycomet;
-                    string requestUri = DatosConexionModel.uri + "cards/delete";
-
-                    HttpClient client = new HttpClient(new LoggingHandler(new HttpClientHandler()));
-                    client.DefaultRequestHeaders.Add("PAYCOMET-API-TOKEN", apiKeyPaycomet);
+                    HttpClient client = NewSecureClient();
                     HttpResponseMessage response = new HttpResponseMessage();
 
-                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(tarjeta), Encoding.UTF8, "application/json"));
+                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json"));
 
 
                     string resultJSON = await response.Content.ReadAsStringAsync();
@@ -6074,26 +6058,14 @@ namespace AsadorMoron.Services
                 //return "http://url-ok";
                 if (App.DAUtil.DoIHaveInternet())
                 {
-                    PurchaseModel compra = new PurchaseModel();
-                    compra.payment = new Payment();
-                    compra.payment.amount = amount;
-                    compra.payment.currency = "EUR";
-                    compra.payment.idUser = idUser;
-                    compra.payment.methodId = 1;
-                    compra.payment.order = order;
-                    compra.payment.originalIp = "127.0.0.1";
-                    compra.payment.secure = 1;
-                    compra.payment.terminal = terminalPaycomet;
-                    compra.payment.tokenUser = tokenUser;
+                    // Proxy server-side (methodId 1 = tarjeta). terminal+IP los pone el servidor.
+                    var payload = new { action = "payment", idUser, tokenUser, amount, order };
+                    string requestUri = urlPro + "pago-paycomet.php";
 
-                    DatosConexionModel.uri = urlPaycomet;
-                    string requestUri = DatosConexionModel.uri + "payments";
-
-                    HttpClient client = new HttpClient(new LoggingHandler(new HttpClientHandler()));
-                    client.DefaultRequestHeaders.Add("PAYCOMET-API-TOKEN", apiKeyPaycomet);
+                    HttpClient client = NewSecureClient();
                     HttpResponseMessage response = new HttpResponseMessage();
 
-                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(compra), Encoding.UTF8, "application/json"));
+                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json"));
 
 
                     string resultJSON = await response.Content.ReadAsStringAsync();
@@ -6109,7 +6081,10 @@ namespace AsadorMoron.Services
                                 return "";
                         }
                         else
-                            return App.erroresPaycomet.Where(p => p.errorCode == respuesta.errorCode).FirstOrDefault().textError;
+                        {
+                            var err = App.erroresPaycomet?.FirstOrDefault(p => p.errorCode == respuesta.errorCode);
+                            return err?.textError ?? (AppResources.HacerPagoKO + " (" + respuesta.errorCode + ")");
+                        }
                     }
                     else
                     {
@@ -6129,26 +6104,14 @@ namespace AsadorMoron.Services
             {
                 if (App.DAUtil.DoIHaveInternet())
                 {
-                    PurchaseModel compra = new PurchaseModel();
-                    compra.payment = new Payment();
-                    compra.payment.amount = amount;
-                    compra.payment.currency = "EUR";
-                    compra.payment.idUser = idUser;
-                    compra.payment.methodId = 11;
-                    compra.payment.order = order;
-                    compra.payment.originalIp = "127.0.0.1";
-                    compra.payment.secure = 1;
-                    compra.payment.terminal = terminalPaycomet;
-                    compra.payment.tokenUser = tokenUser;
+                    // Proxy server-side (methodId 11 = Bizum). terminal+IP los pone el servidor.
+                    var payload = new { action = "bizum", idUser, tokenUser, amount, order };
+                    string requestUri = urlPro + "pago-paycomet.php";
 
-                    DatosConexionModel.uri = urlPaycomet;
-                    string requestUri = DatosConexionModel.uri + "payments";
-
-                    HttpClient client = new HttpClient(new LoggingHandler(new HttpClientHandler()));
-                    client.DefaultRequestHeaders.Add("PAYCOMET-API-TOKEN", apiKeyPaycomet);
+                    HttpClient client = NewSecureClient();
                     HttpResponseMessage response = new HttpResponseMessage();
 
-                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(compra), Encoding.UTF8, "application/json"));
+                    response = await client.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json"));
 
 
                     string resultJSON = await response.Content.ReadAsStringAsync();
@@ -6157,9 +6120,12 @@ namespace AsadorMoron.Services
                     {
                         ResponsePurchaseModel respuesta = JsonConvert.DeserializeObject<ResponsePurchaseModel>(resultJSON);
                         if (respuesta.errorCode == 0)
-                            return respuesta.challengeUrl;
+                            return respuesta.challengeUrl ?? "";
                         else
-                            return App.erroresPaycomet.Where(p => p.errorCode == respuesta.errorCode).FirstOrDefault().textError;
+                        {
+                            var err = App.erroresPaycomet?.FirstOrDefault(p => p.errorCode == respuesta.errorCode);
+                            return err?.textError ?? (AppResources.HacerPagoKO + " (" + respuesta.errorCode + ")");
+                        }
                     }
                     else
                     {

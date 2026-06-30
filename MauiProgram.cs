@@ -4,7 +4,7 @@ using CommunityToolkit.Maui;
 using Mopups.Hosting;
 using FFImageLoading.Maui;
 using Syncfusion.Maui.Core.Hosting;
-using ZXing.Net.Maui.Controls;
+using BarcodeScanning;
 using Plugin.Maui.Audio;
 using Microsoft.Maui.Handlers;
 
@@ -38,7 +38,7 @@ public static class MauiProgram
             .ConfigureMopups()
             .UseFFImageLoading()
             .ConfigureSyncfusionCore()
-            .UseBarcodeReader()
+            .UseBarcodeScanning()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
