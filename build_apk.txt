@@ -1,0 +1,1180 @@
+  Determinando los proyectos que se van a restaurar...
+/usr/local/share/dotnet/packs/Microsoft.Maui.Sdk/8.0.100/Sdk/BundledVersions.targets(85,5): warning MA002: Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in your project.  Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />.  You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/usr/local/share/dotnet/packs/Microsoft.Maui.Sdk/8.0.100/Sdk/BundledVersions.targets(85,5): warning MA002: Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in your project.  Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />.  You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-ios]
+/usr/local/share/dotnet/packs/Microsoft.Maui.Sdk/8.0.100/Sdk/BundledVersions.targets(85,5): warning MA002: Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in your project.  Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />.  You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-maccatalyst]
+  Se ha restaurado /Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj (en 1,02 s).
+/usr/local/share/dotnet/packs/Microsoft.Maui.Sdk/8.0.100/Sdk/BundledVersions.targets(85,5): warning MA002: Starting with .NET 8, setting  <UseMaui>true</UseMaui>  does not automatically include NuGet package references in your project.  Update your project by including this item:  <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />.  You can skip this warning by setting  <SkipValidateMauiImplicitPackageReferences>true</SkipValidateMauiImplicitPackageReferences>  in your project file. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.resx : warning MSB3568: No se permite el nombre de recurso duplicado "Cerrar". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.resx : warning MSB3568: No se permite el nombre de recurso duplicado "ZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.resx : warning MSB3568: No se permite el nombre de recurso duplicado "mZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.resx : warning MSB3568: No se permite el nombre de recurso duplicado "PermiteReserva". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.de.resx : warning MSB3568: No se permite el nombre de recurso duplicado "Cerrar". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.de.resx : warning MSB3568: No se permite el nombre de recurso duplicado "ZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.de.resx : warning MSB3568: No se permite el nombre de recurso duplicado "mZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.de.resx : warning MSB3568: No se permite el nombre de recurso duplicado "PermiteReserva". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.es.resx : warning MSB3568: No se permite el nombre de recurso duplicado "Cerrar". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.es.resx : warning MSB3568: No se permite el nombre de recurso duplicado "ZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.es.resx : warning MSB3568: No se permite el nombre de recurso duplicado "mZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.es.resx : warning MSB3568: No se permite el nombre de recurso duplicado "PermiteReserva". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.fr.resx : warning MSB3568: No se permite el nombre de recurso duplicado "Cerrar". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.fr.resx : warning MSB3568: No se permite el nombre de recurso duplicado "ZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.fr.resx : warning MSB3568: No se permite el nombre de recurso duplicado "mZonaOK". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+Recursos/AppResources.fr.resx : warning MSB3568: No se permite el nombre de recurso duplicado "PermiteReserva". Se omitirá. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Utils/NetPOSPrinter.cs(27,58): warning CS1570: El comentario XML tiene código XML con formato incorrecto: 'No se permite un espacio en blanco en esta ubicación.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(18,7): warning CS0105: La directiva using para 'AsadorMoron.Interfaces' aparece previamente en este espacio de nombres [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(27,7): warning CS0105: La directiva using para 'AsadorMoron.Interfaces' aparece previamente en este espacio de nombres [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(13,7): warning CS0105: La directiva using para 'AsadorMoron.Interfaces' aparece previamente en este espacio de nombres [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(12,7): warning CS0105: La directiva using para 'AsadorMoron.Interfaces' aparece previamente en este espacio de nombres [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Utils/Crypto.cs(54,24): warning SYSLIB0022: 'RijndaelManaged' está obsoleto: 'The Rijndael and RijndaelManaged types are obsolete. Use Aes instead.' (https://aka.ms/dotnet-warnings/SYSLIB0022) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/CategoriasArticulosGroupModel.cs(73,21): warning CS0114: 'CategoriasArticulosGroupModel.RemoveItem(int)' oculta el miembro heredado 'ObservableCollection<Comida>.RemoveItem(int)'. Para hacer que el miembro actual invalide esa implementación, agregue la palabra clave override. Si no, agregue la palabra clave new. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Views/MyWebView.xaml.cs(56,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Views/MyWebView.xaml.cs(67,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Managers/ManagerImpresora.cs(20,34): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/App.xaml.cs(304,28): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/App.xaml.cs(433,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(81,66): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(86,64): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(91,65): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(96,66): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(101,65): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(106,65): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(111,68): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(121,71): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(127,69): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(132,70): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(137,71): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(142,70): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(147,70): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(152,73): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/App.xaml.cs(551,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(1030,17): warning CS0162: Se detectó código inaccesible [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(205,21): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(205,21): warning CS0618: 'Device.StartTimer(TimeSpan, Func<bool>)' está obsoleto: 'Use BindableObject.Dispatcher.StartTimer() or BindableObject.Dispatcher.DispatchDelayed() instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(238,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(72,47): warning SYSLIB0014: 'WebClient.WebClient()' está obsoleto: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.' (https://aka.ms/dotnet-warnings/SYSLIB0014) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(91,47): warning SYSLIB0014: 'WebClient.WebClient()' está obsoleto: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.' (https://aka.ms/dotnet-warnings/SYSLIB0014) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(96,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(108,47): warning SYSLIB0014: 'WebClient.WebClient()' está obsoleto: 'WebRequest, HttpWebRequest, ServicePoint, and WebClient are obsolete. Use HttpClient instead.' (https://aka.ms/dotnet-warnings/SYSLIB0014) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(113,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(338,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(341,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(1508,50): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(555,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(576,29): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(580,29): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(584,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(594,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(625,29): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(629,29): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(631,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(641,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(690,38): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(719,38): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(751,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(772,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(852,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/GastoViewModel.cs(41,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/GastoViewModel.cs(62,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/GastoViewModel.cs(135,33): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/GastoViewModel.cs(139,33): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/GastoViewModel.cs(152,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/MenuLateralViewModel.cs(130,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/MenuLateralViewModel.cs(254,32): warning CS0219: La variable 'a' está asignada pero su valor nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/MenuLateralViewModel.cs(286,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/MenuLateralViewModel.cs(419,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/MainPageViewModel.cs(107,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/IngredientesViewModel.cs(117,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/IngredientesViewModel.cs(133,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HorariosEstablecimientoViewModel.cs(30,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HorariosEstablecimientoViewModel.cs(38,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HorariosEstablecimientoViewModel.cs(254,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(125,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(2545,41): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(478,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(48,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(494,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(512,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(515,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(527,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(99,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(117,42): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(134,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(561,69): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(729,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(147,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(178,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(199,38): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/UsuariosViewModel.cs(211,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(888,29): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(894,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(908,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(966,29): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(988,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(919,24): warning CS0219: La variable 'mensajeCamarero' está asignada pero su valor nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(1039,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/RepartidoresViewModel.cs(30,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/RepartidoresViewModel.cs(30,35): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/RepartidoresViewModel.cs(39,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(1050,45): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(1122,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(1142,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(1156,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(1176,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(519,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Utils/Crypto.cs(56,23): warning SYSLIB0041: 'Rfc2898DeriveBytes.Rfc2898DeriveBytes(string, byte[])' está obsoleto: 'The default hash algorithm and iteration counts in Rfc2898DeriveBytes constructors are outdated and insecure. Use a constructor that accepts the hash algorithm and the number of iterations.' (https://aka.ms/dotnet-warnings/SYSLIB0041) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Utils/Crypto.cs(58,33): warning SYSLIB0022: 'RijndaelManaged' está obsoleto: 'The Rijndael and RijndaelManaged types are obsolete. Use Aes instead.' (https://aka.ms/dotnet-warnings/SYSLIB0022) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(634,29): warning CS8073: El resultado de la expresión siempre es 'false' porque un valor del tipo 'DateTime' nunca es igual a 'NULL' de tipo 'DateTime?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(680,29): warning CS8073: El resultado de la expresión siempre es 'false' porque un valor del tipo 'DateTime' nunca es igual a 'NULL' de tipo 'DateTime?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(735,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(753,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(768,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(827,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(849,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(897,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/VersionMinimaViewModel.cs(48,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/VersionMinimaViewModel.cs(71,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(74,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(92,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(145,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(175,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(1004,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(194,26): warning CS8073: El resultado de la expresión siempre es 'false' porque un valor del tipo 'DateTime' nunca es igual a 'NULL' de tipo 'DateTime?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(304,50): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(360,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(538,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(557,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(578,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(746,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RegistroViewModel.cs(918,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosQoorderViewModelAdmin.cs(1110,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RecoveryViewModel.cs(35,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RecoveryViewModel.cs(44,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RecoveryViewModel.cs(68,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RecoveryViewModel.cs(97,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RecoveryViewModel.cs(150,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/AddCreditCardPageViewModel.cs(69,28): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/RecoveryViewModel.cs(327,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(91,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(544,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(562,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(565,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/QuienViewModel.cs(79,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/QuienViewModel.cs(123,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/QuienViewModel.cs(136,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(135,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(594,21): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(625,41): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(677,49): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(594,21): warning CS0618: 'Device.BeginInvokeOnMainThread(Action)' está obsoleto: 'Use BindableObject.Dispatcher.Dispatch() instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(726,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(181,69): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(453,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4149,81): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4164,79): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4178,80): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4192,81): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4206,80): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4220,80): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4234,83): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4251,86): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4266,84): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4280,85): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4294,86): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4308,85): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4322,85): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4336,88): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(105,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(117,27): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(223,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(241,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(297,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(306,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(349,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PinViewModel.cs(40,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(781,33): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEst.cs(817,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PinViewModel.cs(84,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PinViewModel.cs(108,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(522,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PinViewModel.cs(154,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosBajaViewModel.cs(527,28): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PinViewModel.cs(327,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(59,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(337,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(349,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(79,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(398,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(487,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(498,83): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(499,89): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosNavidadViewModel.cs(516,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(33,13): warning CS0618: 'MessagingCenter' está obsoleto: 'We recommend migrating to `CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger`: https://www.nuget.org/packages/CommunityToolkit.Mvvm' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleIngredienteViewModel.cs(49,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(111,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(121,27): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleIngredienteViewModel.cs(79,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4398,81): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4413,79): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4427,80): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4441,81): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4455,80): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4469,80): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4483,83): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4500,86): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4515,84): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4529,85): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4543,86): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4557,85): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4571,85): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4585,88): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(225,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleIngredienteViewModel.cs(154,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(584,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(258,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(601,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(620,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(638,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(276,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(680,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(702,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(750,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4702,73): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4717,71): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4731,72): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4745,73): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4759,72): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4773,72): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4787,75): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4804,78): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4819,76): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4833,77): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4847,78): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4861,77): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4875,77): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceWS.cs(4889,80): warning CS8073: El resultado de la expresión siempre es 'true' porque un valor del tipo 'TimeSpan' nunca es igual a 'NULL' de tipo 'TimeSpan?' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(110,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(131,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(148,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(165,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(857,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(342,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(385,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/HistoricoPedidosAnuladosQoorderViewModelAdmin.cs(963,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/EnviarNotificacionViewModel.cs(82,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/EnviarNotificacionViewModel.cs(104,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(353,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(373,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(392,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(412,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(397,28): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(491,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(562,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(580,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PerfilViewModel.cs(747,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(194,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(211,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PedidoConfirmadoViewModel.cs(65,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/PagoErroneoViewModel.cs(31,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(230,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(251,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(56,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(485,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(502,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleEstablecimientoViewModel.cs(634,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(121,89): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(121,89): warning CS0618: 'Device.BeginInvokeOnMainThread(Action)' está obsoleto: 'Use BindableObject.Dispatcher.Dispatch() instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(121,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(156,37): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(156,37): warning CS0618: 'Device.RuntimePlatform' está obsoleto: 'Use Microsoft.Maui.Devices.DeviceInfo.Platform instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(156,63): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(156,63): warning CS0618: 'Device.UWP' está obsoleto: 'Use Microsoft.Maui.Devices.DevicePlatform.WinUI instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(158,67): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(158,67): warning CS0618: 'Device.RuntimePlatform' está obsoleto: 'Use Microsoft.Maui.Devices.DeviceInfo.Platform instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(161,41): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(161,41): warning CS0618: 'Device.RuntimePlatform' está obsoleto: 'Use Microsoft.Maui.Devices.DeviceInfo.Platform instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(161,67): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(161,67): warning CS0618: 'Device.iOS' está obsoleto: 'Use Microsoft.Maui.Devices.DevicePlatform.iOS instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(163,46): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(163,46): warning CS0618: 'Device.RuntimePlatform' está obsoleto: 'Use Microsoft.Maui.Devices.DeviceInfo.Platform instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(163,72): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(163,72): warning CS0618: 'Device.Android' está obsoleto: 'Use Microsoft.Maui.Devices.DevicePlatform.Android instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(190,37): warning CS0612: 'Device' está obsoleto [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/LoginViewModel.cs(190,37): warning CS0618: 'Device.BeginInvokeOnMainThread(Action)' está obsoleto: 'Use BindableObject.Dispatcher.Dispatch() instead.' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ConfiguracionEstablecimientoViewModel.cs(69,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(41,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(74,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(97,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ConfiguracionEstablecimientoViewModel.cs(163,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(177,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ConfiguracionEstablecimientoViewModel.cs(261,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(123,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(171,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(312,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ConfiguracionEstablecimientoViewModel.cs(332,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ConfiguracionEstablecimientoViewModel.cs(334,21): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ConfiguracionEstablecimientoViewModel.cs(339,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ConfiguracionEstablecimientoViewModel.cs(336,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(332,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(214,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaViewModel.cs(308,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaViewModel.cs(266,28): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaViewModel.cs(358,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaViewModel.cs(458,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(104,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(132,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(177,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(301,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(200,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(221,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/ArticulosViewModel.cs(651,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/HistoricoPedidosViewModelClient.cs(323,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaViewModel.cs(605,83): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(377,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(480,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/FranjasHorariasViewModel.cs(173,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/FranjasHorariasViewModel.cs(247,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/FranjasHorariasViewModel.cs(341,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(158,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(249,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(320,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(340,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(377,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/DetalleRepartidorViewModel.cs(58,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/DetalleRepartidorViewModel.cs(81,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/DetalleRepartidorViewModel.cs(104,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/DetalleRepartidorViewModel.cs(124,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/NavigationService.cs(343,38): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(578,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/DetalleRepartidorViewModel.cs(284,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(314,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(385,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(395,28): warning CS1998: El método asincrónico carece de operadores "await" y se ejecutará de forma sincrónica. Puede usar el operador 'await' para esperar llamadas API que no sean de bloqueo o 'await Task.Run(...)' para hacer tareas enlazadas a la CPU en un subproceso en segundo plano. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(591,17): warning CS0618: 'MessagingCenter' está obsoleto: 'We recommend migrating to `CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger`: https://www.nuget.org/packages/CommunityToolkit.Mvvm' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(594,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Administrador/DetalleRepartidorViewModel.cs(399,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/FranjasHorariasViewModel.cs(770,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(619,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(690,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosViewModel.cs(345,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(763,13): warning CS0618: 'MessagingCenter' está obsoleto: 'We recommend migrating to `CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger`: https://www.nuget.org/packages/CommunityToolkit.Mvvm' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(774,13): warning CS0618: 'MessagingCenter' está obsoleto: 'We recommend migrating to `CommunityToolkit.Mvvm.Messaging.WeakReferenceMessenger`: https://www.nuget.org/packages/CommunityToolkit.Mvvm' [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosViewModel.cs(401,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(1445,34): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosViewModel.cs(441,25): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosViewModel.cs(453,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosViewModel.cs(502,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(424,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/CartaProductosViewModel.cs(585,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(465,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(923,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleComidaViewModel.cs(948,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(504,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloNavidadViewModel.cs(717,38): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloViewModel.cs(463,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloViewModel.cs(538,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloViewModel.cs(606,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloViewModel.cs(653,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/ResponseServiceAsync.cs(639,17): warning CS4014: Como esta llamada no es 'awaited', la ejecución del método actual continuará antes de que se complete la llamada. Puede aplicar el operador 'await' al resultado de la llamada. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloViewModel.cs(694,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloViewModel.cs(733,30): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetalleArticuloViewModel.cs(977,38): warning CS0168: La variable 'ex' se ha declarado pero nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/UserDialogsService.cs(19,41): warning CS0169: El campo 'UserDialogsService._loadingCts' nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(145,13): warning CS0169: El campo 'HomeViewModelEstMobile.resultadoEstadoImpresora' nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Services/UserDialogsService.cs(20,24): warning CS0169: El campo 'UserDialogsService._currentToast' nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(798,23): warning CS0169: El campo 'DetallePedidoViewModel.codigoPedido' nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/HomeViewModelEstMobile.cs(148,22): warning CS0414: El campo 'HomeViewModelEstMobile.player' está asignado pero su valor nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Clientes/DetallePedidoViewModel.cs(795,24): warning CS0414: El campo 'DetallePedidoViewModel.dia' está asignado pero su valor nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Establecimientos/DetalleCategoriaViewModel.cs(26,24): warning CS0414: El campo 'DetalleCategoriaViewModel.NombreFotoLogo' está asignado pero su valor nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/ViewModels/Repartidores/HomeViewModelRepartidor.cs(36,22): warning CS0414: El campo 'HomeViewModelRepartidor.player' está asignado pero su valor nunca se usa [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/App.xaml.cs(252,21): warning CA2200: Si inicia de nuevo la excepción detectada, se cambia la información de la pila. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2200) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Print/ModelCommand/Image.cs(18,58): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Image.Width" solo se admite en "windows" 6.1 y versiones posteriores. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Print/ModelCommand/Image.cs(19,33): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Image.Height" solo se admite en "windows" 6.1 y versiones posteriores. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Print/ModelCommand/Image.cs(30,33): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Bitmap.GetPixel(int, int)" solo se admite en "windows" 6.1 y versiones posteriores. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Print/ModelCommand/Image.cs(41,31): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Image.Width" solo se admite en "windows" 6.1 y versiones posteriores. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Print/ModelCommand/Image.cs(20,32): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Image.Width" solo se admite en "windows" 6.1 y versiones posteriores. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Print/ModelCommand/Image.cs(40,32): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Image.Height" solo se admite en "windows" 6.1 y versiones posteriores. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Models/DataUltis.cs(461,17): warning CA2200: Si inicia de nuevo la excepción detectada, se cambia la información de la pila. (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca2200) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Utils/LogginHandler.cs(17,13): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Console.ForegroundColor" no se admite en Todas las versiones de "android". (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/Utils/LogginHandler.cs(35,13): warning CA1416: Se puede acceder a este sitio de llamada en "Android" 21.0 y versiones posteriores. "Console.ForegroundColor" no se admite en Todas las versiones de "android". (https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1416) [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
+  AsadorMoron -> /Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/bin/Release/net8.0-android/AsadorMoron.dll
+  Al optimizar el tamaño de los ensamblados, es posible que cambie el comportamiento de la aplicación. Asegúrese de probarla después de su publicación. Visite https://aka.ms/dotnet-illink
+  Optimización del tamaño de los ensamblados. Este proceso puede tardar un momento.
+  Al optimizar el tamaño de los ensamblados, es posible que cambie el comportamiento de la aplicación. Asegúrese de probarla después de su publicación. Visite https://aka.ms/dotnet-illink
+  Optimización del tamaño de los ensamblados. Este proceso puede tardar un momento.
+  Al optimizar el tamaño de los ensamblados, es posible que cambie el comportamiento de la aplicación. Asegúrese de probarla después de su publicación. Visite https://aka.ms/dotnet-illink
+  Optimización del tamaño de los ensamblados. Este proceso puede tardar un momento.
+  Al optimizar el tamaño de los ensamblados, es posible que cambie el comportamiento de la aplicación. Asegúrese de probarla después de su publicación. Visite https://aka.ms/dotnet-illink
+  Optimización del tamaño de los ensamblados. Este proceso puede tardar un momento.
+  [1/193] ESC-POS-USB-NET.dll -> ESC-POS-USB-NET.dll.so
+  [1/193] _Microsoft.Android.Resource.Designer.dll -> _Microsoft.Android.Resource.Designer.dll.so
+  [1/193] _Microsoft.Android.Resource.Designer.dll -> _Microsoft.Android.Resource.Designer.dll.so
+  [2/193] CommunityToolkit.Maui.dll -> CommunityToolkit.Maui.dll.so
+  [3/193] CommunityToolkit.Mvvm.dll -> CommunityToolkit.Mvvm.dll.so
+  [4/193] ExCSS.dll -> ExCSS.dll.so
+  [5/193] _Microsoft.Android.Resource.Designer.dll -> _Microsoft.Android.Resource.Designer.dll.so
+  [6/193] BitMiracle.LibTiff.NET.dll -> BitMiracle.LibTiff.NET.dll.so
+  [7/193] CommunityToolkit.Maui.MediaElement.dll -> CommunityToolkit.Maui.MediaElement.dll.so
+  [9/193] AsyncAwaitBestPractices.dll -> AsyncAwaitBestPractices.dll.so
+  [8/193] CommunityToolkit.Maui.Core.dll -> CommunityToolkit.Maui.Core.dll.so
+  [1/193] _Microsoft.Android.Resource.Designer.dll -> _Microsoft.Android.Resource.Designer.dll.so
+  [10/193] Microsoft.Extensions.Configuration.dll -> Microsoft.Extensions.Configuration.dll.so
+  [11/193] Microsoft.Extensions.Configuration.Abstractions.dll -> Microsoft.Extensions.Configuration.Abstractions.dll.so
+  [12/193] Microsoft.Extensions.DependencyInjection.dll -> Microsoft.Extensions.DependencyInjection.dll.so
+  [13/193] Microsoft.Extensions.DependencyInjection.Abstractions.dll -> Microsoft.Extensions.DependencyInjection.Abstractions.dll.so
+  [14/193] Microsoft.Extensions.Logging.Abstractions.dll -> Microsoft.Extensions.Logging.Abstractions.dll.so
+  [15/193] HarfBuzzSharp.dll -> HarfBuzzSharp.dll.so
+  [16/193] Microsoft.Extensions.Logging.dll -> Microsoft.Extensions.Logging.dll.so
+  [17/193] Microsoft.Extensions.Options.dll -> Microsoft.Extensions.Options.dll.so
+  [18/193] Microsoft.Extensions.Primitives.dll -> Microsoft.Extensions.Primitives.dll.so
+  [19/193] FFImageLoading.Maui.dll -> FFImageLoading.Maui.dll.so
+  [20/193] Microsoft.Maui.Controls.Compatibility.dll -> Microsoft.Maui.Controls.Compatibility.dll.so
+  [21/193] Microsoft.Maui.Controls.Xaml.dll -> Microsoft.Maui.Controls.Xaml.dll.so
+  [22/193] Microsoft.Win32.SystemEvents.dll -> Microsoft.Win32.SystemEvents.dll.so
+  [23/193] Microsoft.Maui.Essentials.dll -> Microsoft.Maui.Essentials.dll.so
+  [24/193] Microsoft.Maui.Graphics.dll -> Microsoft.Maui.Graphics.dll.so
+  [25/193] OneSignalSDK.DotNet.Android.Core.Binding.dll -> OneSignalSDK.DotNet.Android.Core.Binding.dll.so
+  [26/193] Newtonsoft.Json.dll -> Newtonsoft.Json.dll.so
+  [27/193] Mopups.dll -> Mopups.dll.so
+  [28/193] OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll -> OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll.so
+  [29/193] OneSignalSDK.DotNet.Android.Notifications.Binding.dll -> OneSignalSDK.DotNet.Android.Notifications.Binding.dll.so
+  [30/193] OneSignalSDK.DotNet.Android.Location.Binding.dll -> OneSignalSDK.DotNet.Android.Location.Binding.dll.so
+  [31/193] OneSignalSDK.DotNet.Core.dll -> OneSignalSDK.DotNet.Core.dll.so
+  [32/193] OneSignalSDK.DotNet.Android.dll -> OneSignalSDK.DotNet.Android.dll.so
+  [33/193] OneSignalSDK.DotNet.dll -> OneSignalSDK.DotNet.dll.so
+  [34/193] Plugin.StoreReview.dll -> Plugin.StoreReview.dll.so
+  [35/193] SkiaSharp.dll -> SkiaSharp.dll.so
+  [36/193] Microsoft.Maui.dll -> Microsoft.Maui.dll.so
+  [37/193] SQLitePCLRaw.batteries_v2.dll -> SQLitePCLRaw.batteries_v2.dll.so
+  [38/193] Plugin.Maui.Audio.dll -> Plugin.Maui.Audio.dll.so
+  [39/193] ShimSkiaSharp.dll -> ShimSkiaSharp.dll.so
+  [40/193] SQLite-net.dll -> SQLite-net.dll.so
+  [41/193] SkiaSharp.HarfBuzz.dll -> SkiaSharp.HarfBuzz.dll.so
+  [42/193] Microsoft.Maui.Controls.dll -> Microsoft.Maui.Controls.dll.so
+  [43/193] SQLitePCLRaw.provider.e_sqlite3.dll -> SQLitePCLRaw.provider.e_sqlite3.dll.so
+  [44/193] SQLitePCLRaw.lib.e_sqlite3.android.dll -> SQLitePCLRaw.lib.e_sqlite3.android.dll.so
+  [45/193] SQLitePCLRaw.core.dll -> SQLitePCLRaw.core.dll.so
+  [46/193] Svg.Model.dll -> Svg.Model.dll.so
+  [47/193] Svg.Skia.dll -> Svg.Skia.dll.so
+  [48/193] Syncfusion.Maui.Calendar.dll -> Syncfusion.Maui.Calendar.dll.so
+  [49/193] Syncfusion.Compression.NET.dll -> Syncfusion.Compression.NET.dll.so
+  [50/193] Syncfusion.Licensing.dll -> Syncfusion.Licensing.dll.so
+  [51/193] Svg.Custom.dll -> Svg.Custom.dll.so
+  [52/193] Syncfusion.Maui.Charts.dll -> Syncfusion.Maui.Charts.dll.so
+  [53/193] Syncfusion.Maui.Core.dll -> Syncfusion.Maui.Core.dll.so
+  [54/193] Syncfusion.Maui.DataSource.dll -> Syncfusion.Maui.DataSource.dll.so
+  [55/193] Syncfusion.Maui.PdfToImageConverter.dll -> Syncfusion.Maui.PdfToImageConverter.dll.so
+  [56/193] Syncfusion.Maui.Inputs.dll -> Syncfusion.Maui.Inputs.dll.so
+  [57/193] Syncfusion.Maui.ListView.dll -> Syncfusion.Maui.ListView.dll.so
+  [58/193] Syncfusion.Maui.GridCommon.dll -> Syncfusion.Maui.GridCommon.dll.so
+  [59/193] Syncfusion.Maui.SignaturePad.dll -> Syncfusion.Maui.SignaturePad.dll.so
+  [60/193] Syncfusion.Maui.PdfViewer.dll -> Syncfusion.Maui.PdfViewer.dll.so
+  [61/193] Syncfusion.Maui.TabView.dll -> Syncfusion.Maui.TabView.dll.so
+  [62/193] Syncfusion.Pdf.Imaging.NET.dll -> Syncfusion.Pdf.Imaging.NET.dll.so
+  [63/193] System.Drawing.Common.dll -> System.Drawing.Common.dll.so
+  [64/193] ExoPlayer.dll -> ExoPlayer.dll.so
+  [65/193] ExoPlayer.Container.dll -> ExoPlayer.Container.dll.so
+  [66/193] ExoPlayer.Common.dll -> ExoPlayer.Common.dll.so
+  [67/193] ExoPlayer.Database.dll -> ExoPlayer.Database.dll.so
+  [68/193] ExoPlayer.Dash.dll -> ExoPlayer.Dash.dll.so
+  [69/193] Syncfusion.Pdf.NET.dll -> Syncfusion.Pdf.NET.dll.so
+  [70/193] ExoPlayer.Core.dll -> ExoPlayer.Core.dll.so
+  [71/193] ExoPlayer.DataSource.dll -> ExoPlayer.DataSource.dll.so
+  [72/193] ExoPlayer.Decoder.dll -> ExoPlayer.Decoder.dll.so
+  [73/193] ExoPlayer.Hls.dll -> ExoPlayer.Hls.dll.so
+  [74/193] ExoPlayer.Extractor.dll -> ExoPlayer.Extractor.dll.so
+  [75/193] Syncfusion.XlsIO.NET.dll -> Syncfusion.XlsIO.NET.dll.so
+  [76/193] ExoPlayer.SmoothStreaming.dll -> ExoPlayer.SmoothStreaming.dll.so
+  [77/193] ExoPlayer.Rtsp.dll -> ExoPlayer.Rtsp.dll.so
+  [78/193] ExoPlayer.Transformer.dll -> ExoPlayer.Transformer.dll.so
+  [79/193] ExoPlayer.UI.dll -> ExoPlayer.UI.dll.so
+  [80/193] Xamarin.AndroidX.Activity.dll -> Xamarin.AndroidX.Activity.dll.so
+  [81/193] Xamarin.AndroidX.AppCompat.AppCompatResources.dll -> Xamarin.AndroidX.AppCompat.AppCompatResources.dll.so
+  [82/193] Xamarin.AndroidX.AppCompat.dll -> Xamarin.AndroidX.AppCompat.dll.so
+  [83/193] Xamarin.AndroidX.Browser.dll -> Xamarin.AndroidX.Browser.dll.so
+  [84/193] Xamarin.AndroidX.Camera.Core.dll -> Xamarin.AndroidX.Camera.Core.dll.so
+  [85/193] Xamarin.AndroidX.Camera.Lifecycle.dll -> Xamarin.AndroidX.Camera.Lifecycle.dll.so
+  [86/193] Xamarin.AndroidX.Camera.View.dll -> Xamarin.AndroidX.Camera.View.dll.so
+  [87/193] Xamarin.AndroidX.Collection.Jvm.dll -> Xamarin.AndroidX.Collection.Jvm.dll.so
+  [88/193] Xamarin.AndroidX.CardView.dll -> Xamarin.AndroidX.CardView.dll.so
+  [89/193] Xamarin.AndroidX.CoordinatorLayout.dll -> Xamarin.AndroidX.CoordinatorLayout.dll.so
+  [90/193] Xamarin.AndroidX.CursorAdapter.dll -> Xamarin.AndroidX.CursorAdapter.dll.so
+  [91/193] Xamarin.AndroidX.CustomView.dll -> Xamarin.AndroidX.CustomView.dll.so
+  [92/193] Xamarin.AndroidX.Core.dll -> Xamarin.AndroidX.Core.dll.so
+  [93/193] Xamarin.AndroidX.DrawerLayout.dll -> Xamarin.AndroidX.DrawerLayout.dll.so
+  [94/193] Xamarin.AndroidX.Lifecycle.Common.dll -> Xamarin.AndroidX.Lifecycle.Common.dll.so
+  [95/193] Xamarin.AndroidX.Lifecycle.LiveData.Core.dll -> Xamarin.AndroidX.Lifecycle.LiveData.Core.dll.so
+  [96/193] Xamarin.AndroidX.Fragment.dll -> Xamarin.AndroidX.Fragment.dll.so
+  [97/193] Xamarin.AndroidX.Lifecycle.ViewModel.dll -> Xamarin.AndroidX.Lifecycle.ViewModel.dll.so
+  [98/193] Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll -> Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll.so
+  [99/193] Xamarin.AndroidX.Loader.dll -> Xamarin.AndroidX.Loader.dll.so
+  [100/193] Xamarin.AndroidX.Media.dll -> Xamarin.AndroidX.Media.dll.so
+  [101/193] Xamarin.AndroidX.Navigation.Common.dll -> Xamarin.AndroidX.Navigation.Common.dll.so
+  [102/193] Xamarin.AndroidX.Navigation.Fragment.dll -> Xamarin.AndroidX.Navigation.Fragment.dll.so
+  [103/193] Xamarin.AndroidX.Navigation.Runtime.dll -> Xamarin.AndroidX.Navigation.Runtime.dll.so
+  [104/193] Xamarin.AndroidX.Navigation.UI.dll -> Xamarin.AndroidX.Navigation.UI.dll.so
+  [105/193] Xamarin.AndroidX.RecyclerView.dll -> Xamarin.AndroidX.RecyclerView.dll.so
+  [106/193] Xamarin.AndroidX.SavedState.dll -> Xamarin.AndroidX.SavedState.dll.so
+  [107/193] Xamarin.AndroidX.VersionedParcelable.dll -> Xamarin.AndroidX.VersionedParcelable.dll.so
+  [108/193] Xamarin.AndroidX.ViewPager.dll -> Xamarin.AndroidX.ViewPager.dll.so
+  [109/193] Xamarin.AndroidX.SwipeRefreshLayout.dll -> Xamarin.AndroidX.SwipeRefreshLayout.dll.so
+  [110/193] Xamarin.AndroidX.ViewPager2.dll -> Xamarin.AndroidX.ViewPager2.dll.so
+  [111/193] Xamarin.Google.Guava.ListenableFuture.dll -> Xamarin.Google.Guava.ListenableFuture.dll.so
+  [112/193] Xamarin.Google.Android.Play.Core.dll -> Xamarin.Google.Android.Play.Core.dll.so
+  [113/193] Xamarin.Google.Android.Material.dll -> Xamarin.Google.Android.Material.dll.so
+  [114/193] Xamarin.KotlinX.Coroutines.Core.Jvm.dll -> Xamarin.KotlinX.Coroutines.Core.Jvm.dll.so
+  [115/193] Xamarin.Kotlin.StdLib.dll -> Xamarin.Kotlin.StdLib.dll.so
+  [116/193] zxing.dll -> zxing.dll.so
+  [117/193] Microsoft.CSharp.dll -> Microsoft.CSharp.dll.so
+  [118/193] ZXing.Net.MAUI.dll -> ZXing.Net.MAUI.dll.so
+  [119/193] ZXing.Net.MAUI.Controls.dll -> ZXing.Net.MAUI.Controls.dll.so
+  [120/193] Microsoft.Win32.Primitives.dll -> Microsoft.Win32.Primitives.dll.so
+  [121/193] System.Collections.NonGeneric.dll -> System.Collections.NonGeneric.dll.so
+  [122/193] System.Collections.Concurrent.dll -> System.Collections.Concurrent.dll.so
+  [123/193] System.Collections.Immutable.dll -> System.Collections.Immutable.dll.so
+  [124/193] System.Collections.Specialized.dll -> System.Collections.Specialized.dll.so
+  [125/193] System.ComponentModel.Primitives.dll -> System.ComponentModel.Primitives.dll.so
+  [126/193] System.ComponentModel.EventBasedAsync.dll -> System.ComponentModel.EventBasedAsync.dll.so
+  [127/193] System.ComponentModel.dll -> System.ComponentModel.dll.so
+  [128/193] System.ComponentModel.TypeConverter.dll -> System.ComponentModel.TypeConverter.dll.so
+  [129/193] System.Console.dll -> System.Console.dll.so
+  [130/193] System.Collections.dll -> System.Collections.dll.so
+  [131/193] System.Diagnostics.DiagnosticSource.dll -> System.Diagnostics.DiagnosticSource.dll.so
+  [132/193] System.Data.Common.dll -> System.Data.Common.dll.so
+  [133/193] System.Diagnostics.Process.dll -> System.Diagnostics.Process.dll.so
+  [134/193] System.Diagnostics.TraceSource.dll -> System.Diagnostics.TraceSource.dll.so
+  [135/193] System.Drawing.Primitives.dll -> System.Drawing.Primitives.dll.so
+  [136/193] System.Formats.Asn1.dll -> System.Formats.Asn1.dll.so
+  [137/193] System.IO.Compression.Brotli.dll -> System.IO.Compression.Brotli.dll.so
+  [138/193] System.Drawing.dll -> System.Drawing.dll.so
+  [139/193] System.IO.Compression.dll -> System.IO.Compression.dll.so
+  [140/193] System.Linq.Queryable.dll -> System.Linq.Queryable.dll.so
+  [141/193] System.Memory.dll -> System.Memory.dll.so
+  [142/193] System.Net.NetworkInformation.dll -> System.Net.NetworkInformation.dll.so
+  [143/193] System.Net.Mail.dll -> System.Net.Mail.dll.so
+  [144/193] System.Net.NameResolution.dll -> System.Net.NameResolution.dll.so
+  [145/193] System.Net.Primitives.dll -> System.Net.Primitives.dll.so
+  [146/193] System.Linq.Expressions.dll -> System.Linq.Expressions.dll.so
+  [147/193] System.Net.Http.dll -> System.Net.Http.dll.so
+  [148/193] AsadorMoron.dll -> AsadorMoron.dll.so
+  [149/193] System.Net.Requests.dll -> System.Net.Requests.dll.so
+  [150/193] System.Linq.dll -> System.Linq.dll.so
+  [151/193] System.Net.ServicePoint.dll -> System.Net.ServicePoint.dll.so
+  [152/193] System.Net.Security.dll -> System.Net.Security.dll.so
+  [153/193] System.Net.WebClient.dll -> System.Net.WebClient.dll.so
+  [154/193] System.Net.Sockets.dll -> System.Net.Sockets.dll.so
+  [155/193] System.Numerics.Vectors.dll -> System.Numerics.Vectors.dll.so
+  [156/193] System.ObjectModel.dll -> System.ObjectModel.dll.so
+  [157/193] System.Net.WebHeaderCollection.dll -> System.Net.WebHeaderCollection.dll.so
+  [158/193] System.Reflection.Emit.ILGeneration.dll -> System.Reflection.Emit.ILGeneration.dll.so
+  [159/193] System.Private.Xml.Linq.dll -> System.Private.Xml.Linq.dll.so
+  [160/193] System.Reflection.Emit.Lightweight.dll -> System.Reflection.Emit.Lightweight.dll.so
+  [161/193] System.Reflection.Primitives.dll -> System.Reflection.Primitives.dll.so
+  [162/193] System.Private.Uri.dll -> System.Private.Uri.dll.so
+  [163/193] System.Runtime.InteropServices.dll -> System.Runtime.InteropServices.dll.so
+  [164/193] System.Runtime.InteropServices.RuntimeInformation.dll -> System.Runtime.InteropServices.RuntimeInformation.dll.so
+  [165/193] System.Private.Xml.dll -> System.Private.Xml.dll.so
+  [166/193] System.Runtime.Loader.dll -> System.Runtime.Loader.dll.so
+  [167/193] System.Runtime.Serialization.Primitives.dll -> System.Runtime.Serialization.Primitives.dll.so
+  [168/193] System.Runtime.Serialization.Formatters.dll -> System.Runtime.Serialization.Formatters.dll.so
+  [169/193] System.Runtime.Numerics.dll -> System.Runtime.Numerics.dll.so
+  [170/193] System.Text.Encoding.CodePages.dll -> System.Text.Encoding.CodePages.dll.so
+  [171/193] System.Security.Cryptography.dll -> System.Security.Cryptography.dll.so
+  [172/193] System.Runtime.dll -> System.Runtime.dll.so
+  [173/193] System.Text.Encodings.Web.dll -> System.Text.Encodings.Web.dll.so
+  [174/193] System.Text.Encoding.Extensions.dll -> System.Text.Encoding.Extensions.dll.so
+  [175/193] System.Threading.Channels.dll -> System.Threading.Channels.dll.so
+  [176/193] System.Threading.Thread.dll -> System.Threading.Thread.dll.so
+  [177/193] System.Threading.Tasks.Parallel.dll -> System.Threading.Tasks.Parallel.dll.so
+  [178/193] System.Threading.dll -> System.Threading.dll.so
+  [179/193] System.Threading.ThreadPool.dll -> System.Threading.ThreadPool.dll.so
+  [180/193] System.Xml.ReaderWriter.dll -> System.Xml.ReaderWriter.dll.so
+  [181/193] System.Web.HttpUtility.dll -> System.Web.HttpUtility.dll.so
+  [182/193] System.Xml.Linq.dll -> System.Xml.Linq.dll.so
+  [183/193] System.Text.RegularExpressions.dll -> System.Text.RegularExpressions.dll.so
+  [184/193] System.Xml.XmlSerializer.dll -> System.Xml.XmlSerializer.dll.so
+  [185/193] System.Xml.XDocument.dll -> System.Xml.XDocument.dll.so
+  [186/193] System.Text.Json.dll -> System.Text.Json.dll.so
+  [187/193] netstandard.dll -> netstandard.dll.so
+  [188/193] mscorlib.dll -> mscorlib.dll.so
+  [189/193] System.dll -> System.dll.so
+  [190/193] Mono.Android.Runtime.dll -> Mono.Android.Runtime.dll.so
+  [191/193] Java.Interop.dll -> Java.Interop.dll.so
+  [192/193] Mono.Android.dll -> Mono.Android.dll.so
+  [193/193] System.Private.CoreLib.dll -> System.Private.CoreLib.dll.so
+  [2/193] AsadorMoron.dll -> AsadorMoron.dll.so
+  [2/193] AsadorMoron.dll -> AsadorMoron.dll.so
+  [3/193] AsyncAwaitBestPractices.dll -> AsyncAwaitBestPractices.dll.so
+  [3/193] AsyncAwaitBestPractices.dll -> AsyncAwaitBestPractices.dll.so
+  [4/193] BitMiracle.LibTiff.NET.dll -> BitMiracle.LibTiff.NET.dll.so
+  [4/193] BitMiracle.LibTiff.NET.dll -> BitMiracle.LibTiff.NET.dll.so
+  [5/193] CommunityToolkit.Maui.dll -> CommunityToolkit.Maui.dll.so
+  [5/193] CommunityToolkit.Maui.dll -> CommunityToolkit.Maui.dll.so
+  [2/193] AsadorMoron.dll -> AsadorMoron.dll.so
+  [6/193] CommunityToolkit.Maui.Core.dll -> CommunityToolkit.Maui.Core.dll.so
+  [6/193] CommunityToolkit.Maui.Core.dll -> CommunityToolkit.Maui.Core.dll.so
+  [3/193] AsyncAwaitBestPractices.dll -> AsyncAwaitBestPractices.dll.so
+  [7/193] CommunityToolkit.Maui.MediaElement.dll -> CommunityToolkit.Maui.MediaElement.dll.so
+  [7/193] CommunityToolkit.Maui.MediaElement.dll -> CommunityToolkit.Maui.MediaElement.dll.so
+  [8/193] CommunityToolkit.Mvvm.dll -> CommunityToolkit.Mvvm.dll.so
+  [4/193] BitMiracle.LibTiff.NET.dll -> BitMiracle.LibTiff.NET.dll.so
+  [8/193] CommunityToolkit.Mvvm.dll -> CommunityToolkit.Mvvm.dll.so
+  [9/193] ESC-POS-USB-NET.dll -> ESC-POS-USB-NET.dll.so
+  [9/193] ESC-POS-USB-NET.dll -> ESC-POS-USB-NET.dll.so
+  [5/193] CommunityToolkit.Maui.dll -> CommunityToolkit.Maui.dll.so
+  [10/193] ExCSS.dll -> ExCSS.dll.so
+  [10/193] ExCSS.dll -> ExCSS.dll.so
+  [6/193] CommunityToolkit.Maui.Core.dll -> CommunityToolkit.Maui.Core.dll.so
+  [7/193] CommunityToolkit.Maui.MediaElement.dll -> CommunityToolkit.Maui.MediaElement.dll.so
+  [11/193] FFImageLoading.Maui.dll -> FFImageLoading.Maui.dll.so
+  [11/193] FFImageLoading.Maui.dll -> FFImageLoading.Maui.dll.so
+  [12/193] HarfBuzzSharp.dll -> HarfBuzzSharp.dll.so
+  [8/193] CommunityToolkit.Mvvm.dll -> CommunityToolkit.Mvvm.dll.so
+  [12/193] HarfBuzzSharp.dll -> HarfBuzzSharp.dll.so
+  [13/193] Microsoft.Extensions.Configuration.dll -> Microsoft.Extensions.Configuration.dll.so
+  [9/193] ESC-POS-USB-NET.dll -> ESC-POS-USB-NET.dll.so
+  [13/193] Microsoft.Extensions.Configuration.dll -> Microsoft.Extensions.Configuration.dll.so
+  [14/193] Microsoft.Extensions.Configuration.Abstractions.dll -> Microsoft.Extensions.Configuration.Abstractions.dll.so
+  [14/193] Microsoft.Extensions.Configuration.Abstractions.dll -> Microsoft.Extensions.Configuration.Abstractions.dll.so
+  [10/193] ExCSS.dll -> ExCSS.dll.so
+  [15/193] Microsoft.Extensions.DependencyInjection.dll -> Microsoft.Extensions.DependencyInjection.dll.so
+  [15/193] Microsoft.Extensions.DependencyInjection.dll -> Microsoft.Extensions.DependencyInjection.dll.so
+  [16/193] Microsoft.Extensions.DependencyInjection.Abstractions.dll -> Microsoft.Extensions.DependencyInjection.Abstractions.dll.so
+  [16/193] Microsoft.Extensions.DependencyInjection.Abstractions.dll -> Microsoft.Extensions.DependencyInjection.Abstractions.dll.so
+  [17/193] Microsoft.Extensions.Logging.dll -> Microsoft.Extensions.Logging.dll.so
+  [11/193] FFImageLoading.Maui.dll -> FFImageLoading.Maui.dll.so
+  [17/193] Microsoft.Extensions.Logging.dll -> Microsoft.Extensions.Logging.dll.so
+  [18/193] Microsoft.Extensions.Logging.Abstractions.dll -> Microsoft.Extensions.Logging.Abstractions.dll.so
+  [12/193] HarfBuzzSharp.dll -> HarfBuzzSharp.dll.so
+  [18/193] Microsoft.Extensions.Logging.Abstractions.dll -> Microsoft.Extensions.Logging.Abstractions.dll.so
+  [19/193] Microsoft.Extensions.Options.dll -> Microsoft.Extensions.Options.dll.so
+  [13/193] Microsoft.Extensions.Configuration.dll -> Microsoft.Extensions.Configuration.dll.so
+  [19/193] Microsoft.Extensions.Options.dll -> Microsoft.Extensions.Options.dll.so
+  [20/193] Microsoft.Extensions.Primitives.dll -> Microsoft.Extensions.Primitives.dll.so
+  [14/193] Microsoft.Extensions.Configuration.Abstractions.dll -> Microsoft.Extensions.Configuration.Abstractions.dll.so
+  [20/193] Microsoft.Extensions.Primitives.dll -> Microsoft.Extensions.Primitives.dll.so
+  [21/193] Microsoft.Maui.Controls.Compatibility.dll -> Microsoft.Maui.Controls.Compatibility.dll.so
+  [15/193] Microsoft.Extensions.DependencyInjection.dll -> Microsoft.Extensions.DependencyInjection.dll.so
+  [21/193] Microsoft.Maui.Controls.Compatibility.dll -> Microsoft.Maui.Controls.Compatibility.dll.so
+  [16/193] Microsoft.Extensions.DependencyInjection.Abstractions.dll -> Microsoft.Extensions.DependencyInjection.Abstractions.dll.so
+  [17/193] Microsoft.Extensions.Logging.dll -> Microsoft.Extensions.Logging.dll.so
+  [18/193] Microsoft.Extensions.Logging.Abstractions.dll -> Microsoft.Extensions.Logging.Abstractions.dll.so
+  [19/193] Microsoft.Extensions.Options.dll -> Microsoft.Extensions.Options.dll.so
+  [20/193] Microsoft.Extensions.Primitives.dll -> Microsoft.Extensions.Primitives.dll.so
+  [22/193] Microsoft.Maui.Controls.dll -> Microsoft.Maui.Controls.dll.so
+  [21/193] Microsoft.Maui.Controls.Compatibility.dll -> Microsoft.Maui.Controls.Compatibility.dll.so
+  [23/193] Microsoft.Maui.Controls.Xaml.dll -> Microsoft.Maui.Controls.Xaml.dll.so
+  [22/193] Microsoft.Maui.Controls.dll -> Microsoft.Maui.Controls.dll.so
+  [23/193] Microsoft.Maui.Controls.Xaml.dll -> Microsoft.Maui.Controls.Xaml.dll.so
+  [24/193] Microsoft.Maui.dll -> Microsoft.Maui.dll.so
+  [25/193] Microsoft.Maui.Essentials.dll -> Microsoft.Maui.Essentials.dll.so
+  [24/193] Microsoft.Maui.dll -> Microsoft.Maui.dll.so
+  [26/193] Microsoft.Maui.Graphics.dll -> Microsoft.Maui.Graphics.dll.so
+  [25/193] Microsoft.Maui.Essentials.dll -> Microsoft.Maui.Essentials.dll.so
+  [27/193] Microsoft.Win32.SystemEvents.dll -> Microsoft.Win32.SystemEvents.dll.so
+  [26/193] Microsoft.Maui.Graphics.dll -> Microsoft.Maui.Graphics.dll.so
+  [22/193] Microsoft.Maui.Controls.dll -> Microsoft.Maui.Controls.dll.so
+  [27/193] Microsoft.Win32.SystemEvents.dll -> Microsoft.Win32.SystemEvents.dll.so
+  [28/193] Mopups.dll -> Mopups.dll.so
+  [23/193] Microsoft.Maui.Controls.Xaml.dll -> Microsoft.Maui.Controls.Xaml.dll.so
+  [28/193] Mopups.dll -> Mopups.dll.so
+  [29/193] Newtonsoft.Json.dll -> Newtonsoft.Json.dll.so
+  [30/193] OneSignalSDK.DotNet.Android.Core.Binding.dll -> OneSignalSDK.DotNet.Android.Core.Binding.dll.so
+  [29/193] Newtonsoft.Json.dll -> Newtonsoft.Json.dll.so
+  [31/193] OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll -> OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll.so
+  [30/193] OneSignalSDK.DotNet.Android.Core.Binding.dll -> OneSignalSDK.DotNet.Android.Core.Binding.dll.so
+  [32/193] OneSignalSDK.DotNet.Android.Location.Binding.dll -> OneSignalSDK.DotNet.Android.Location.Binding.dll.so
+  [24/193] Microsoft.Maui.dll -> Microsoft.Maui.dll.so
+  [31/193] OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll -> OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll.so
+  [33/193] OneSignalSDK.DotNet.Android.Notifications.Binding.dll -> OneSignalSDK.DotNet.Android.Notifications.Binding.dll.so
+  [25/193] Microsoft.Maui.Essentials.dll -> Microsoft.Maui.Essentials.dll.so
+  [32/193] OneSignalSDK.DotNet.Android.Location.Binding.dll -> OneSignalSDK.DotNet.Android.Location.Binding.dll.so
+  [34/193] OneSignalSDK.DotNet.Android.dll -> OneSignalSDK.DotNet.Android.dll.so
+  [35/193] OneSignalSDK.DotNet.Core.dll -> OneSignalSDK.DotNet.Core.dll.so
+  [33/193] OneSignalSDK.DotNet.Android.Notifications.Binding.dll -> OneSignalSDK.DotNet.Android.Notifications.Binding.dll.so
+  [26/193] Microsoft.Maui.Graphics.dll -> Microsoft.Maui.Graphics.dll.so
+  [36/193] OneSignalSDK.DotNet.dll -> OneSignalSDK.DotNet.dll.so
+  [34/193] OneSignalSDK.DotNet.Android.dll -> OneSignalSDK.DotNet.Android.dll.so
+  [27/193] Microsoft.Win32.SystemEvents.dll -> Microsoft.Win32.SystemEvents.dll.so
+  [37/193] Plugin.Maui.Audio.dll -> Plugin.Maui.Audio.dll.so
+  [35/193] OneSignalSDK.DotNet.Core.dll -> OneSignalSDK.DotNet.Core.dll.so
+  [38/193] Plugin.StoreReview.dll -> Plugin.StoreReview.dll.so
+  [36/193] OneSignalSDK.DotNet.dll -> OneSignalSDK.DotNet.dll.so
+  [28/193] Mopups.dll -> Mopups.dll.so
+  [39/193] ShimSkiaSharp.dll -> ShimSkiaSharp.dll.so
+  [37/193] Plugin.Maui.Audio.dll -> Plugin.Maui.Audio.dll.so
+  [40/193] SkiaSharp.dll -> SkiaSharp.dll.so
+  [38/193] Plugin.StoreReview.dll -> Plugin.StoreReview.dll.so
+  [29/193] Newtonsoft.Json.dll -> Newtonsoft.Json.dll.so
+  [41/193] SkiaSharp.HarfBuzz.dll -> SkiaSharp.HarfBuzz.dll.so
+  [39/193] ShimSkiaSharp.dll -> ShimSkiaSharp.dll.so
+  [30/193] OneSignalSDK.DotNet.Android.Core.Binding.dll -> OneSignalSDK.DotNet.Android.Core.Binding.dll.so
+  [40/193] SkiaSharp.dll -> SkiaSharp.dll.so
+  [42/193] SQLite-net.dll -> SQLite-net.dll.so
+  [41/193] SkiaSharp.HarfBuzz.dll -> SkiaSharp.HarfBuzz.dll.so
+  [31/193] OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll -> OneSignalSDK.DotNet.Android.InAppMessages.Binding.dll.so
+  [43/193] SQLitePCLRaw.batteries_v2.dll -> SQLitePCLRaw.batteries_v2.dll.so
+  [44/193] SQLitePCLRaw.core.dll -> SQLitePCLRaw.core.dll.so
+  [32/193] OneSignalSDK.DotNet.Android.Location.Binding.dll -> OneSignalSDK.DotNet.Android.Location.Binding.dll.so
+  [42/193] SQLite-net.dll -> SQLite-net.dll.so
+  [45/193] SQLitePCLRaw.lib.e_sqlite3.android.dll -> SQLitePCLRaw.lib.e_sqlite3.android.dll.so
+  [33/193] OneSignalSDK.DotNet.Android.Notifications.Binding.dll -> OneSignalSDK.DotNet.Android.Notifications.Binding.dll.so
+  [43/193] SQLitePCLRaw.batteries_v2.dll -> SQLitePCLRaw.batteries_v2.dll.so
+  [46/193] SQLitePCLRaw.provider.e_sqlite3.dll -> SQLitePCLRaw.provider.e_sqlite3.dll.so
+  [44/193] SQLitePCLRaw.core.dll -> SQLitePCLRaw.core.dll.so
+  [34/193] OneSignalSDK.DotNet.Android.dll -> OneSignalSDK.DotNet.Android.dll.so
+  [47/193] Svg.Custom.dll -> Svg.Custom.dll.so
+  [45/193] SQLitePCLRaw.lib.e_sqlite3.android.dll -> SQLitePCLRaw.lib.e_sqlite3.android.dll.so
+  [35/193] OneSignalSDK.DotNet.Core.dll -> OneSignalSDK.DotNet.Core.dll.so
+  [48/193] Svg.Model.dll -> Svg.Model.dll.so
+  [46/193] SQLitePCLRaw.provider.e_sqlite3.dll -> SQLitePCLRaw.provider.e_sqlite3.dll.so
+  [36/193] OneSignalSDK.DotNet.dll -> OneSignalSDK.DotNet.dll.so
+  [49/193] Svg.Skia.dll -> Svg.Skia.dll.so
+  [47/193] Svg.Custom.dll -> Svg.Custom.dll.so
+  [37/193] Plugin.Maui.Audio.dll -> Plugin.Maui.Audio.dll.so
+  [50/193] Syncfusion.Compression.NET.dll -> Syncfusion.Compression.NET.dll.so
+  [48/193] Svg.Model.dll -> Svg.Model.dll.so
+  [38/193] Plugin.StoreReview.dll -> Plugin.StoreReview.dll.so
+  [51/193] Syncfusion.Licensing.dll -> Syncfusion.Licensing.dll.so
+  [49/193] Svg.Skia.dll -> Svg.Skia.dll.so
+  [52/193] Syncfusion.Maui.Calendar.dll -> Syncfusion.Maui.Calendar.dll.so
+  [39/193] ShimSkiaSharp.dll -> ShimSkiaSharp.dll.so
+  [50/193] Syncfusion.Compression.NET.dll -> Syncfusion.Compression.NET.dll.so
+  [53/193] Syncfusion.Maui.Charts.dll -> Syncfusion.Maui.Charts.dll.so
+  [40/193] SkiaSharp.dll -> SkiaSharp.dll.so
+  [51/193] Syncfusion.Licensing.dll -> Syncfusion.Licensing.dll.so
+  [41/193] SkiaSharp.HarfBuzz.dll -> SkiaSharp.HarfBuzz.dll.so
+  [54/193] Syncfusion.Maui.Core.dll -> Syncfusion.Maui.Core.dll.so
+  [52/193] Syncfusion.Maui.Calendar.dll -> Syncfusion.Maui.Calendar.dll.so
+  [55/193] Syncfusion.Maui.DataSource.dll -> Syncfusion.Maui.DataSource.dll.so
+  [42/193] SQLite-net.dll -> SQLite-net.dll.so
+  [53/193] Syncfusion.Maui.Charts.dll -> Syncfusion.Maui.Charts.dll.so
+  [43/193] SQLitePCLRaw.batteries_v2.dll -> SQLitePCLRaw.batteries_v2.dll.so
+  [56/193] Syncfusion.Maui.GridCommon.dll -> Syncfusion.Maui.GridCommon.dll.so
+  [54/193] Syncfusion.Maui.Core.dll -> Syncfusion.Maui.Core.dll.so
+  [44/193] SQLitePCLRaw.core.dll -> SQLitePCLRaw.core.dll.so
+  [57/193] Syncfusion.Maui.Inputs.dll -> Syncfusion.Maui.Inputs.dll.so
+  [55/193] Syncfusion.Maui.DataSource.dll -> Syncfusion.Maui.DataSource.dll.so
+  [45/193] SQLitePCLRaw.lib.e_sqlite3.android.dll -> SQLitePCLRaw.lib.e_sqlite3.android.dll.so
+  [58/193] Syncfusion.Maui.ListView.dll -> Syncfusion.Maui.ListView.dll.so
+  [56/193] Syncfusion.Maui.GridCommon.dll -> Syncfusion.Maui.GridCommon.dll.so
+  [59/193] Syncfusion.Maui.PdfToImageConverter.dll -> Syncfusion.Maui.PdfToImageConverter.dll.so
+  [46/193] SQLitePCLRaw.provider.e_sqlite3.dll -> SQLitePCLRaw.provider.e_sqlite3.dll.so
+  [57/193] Syncfusion.Maui.Inputs.dll -> Syncfusion.Maui.Inputs.dll.so
+  [60/193] Syncfusion.Maui.PdfViewer.dll -> Syncfusion.Maui.PdfViewer.dll.so
+  [47/193] Svg.Custom.dll -> Svg.Custom.dll.so
+  [58/193] Syncfusion.Maui.ListView.dll -> Syncfusion.Maui.ListView.dll.so
+  [61/193] Syncfusion.Maui.SignaturePad.dll -> Syncfusion.Maui.SignaturePad.dll.so
+  [48/193] Svg.Model.dll -> Svg.Model.dll.so
+  [59/193] Syncfusion.Maui.PdfToImageConverter.dll -> Syncfusion.Maui.PdfToImageConverter.dll.so
+  [62/193] Syncfusion.Maui.TabView.dll -> Syncfusion.Maui.TabView.dll.so
+  [49/193] Svg.Skia.dll -> Svg.Skia.dll.so
+  [63/193] Syncfusion.Pdf.Imaging.NET.dll -> Syncfusion.Pdf.Imaging.NET.dll.so
+  [60/193] Syncfusion.Maui.PdfViewer.dll -> Syncfusion.Maui.PdfViewer.dll.so
+  [50/193] Syncfusion.Compression.NET.dll -> Syncfusion.Compression.NET.dll.so
+  [61/193] Syncfusion.Maui.SignaturePad.dll -> Syncfusion.Maui.SignaturePad.dll.so
+  [51/193] Syncfusion.Licensing.dll -> Syncfusion.Licensing.dll.so
+  [64/193] Syncfusion.Pdf.NET.dll -> Syncfusion.Pdf.NET.dll.so
+  [62/193] Syncfusion.Maui.TabView.dll -> Syncfusion.Maui.TabView.dll.so
+  [52/193] Syncfusion.Maui.Calendar.dll -> Syncfusion.Maui.Calendar.dll.so
+  [63/193] Syncfusion.Pdf.Imaging.NET.dll -> Syncfusion.Pdf.Imaging.NET.dll.so
+  [65/193] Syncfusion.XlsIO.NET.dll -> Syncfusion.XlsIO.NET.dll.so
+  [53/193] Syncfusion.Maui.Charts.dll -> Syncfusion.Maui.Charts.dll.so
+  [64/193] Syncfusion.Pdf.NET.dll -> Syncfusion.Pdf.NET.dll.so
+  [66/193] System.Drawing.Common.dll -> System.Drawing.Common.dll.so
+  [54/193] Syncfusion.Maui.Core.dll -> Syncfusion.Maui.Core.dll.so
+  [67/193] ExoPlayer.dll -> ExoPlayer.dll.so
+  [68/193] ExoPlayer.Common.dll -> ExoPlayer.Common.dll.so
+  [55/193] Syncfusion.Maui.DataSource.dll -> Syncfusion.Maui.DataSource.dll.so
+  [65/193] Syncfusion.XlsIO.NET.dll -> Syncfusion.XlsIO.NET.dll.so
+  [69/193] ExoPlayer.Container.dll -> ExoPlayer.Container.dll.so
+  [66/193] System.Drawing.Common.dll -> System.Drawing.Common.dll.so
+  [56/193] Syncfusion.Maui.GridCommon.dll -> Syncfusion.Maui.GridCommon.dll.so
+  [67/193] ExoPlayer.dll -> ExoPlayer.dll.so
+  [70/193] ExoPlayer.Core.dll -> ExoPlayer.Core.dll.so
+  [57/193] Syncfusion.Maui.Inputs.dll -> Syncfusion.Maui.Inputs.dll.so
+  [71/193] ExoPlayer.Dash.dll -> ExoPlayer.Dash.dll.so
+  [68/193] ExoPlayer.Common.dll -> ExoPlayer.Common.dll.so
+  [72/193] ExoPlayer.Database.dll -> ExoPlayer.Database.dll.so
+  [58/193] Syncfusion.Maui.ListView.dll -> Syncfusion.Maui.ListView.dll.so
+  [69/193] ExoPlayer.Container.dll -> ExoPlayer.Container.dll.so
+  [73/193] ExoPlayer.DataSource.dll -> ExoPlayer.DataSource.dll.so
+  [59/193] Syncfusion.Maui.PdfToImageConverter.dll -> Syncfusion.Maui.PdfToImageConverter.dll.so
+  [70/193] ExoPlayer.Core.dll -> ExoPlayer.Core.dll.so
+  [74/193] ExoPlayer.Decoder.dll -> ExoPlayer.Decoder.dll.so
+  [60/193] Syncfusion.Maui.PdfViewer.dll -> Syncfusion.Maui.PdfViewer.dll.so
+  [71/193] ExoPlayer.Dash.dll -> ExoPlayer.Dash.dll.so
+  [75/193] ExoPlayer.Extractor.dll -> ExoPlayer.Extractor.dll.so
+  [72/193] ExoPlayer.Database.dll -> ExoPlayer.Database.dll.so
+  [61/193] Syncfusion.Maui.SignaturePad.dll -> Syncfusion.Maui.SignaturePad.dll.so
+  [76/193] ExoPlayer.Hls.dll -> ExoPlayer.Hls.dll.so
+  [77/193] ExoPlayer.Rtsp.dll -> ExoPlayer.Rtsp.dll.so
+  [73/193] ExoPlayer.DataSource.dll -> ExoPlayer.DataSource.dll.so
+  [62/193] Syncfusion.Maui.TabView.dll -> Syncfusion.Maui.TabView.dll.so
+  [78/193] ExoPlayer.SmoothStreaming.dll -> ExoPlayer.SmoothStreaming.dll.so
+  [74/193] ExoPlayer.Decoder.dll -> ExoPlayer.Decoder.dll.so
+  [63/193] Syncfusion.Pdf.Imaging.NET.dll -> Syncfusion.Pdf.Imaging.NET.dll.so
+  [79/193] ExoPlayer.Transformer.dll -> ExoPlayer.Transformer.dll.so
+  [75/193] ExoPlayer.Extractor.dll -> ExoPlayer.Extractor.dll.so
+  [80/193] ExoPlayer.UI.dll -> ExoPlayer.UI.dll.so
+  [76/193] ExoPlayer.Hls.dll -> ExoPlayer.Hls.dll.so
+  [81/193] Xamarin.AndroidX.Activity.dll -> Xamarin.AndroidX.Activity.dll.so
+  [77/193] ExoPlayer.Rtsp.dll -> ExoPlayer.Rtsp.dll.so
+  [64/193] Syncfusion.Pdf.NET.dll -> Syncfusion.Pdf.NET.dll.so
+  [82/193] Xamarin.AndroidX.AppCompat.dll -> Xamarin.AndroidX.AppCompat.dll.so
+  [78/193] ExoPlayer.SmoothStreaming.dll -> ExoPlayer.SmoothStreaming.dll.so
+  [83/193] Xamarin.AndroidX.AppCompat.AppCompatResources.dll -> Xamarin.AndroidX.AppCompat.AppCompatResources.dll.so
+  [79/193] ExoPlayer.Transformer.dll -> ExoPlayer.Transformer.dll.so
+  [84/193] Xamarin.AndroidX.Browser.dll -> Xamarin.AndroidX.Browser.dll.so
+  [80/193] ExoPlayer.UI.dll -> ExoPlayer.UI.dll.so
+  [65/193] Syncfusion.XlsIO.NET.dll -> Syncfusion.XlsIO.NET.dll.so
+  [85/193] Xamarin.AndroidX.Camera.Core.dll -> Xamarin.AndroidX.Camera.Core.dll.so
+  [81/193] Xamarin.AndroidX.Activity.dll -> Xamarin.AndroidX.Activity.dll.so
+  [66/193] System.Drawing.Common.dll -> System.Drawing.Common.dll.so
+  [86/193] Xamarin.AndroidX.Camera.Lifecycle.dll -> Xamarin.AndroidX.Camera.Lifecycle.dll.so
+  [82/193] Xamarin.AndroidX.AppCompat.dll -> Xamarin.AndroidX.AppCompat.dll.so
+  [67/193] ExoPlayer.dll -> ExoPlayer.dll.so
+  [87/193] Xamarin.AndroidX.Camera.View.dll -> Xamarin.AndroidX.Camera.View.dll.so
+  [83/193] Xamarin.AndroidX.AppCompat.AppCompatResources.dll -> Xamarin.AndroidX.AppCompat.AppCompatResources.dll.so
+  [88/193] Xamarin.AndroidX.CardView.dll -> Xamarin.AndroidX.CardView.dll.so
+  [68/193] ExoPlayer.Common.dll -> ExoPlayer.Common.dll.so
+  [84/193] Xamarin.AndroidX.Browser.dll -> Xamarin.AndroidX.Browser.dll.so
+  [89/193] Xamarin.AndroidX.Collection.Jvm.dll -> Xamarin.AndroidX.Collection.Jvm.dll.so
+  [69/193] ExoPlayer.Container.dll -> ExoPlayer.Container.dll.so
+  [85/193] Xamarin.AndroidX.Camera.Core.dll -> Xamarin.AndroidX.Camera.Core.dll.so
+  [90/193] Xamarin.AndroidX.CoordinatorLayout.dll -> Xamarin.AndroidX.CoordinatorLayout.dll.so
+  [86/193] Xamarin.AndroidX.Camera.Lifecycle.dll -> Xamarin.AndroidX.Camera.Lifecycle.dll.so
+  [91/193] Xamarin.AndroidX.Core.dll -> Xamarin.AndroidX.Core.dll.so
+  [70/193] ExoPlayer.Core.dll -> ExoPlayer.Core.dll.so
+  [87/193] Xamarin.AndroidX.Camera.View.dll -> Xamarin.AndroidX.Camera.View.dll.so
+  [92/193] Xamarin.AndroidX.CursorAdapter.dll -> Xamarin.AndroidX.CursorAdapter.dll.so
+  [88/193] Xamarin.AndroidX.CardView.dll -> Xamarin.AndroidX.CardView.dll.so
+  [71/193] ExoPlayer.Dash.dll -> ExoPlayer.Dash.dll.so
+  [93/193] Xamarin.AndroidX.CustomView.dll -> Xamarin.AndroidX.CustomView.dll.so
+  [89/193] Xamarin.AndroidX.Collection.Jvm.dll -> Xamarin.AndroidX.Collection.Jvm.dll.so
+  [72/193] ExoPlayer.Database.dll -> ExoPlayer.Database.dll.so
+  [94/193] Xamarin.AndroidX.DrawerLayout.dll -> Xamarin.AndroidX.DrawerLayout.dll.so
+  [90/193] Xamarin.AndroidX.CoordinatorLayout.dll -> Xamarin.AndroidX.CoordinatorLayout.dll.so
+  [95/193] Xamarin.AndroidX.Fragment.dll -> Xamarin.AndroidX.Fragment.dll.so
+  [73/193] ExoPlayer.DataSource.dll -> ExoPlayer.DataSource.dll.so
+  [91/193] Xamarin.AndroidX.Core.dll -> Xamarin.AndroidX.Core.dll.so
+  [96/193] Xamarin.AndroidX.Lifecycle.Common.dll -> Xamarin.AndroidX.Lifecycle.Common.dll.so
+  [74/193] ExoPlayer.Decoder.dll -> ExoPlayer.Decoder.dll.so
+  [92/193] Xamarin.AndroidX.CursorAdapter.dll -> Xamarin.AndroidX.CursorAdapter.dll.so
+  [97/193] Xamarin.AndroidX.Lifecycle.LiveData.Core.dll -> Xamarin.AndroidX.Lifecycle.LiveData.Core.dll.so
+  [75/193] ExoPlayer.Extractor.dll -> ExoPlayer.Extractor.dll.so
+  [98/193] Xamarin.AndroidX.Lifecycle.ViewModel.dll -> Xamarin.AndroidX.Lifecycle.ViewModel.dll.so
+  [93/193] Xamarin.AndroidX.CustomView.dll -> Xamarin.AndroidX.CustomView.dll.so
+  [76/193] ExoPlayer.Hls.dll -> ExoPlayer.Hls.dll.so
+  [99/193] Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll -> Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll.so
+  [94/193] Xamarin.AndroidX.DrawerLayout.dll -> Xamarin.AndroidX.DrawerLayout.dll.so
+  [100/193] Xamarin.AndroidX.Loader.dll -> Xamarin.AndroidX.Loader.dll.so
+  [77/193] ExoPlayer.Rtsp.dll -> ExoPlayer.Rtsp.dll.so
+  [95/193] Xamarin.AndroidX.Fragment.dll -> Xamarin.AndroidX.Fragment.dll.so
+  [101/193] Xamarin.AndroidX.Media.dll -> Xamarin.AndroidX.Media.dll.so
+  [78/193] ExoPlayer.SmoothStreaming.dll -> ExoPlayer.SmoothStreaming.dll.so
+  [96/193] Xamarin.AndroidX.Lifecycle.Common.dll -> Xamarin.AndroidX.Lifecycle.Common.dll.so
+  [102/193] Xamarin.AndroidX.Navigation.Common.dll -> Xamarin.AndroidX.Navigation.Common.dll.so
+  [97/193] Xamarin.AndroidX.Lifecycle.LiveData.Core.dll -> Xamarin.AndroidX.Lifecycle.LiveData.Core.dll.so
+  [79/193] ExoPlayer.Transformer.dll -> ExoPlayer.Transformer.dll.so
+  [103/193] Xamarin.AndroidX.Navigation.Fragment.dll -> Xamarin.AndroidX.Navigation.Fragment.dll.so
+  [98/193] Xamarin.AndroidX.Lifecycle.ViewModel.dll -> Xamarin.AndroidX.Lifecycle.ViewModel.dll.so
+  [80/193] ExoPlayer.UI.dll -> ExoPlayer.UI.dll.so
+  [104/193] Xamarin.AndroidX.Navigation.Runtime.dll -> Xamarin.AndroidX.Navigation.Runtime.dll.so
+  [99/193] Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll -> Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll.so
+  [81/193] Xamarin.AndroidX.Activity.dll -> Xamarin.AndroidX.Activity.dll.so
+  [105/193] Xamarin.AndroidX.Navigation.UI.dll -> Xamarin.AndroidX.Navigation.UI.dll.so
+  [100/193] Xamarin.AndroidX.Loader.dll -> Xamarin.AndroidX.Loader.dll.so
+  [106/193] Xamarin.AndroidX.RecyclerView.dll -> Xamarin.AndroidX.RecyclerView.dll.so
+  [101/193] Xamarin.AndroidX.Media.dll -> Xamarin.AndroidX.Media.dll.so
+  [82/193] Xamarin.AndroidX.AppCompat.dll -> Xamarin.AndroidX.AppCompat.dll.so
+  [107/193] Xamarin.AndroidX.SavedState.dll -> Xamarin.AndroidX.SavedState.dll.so
+  [102/193] Xamarin.AndroidX.Navigation.Common.dll -> Xamarin.AndroidX.Navigation.Common.dll.so
+  [83/193] Xamarin.AndroidX.AppCompat.AppCompatResources.dll -> Xamarin.AndroidX.AppCompat.AppCompatResources.dll.so
+  [108/193] Xamarin.AndroidX.SwipeRefreshLayout.dll -> Xamarin.AndroidX.SwipeRefreshLayout.dll.so
+  [103/193] Xamarin.AndroidX.Navigation.Fragment.dll -> Xamarin.AndroidX.Navigation.Fragment.dll.so
+  [84/193] Xamarin.AndroidX.Browser.dll -> Xamarin.AndroidX.Browser.dll.so
+  [109/193] Xamarin.AndroidX.VersionedParcelable.dll -> Xamarin.AndroidX.VersionedParcelable.dll.so
+  [104/193] Xamarin.AndroidX.Navigation.Runtime.dll -> Xamarin.AndroidX.Navigation.Runtime.dll.so
+  [110/193] Xamarin.AndroidX.ViewPager.dll -> Xamarin.AndroidX.ViewPager.dll.so
+  [85/193] Xamarin.AndroidX.Camera.Core.dll -> Xamarin.AndroidX.Camera.Core.dll.so
+  [105/193] Xamarin.AndroidX.Navigation.UI.dll -> Xamarin.AndroidX.Navigation.UI.dll.so
+  [111/193] Xamarin.AndroidX.ViewPager2.dll -> Xamarin.AndroidX.ViewPager2.dll.so
+  [86/193] Xamarin.AndroidX.Camera.Lifecycle.dll -> Xamarin.AndroidX.Camera.Lifecycle.dll.so
+  [106/193] Xamarin.AndroidX.RecyclerView.dll -> Xamarin.AndroidX.RecyclerView.dll.so
+  [112/193] Xamarin.Google.Android.Material.dll -> Xamarin.Google.Android.Material.dll.so
+  [87/193] Xamarin.AndroidX.Camera.View.dll -> Xamarin.AndroidX.Camera.View.dll.so
+  [107/193] Xamarin.AndroidX.SavedState.dll -> Xamarin.AndroidX.SavedState.dll.so
+  [113/193] Xamarin.Google.Android.Play.Core.dll -> Xamarin.Google.Android.Play.Core.dll.so
+  [88/193] Xamarin.AndroidX.CardView.dll -> Xamarin.AndroidX.CardView.dll.so
+  [108/193] Xamarin.AndroidX.SwipeRefreshLayout.dll -> Xamarin.AndroidX.SwipeRefreshLayout.dll.so
+  [114/193] Xamarin.Google.Guava.ListenableFuture.dll -> Xamarin.Google.Guava.ListenableFuture.dll.so
+  [89/193] Xamarin.AndroidX.Collection.Jvm.dll -> Xamarin.AndroidX.Collection.Jvm.dll.so
+  [109/193] Xamarin.AndroidX.VersionedParcelable.dll -> Xamarin.AndroidX.VersionedParcelable.dll.so
+  [115/193] Xamarin.Kotlin.StdLib.dll -> Xamarin.Kotlin.StdLib.dll.so
+  [110/193] Xamarin.AndroidX.ViewPager.dll -> Xamarin.AndroidX.ViewPager.dll.so
+  [90/193] Xamarin.AndroidX.CoordinatorLayout.dll -> Xamarin.AndroidX.CoordinatorLayout.dll.so
+  [116/193] Xamarin.KotlinX.Coroutines.Core.Jvm.dll -> Xamarin.KotlinX.Coroutines.Core.Jvm.dll.so
+  [111/193] Xamarin.AndroidX.ViewPager2.dll -> Xamarin.AndroidX.ViewPager2.dll.so
+  [117/193] zxing.dll -> zxing.dll.so
+  [91/193] Xamarin.AndroidX.Core.dll -> Xamarin.AndroidX.Core.dll.so
+  [118/193] ZXing.Net.MAUI.dll -> ZXing.Net.MAUI.dll.so
+  [112/193] Xamarin.Google.Android.Material.dll -> Xamarin.Google.Android.Material.dll.so
+  [92/193] Xamarin.AndroidX.CursorAdapter.dll -> Xamarin.AndroidX.CursorAdapter.dll.so
+  [113/193] Xamarin.Google.Android.Play.Core.dll -> Xamarin.Google.Android.Play.Core.dll.so
+  [119/193] ZXing.Net.MAUI.Controls.dll -> ZXing.Net.MAUI.Controls.dll.so
+  [93/193] Xamarin.AndroidX.CustomView.dll -> Xamarin.AndroidX.CustomView.dll.so
+  [114/193] Xamarin.Google.Guava.ListenableFuture.dll -> Xamarin.Google.Guava.ListenableFuture.dll.so
+  [120/193] Microsoft.CSharp.dll -> Microsoft.CSharp.dll.so
+  [94/193] Xamarin.AndroidX.DrawerLayout.dll -> Xamarin.AndroidX.DrawerLayout.dll.so
+  [121/193] Microsoft.Win32.Primitives.dll -> Microsoft.Win32.Primitives.dll.so
+  [115/193] Xamarin.Kotlin.StdLib.dll -> Xamarin.Kotlin.StdLib.dll.so
+  [95/193] Xamarin.AndroidX.Fragment.dll -> Xamarin.AndroidX.Fragment.dll.so
+  [116/193] Xamarin.KotlinX.Coroutines.Core.Jvm.dll -> Xamarin.KotlinX.Coroutines.Core.Jvm.dll.so
+  [122/193] System.Collections.Concurrent.dll -> System.Collections.Concurrent.dll.so
+  [96/193] Xamarin.AndroidX.Lifecycle.Common.dll -> Xamarin.AndroidX.Lifecycle.Common.dll.so
+  [117/193] zxing.dll -> zxing.dll.so
+  [123/193] System.Collections.Immutable.dll -> System.Collections.Immutable.dll.so
+  [118/193] ZXing.Net.MAUI.dll -> ZXing.Net.MAUI.dll.so
+  [97/193] Xamarin.AndroidX.Lifecycle.LiveData.Core.dll -> Xamarin.AndroidX.Lifecycle.LiveData.Core.dll.so
+  [124/193] System.Collections.NonGeneric.dll -> System.Collections.NonGeneric.dll.so
+  [125/193] System.Collections.Specialized.dll -> System.Collections.Specialized.dll.so
+  [119/193] ZXing.Net.MAUI.Controls.dll -> ZXing.Net.MAUI.Controls.dll.so
+  [98/193] Xamarin.AndroidX.Lifecycle.ViewModel.dll -> Xamarin.AndroidX.Lifecycle.ViewModel.dll.so
+  [120/193] Microsoft.CSharp.dll -> Microsoft.CSharp.dll.so
+  [99/193] Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll -> Xamarin.AndroidX.Lifecycle.ViewModelSavedState.dll.so
+  [126/193] System.Collections.dll -> System.Collections.dll.so
+  [121/193] Microsoft.Win32.Primitives.dll -> Microsoft.Win32.Primitives.dll.so
+  [127/193] System.ComponentModel.EventBasedAsync.dll -> System.ComponentModel.EventBasedAsync.dll.so
+  [100/193] Xamarin.AndroidX.Loader.dll -> Xamarin.AndroidX.Loader.dll.so
+  [128/193] System.ComponentModel.Primitives.dll -> System.ComponentModel.Primitives.dll.so
+  [122/193] System.Collections.Concurrent.dll -> System.Collections.Concurrent.dll.so
+  [101/193] Xamarin.AndroidX.Media.dll -> Xamarin.AndroidX.Media.dll.so
+  [129/193] System.ComponentModel.TypeConverter.dll -> System.ComponentModel.TypeConverter.dll.so
+  [123/193] System.Collections.Immutable.dll -> System.Collections.Immutable.dll.so
+  [102/193] Xamarin.AndroidX.Navigation.Common.dll -> Xamarin.AndroidX.Navigation.Common.dll.so
+  [130/193] System.ComponentModel.dll -> System.ComponentModel.dll.so
+  [124/193] System.Collections.NonGeneric.dll -> System.Collections.NonGeneric.dll.so
+  [103/193] Xamarin.AndroidX.Navigation.Fragment.dll -> Xamarin.AndroidX.Navigation.Fragment.dll.so
+  [131/193] System.Console.dll -> System.Console.dll.so
+  [125/193] System.Collections.Specialized.dll -> System.Collections.Specialized.dll.so
+  [104/193] Xamarin.AndroidX.Navigation.Runtime.dll -> Xamarin.AndroidX.Navigation.Runtime.dll.so
+  [132/193] System.Data.Common.dll -> System.Data.Common.dll.so
+  [126/193] System.Collections.dll -> System.Collections.dll.so
+  [133/193] System.Diagnostics.DiagnosticSource.dll -> System.Diagnostics.DiagnosticSource.dll.so
+  [105/193] Xamarin.AndroidX.Navigation.UI.dll -> Xamarin.AndroidX.Navigation.UI.dll.so
+  [127/193] System.ComponentModel.EventBasedAsync.dll -> System.ComponentModel.EventBasedAsync.dll.so
+  [134/193] System.Diagnostics.Process.dll -> System.Diagnostics.Process.dll.so
+  [106/193] Xamarin.AndroidX.RecyclerView.dll -> Xamarin.AndroidX.RecyclerView.dll.so
+  [128/193] System.ComponentModel.Primitives.dll -> System.ComponentModel.Primitives.dll.so
+  [135/193] System.Diagnostics.TraceSource.dll -> System.Diagnostics.TraceSource.dll.so
+  [107/193] Xamarin.AndroidX.SavedState.dll -> Xamarin.AndroidX.SavedState.dll.so
+  [136/193] System.Drawing.Primitives.dll -> System.Drawing.Primitives.dll.so
+  [129/193] System.ComponentModel.TypeConverter.dll -> System.ComponentModel.TypeConverter.dll.so
+  [137/193] System.Drawing.dll -> System.Drawing.dll.so
+  [130/193] System.ComponentModel.dll -> System.ComponentModel.dll.so
+  [108/193] Xamarin.AndroidX.SwipeRefreshLayout.dll -> Xamarin.AndroidX.SwipeRefreshLayout.dll.so
+  [138/193] System.Formats.Asn1.dll -> System.Formats.Asn1.dll.so
+  [131/193] System.Console.dll -> System.Console.dll.so
+  [109/193] Xamarin.AndroidX.VersionedParcelable.dll -> Xamarin.AndroidX.VersionedParcelable.dll.so
+  [139/193] System.IO.Compression.Brotli.dll -> System.IO.Compression.Brotli.dll.so
+  [132/193] System.Data.Common.dll -> System.Data.Common.dll.so
+  [110/193] Xamarin.AndroidX.ViewPager.dll -> Xamarin.AndroidX.ViewPager.dll.so
+  [140/193] System.IO.Compression.dll -> System.IO.Compression.dll.so
+  [133/193] System.Diagnostics.DiagnosticSource.dll -> System.Diagnostics.DiagnosticSource.dll.so
+  [111/193] Xamarin.AndroidX.ViewPager2.dll -> Xamarin.AndroidX.ViewPager2.dll.so
+  [134/193] System.Diagnostics.Process.dll -> System.Diagnostics.Process.dll.so
+  [141/193] System.Linq.Expressions.dll -> System.Linq.Expressions.dll.so
+  [112/193] Xamarin.Google.Android.Material.dll -> Xamarin.Google.Android.Material.dll.so
+  [135/193] System.Diagnostics.TraceSource.dll -> System.Diagnostics.TraceSource.dll.so
+  [142/193] System.Linq.Queryable.dll -> System.Linq.Queryable.dll.so
+  [136/193] System.Drawing.Primitives.dll -> System.Drawing.Primitives.dll.so
+  [113/193] Xamarin.Google.Android.Play.Core.dll -> Xamarin.Google.Android.Play.Core.dll.so
+  [137/193] System.Drawing.dll -> System.Drawing.dll.so
+  [114/193] Xamarin.Google.Guava.ListenableFuture.dll -> Xamarin.Google.Guava.ListenableFuture.dll.so
+  [138/193] System.Formats.Asn1.dll -> System.Formats.Asn1.dll.so
+  [143/193] System.Linq.dll -> System.Linq.dll.so
+  [115/193] Xamarin.Kotlin.StdLib.dll -> Xamarin.Kotlin.StdLib.dll.so
+  [139/193] System.IO.Compression.Brotli.dll -> System.IO.Compression.Brotli.dll.so
+  [144/193] System.Memory.dll -> System.Memory.dll.so
+  [116/193] Xamarin.KotlinX.Coroutines.Core.Jvm.dll -> Xamarin.KotlinX.Coroutines.Core.Jvm.dll.so
+  [140/193] System.IO.Compression.dll -> System.IO.Compression.dll.so
+  [145/193] System.Net.Http.dll -> System.Net.Http.dll.so
+  [117/193] zxing.dll -> zxing.dll.so
+  [146/193] System.Net.Mail.dll -> System.Net.Mail.dll.so
+  [141/193] System.Linq.Expressions.dll -> System.Linq.Expressions.dll.so
+  [118/193] ZXing.Net.MAUI.dll -> ZXing.Net.MAUI.dll.so
+  [147/193] System.Net.NameResolution.dll -> System.Net.NameResolution.dll.so
+  [142/193] System.Linq.Queryable.dll -> System.Linq.Queryable.dll.so
+  [119/193] ZXing.Net.MAUI.Controls.dll -> ZXing.Net.MAUI.Controls.dll.so
+  [148/193] System.Net.NetworkInformation.dll -> System.Net.NetworkInformation.dll.so
+  [120/193] Microsoft.CSharp.dll -> Microsoft.CSharp.dll.so
+  [149/193] System.Net.Primitives.dll -> System.Net.Primitives.dll.so
+  [143/193] System.Linq.dll -> System.Linq.dll.so
+  [150/193] System.Net.Requests.dll -> System.Net.Requests.dll.so
+  [121/193] Microsoft.Win32.Primitives.dll -> Microsoft.Win32.Primitives.dll.so
+  [144/193] System.Memory.dll -> System.Memory.dll.so
+  [151/193] System.Net.Security.dll -> System.Net.Security.dll.so
+  [122/193] System.Collections.Concurrent.dll -> System.Collections.Concurrent.dll.so
+  [152/193] System.Net.ServicePoint.dll -> System.Net.ServicePoint.dll.so
+  [145/193] System.Net.Http.dll -> System.Net.Http.dll.so
+  [123/193] System.Collections.Immutable.dll -> System.Collections.Immutable.dll.so
+  [153/193] System.Net.Sockets.dll -> System.Net.Sockets.dll.so
+  [146/193] System.Net.Mail.dll -> System.Net.Mail.dll.so
+  [154/193] System.Net.WebClient.dll -> System.Net.WebClient.dll.so
+  [124/193] System.Collections.NonGeneric.dll -> System.Collections.NonGeneric.dll.so
+  [147/193] System.Net.NameResolution.dll -> System.Net.NameResolution.dll.so
+  [155/193] System.Net.WebHeaderCollection.dll -> System.Net.WebHeaderCollection.dll.so
+  [125/193] System.Collections.Specialized.dll -> System.Collections.Specialized.dll.so
+  [148/193] System.Net.NetworkInformation.dll -> System.Net.NetworkInformation.dll.so
+  [156/193] System.Numerics.Vectors.dll -> System.Numerics.Vectors.dll.so
+  [149/193] System.Net.Primitives.dll -> System.Net.Primitives.dll.so
+  [157/193] System.ObjectModel.dll -> System.ObjectModel.dll.so
+  [126/193] System.Collections.dll -> System.Collections.dll.so
+  [150/193] System.Net.Requests.dll -> System.Net.Requests.dll.so
+  [127/193] System.ComponentModel.EventBasedAsync.dll -> System.ComponentModel.EventBasedAsync.dll.so
+  [158/193] System.Private.Uri.dll -> System.Private.Uri.dll.so
+  [151/193] System.Net.Security.dll -> System.Net.Security.dll.so
+  [128/193] System.ComponentModel.Primitives.dll -> System.ComponentModel.Primitives.dll.so
+  [159/193] System.Private.Xml.Linq.dll -> System.Private.Xml.Linq.dll.so
+  [152/193] System.Net.ServicePoint.dll -> System.Net.ServicePoint.dll.so
+  [129/193] System.ComponentModel.TypeConverter.dll -> System.ComponentModel.TypeConverter.dll.so
+  [153/193] System.Net.Sockets.dll -> System.Net.Sockets.dll.so
+  [160/193] System.Private.Xml.dll -> System.Private.Xml.dll.so
+  [130/193] System.ComponentModel.dll -> System.ComponentModel.dll.so
+  [154/193] System.Net.WebClient.dll -> System.Net.WebClient.dll.so
+  [161/193] System.Reflection.Emit.ILGeneration.dll -> System.Reflection.Emit.ILGeneration.dll.so
+  [131/193] System.Console.dll -> System.Console.dll.so
+  [155/193] System.Net.WebHeaderCollection.dll -> System.Net.WebHeaderCollection.dll.so
+  [162/193] System.Reflection.Emit.Lightweight.dll -> System.Reflection.Emit.Lightweight.dll.so
+  [156/193] System.Numerics.Vectors.dll -> System.Numerics.Vectors.dll.so
+  [163/193] System.Reflection.Primitives.dll -> System.Reflection.Primitives.dll.so
+  [132/193] System.Data.Common.dll -> System.Data.Common.dll.so
+  [164/193] System.Runtime.InteropServices.RuntimeInformation.dll -> System.Runtime.InteropServices.RuntimeInformation.dll.so
+  [157/193] System.ObjectModel.dll -> System.ObjectModel.dll.so
+  [133/193] System.Diagnostics.DiagnosticSource.dll -> System.Diagnostics.DiagnosticSource.dll.so
+  [165/193] System.Runtime.InteropServices.dll -> System.Runtime.InteropServices.dll.so
+  [158/193] System.Private.Uri.dll -> System.Private.Uri.dll.so
+  [134/193] System.Diagnostics.Process.dll -> System.Diagnostics.Process.dll.so
+  [166/193] System.Runtime.Loader.dll -> System.Runtime.Loader.dll.so
+  [159/193] System.Private.Xml.Linq.dll -> System.Private.Xml.Linq.dll.so
+  [135/193] System.Diagnostics.TraceSource.dll -> System.Diagnostics.TraceSource.dll.so
+  [167/193] System.Runtime.Numerics.dll -> System.Runtime.Numerics.dll.so
+  [136/193] System.Drawing.Primitives.dll -> System.Drawing.Primitives.dll.so
+  [168/193] System.Runtime.Serialization.Formatters.dll -> System.Runtime.Serialization.Formatters.dll.so
+  [160/193] System.Private.Xml.dll -> System.Private.Xml.dll.so
+  [169/193] System.Runtime.Serialization.Primitives.dll -> System.Runtime.Serialization.Primitives.dll.so
+  [137/193] System.Drawing.dll -> System.Drawing.dll.so
+  [161/193] System.Reflection.Emit.ILGeneration.dll -> System.Reflection.Emit.ILGeneration.dll.so
+  [170/193] System.Runtime.dll -> System.Runtime.dll.so
+  [138/193] System.Formats.Asn1.dll -> System.Formats.Asn1.dll.so
+  [162/193] System.Reflection.Emit.Lightweight.dll -> System.Reflection.Emit.Lightweight.dll.so
+  [171/193] System.Security.Cryptography.dll -> System.Security.Cryptography.dll.so
+  [139/193] System.IO.Compression.Brotli.dll -> System.IO.Compression.Brotli.dll.so
+  [163/193] System.Reflection.Primitives.dll -> System.Reflection.Primitives.dll.so
+  [172/193] System.Text.Encoding.CodePages.dll -> System.Text.Encoding.CodePages.dll.so
+  [164/193] System.Runtime.InteropServices.RuntimeInformation.dll -> System.Runtime.InteropServices.RuntimeInformation.dll.so
+  [140/193] System.IO.Compression.dll -> System.IO.Compression.dll.so
+  [173/193] System.Text.Encoding.Extensions.dll -> System.Text.Encoding.Extensions.dll.so
+  [165/193] System.Runtime.InteropServices.dll -> System.Runtime.InteropServices.dll.so
+  [174/193] System.Text.Encodings.Web.dll -> System.Text.Encodings.Web.dll.so
+  [166/193] System.Runtime.Loader.dll -> System.Runtime.Loader.dll.so
+  [141/193] System.Linq.Expressions.dll -> System.Linq.Expressions.dll.so
+  [167/193] System.Runtime.Numerics.dll -> System.Runtime.Numerics.dll.so
+  [142/193] System.Linq.Queryable.dll -> System.Linq.Queryable.dll.so
+  [168/193] System.Runtime.Serialization.Formatters.dll -> System.Runtime.Serialization.Formatters.dll.so
+  [175/193] System.Text.Json.dll -> System.Text.Json.dll.so
+  [169/193] System.Runtime.Serialization.Primitives.dll -> System.Runtime.Serialization.Primitives.dll.so
+  [170/193] System.Runtime.dll -> System.Runtime.dll.so
+  [176/193] System.Text.RegularExpressions.dll -> System.Text.RegularExpressions.dll.so
+  [143/193] System.Linq.dll -> System.Linq.dll.so
+  [171/193] System.Security.Cryptography.dll -> System.Security.Cryptography.dll.so
+  [177/193] System.Threading.Channels.dll -> System.Threading.Channels.dll.so
+  [144/193] System.Memory.dll -> System.Memory.dll.so
+  [172/193] System.Text.Encoding.CodePages.dll -> System.Text.Encoding.CodePages.dll.so
+  [178/193] System.Threading.Tasks.Parallel.dll -> System.Threading.Tasks.Parallel.dll.so
+  [173/193] System.Text.Encoding.Extensions.dll -> System.Text.Encoding.Extensions.dll.so
+  [179/193] System.Threading.Thread.dll -> System.Threading.Thread.dll.so
+  [145/193] System.Net.Http.dll -> System.Net.Http.dll.so
+  [174/193] System.Text.Encodings.Web.dll -> System.Text.Encodings.Web.dll.so
+  [180/193] System.Threading.ThreadPool.dll -> System.Threading.ThreadPool.dll.so
+  [146/193] System.Net.Mail.dll -> System.Net.Mail.dll.so
+  [181/193] System.Threading.dll -> System.Threading.dll.so
+  [147/193] System.Net.NameResolution.dll -> System.Net.NameResolution.dll.so
+  [182/193] System.Web.HttpUtility.dll -> System.Web.HttpUtility.dll.so
+  [175/193] System.Text.Json.dll -> System.Text.Json.dll.so
+  [183/193] System.Xml.Linq.dll -> System.Xml.Linq.dll.so
+  [148/193] System.Net.NetworkInformation.dll -> System.Net.NetworkInformation.dll.so
+  [184/193] System.Xml.ReaderWriter.dll -> System.Xml.ReaderWriter.dll.so
+  [149/193] System.Net.Primitives.dll -> System.Net.Primitives.dll.so
+  [185/193] System.Xml.XDocument.dll -> System.Xml.XDocument.dll.so
+  [176/193] System.Text.RegularExpressions.dll -> System.Text.RegularExpressions.dll.so
+  [150/193] System.Net.Requests.dll -> System.Net.Requests.dll.so
+  [186/193] System.Xml.XmlSerializer.dll -> System.Xml.XmlSerializer.dll.so
+  [177/193] System.Threading.Channels.dll -> System.Threading.Channels.dll.so
+  [187/193] System.dll -> System.dll.so
+  [151/193] System.Net.Security.dll -> System.Net.Security.dll.so
+  [178/193] System.Threading.Tasks.Parallel.dll -> System.Threading.Tasks.Parallel.dll.so
+  [188/193] mscorlib.dll -> mscorlib.dll.so
+  [152/193] System.Net.ServicePoint.dll -> System.Net.ServicePoint.dll.so
+  [179/193] System.Threading.Thread.dll -> System.Threading.Thread.dll.so
+  [189/193] netstandard.dll -> netstandard.dll.so
+  [180/193] System.Threading.ThreadPool.dll -> System.Threading.ThreadPool.dll.so
+  [153/193] System.Net.Sockets.dll -> System.Net.Sockets.dll.so
+  [181/193] System.Threading.dll -> System.Threading.dll.so
+  [190/193] Java.Interop.dll -> Java.Interop.dll.so
+  [154/193] System.Net.WebClient.dll -> System.Net.WebClient.dll.so
+  [182/193] System.Web.HttpUtility.dll -> System.Web.HttpUtility.dll.so
+  [191/193] Mono.Android.Runtime.dll -> Mono.Android.Runtime.dll.so
+  [155/193] System.Net.WebHeaderCollection.dll -> System.Net.WebHeaderCollection.dll.so
+  [183/193] System.Xml.Linq.dll -> System.Xml.Linq.dll.so
+  [156/193] System.Numerics.Vectors.dll -> System.Numerics.Vectors.dll.so
+  [184/193] System.Xml.ReaderWriter.dll -> System.Xml.ReaderWriter.dll.so
+  [157/193] System.ObjectModel.dll -> System.ObjectModel.dll.so
+  [185/193] System.Xml.XDocument.dll -> System.Xml.XDocument.dll.so
+  [186/193] System.Xml.XmlSerializer.dll -> System.Xml.XmlSerializer.dll.so
+  [192/193] Mono.Android.dll -> Mono.Android.dll.so
+  [158/193] System.Private.Uri.dll -> System.Private.Uri.dll.so
+  [187/193] System.dll -> System.dll.so
+  [188/193] mscorlib.dll -> mscorlib.dll.so
+  [159/193] System.Private.Xml.Linq.dll -> System.Private.Xml.Linq.dll.so
+  [189/193] netstandard.dll -> netstandard.dll.so
+  [160/193] System.Private.Xml.dll -> System.Private.Xml.dll.so
+  [190/193] Java.Interop.dll -> Java.Interop.dll.so
+  [161/193] System.Reflection.Emit.ILGeneration.dll -> System.Reflection.Emit.ILGeneration.dll.so
+  [191/193] Mono.Android.Runtime.dll -> Mono.Android.Runtime.dll.so
+  [162/193] System.Reflection.Emit.Lightweight.dll -> System.Reflection.Emit.Lightweight.dll.so
+  [163/193] System.Reflection.Primitives.dll -> System.Reflection.Primitives.dll.so
+  [164/193] System.Runtime.InteropServices.RuntimeInformation.dll -> System.Runtime.InteropServices.RuntimeInformation.dll.so
+  [192/193] Mono.Android.dll -> Mono.Android.dll.so
+  [165/193] System.Runtime.InteropServices.dll -> System.Runtime.InteropServices.dll.so
+  [166/193] System.Runtime.Loader.dll -> System.Runtime.Loader.dll.so
+  [167/193] System.Runtime.Numerics.dll -> System.Runtime.Numerics.dll.so
+  [168/193] System.Runtime.Serialization.Formatters.dll -> System.Runtime.Serialization.Formatters.dll.so
+  [193/193] System.Private.CoreLib.dll -> System.Private.CoreLib.dll.so
+  [169/193] System.Runtime.Serialization.Primitives.dll -> System.Runtime.Serialization.Primitives.dll.so
+  [170/193] System.Runtime.dll -> System.Runtime.dll.so
+  [171/193] System.Security.Cryptography.dll -> System.Security.Cryptography.dll.so
+  [172/193] System.Text.Encoding.CodePages.dll -> System.Text.Encoding.CodePages.dll.so
+  [173/193] System.Text.Encoding.Extensions.dll -> System.Text.Encoding.Extensions.dll.so
+  [193/193] System.Private.CoreLib.dll -> System.Private.CoreLib.dll.so
+  [174/193] System.Text.Encodings.Web.dll -> System.Text.Encodings.Web.dll.so
+  [175/193] System.Text.Json.dll -> System.Text.Json.dll.so
+  [176/193] System.Text.RegularExpressions.dll -> System.Text.RegularExpressions.dll.so
+  [177/193] System.Threading.Channels.dll -> System.Threading.Channels.dll.so
+  [178/193] System.Threading.Tasks.Parallel.dll -> System.Threading.Tasks.Parallel.dll.so
+  [179/193] System.Threading.Thread.dll -> System.Threading.Thread.dll.so
+  [180/193] System.Threading.ThreadPool.dll -> System.Threading.ThreadPool.dll.so
+  [181/193] System.Threading.dll -> System.Threading.dll.so
+  [182/193] System.Web.HttpUtility.dll -> System.Web.HttpUtility.dll.so
+  [183/193] System.Xml.Linq.dll -> System.Xml.Linq.dll.so
+  [184/193] System.Xml.ReaderWriter.dll -> System.Xml.ReaderWriter.dll.so
+  [185/193] System.Xml.XDocument.dll -> System.Xml.XDocument.dll.so
+  [186/193] System.Xml.XmlSerializer.dll -> System.Xml.XmlSerializer.dll.so
+  [187/193] System.dll -> System.dll.so
+  [188/193] mscorlib.dll -> mscorlib.dll.so
+  [189/193] netstandard.dll -> netstandard.dll.so
+  [190/193] Java.Interop.dll -> Java.Interop.dll.so
+  [191/193] Mono.Android.Runtime.dll -> Mono.Android.Runtime.dll.so
+  [192/193] Mono.Android.dll -> Mono.Android.dll.so
+  [193/193] System.Private.CoreLib.dll -> System.Private.CoreLib.dll.so
+/usr/local/share/dotnet/packs/Microsoft.Android.Sdk.Darwin/34.0.154/targets/Microsoft.Android.Sdk.Tooling.targets(69,5): warning XA1008: El valor de TargetFrameworkVersion (nivel de API 34 de Android) es menor que el de targetSdkVersion (35). Aumente el valor de "$(TargetFrameworkVersion)" o reduzca el de "android:targetSdkVersion" en "AndroidManifest.xml" para que los niveles de API coincidan. [/Users/macminimoi2/Documents/Desarrollo/MAUI/AsadorMoron/AsadorMoron.csproj::TargetFramework=net8.0-android]
