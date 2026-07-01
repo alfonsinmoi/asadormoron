@@ -130,6 +130,12 @@ function dispatch_tool(string $name, array $args, string $callId, ?string $telef
             $buscar = (string)($args['buscar'] ?? '');
             return tool_get_menu($db, $buscar);
 
+        case 'get_opciones':
+            return tool_get_opciones($db, (int)($args['idProducto'] ?? 0));
+
+        case 'get_ingredientes':
+            return tool_get_ingredientes($db, (int)($args['idProducto'] ?? 0));
+
         case 'get_estado_local':
             return tool_get_estado_local($db);
 
@@ -169,7 +175,10 @@ function tool_get_menu(PDO $db, string $buscar = ''): array {
             $where[] = "(LOWER(pe.nombre) LIKE {$key} OR LOWER(pc.nombre) LIKE {$key})";
             $params[$key] = '%' . $p . '%';
         }
-        $sql = "SELECT pe.id, pe.nombre, pe.precio, pc.nombre AS categoria
+        $sql = "SELECT pe.id, pe.nombre, pe.precio, pc.nombre AS categoria,
+                       EXISTS(SELECT 1 FROM qo_productos_opc o WHERE o.idProducto = pe.id) AS tieneOpciones,
+                       EXISTS(SELECT 1 FROM qo_ingredientes_producto ip WHERE ip.idProducto = pe.id) AS tieneIngredientes,
+                       pe.numeroIngredientes AS numIng
                 FROM qo_productos_est pe
                 JOIN qo_productos_cat pc ON pc.id = pe.idCategoria
                 WHERE " . implode(' AND ', $where) . "
@@ -184,7 +193,10 @@ function tool_get_menu(PDO $db, string $buscar = ''): array {
     } else {
         // Sin filtro: top productos por presencia
         $stmt = $db->prepare("
-            SELECT pe.id, pe.nombre, pe.precio, pc.nombre AS categoria
+            SELECT pe.id, pe.nombre, pe.precio, pc.nombre AS categoria,
+                   EXISTS(SELECT 1 FROM qo_productos_opc o WHERE o.idProducto = pe.id) AS tieneOpciones,
+                   EXISTS(SELECT 1 FROM qo_ingredientes_producto ip WHERE ip.idProducto = pe.id) AS tieneIngredientes,
+                   pe.numeroIngredientes AS numIng
             FROM qo_productos_est pe
             JOIN qo_productos_cat pc ON pc.id = pe.idCategoria
             WHERE pc.idEstablecimiento = :est
@@ -198,16 +210,79 @@ function tool_get_menu(PDO $db, string $buscar = ''): array {
     }
 
     $productos = array_map(fn($r) => [
-        'id' => (int)$r['id'],
-        'n'  => trim($r['nombre']),
-        'p'  => (float)$r['precio'],
-        'c'  => trim($r['categoria'])
+        'id'   => (int)$r['id'],
+        'n'    => trim($r['nombre']),
+        'p'    => (float)$r['precio'],
+        'c'    => trim($r['categoria']),
+        // Flags de personalización: el agente sabe si debe llamar a get_opciones /
+        // get_ingredientes tras elegir este producto (P2).
+        'opc'  => (int)($r['tieneOpciones'] ?? 0) === 1,
+        'ing'  => (int)($r['tieneIngredientes'] ?? 0) === 1,
+        'nIng' => (int)($r['numIng'] ?? 0),
     ], $rows);
 
     return [
         'productos' => $productos,
         'total'     => count($productos),
         'buscar'    => $buscar
+    ];
+}
+
+// ─── get_opciones: opciones de un producto (entero/medio/cuarto, menús…) ──
+// valorIncremento es el PRECIO ABSOLUTO de la opción (no un incremento): al
+// elegir una opción, el precio de la línea = ese valor. Semántica idéntica a
+// la app móvil (OpcionSeleccionada.precio).
+function tool_get_opciones(PDO $db, int $idProducto): array {
+    if ($idProducto <= 0) return ['error' => 'idProducto_requerido'];
+    $stmt = $db->prepare("
+        SELECT id AS idOpcion, opcion, valorIncremento AS precio
+        FROM qo_productos_opc
+        WHERE idProducto = :id
+        ORDER BY valorIncremento ASC, id ASC
+    ");
+    $stmt->bindValue(':id', $idProducto, PDO::PARAM_INT);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $opciones = array_map(fn($r) => [
+        'idOpcion' => (int)$r['idOpcion'],
+        'opcion'   => trim($r['opcion']),
+        'precio'   => (float)$r['precio'],   // ABSOLUTO
+    ], $rows);
+
+    return [
+        'idProducto' => $idProducto,
+        'opciones'   => $opciones,
+        'total'      => count($opciones),
+    ];
+}
+
+// ─── get_ingredientes: ingredientes configurables de un producto ──────────
+// Nombre en qo_ingredientes_establecimiento; precio incremental (a SUMAR al
+// añadir) en qo_ingredientes_producto.precio. Mismo origen que la app.
+function tool_get_ingredientes(PDO $db, int $idProducto): array {
+    if ($idProducto <= 0) return ['error' => 'idProducto_requerido'];
+    $stmt = $db->prepare("
+        SELECT ie.id AS idIngrediente, ie.nombre, ip.precio
+        FROM qo_ingredientes_producto ip
+        JOIN qo_ingredientes_establecimiento ie ON ie.id = ip.idIngrediente AND ie.estado = 1
+        WHERE ip.idProducto = :id
+        ORDER BY ie.nombre ASC
+    ");
+    $stmt->bindValue(':id', $idProducto, PDO::PARAM_INT);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $ingredientes = array_map(fn($r) => [
+        'idIngrediente' => (int)$r['idIngrediente'],
+        'nombre'        => trim($r['nombre']),
+        'precio'        => (float)$r['precio'],  // incremental al añadir
+    ], $rows);
+
+    return [
+        'idProducto'    => $idProducto,
+        'ingredientes'  => $ingredientes,
+        'total'         => count($ingredientes),
     ];
 }
 
