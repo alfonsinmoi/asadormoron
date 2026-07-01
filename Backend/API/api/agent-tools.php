@@ -506,19 +506,40 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
         return ['error' => 'hora_pasada', 'hora_solicitada' => $hora, 'hora_actual' => date('Y-m-d H:i')];
     }
 
+    // Precio AUTORITATIVO server-side por línea (revalida opción e ingredientes
+    // contra BD ANTES de crear el pedido; recomputa el precio ignorando el del LLM).
     $totalProductos = 0.0;
+    $lineasCalc = [];
     foreach ($lineas as $l) {
-        $totalProductos += (float)($l['precio'] ?? 0) * (int)($l['cantidad'] ?? 0);
+        $cant = max(1, (int)($l['cantidad'] ?? 1));
+        $calc = precio_linea_autoritativo($db, $l);
+        if (!$calc['ok']) {
+            return [
+                'error'         => $calc['error'],
+                'idProducto'    => $calc['idProducto']    ?? null,
+                'idOpcion'      => $calc['idOpcion']      ?? null,
+                'idIngrediente' => $calc['idIngrediente'] ?? null,
+                'hint'          => 'id no válido para ese producto; reconsulta get_menu/get_opciones/get_ingredientes y reintenta.',
+            ];
+        }
+        // Auditoría anti-alucinación: si el precio del LLM difiere del autoritativo, se loguea.
+        $precioLLM = (float)($l['precio'] ?? 0);
+        if (abs($precioLLM - $calc['precioUnit']) > 0.01) {
+            agente_log('warn', 'precio_divergente', [
+                'idProducto' => (int)($l['idProducto'] ?? 0),
+                'concepto'   => $calc['nombre'],
+                'precio_llm' => $precioLLM,
+                'precio_srv' => $calc['precioUnit'],
+            ]);
+        }
+        $totalProductos += $calc['precioUnit'] * $cant;
+        $lineasCalc[] = ['orig' => $l, 'cant' => $cant, 'calc' => $calc];
     }
 
-    // Gastos de envío automáticos (tipo=1 en qo_pedidos_detalle).
-    // Solo si es envío y el cliente no ha mandado ya una línea de portes.
-    $gastosEnvio = 0.0;
-    if ($tipoVenta === 'Envío') {
-        $envRow = $db->query("SELECT valor FROM qo_config_agente WHERE clave='gastos_envio_eur'")->fetchColumn();
-        $gastosEnvio = (float)(json_decode((string)$envRow, true) ?: 1.90);
-    }
-    $total = $totalProductos + $gastosEnvio;
+    // Gastos de envío (tipo=1) y bolsa (tipo=2) — importes de config, nunca del LLM.
+    $gastosEnvio = ($tipoVenta === 'Envío') ? agente_config_num($db, 'gastos_envio_eur', 1.90) : 0.0;
+    $gastosBolsa = agente_config_num($db, 'gastos_bolsa_eur', 0.0);
+    $total = $totalProductos + $gastosEnvio + $gastosBolsa;
 
     // Umbral importe
     $umbralRow = $db->query("SELECT valor FROM qo_config_agente WHERE clave='max_importe_sin_humano_eur'")->fetchColumn();
@@ -586,22 +607,24 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
                 (idPedido, idProducto, idOpcion, precio, cantidad, tipo, concepto, ingredientes_json, comentario, tipoVenta, pagadoConPuntos)
             VALUES (:p, :prod, :opc, :precio, :cant, 0, :conc, :ing, :coment, :tv, 0)
         ");
-        foreach ($lineas as $l) {
-            // idOpcion: entero o NULL
-            $idOpcion = isset($l['idOpcion']) && $l['idOpcion'] !== null && (int)$l['idOpcion'] > 0
-                ? (int)$l['idOpcion'] : null;
-            // ingredientes: JSON válido o NULL (nunca cadena vacía por el contrato)
-            $ingJson = null;
-            if (isset($l['ingredientes']) && is_array($l['ingredientes']) && count($l['ingredientes']) > 0) {
-                $ingJson = json_encode(array_values($l['ingredientes']), JSON_UNESCAPED_UNICODE);
-            }
+        foreach ($lineasCalc as $lc) {
+            $l    = $lc['orig'];
+            $calc = $lc['calc'];
+            $idOpcion = (isset($l['idOpcion']) && (int)$l['idOpcion'] > 0) ? (int)$l['idOpcion'] : null;
+            // ingredientes_json a partir de la versión NORMALIZADA (validada contra BD)
+            $ingJson = count($calc['ingNorm']) > 0
+                ? json_encode($calc['ingNorm'], JSON_UNESCAPED_UNICODE) : null;
+            // concepto legible: nombre + opción + ingredientes
+            $concepto = $calc['nombre']
+                . ($calc['opcion'] ? ' (' . $calc['opcion'] . ')' : '')
+                . ($calc['ingTxt'] !== '' ? ' ' . $calc['ingTxt'] : '');
 
             $insDet->bindValue(':p',      $pedidoId, PDO::PARAM_INT);
             $insDet->bindValue(':prod',   (int)($l['idProducto'] ?? 0), PDO::PARAM_INT);
             $insDet->bindValue(':opc',    $idOpcion, $idOpcion === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
-            $insDet->bindValue(':precio', (float)($l['precio'] ?? 0));
-            $insDet->bindValue(':cant',   (int)($l['cantidad'] ?? 1), PDO::PARAM_INT);
-            $insDet->bindValue(':conc',   (string)($l['concepto'] ?? ''));
+            $insDet->bindValue(':precio', $calc['precioUnit']);   // AUTORITATIVO, no el del LLM
+            $insDet->bindValue(':cant',   $lc['cant'], PDO::PARAM_INT);
+            $insDet->bindValue(':conc',   $concepto);
             $insDet->bindValue(':ing',    $ingJson, $ingJson === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
             $insDet->bindValue(':coment', (string)($l['comentario'] ?? ''));
             $insDet->bindValue(':tv',     $tipoVenta);
@@ -610,15 +633,30 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
 
         // Línea de gastos de envío (idProducto=0, tipo=1) — mismo patrón que la app
         if ($gastosEnvio > 0) {
-            $insEnv = $db->prepare("
+            $insExtra = $db->prepare("
                 INSERT INTO qo_pedidos_detalle
                     (idPedido, idProducto, precio, cantidad, tipo, concepto, comentario, tipoVenta, pagadoConPuntos)
-                VALUES (:p, 0, :precio, 1, 1, '', '', :tv, 0)
+                VALUES (:p, 0, :precio, 1, :tipo, :conc, '', :tv, 0)
             ");
-            $insEnv->bindValue(':p',      $pedidoId, PDO::PARAM_INT);
-            $insEnv->bindValue(':precio', $gastosEnvio);
-            $insEnv->bindValue(':tv',     $tipoVenta);
-            $insEnv->execute();
+            $insExtra->bindValue(':p', $pedidoId, PDO::PARAM_INT);
+            $insExtra->bindValue(':precio', $gastosEnvio);
+            $insExtra->bindValue(':tipo', 1, PDO::PARAM_INT);
+            $insExtra->bindValue(':conc', 'Gastos de envío');
+            $insExtra->bindValue(':tv', $tipoVenta);
+            $insExtra->execute();
+        }
+
+        // Línea de bolsa/embalaje (idProducto=0, tipo=2). Solo si hay importe configurado.
+        if ($gastosBolsa > 0) {
+            $insBolsa = $db->prepare("
+                INSERT INTO qo_pedidos_detalle
+                    (idPedido, idProducto, precio, cantidad, tipo, concepto, comentario, tipoVenta, pagadoConPuntos)
+                VALUES (:p, 0, :precio, 1, 2, 'Bolsa', '', :tv, 0)
+            ");
+            $insBolsa->bindValue(':p', $pedidoId, PDO::PARAM_INT);
+            $insBolsa->bindValue(':precio', $gastosBolsa);
+            $insBolsa->bindValue(':tv', $tipoVenta);
+            $insBolsa->execute();
         }
 
         $insEst = $db->prepare("INSERT INTO qo_pedidos_estado (estado, idUsuario, fecha, idPedido) VALUES (1, :u, NOW(), :p)");
@@ -704,54 +742,43 @@ function tool_resumen_pedido(PDO $db, array $args): array {
 
     date_default_timezone_set('Europe/Madrid');
 
-    // Lookup precios autoritativos en BD por idProducto (anti-alucinación del LLM)
-    $ids = [];
-    foreach ($lineas as $l) {
-        $pid = (int)($l['idProducto'] ?? 0);
-        if ($pid > 0) $ids[] = $pid;
-    }
-    $preciosDb = [];
-    $nombresDb = [];
-    if (count($ids) > 0) {
-        $in  = implode(',', array_fill(0, count($ids), '?'));
-        $stmt = $db->prepare("SELECT id, nombre, precio FROM qo_productos_est WHERE id IN ($in)");
-        foreach (array_values($ids) as $i => $v) $stmt->bindValue($i + 1, $v, PDO::PARAM_INT);
-        $stmt->execute();
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
-            $preciosDb[(int)$r['id']] = (float)$r['precio'];
-            $nombresDb[(int)$r['id']] = trim($r['nombre']);
-        }
-    }
-
+    // Precio AUTORITATIVO server-side por línea (opción absoluta + ingredientes).
+    // Si una línea trae opción/ingrediente inválido, devolvemos error+hint para que
+    // el LLM reintente (nunca inventamos precio).
     $totalProductos = 0.0;
     $items          = [];
     foreach ($lineas as $l) {
-        $pid    = (int)($l['idProducto'] ?? 0);
-        $cant   = max(1, (int)($l['cantidad'] ?? 1));
-        $precio = isset($preciosDb[$pid]) ? $preciosDb[$pid] : (float)($l['precio'] ?? 0);
-        $nombre = $nombresDb[$pid] ?? trim((string)($l['concepto'] ?? 'producto'));
-        $totalProductos += $precio * $cant;
-        $items[] = ['cantidad' => $cant, 'nombre' => $nombre, 'precio' => $precio];
+        $cant = max(1, (int)($l['cantidad'] ?? 1));
+        $calc = precio_linea_autoritativo($db, $l);
+        if (!$calc['ok']) {
+            return ['error' => $calc['error'], 'idProducto' => $calc['idProducto'] ?? null,
+                    'hint' => 'Vuelve a consultar get_menu/get_opciones/get_ingredientes; el id no es válido para ese producto.'];
+        }
+        $totalProductos += $calc['precioUnit'] * $cant;
+        $items[] = [
+            'cantidad' => $cant,
+            'nombre'   => $calc['nombre'],
+            'opcion'   => $calc['opcion'],
+            'ingTxt'   => $calc['ingTxt'],
+            'precio'   => $calc['precioUnit'],
+        ];
     }
 
-    // Envío
-    $envio = 0.0;
-    if ($tipoVenta === 'Envío') {
-        $envRow = $db->query("SELECT valor FROM qo_config_agente WHERE clave='gastos_envio_eur'")->fetchColumn();
-        $envio  = (float)(json_decode((string)$envRow, true) ?: 1.90);
-    }
-    $total = $totalProductos + $envio;
+    // Envío + bolsa
+    $envio = ($tipoVenta === 'Envío') ? agente_config_num($db, 'gastos_envio_eur', 1.90) : 0.0;
+    $bolsa = agente_config_num($db, 'gastos_bolsa_eur', 0.0);
+    $total = $totalProductos + $envio + $bolsa;
 
-    // Texto natural de los productos
+    // Texto natural de los productos (con opción e ingredientes)
     $itemsTxt = '';
     foreach ($items as $it) {
         $cant = $it['cantidad'];
         $nom  = mb_strtolower($it['nombre'], 'UTF-8');
+        if ($it['opcion']) $nom .= ' ' . mb_strtolower($it['opcion'], 'UTF-8');
+        if ($it['ingTxt'] !== '') $nom .= ' ' . $it['ingTxt'];
         $itemsTxt .= ($itemsTxt === '' ? '' : ', ');
-        $itemsTxt .= ($cant === 1 ? ($cant_articulo = preg_match('/^[aeiouáéíóú]/u', $nom) ? 'un' : 'un') . ' ' . $nom
-                                  : $cant . ' ' . $nom);
+        $itemsTxt .= ($cant === 1 ? 'un ' . $nom : $cant . ' ' . $nom);
     }
-    // Capitalizar la primera letra
     if ($itemsTxt !== '') $itemsTxt = mb_strtoupper(mb_substr($itemsTxt, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($itemsTxt, 1, null, 'UTF-8');
 
     // ETA según saturación de cocina (determinista, no LLM)
@@ -760,11 +787,17 @@ function tool_resumen_pedido(PDO $db, array $args): array {
     $etaTxt   = "en {$eta} minutos";
     $totalNat = euro_natural($total);
 
+    // Frase de coste: menciona envío y/o bolsa solo si aplican
+    $extras = [];
+    if ($envio > 0) $extras[] = 'envío';
+    if ($bolsa > 0) $extras[] = 'bolsa';
+    $conExtras = count($extras) ? ' con ' . implode(' y ', $extras) : '';
+
     if ($tipoVenta === 'Envío') {
         $dir = $direccion !== '' ? $direccion : 'la dirección indicada';
-        $resumen = "$itemsTxt. Envío a $dir, $etaTxt lo tiene. Total con envío: $totalNat. ¿Está conforme?";
+        $resumen = "$itemsTxt. Envío a $dir, $etaTxt lo tiene. Total$conExtras: $totalNat. ¿Está conforme?";
     } else {
-        $resumen = "$itemsTxt. Recogida en local, $etaTxt. Total: $totalNat. ¿Está conforme?";
+        $resumen = "$itemsTxt. Recogida en local, $etaTxt. Total$conExtras: $totalNat. ¿Está conforme?";
     }
 
     return [
@@ -772,11 +805,83 @@ function tool_resumen_pedido(PDO $db, array $args): array {
         'total'           => round($total, 2),
         'totalProductos'  => round($totalProductos, 2),
         'gastosEnvio'     => round($envio, 2),
+        'gastosBolsa'     => round($bolsa, 2),
         'etaMinutos'      => $eta,
         'horaEntrega'     => $horaIso,
         'totalNatural'    => $totalNat,
         'items'           => $items
     ];
+}
+
+// ─── Precio autoritativo de una línea (compartido resumen ↔ crear) ────────
+// Fuente de verdad server-side: producto base, opción (precio ABSOLUTO en
+// valorIncremento) e ingredientes añadidos (precio incremental). Nunca usa el
+// precio que manda el LLM. Devuelve ok=false + error si algún id no es válido.
+function precio_linea_autoritativo(PDO $db, array $l): array {
+    $pid = (int)($l['idProducto'] ?? 0);
+    if ($pid <= 0) return ['ok' => false, 'error' => 'idProducto_invalido'];
+
+    $st = $db->prepare("SELECT nombre, precio FROM qo_productos_est WHERE id=:id AND eliminado=0");
+    $st->bindValue(':id', $pid, PDO::PARAM_INT); $st->execute();
+    $prod = $st->fetch(PDO::FETCH_ASSOC);
+    if (!$prod) return ['ok' => false, 'error' => 'producto_no_existe', 'idProducto' => $pid];
+
+    $nombre     = trim($prod['nombre']);
+    $precioUnit = (float)$prod['precio'];
+    $opcionTxt  = null;
+
+    // Opción → precio ABSOLUTO
+    $idOpcion = (isset($l['idOpcion']) && (int)$l['idOpcion'] > 0) ? (int)$l['idOpcion'] : null;
+    if ($idOpcion !== null) {
+        $so = $db->prepare("SELECT opcion, valorIncremento FROM qo_productos_opc WHERE id=:o AND idProducto=:p");
+        $so->bindValue(':o', $idOpcion, PDO::PARAM_INT); $so->bindValue(':p', $pid, PDO::PARAM_INT); $so->execute();
+        $op = $so->fetch(PDO::FETCH_ASSOC);
+        if (!$op) return ['ok' => false, 'error' => 'opcion_invalida', 'idProducto' => $pid, 'idOpcion' => $idOpcion];
+        $precioUnit = (float)$op['valorIncremento'];
+        $opcionTxt  = trim($op['opcion']);
+    }
+
+    // Ingredientes añadidos/quitados
+    $ingTxt = ''; $ingNorm = [];
+    if (isset($l['ingredientes']) && is_array($l['ingredientes'])) {
+        foreach ($l['ingredientes'] as $ing) {
+            $iid = (int)($ing['idIngrediente'] ?? 0);
+            if ($iid <= 0) continue;
+            $add = !empty($ing['esAnadir']);
+            $si = $db->prepare("
+                SELECT ie.nombre, ip.precio
+                FROM qo_ingredientes_producto ip
+                JOIN qo_ingredientes_establecimiento ie ON ie.id = ip.idIngrediente
+                WHERE ip.idProducto=:p AND ip.idIngrediente=:i
+            ");
+            $si->bindValue(':p', $pid, PDO::PARAM_INT); $si->bindValue(':i', $iid, PDO::PARAM_INT); $si->execute();
+            $ir = $si->fetch(PDO::FETCH_ASSOC);
+            if (!$ir) return ['ok' => false, 'error' => 'ingrediente_invalido', 'idProducto' => $pid, 'idIngrediente' => $iid];
+            $iprecio = $add ? (float)$ir['precio'] : 0.0;
+            if ($add) $precioUnit += $iprecio;
+            $ingNorm[] = ['idIngrediente' => $iid, 'esAnadir' => $add, 'precio' => $iprecio, 'nombre' => trim($ir['nombre'])];
+            $ingTxt   .= ($add ? ' con ' : ' sin ') . mb_strtolower(trim($ir['nombre']), 'UTF-8');
+        }
+    }
+
+    return [
+        'ok'         => true,
+        'precioUnit' => round($precioUnit, 2),
+        'nombre'     => $nombre,
+        'opcion'     => $opcionTxt,
+        'ingTxt'     => trim($ingTxt),
+        'ingNorm'    => $ingNorm,
+    ];
+}
+
+/** Lee una clave numérica de qo_config_agente (los valores están JSON-encoded). */
+function agente_config_num(PDO $db, string $clave, float $default): float {
+    $st = $db->prepare("SELECT valor FROM qo_config_agente WHERE clave = :c");
+    $st->bindValue(':c', $clave); $st->execute();
+    $v = $st->fetchColumn();
+    if ($v === false) return $default;
+    $dec = json_decode((string)$v, true);
+    return is_numeric($dec) ? (float)$dec : (is_numeric($v) ? (float)$v : $default);
 }
 
 /** Tiempo estimado: base + extra por pollo en cola + buffer. Redondeado a 5 min. */
@@ -797,11 +902,28 @@ function tiempo_estimado_minutos(PDO $db, array $lineas = []): int {
     $stmt->execute();
     $pollosCola = (int)($stmt->fetchColumn() ?: 0);
 
-    // Pollos en este pedido (aproximado por concepto)
+    // Pollos en este pedido: detectados por idProducto (nombre/categoría), robusto
+    // frente a conceptos personalizados ("pollo asado entero sin piel").
     $pollosPedido = 0;
+    $ids = [];
     foreach ($lineas as $l) {
-        $c = mb_strtolower((string)($l['concepto'] ?? ''), 'UTF-8');
-        if (strpos($c, 'pollo') !== false) $pollosPedido += max(1, (int)($l['cantidad'] ?? 1));
+        $pid = (int)($l['idProducto'] ?? 0);
+        if ($pid > 0) $ids[$pid] = ($ids[$pid] ?? 0) + max(1, (int)($l['cantidad'] ?? 1));
+    }
+    if (count($ids) > 0) {
+        $in = implode(',', array_fill(0, count($ids), '?'));
+        $q = $db->prepare("
+            SELECT pe.id
+            FROM qo_productos_est pe
+            JOIN qo_productos_cat pc ON pc.id = pe.idCategoria
+            WHERE pe.id IN ($in)
+              AND (LOWER(pe.nombre) LIKE '%pollo%' OR LOWER(pc.nombre) LIKE '%pollo%')
+        ");
+        foreach (array_keys($ids) as $i => $v) $q->bindValue($i + 1, $v, PDO::PARAM_INT);
+        $q->execute();
+        foreach ($q->fetchAll(PDO::FETCH_COLUMN) as $pid) {
+            $pollosPedido += $ids[(int)$pid] ?? 1;
+        }
     }
 
     $eta = $base + $buffer + ($pollosCola + $pollosPedido) * $extra;
