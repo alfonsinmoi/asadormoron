@@ -21,9 +21,11 @@
 		<!-- App Identifier -->
 		<ApplicationId>net.polloandaluz.PolloAndaluz</ApplicationId>
 
-		<!-- Versions -->
-		<ApplicationDisplayVersion>1.1.2</ApplicationDisplayVersion>
-		<ApplicationVersion>49</ApplicationVersion>
+		<!-- Versions: iOS lleva su propio esquema (12.x); Android/Windows van 1.1.2/50 -->
+		<ApplicationDisplayVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">12.0.6</ApplicationDisplayVersion>
+		<ApplicationVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">2</ApplicationVersion>
+		<ApplicationDisplayVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios'">1.1.2</ApplicationDisplayVersion>
+		<ApplicationVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) != 'ios'">50</ApplicationVersion>
 
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
