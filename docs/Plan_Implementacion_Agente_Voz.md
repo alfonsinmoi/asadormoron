@@ -16,7 +16,7 @@
 | Fase 0 — Descubrimiento y setup | 🟢 Cerrada (Hello World OK) | Entrevista cliente: sección 5 (Reparto) rellenada; resto pendiente |
 | Fase 1 — API y modelo de datos | 🟢 12/13 endpoints + Redis + logs + load tests OK | Motor de asignación (cae en Fase 3) · staging · tests unitarios |
 | Fase 2 — Agente de voz MVP | 🟡 5 tools conectadas + crear_pedido funcional | Validación E2E en llamada real con tools activas |
-| Fase 3 — Reparto y asignación | ⚪ No iniciada | Fase 2 |
+| Fase 3 — Reparto y asignación | 🟢 Motor de asignación hecho | `asignar_repartidor()` (turno+carga+round-robin) autoasigna en pedidos de voz Envío + endpoint `asignar-repartidor.php` + push al repartidor. Pendiente opcional: filtro por distancia/geocoding y autoasignación también en pedidos de la app |
 | Fase 4 — Dashboard en app | 🟡 Vistas Llamadas + Detalle + Dashboard listas en MAUI | Audio inline · notificaciones push tiempo real · gráfico heatmap |
 | Fase 5 — Robustez y casos límite | ⚪ No iniciada | Fase 2 |
 | Fase 6 — Piloto y producción | ⚪ No iniciada | Fases 2-5 |
