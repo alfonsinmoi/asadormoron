@@ -355,3 +355,92 @@ function normalizar_transcripcion(string $texto): string {
     }
     return $out;
 }
+
+// ─────────────────────────────────────────────────────────────────────
+// MOTOR DE ASIGNACIÓN DE REPARTIDORES (Fase 3)
+// Aplica las reglas activas de qo_reglas_asignacion:
+//   - turno       → solo repartidores en jornada (activo=1)
+//   - carga       → excluye repartidores con >= max_pedidos_simultaneos en curso
+//   - round_robin → reparte al de MENOS carga; desempata por el que hace más que no recibe
+// Complementa el "coger manual": si hay repartidor disponible, autoasigna y notifica;
+// si no, deja el pedido libre para que lo cojan. Best-effort: nunca rompe el pedido.
+// Devuelve ['asignado'=>bool, 'idRepartidor'=>?, 'nombre'=>?, 'motivo'=>?].
+// ─────────────────────────────────────────────────────────────────────
+function asignar_repartidor(PDO $db, int $pedidoId, int $idEstablecimiento, int $idPueblo): array {
+    try {
+        // Pedido existente y sin repartidor
+        $p = $db->prepare("SELECT idRepartidor FROM qo_pedidos WHERE id = :id");
+        $p->bindValue(':id', $pedidoId, PDO::PARAM_INT); $p->execute();
+        $pedido = $p->fetch(PDO::FETCH_ASSOC);
+        if (!$pedido) return ['asignado' => false, 'motivo' => 'pedido_no_existe'];
+        if ((int)($pedido['idRepartidor'] ?? 0) > 0) {
+            return ['asignado' => false, 'motivo' => 'ya_asignado', 'idRepartidor' => (int)$pedido['idRepartidor']];
+        }
+
+        // Reglas activas (parámetros)
+        $soloActivo = true;      // turno
+        $maxCarga   = 999;       // carga
+        $usaRoundRobin = false;
+        $rs = $db->prepare("SELECT tipo, parametros FROM qo_reglas_asignacion
+                            WHERE activa = 1 AND (idEstablecimiento = :e OR idEstablecimiento IS NULL)
+                            ORDER BY prioridad ASC");
+        $rs->bindValue(':e', $idEstablecimiento, PDO::PARAM_INT); $rs->execute();
+        foreach ($rs->fetchAll(PDO::FETCH_ASSOC) as $r) {
+            $par = json_decode((string)$r['parametros'], true) ?: [];
+            if ($r['tipo'] === 'turno') $soloActivo = (bool)($par['solo_jornada_activa'] ?? true);
+            if ($r['tipo'] === 'carga') $maxCarga = (int)($par['max_pedidos_simultaneos'] ?? 3);
+            if ($r['tipo'] === 'round_robin') $usaRoundRobin = true;
+        }
+
+        // Candidato: turno (activo) + carga (HAVING) + round-robin (ORDER BY)
+        $whereActivo = $soloActivo ? "AND r.activo = 1" : "";
+        $sql = "
+            SELECT r.id, r.idUsuario, r.nombre,
+                   (SELECT COUNT(*) FROM qo_pedidos p
+                     WHERE p.idRepartidor = r.id AND p.anulado = 0 AND p.estado < 5) AS carga,
+                   (SELECT MAX(p2.horaPedido) FROM qo_pedidos p2 WHERE p2.idRepartidor = r.id) AS ultima
+            FROM qo_repartidores r
+            WHERE r.eliminado = 0 AND r.idPueblo = :pueblo $whereActivo
+            HAVING carga < :maxc
+            ORDER BY " . ($usaRoundRobin ? "carga ASC, (ultima IS NULL) DESC, ultima ASC" : "carga ASC") . "
+            LIMIT 1";
+        $q = $db->prepare($sql);
+        $q->bindValue(':pueblo', $idPueblo, PDO::PARAM_INT);
+        $q->bindValue(':maxc', $maxCarga, PDO::PARAM_INT);
+        $q->execute();
+        $rep = $q->fetch(PDO::FETCH_ASSOC);
+        if (!$rep) return ['asignado' => false, 'motivo' => 'sin_repartidor_disponible'];
+
+        // Asignar
+        $u = $db->prepare("UPDATE qo_pedidos SET idRepartidor = :r, repartidor = 1 WHERE id = :id AND idRepartidor = 0");
+        $u->bindValue(':r', (int)$rep['id'], PDO::PARAM_INT);
+        $u->bindValue(':id', $pedidoId, PDO::PARAM_INT);
+        $u->execute();
+        if ($u->rowCount() === 0) {
+            return ['asignado' => false, 'motivo' => 'carrera_ya_asignado'];
+        }
+
+        // Notificar al repartidor (push a su token)
+        $tk = $db->prepare("SELECT token FROM qo_users WHERE id = :u AND token IS NOT NULL AND token <> ''");
+        $tk->bindValue(':u', (int)$rep['idUsuario'], PDO::PARAM_INT); $tk->execute();
+        $token = $tk->fetchColumn();
+        if ($token) {
+            $cod = $db->prepare("SELECT codigo FROM qo_pedidos WHERE id = :id");
+            $cod->bindValue(':id', $pedidoId, PDO::PARAM_INT); $cod->execute();
+            $codigo = (string)($cod->fetchColumn() ?: '');
+            agente_push([$token], 'Nuevo reparto asignado',
+                "Se te ha asignado el pedido {$codigo}",
+                ['tipo' => 'asignacion', 'pedido_id' => $pedidoId, 'codigo' => $codigo]);
+        }
+
+        agente_log('info', 'repartidor_asignado', [
+            'pedido_id' => $pedidoId, 'idRepartidor' => (int)$rep['id'],
+            'nombre' => $rep['nombre'], 'carga' => (int)$rep['carga']
+        ]);
+        return ['asignado' => true, 'idRepartidor' => (int)$rep['id'], 'nombre' => trim($rep['nombre'])];
+
+    } catch (\Throwable $e) {
+        agente_log('warn', 'asignacion_error', ['pedido_id' => $pedidoId, 'err' => $e->getMessage()]);
+        return ['asignado' => false, 'motivo' => 'error'];
+    }
+}

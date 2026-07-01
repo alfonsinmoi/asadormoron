@@ -734,6 +734,14 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
 
         $db->commit();
 
+        // Asignación automática de repartidor (Fase 3) — solo Envío, best-effort.
+        // Si hay repartidor disponible según reglas, lo asigna y notifica; si no,
+        // queda libre para coger manualmente. No bloquea la respuesta del pedido.
+        $asignacion = null;
+        if ($tipoVenta === 'Envío') {
+            $asignacion = asignar_repartidor($db, $pedidoId, ID_ESTABLECIMIENTO, ID_PUEBLO);
+        }
+
         // Push al staff: pedido por voz recién creado
         $tokens = agente_tokens_staff($db, ID_ESTABLECIMIENTO);
         if (count($tokens) > 0) {
@@ -777,7 +785,8 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
             'total'        => round($total, 2),
             'horaEntrega'  => $hora,
             'origen'       => 'voz',
-            'llamada_id'   => $llamadaId
+            'llamada_id'   => $llamadaId,
+            'repartidor'   => $asignacion['asignado'] ?? false ? $asignacion['nombre'] : null
         ];
 
     } catch (\Throwable $e) {
