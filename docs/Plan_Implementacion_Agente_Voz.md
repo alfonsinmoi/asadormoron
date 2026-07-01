@@ -82,7 +82,7 @@ Lo que **sí** funciona y está verificado en producción: recepción de llamada
 | P2 — Tools de personalización | 🟢 hecho | `get_opciones`, `get_ingredientes`, `get_menu` con flags `opc/ing/nIng`; registradas en Vapi; keywords Deepgram |
 | P3 — Precio server-side + bolsa | 🟢 hecho | `precio_linea_autoritativo()` compartido; opción absoluta + ingredientes; **bolsa calculada como la app** (`qo_configuracion_est`, nBolsas×precioBolsa, `tipo=4`); log de divergencia; ETA por idProducto |
 | P4 — Prompt de personalización | 🟢 hecho | `vapi_prompt_v27.txt` versionado y desplegado; árbol opciones/ingredientes; deshecho "X con Y = 2 productos" |
-| P5 — Acento andaluz | 🟡 parcial | `get_menu` tolerante a acento (`normalizar_andaluz`) hecho. Pendiente: métricas/corpus de regresión en dashboard |
+| P5 — Acento andaluz | 🟢 hecho | `get_menu` tolerante (`normalizar_andaluz`) + **métricas en dashboard** (tasa de reconocimiento vía búsquedas, transcripción normalizada, migración 003). Corpus de regresión etiquetado queda como mejora futura opcional |
 | P6 — Robustez e infraestructura | 🟡 parcial | Quick-wins técnicos hechos; quedan ítems de decisión del cliente |
 
 **P6 — hecho (quick-wins técnicos, sin dependencia del cliente):**
