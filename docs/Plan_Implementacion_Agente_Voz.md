@@ -91,6 +91,15 @@ Lo que **sí** funciona y está verificado en producción: recepción de llamada
 - ✅ **Auto-blacklist configurable**: umbrales en `qo_config_agente` (`autoblacklist_fallidas=12`, `autoblacklist_ventana_h=24`); nunca bloquea si hubo un pedido en la ventana. Antes: 50/7d fijo (valor de desarrollo).
 - ✅ **Test E2E del pedido personalizado**: `Backend/API/tests/e2e_pedido_personalizado.sh` (verificado contra producción: opción + ingredientes + precio autoritativo persistidos, con limpieza).
 
+**Hardening pre-producción (revisión adversarial multi-agente, 2026-07-02):** el revisor marcó "no apto" con 2 críticos + 5 altos; **todos corregidos y verificados**:
+- **Idempotencia de `crear_pedido` por callId** (no duplica pedidos) + índice UNIQUE en `qo_llamadas.pedido_id` (migración 004).
+- **ETA unificada** (`eta_minutos()`) entre resumen/crear y slots (defaults y saturación coherentes).
+- **Sin fuga de excepciones** en respuestas HTTP (crear_pedido, tool-call, dashboard) — solo en logs.
+- **Métricas filtradas por establecimiento** (y arreglado un PDO error latente al pasar `idEst`).
+- **Auditoría de ingredientes** (precio real + efecto), **cantidad/ingredientes validados**, header X-Vapi redactado, redondeo de bolsa coherente.
+- Verificado E2E: doble tool-call del mismo callId → mismo pedido; cantidad 0 e ingredientes malformados → error controlado.
+- Diferido (bajo, futuro): columna hash UNIQUE en transcripciones, `FOR UPDATE` en contador de pollos, política fail-closed del rate-limit sin Redis.
+
 **P6 — pendiente (necesita decisión/gestión del cliente):**
 
 - **Importe de la bolsa**: ✅ resuelto — el agente calcula la bolsa **igual que la app** leyendo de `qo_configuracion_est` (`precioBolsa`=col `tieneMediaPizza`, `rangoBolsas`=col `idCategoriaPizza`): `nBolsas=floor(total/rango)` (mín 1) × `precioBolsa`, línea `tipo=4`. Hoy `precioBolsa=0` para el est. 67 → no cobra; cuando el cliente fije el precio en la config del local, se aplicará automáticamente en app **y** voz.
