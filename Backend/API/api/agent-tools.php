@@ -563,9 +563,10 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
         $lineasCalc[] = ['orig' => $l, 'cant' => $cant, 'calc' => $calc];
     }
 
-    // Gastos de envío (tipo=1) y bolsa (tipo=2) — importes de config, nunca del LLM.
+    // Gastos de envío (tipo=1) y bolsa (tipo=4, como la app) — nunca del LLM.
     $gastosEnvio = ($tipoVenta === 'Envío') ? agente_config_num($db, 'gastos_envio_eur', 1.90) : 0.0;
-    $gastosBolsa = agente_config_num($db, 'gastos_bolsa_eur', 0.0);
+    $bolsaInfo   = calcular_bolsa($db, $totalProductos);
+    $gastosBolsa = $bolsaInfo ? $bolsaInfo['total'] : 0.0;
     $total = $totalProductos + $gastosEnvio + $gastosBolsa;
 
     // Umbral importe
@@ -673,15 +674,16 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
             $insExtra->execute();
         }
 
-        // Línea de bolsa/embalaje (idProducto=0, tipo=2). Solo si hay importe configurado.
-        if ($gastosBolsa > 0) {
+        // Línea de bolsa (idProducto=0, tipo=4, precio unitario × nBolsas) — igual que la app.
+        if ($bolsaInfo && $bolsaInfo['total'] > 0) {
             $insBolsa = $db->prepare("
                 INSERT INTO qo_pedidos_detalle
                     (idPedido, idProducto, precio, cantidad, tipo, concepto, comentario, tipoVenta, pagadoConPuntos)
-                VALUES (:p, 0, :precio, 1, 2, 'Bolsa', '', :tv, 0)
+                VALUES (:p, 0, :precio, :cant, 4, 'Bolsa', '', :tv, 0)
             ");
             $insBolsa->bindValue(':p', $pedidoId, PDO::PARAM_INT);
-            $insBolsa->bindValue(':precio', $gastosBolsa);
+            $insBolsa->bindValue(':precio', $bolsaInfo['precioUnit']);
+            $insBolsa->bindValue(':cant', $bolsaInfo['cantidad'], PDO::PARAM_INT);
             $insBolsa->bindValue(':tv', $tipoVenta);
             $insBolsa->execute();
         }
@@ -791,10 +793,11 @@ function tool_resumen_pedido(PDO $db, array $args): array {
         ];
     }
 
-    // Envío + bolsa
-    $envio = ($tipoVenta === 'Envío') ? agente_config_num($db, 'gastos_envio_eur', 1.90) : 0.0;
-    $bolsa = agente_config_num($db, 'gastos_bolsa_eur', 0.0);
-    $total = $totalProductos + $envio + $bolsa;
+    // Envío + bolsa (bolsa calculada como en la app: nBolsas por rango)
+    $envio     = ($tipoVenta === 'Envío') ? agente_config_num($db, 'gastos_envio_eur', 1.90) : 0.0;
+    $bolsaInfo = calcular_bolsa($db, $totalProductos);
+    $bolsa     = $bolsaInfo ? $bolsaInfo['total'] : 0.0;
+    $total     = $totalProductos + $envio + $bolsa;
 
     // Texto natural de los productos (con opción e ingredientes)
     $itemsTxt = '';
@@ -898,6 +901,32 @@ function precio_linea_autoritativo(PDO $db, array $l): array {
         'opcion'     => $opcionTxt,
         'ingTxt'     => trim($ingTxt),
         'ingNorm'    => $ingNorm,
+    ];
+}
+
+// Calcula el cargo de bolsa igual que la app móvil (FranjasHorariasViewModel):
+// precioBolsa y rangoBolsas viven en qo_configuracion_est con nombres de columna
+// legacy reutilizados: tieneMediaPizza=precioBolsa, idCategoriaPizza=rangoBolsas.
+//   nBolsas = floor(totalProductos / rangoBolsas)  (mínimo 1 si hay cargo)
+//   totalBolsa = nBolsas * precioBolsa
+// Devuelve null si no hay cargo configurado (precioBolsa<=0 o rango<=0).
+function calcular_bolsa(PDO $db, float $totalProductos): ?array {
+    $st = $db->prepare("SELECT tieneMediaPizza AS precioBolsa, idCategoriaPizza AS rangoBolsas
+                        FROM qo_configuracion_est WHERE idEstablecimiento = :id LIMIT 1");
+    $st->bindValue(':id', ID_ESTABLECIMIENTO, PDO::PARAM_INT);
+    $st->execute();
+    $cfg = $st->fetch(PDO::FETCH_ASSOC);
+    if (!$cfg) return null;
+    $precioBolsa = (float)$cfg['precioBolsa'];
+    $rango       = (float)$cfg['rangoBolsas'];
+    if ($precioBolsa <= 0 || $rango <= 0) return null;
+
+    $n = (int)floor($totalProductos / $rango);
+    if ($n < 1) $n = 1;
+    return [
+        'cantidad'   => $n,
+        'precioUnit' => round($precioBolsa, 2),
+        'total'      => round($n * $precioBolsa, 2),
     ];
 }
 
