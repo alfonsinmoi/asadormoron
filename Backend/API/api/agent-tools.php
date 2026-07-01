@@ -158,6 +158,25 @@ function dispatch_tool(string $name, array $args, string $callId, ?string $telef
     }
 }
 
+// Normaliza una palabra para búsqueda tolerante a acento/transcripción andaluza:
+// quita acentos y mapea errores típicos de STT a la raíz del producto real.
+function normalizar_andaluz(string $palabra): string {
+    // La colación de BD (utf8mb4_unicode_ci) ya es insensible a acentos/ñ, así que
+    // NO tocamos acentos aquí (evita romper "aliños", "bocata", etc.). Solo mapeamos
+    // errores CLAROS de transcripción a una raíz que SÍ existe en el menú, y siempre
+    // mediante LIKE %substring% (matchea plural/singular).
+    $p = mb_strtolower(trim($palabra), 'UTF-8');
+    static $map = [
+        'boyo'=>'pollo','bollo'=>'pollo','rollo'=>'pollo','poyo'=>'pollo',
+        'patada'=>'patata',
+        'chocha'=>'choco',
+        'ganbas'=>'gamba','ganbon'=>'gambon',
+        'anburgesa'=>'hamburguesa','amburguesa'=>'hamburguesa','hamburgesa'=>'hamburguesa',
+        'pisa'=>'pizza',
+    ];
+    return $map[$p] ?? $p;
+}
+
 // ─── get_cliente ─────────────────────────────────────────────────────
 // ─── get_menu: catálogo del establecimiento ───────────────────────────
 // Si se pasa `buscar` filtra por nombre/categoría (LIKE) para reducir resultados.
@@ -166,8 +185,16 @@ function tool_get_menu(PDO $db, string $buscar = ''): array {
     $buscar = trim($buscar);
 
     if ($buscar !== '') {
-        // Búsqueda fuzzy: divide en palabras y exige que TODAS aparezcan en nombre o categoría
-        $palabras = preg_split('/\s+/', mb_strtolower($buscar, 'UTF-8'));
+        // Búsqueda fuzzy + tolerante a acento andaluz: normaliza cada palabra
+        // (errores típicos de transcripción) antes del LIKE, y descarta palabras
+        // vacías/muy cortas que no ayudan a filtrar.
+        $palabras = array_filter(
+            array_map('normalizar_andaluz', preg_split('/\s+/', mb_strtolower($buscar, 'UTF-8'))),
+            fn($p) => mb_strlen($p) >= 3
+        );
+        if (count($palabras) === 0) { // fallback: usa el término tal cual
+            $palabras = [mb_strtolower($buscar, 'UTF-8')];
+        }
         $where = ["pc.idEstablecimiento = :est", "pe.estado = 1", "pe.eliminado = 0", "pe.precio > 0"];
         $params = [':est' => ID_ESTABLECIMIENTO];
         foreach ($palabras as $i => $p) {
