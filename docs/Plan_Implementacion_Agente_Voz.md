@@ -80,14 +80,14 @@ Lo que **sí** funciona y está verificado en producción: recepción de llamada
 |---|---|---|
 | P1 — Cimientos de datos | 🟢 hecho | Migración 002 aplicada (`idOpcion` + `ingredientes_json` + índice); contrato de línea; `tool_crear_pedido` write-ready; verificado transaccional |
 | P2 — Tools de personalización | 🟢 hecho | `get_opciones`, `get_ingredientes`, `get_menu` con flags `opc/ing/nIng`; registradas en Vapi; keywords Deepgram |
-| P3 — Precio server-side + bolsa | 🟢 hecho | `precio_linea_autoritativo()` compartido; opción absoluta + ingredientes; línea bolsa `tipo=2` (0 € hasta que el cliente fije importe); log de divergencia; ETA por idProducto |
+| P3 — Precio server-side + bolsa | 🟢 hecho | `precio_linea_autoritativo()` compartido; opción absoluta + ingredientes; **bolsa calculada como la app** (`qo_configuracion_est`, nBolsas×precioBolsa, `tipo=4`); log de divergencia; ETA por idProducto |
 | P4 — Prompt de personalización | 🟢 hecho | `vapi_prompt_v27.txt` versionado y desplegado; árbol opciones/ingredientes; deshecho "X con Y = 2 productos" |
 | P5 — Acento andaluz | 🟡 parcial | `get_menu` tolerante a acento (`normalizar_andaluz`) hecho. Pendiente: métricas/corpus de regresión en dashboard |
 | P6 — Robustez e infraestructura | ⚪ pendiente | Requiere decisiones del cliente (ver abajo) |
 
 **P6 — lo que necesita decisión/acción del cliente antes de ejecutarse:**
 
-- **Importe de la bolsa**: el mecanismo está listo (`gastos_bolsa_eur`), pero puesto a **0 €**. El cliente debe confirmar el importe real para activarlo.
+- **Importe de la bolsa**: ✅ resuelto — el agente calcula la bolsa **igual que la app** leyendo de `qo_configuracion_est` (`precioBolsa`=col `tieneMediaPizza`, `rangoBolsas`=col `idCategoriaPizza`): `nBolsas=floor(total/rango)` (mín 1) × `precioBolsa`, línea `tipo=4`. Hoy `precioBolsa=0` para el est. 67 → no cobra; cuando el cliente fije el precio en la config del local, se aplicará automáticamente en app **y** voz.
 - **Número de teléfono español (+34)**: el actual es Twilio **+1 US**, que operadores españoles pueden rechazar. Comprar/portar número ES con Regulatory Bundle (DNI + dirección, 1–3 días) es una gestión del cliente.
 - **Transferencia a humano en vivo**: hoy el agente da el 626692828 y cuelga; conectar la llamada requiere configurar `<Dial>`/transferCall (técnico, pero conviene validar con el cliente el número destino y horario).
 - Quick-wins técnicos sin dependencia (se pueden hacer ya): idempotencia real del webhook, recalibrar auto-blacklist (50/7d → 15/24h), test E2E del pedido personalizado.
