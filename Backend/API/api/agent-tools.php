@@ -50,7 +50,7 @@ if ($secret !== '') {
         // Log para diagnóstico (cabeceras que sí llegaron)
         $vapiHeaders = [];
         foreach ($_SERVER as $k => $v) {
-            if (strpos($k, 'HTTP_X_VAPI') === 0) $vapiHeaders[$k] = is_string($v) ? substr($v, 0, 8) . '…' : '';
+            if (strpos($k, 'HTTP_X_VAPI') === 0) $vapiHeaders[$k] = '***REDACTED***';
         }
         agente_log('warn', 'tools_auth_invalido', ['headers' => $vapiHeaders]);
         http_response_code(401);
@@ -95,7 +95,7 @@ foreach ($toolCalls as $tc) {
             'call_id'=> $callId,
             'err'    => $e->getMessage()
         ]);
-        $result = ['error' => 'tool_error', 'message' => $e->getMessage()];
+        $result = ['error' => 'tool_error'];  // detalle ya logueado; no exponer en HTTP
     }
 
     agente_log('info', 'tool_invocada', [
@@ -412,24 +412,17 @@ function tool_get_estado_local(PDO $db): array {
 function tool_get_slots_recogida(PDO $db, int $cantidad): array {
     $cantidad = max(1, min(12, $cantidad));
 
-    $cfg = [];
-    foreach ($db->query("SELECT clave, valor FROM qo_config_agente WHERE clave IN
-        ('tiempo_preparacion_base_minutos','tiempo_extra_por_pollo','buffer_seguridad_minutos','modo_saturacion_umbral')
-    ")->fetchAll(PDO::FETCH_ASSOC) as $r) {
-        $cfg[$r['clave']] = json_decode($r['valor'], true);
-    }
-    $base   = (int)($cfg['tiempo_preparacion_base_minutos'] ?? 20);
-    $extra  = (int)($cfg['tiempo_extra_por_pollo']          ?? 5);
-    $buffer = (int)($cfg['buffer_seguridad_minutos']        ?? 5);
-    $capac  = (int)($cfg['modo_saturacion_umbral']          ?? 10);
+    $capacRow = $db->query("SELECT valor FROM qo_config_agente WHERE clave='modo_saturacion_umbral'")->fetchColumn();
+    $capac    = (int)(json_decode((string)$capacRow, true) ?: 10);
 
     $sql = $db->prepare("SELECT COALESCE(cantidad,0) FROM qo_contador_pollos WHERE idEstablecimiento=:id AND fecha=CURDATE() LIMIT 1");
     $sql->bindValue(':id', ID_ESTABLECIMIENTO, PDO::PARAM_INT);
     $sql->execute();
     $pollos = (int)($sql->fetchColumn() ?: 0);
 
+    // Mismo cálculo de ETA que resumen/crear (evita ofrecer un slot distinto al grabado).
     date_default_timezone_set('Europe/Madrid');
-    $arranque = (new DateTime('now'))->modify('+' . ($base + $buffer + $pollos * $extra) . ' minutes');
+    $arranque = (new DateTime('now'))->modify('+' . eta_minutos($db, 0) . ' minutes');
     $m = (int)$arranque->format('i');
     if ($m % 15 !== 0) $arranque->modify('+' . (15 - ($m % 15)) . ' minutes');
     $arranque->setTime((int)$arranque->format('H'), (int)$arranque->format('i'), 0);
@@ -485,13 +478,36 @@ function tool_validar_zona(PDO $db, string $direccion): array {
 
 // ─── crear_pedido ────────────────────────────────────────────────────
 function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefonoLlamada): array {
-    // Vincular llamada
+    // Vincular llamada + IDEMPOTENCIA: si esta llamada ya generó un pedido,
+    // no creamos otro (reintento del LLM / doble tool-call). Devolvemos el existente.
     $llamadaId = null;
     if ($callId !== '') {
-        $s = $db->prepare("SELECT id FROM qo_llamadas WHERE vapi_call_id = :v");
+        $s = $db->prepare("SELECT id, pedido_id FROM qo_llamadas WHERE vapi_call_id = :v");
         $s->bindValue(':v', $callId);
         $s->execute();
-        $llamadaId = $s->fetchColumn() ?: null;
+        $row = $s->fetch(PDO::FETCH_ASSOC) ?: null;
+        if ($row) {
+            $llamadaId = (int)$row['id'];
+            if (!empty($row['pedido_id'])) {
+                $pe = $db->prepare("SELECT codigo FROM qo_pedidos WHERE id = :p");
+                $pe->bindValue(':p', (int)$row['pedido_id'], PDO::PARAM_INT);
+                $pe->execute();
+                $codExist = (string)($pe->fetchColumn() ?: '');
+                $codLeer = '';
+                for ($i = 0; $i < strlen($codExist); $i++) {
+                    $codLeer .= ($codLeer === '' ? '' : ' ') . $codExist[$i];
+                    if ($i === 2) $codLeer .= '.';
+                }
+                return [
+                    'ok'          => true,
+                    'idempotente' => true,
+                    'id'          => (int)$row['pedido_id'],
+                    'codigo'      => $codExist,
+                    'codigo_leer' => $codLeer,
+                    'mensaje'     => "El pedido ya estaba confirmado. Tu código es: $codLeer. Hasta pronto.",
+                ];
+            }
+        }
     }
 
     $idUsuario = (int)($args['idUsuario'] ?? 0);
@@ -640,6 +656,7 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
         $ins->execute();
 
         $pedidoId = (int)$db->lastInsertId();
+        if ($pedidoId <= 0) throw new RuntimeException('lastInsertId devolvió ' . $pedidoId);
 
         // Contrato de línea canónico (voz ↔ app): persistimos idOpcion e
         // ingredientes_json de forma estructurada. NULL si la línea no los trae
@@ -765,7 +782,8 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
 
     } catch (\Throwable $e) {
         $db->rollBack();
-        return ['error' => 'pedido_fallido', 'detalle' => $e->getMessage()];
+        agente_log('error', 'pedido_excepcion', ['call_id' => $callId, 'err' => $e->getMessage()]);
+        return ['error' => 'pedido_fallido'];  // detalle solo en logs, nunca en HTTP
     }
 }
 
@@ -866,6 +884,16 @@ function precio_linea_autoritativo(PDO $db, array $l): array {
     $pid = (int)($l['idProducto'] ?? 0);
     if ($pid <= 0) return ['ok' => false, 'error' => 'idProducto_invalido'];
 
+    // Cantidad válida (>0). No la "corregimos" en silencio: rechazamos para no crear
+    // una línea que el cliente no pidió.
+    if (isset($l['cantidad']) && (int)$l['cantidad'] <= 0) {
+        return ['ok' => false, 'error' => 'cantidad_invalida', 'idProducto' => $pid];
+    }
+    // Ingredientes: si vienen, deben ser un array (no una cadena/JSON malformado).
+    if (isset($l['ingredientes']) && !is_array($l['ingredientes'])) {
+        return ['ok' => false, 'error' => 'ingredientes_formato_invalido', 'idProducto' => $pid];
+    }
+
     $st = $db->prepare("SELECT nombre, precio FROM qo_productos_est WHERE id=:id AND eliminado=0");
     $st->bindValue(':id', $pid, PDO::PARAM_INT); $st->execute();
     $prod = $st->fetch(PDO::FETCH_ASSOC);
@@ -902,9 +930,11 @@ function precio_linea_autoritativo(PDO $db, array $l): array {
             $si->bindValue(':p', $pid, PDO::PARAM_INT); $si->bindValue(':i', $iid, PDO::PARAM_INT); $si->execute();
             $ir = $si->fetch(PDO::FETCH_ASSOC);
             if (!$ir) return ['ok' => false, 'error' => 'ingrediente_invalido', 'idProducto' => $pid, 'idIngrediente' => $iid];
-            $iprecio = $add ? (float)$ir['precio'] : 0.0;
-            if ($add) $precioUnit += $iprecio;
-            $ingNorm[] = ['idIngrediente' => $iid, 'esAnadir' => $add, 'precio' => $iprecio, 'nombre' => trim($ir['nombre'])];
+            $precioReal = (float)$ir['precio'];          // precio catálogo del ingrediente
+            $efecto     = $add ? $precioReal : 0.0;       // solo suma al total si se AÑADE
+            $precioUnit += $efecto;
+            // Guardamos el precio real (auditoría) y el efecto aplicado; cocina ve qué se quitó y su valor.
+            $ingNorm[] = ['idIngrediente' => $iid, 'esAnadir' => $add, 'precio' => $precioReal, 'efecto' => $efecto, 'nombre' => trim($ir['nombre'])];
             $ingTxt   .= ($add ? ' con ' : ' sin ') . mb_strtolower(trim($ir['nombre']), 'UTF-8');
         }
     }
@@ -938,10 +968,11 @@ function calcular_bolsa(PDO $db, float $totalProductos): ?array {
 
     $n = (int)floor($totalProductos / $rango);
     if ($n < 1) $n = 1;
+    $precioUnit = round($precioBolsa, 2);
     return [
         'cantidad'   => $n,
-        'precioUnit' => round($precioBolsa, 2),
-        'total'      => round($n * $precioBolsa, 2),
+        'precioUnit' => $precioUnit,
+        'total'      => round($n * $precioUnit, 2),   // coherente: cantidad × precioUnit
     ];
 }
 
@@ -955,8 +986,9 @@ function agente_config_num(PDO $db, string $clave, float $default): float {
     return is_numeric($dec) ? (float)$dec : (is_numeric($v) ? (float)$v : $default);
 }
 
-/** Tiempo estimado: base + extra por pollo en cola + buffer. Redondeado a 5 min. */
-function tiempo_estimado_minutos(PDO $db, array $lineas = []): int {
+// Núcleo ÚNICO de cálculo de ETA (usado por resumen/crear y por get_slots_recogida,
+// para que el tiempo ofrecido y el grabado nunca difieran). Defaults unificados.
+function eta_minutos(PDO $db, int $pollosPedido = 0): int {
     $cfg = [];
     foreach ($db->query("SELECT clave, valor FROM qo_config_agente WHERE clave IN
         ('tiempo_preparacion_base_minutos','tiempo_extra_por_pollo','buffer_seguridad_minutos','modo_saturacion_umbral')
@@ -973,8 +1005,13 @@ function tiempo_estimado_minutos(PDO $db, array $lineas = []): int {
     $stmt->execute();
     $pollosCola = (int)($stmt->fetchColumn() ?: 0);
 
-    // Pollos en este pedido: detectados por idProducto (nombre/categoría), robusto
-    // frente a conceptos personalizados ("pollo asado entero sin piel").
+    $eta = $base + $buffer + ($pollosCola + $pollosPedido) * $extra;
+    if ($pollosCola >= $capac) $eta += 10;              // saturación
+    return max(20, min(90, (int)(ceil($eta / 5) * 5))); // redondeo 5 min, 20..90
+}
+
+/** ETA de un pedido: cuenta los pollos por idProducto/categoría y delega en eta_minutos(). */
+function tiempo_estimado_minutos(PDO $db, array $lineas = []): int {
     $pollosPedido = 0;
     $ids = [];
     foreach ($lineas as $l) {
@@ -996,13 +1033,7 @@ function tiempo_estimado_minutos(PDO $db, array $lineas = []): int {
             $pollosPedido += $ids[(int)$pid] ?? 1;
         }
     }
-
-    $eta = $base + $buffer + ($pollosCola + $pollosPedido) * $extra;
-    // saturación → empuja un poco más
-    if ($pollosCola >= $capac) $eta += 10;
-    // redondeo a 5 min superior, mín 20, máx 90
-    $eta = max(20, min(90, (int)(ceil($eta / 5) * 5)));
-    return $eta;
+    return eta_minutos($db, $pollosPedido);
 }
 
 // ─── Helpers de lenguaje natural ─────────────────────────────────────

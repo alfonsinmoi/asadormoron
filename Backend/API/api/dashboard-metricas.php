@@ -107,26 +107,34 @@ function calcular_metricas(array $dbConf, string $desde, string $hasta, ?int $id
     // ─── Métricas de acento/reconocimiento (P5) ──────────────────────────
     // Búsquedas de get_menu en el rango; % que encontró producto = proxy de
     // calidad de transcripción. + nº de transcripciones que se normalizaron.
+    $filtroEst = $idEst !== null ? ' AND idEstablecimiento = :est' : '';
     $stmt = $dbConn->prepare("
         SELECT COUNT(*) AS busquedas,
                COALESCE(SUM(CASE WHEN resultados = 0 THEN 1 ELSE 0 END), 0) AS sin_resultado
         FROM qo_agente_busquedas
-        WHERE fecha BETWEEN :desde AND :hasta
+        WHERE fecha BETWEEN :desde AND :hasta $filtroEst
     ");
-    foreach ($params as $k => $v) $stmt->bindValue($k, $v);
+    $stmt->bindValue(':desde', $desde . ' 00:00:00');
+    $stmt->bindValue(':hasta', $hasta . ' 23:59:59');
+    if ($idEst !== null) $stmt->bindValue(':est', $idEst);
     $stmt->execute();
     $bus = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['busquedas' => 0, 'sin_resultado' => 0];
     $busquedas    = (int)$bus['busquedas'];
     $sinResultado = (int)$bus['sin_resultado'];
     $tasaRecon    = $busquedas > 0 ? round(($busquedas - $sinResultado) * 100 / $busquedas, 1) : 0;
 
+    // Transcripciones normalizadas (opcionalmente filtradas por establecimiento vía la llamada).
+    $joinEst  = $idEst !== null ? 'JOIN qo_llamadas l ON l.id = t.llamada_id AND l.idEstablecimiento = :est' : '';
     $stmt = $dbConn->prepare("
-        SELECT COALESCE(SUM(CASE WHEN texto_normalizado IS NOT NULL
-                                  AND texto_normalizado <> texto THEN 1 ELSE 0 END), 0) AS normalizadas
-        FROM qo_transcripciones
-        WHERE fecha BETWEEN :desde AND :hasta
+        SELECT COALESCE(SUM(CASE WHEN t.texto_normalizado IS NOT NULL
+                                  AND t.texto_normalizado <> t.texto THEN 1 ELSE 0 END), 0) AS normalizadas
+        FROM qo_transcripciones t
+        $joinEst
+        WHERE t.fecha BETWEEN :desde AND :hasta
     ");
-    foreach ($params as $k => $v) $stmt->bindValue($k, $v);
+    $stmt->bindValue(':desde', $desde . ' 00:00:00');
+    $stmt->bindValue(':hasta', $hasta . ' 23:59:59');
+    if ($idEst !== null) $stmt->bindValue(':est', $idEst);
     $stmt->execute();
     $normalizadas = (int)($stmt->fetchColumn() ?: 0);
 
@@ -158,5 +166,5 @@ try {
 } catch (Exception $e) {
     agente_log('error', 'dashboard_error', ['err' => $e->getMessage()]);
     http_response_code(500);
-    echo json_encode(['error' => 'Internal error', 'detalle' => $e->getMessage()]);
+    echo json_encode(['error' => 'Internal error']);  // detalle solo en logs
 }
