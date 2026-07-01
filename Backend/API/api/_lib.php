@@ -329,3 +329,29 @@ function agente_tokens_staff(PDO $db, int $idEstablecimiento): array {
         return [];
     }
 }
+
+// ─────────────────────────────────────────────────────────────────────
+// Normalización de transcripción andaluza (P5). Corrige errores típicos de
+// STT palabra a palabra para almacenar `texto_normalizado` y para métricas.
+// La colación de BD ya es insensible a acentos, así que aquí solo mapeamos
+// confusiones frecuentes (no tocamos tildes).
+// ─────────────────────────────────────────────────────────────────────
+function normalizar_transcripcion(string $texto): string {
+    static $map = [
+        'boyo'=>'pollo','bollo'=>'pollo','rollo'=>'pollo','poyo'=>'pollo',
+        'patada'=>'patatas','papas'=>'patatas','papa'=>'patata',
+        'chocha'=>'chocos','choco'=>'chocos',
+        'ganbas'=>'gambas','ganbon'=>'gambón',
+        'anburgesa'=>'hamburguesa','amburguesa'=>'hamburguesa','hamburgesa'=>'hamburguesa',
+        'pisa'=>'pizza',
+        'ganbarjillo'=>'gambas al ajillo',
+    ];
+    $palabras = preg_split('/(\s+)/u', $texto, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $out = '';
+    foreach ($palabras as $tok) {
+        if (trim($tok) === '') { $out .= $tok; continue; }
+        $low = mb_strtolower($tok, 'UTF-8');
+        $out .= $map[$low] ?? $tok;
+    }
+    return $out;
+}

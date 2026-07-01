@@ -104,6 +104,32 @@ function calcular_metricas(array $dbConf, string $desde, string $hasta, ?int $id
 
     $tasa = $total > 0 ? round(((int)$agg['convertidas']) * 100 / $total, 1) : 0;
 
+    // ─── Métricas de acento/reconocimiento (P5) ──────────────────────────
+    // Búsquedas de get_menu en el rango; % que encontró producto = proxy de
+    // calidad de transcripción. + nº de transcripciones que se normalizaron.
+    $stmt = $dbConn->prepare("
+        SELECT COUNT(*) AS busquedas,
+               COALESCE(SUM(CASE WHEN resultados = 0 THEN 1 ELSE 0 END), 0) AS sin_resultado
+        FROM qo_agente_busquedas
+        WHERE fecha BETWEEN :desde AND :hasta
+    ");
+    foreach ($params as $k => $v) $stmt->bindValue($k, $v);
+    $stmt->execute();
+    $bus = $stmt->fetch(PDO::FETCH_ASSOC) ?: ['busquedas' => 0, 'sin_resultado' => 0];
+    $busquedas    = (int)$bus['busquedas'];
+    $sinResultado = (int)$bus['sin_resultado'];
+    $tasaRecon    = $busquedas > 0 ? round(($busquedas - $sinResultado) * 100 / $busquedas, 1) : 0;
+
+    $stmt = $dbConn->prepare("
+        SELECT COALESCE(SUM(CASE WHEN texto_normalizado IS NOT NULL
+                                  AND texto_normalizado <> texto THEN 1 ELSE 0 END), 0) AS normalizadas
+        FROM qo_transcripciones
+        WHERE fecha BETWEEN :desde AND :hasta
+    ");
+    foreach ($params as $k => $v) $stmt->bindValue($k, $v);
+    $stmt->execute();
+    $normalizadas = (int)($stmt->fetchColumn() ?: 0);
+
     return [
         'desde'                 => $desde,
         'hasta'                 => $hasta,
@@ -116,6 +142,11 @@ function calcular_metricas(array $dbConf, string $desde, string $hasta, ?int $id
         'duracion_media_seg'    => (int)round((float)$agg['duracion_media']),
         'pico_concurrencia'     => $pico,
         'heatmap'               => $heatmap,
+        // Reconocimiento de acento (P5)
+        'busquedas_menu'        => $busquedas,
+        'busquedas_sin_resultado' => $sinResultado,
+        'tasa_reconocimiento_pct' => $tasaRecon,
+        'transcripciones_normalizadas' => $normalizadas,
         'generado'              => date('c')
     ];
 }

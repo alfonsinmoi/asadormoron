@@ -145,13 +145,17 @@ try {
                     && strpos((string)$last['texto_estructurado'], '"rol":"' . $role . '"') !== false;
 
                 if (!$esDuplicado) {
+                    // Solo normalizamos el turno del CLIENTE (el del asistente ya es correcto).
+                    $textoNorm = ($role === 'user' || $role === 'customer')
+                        ? normalizar_transcripcion($texto) : $texto;
                     $turno = [['rol' => $role, 'texto' => $texto, 'timestamp' => date('c')]];
                     $ins = $dbConn->prepare("
-                        INSERT INTO qo_transcripciones (llamada_id, texto, texto_estructurado, fecha)
-                        VALUES (:llid, :txt, :json, NOW())
+                        INSERT INTO qo_transcripciones (llamada_id, texto, texto_normalizado, texto_estructurado, fecha)
+                        VALUES (:llid, :txt, :norm, :json, NOW())
                     ");
                     $ins->bindValue(':llid', $llamadaId, PDO::PARAM_INT);
                     $ins->bindValue(':txt',  $texto);
+                    $ins->bindValue(':norm', $textoNorm);
                     $ins->bindValue(':json', json_encode($turno));
                     $ins->execute();
                 }

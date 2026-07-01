@@ -26,6 +26,14 @@ namespace AsadorMoron.Models
         public List<HeatmapPuntoModel> heatmap { get; set; } = new List<HeatmapPuntoModel>();
         public string generado { get; set; }
 
+        // Reconocimiento de acento (P5)
+        public int busquedas_menu { get; set; }
+        public int busquedas_sin_resultado { get; set; }
+        public double tasa_reconocimiento_pct { get; set; }
+        public int transcripciones_normalizadas { get; set; }
+
+        public string TasaReconocimientoFormateada => $"{tasa_reconocimiento_pct:0.#} %";
+
         public string DuracionMediaFormateada
         {
             get

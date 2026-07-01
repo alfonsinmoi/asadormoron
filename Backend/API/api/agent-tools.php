@@ -248,6 +248,21 @@ function tool_get_menu(PDO $db, string $buscar = ''): array {
         'nIng' => (int)($r['numIng'] ?? 0),
     ], $rows);
 
+    // Métrica de reconocimiento (P5): registra la búsqueda y su nº de resultados.
+    // Best-effort: nunca rompe get_menu por un fallo de métricas.
+    if ($buscar !== '') {
+        try {
+            $normWords = array_map('normalizar_andaluz', preg_split('/\s+/', mb_strtolower($buscar, 'UTF-8')));
+            $bs = $db->prepare("INSERT INTO qo_agente_busquedas (idEstablecimiento, termino, termino_norm, resultados, fecha)
+                                VALUES (:e, :t, :n, :r, NOW())");
+            $bs->bindValue(':e', ID_ESTABLECIMIENTO, PDO::PARAM_INT);
+            $bs->bindValue(':t', mb_substr($buscar, 0, 255));
+            $bs->bindValue(':n', mb_substr(implode(' ', $normWords), 0, 255));
+            $bs->bindValue(':r', count($productos), PDO::PARAM_INT);
+            $bs->execute();
+        } catch (\Throwable $e) { /* métricas no bloquean */ }
+    }
+
     return [
         'productos' => $productos,
         'total'     => count($productos),
