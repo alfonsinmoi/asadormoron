@@ -502,17 +502,32 @@ function tool_crear_pedido(PDO $db, array $args, string $callId, ?string $telefo
 
         $pedidoId = (int)$db->lastInsertId();
 
+        // Contrato de línea canónico (voz ↔ app): persistimos idOpcion e
+        // ingredientes_json de forma estructurada. NULL si la línea no los trae
+        // (P1 deja el path write-ready; el cálculo de precio por opción/ingrediente
+        // se blindará server-side en P3).
         $insDet = $db->prepare("
             INSERT INTO qo_pedidos_detalle
-                (idPedido, idProducto, precio, cantidad, tipo, concepto, comentario, tipoVenta, pagadoConPuntos)
-            VALUES (:p, :prod, :precio, :cant, 0, :conc, :coment, :tv, 0)
+                (idPedido, idProducto, idOpcion, precio, cantidad, tipo, concepto, ingredientes_json, comentario, tipoVenta, pagadoConPuntos)
+            VALUES (:p, :prod, :opc, :precio, :cant, 0, :conc, :ing, :coment, :tv, 0)
         ");
         foreach ($lineas as $l) {
+            // idOpcion: entero o NULL
+            $idOpcion = isset($l['idOpcion']) && $l['idOpcion'] !== null && (int)$l['idOpcion'] > 0
+                ? (int)$l['idOpcion'] : null;
+            // ingredientes: JSON válido o NULL (nunca cadena vacía por el contrato)
+            $ingJson = null;
+            if (isset($l['ingredientes']) && is_array($l['ingredientes']) && count($l['ingredientes']) > 0) {
+                $ingJson = json_encode(array_values($l['ingredientes']), JSON_UNESCAPED_UNICODE);
+            }
+
             $insDet->bindValue(':p',      $pedidoId, PDO::PARAM_INT);
             $insDet->bindValue(':prod',   (int)($l['idProducto'] ?? 0), PDO::PARAM_INT);
+            $insDet->bindValue(':opc',    $idOpcion, $idOpcion === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
             $insDet->bindValue(':precio', (float)($l['precio'] ?? 0));
             $insDet->bindValue(':cant',   (int)($l['cantidad'] ?? 1), PDO::PARAM_INT);
             $insDet->bindValue(':conc',   (string)($l['concepto'] ?? ''));
+            $insDet->bindValue(':ing',    $ingJson, $ingJson === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
             $insDet->bindValue(':coment', (string)($l['comentario'] ?? ''));
             $insDet->bindValue(':tv',     $tipoVenta);
             $insDet->execute();

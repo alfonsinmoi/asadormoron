@@ -3,9 +3,9 @@
 > Documento técnico de trabajo. Recoge tareas concretas, esquemas, decisiones de arquitectura y criterios de aceptación para ejecutar el proyecto de principio a fin.
 
 **Cliente:** Asador Morón
-**Versión:** 2.0
-**Última actualización:** 2026-05-11
-**Duración total estimada:** 5-6 semanas
+**Versión:** 3.0
+**Última actualización:** 2026-07-01
+**Duración total estimada:** 5-6 semanas (+ bloque de personalización, ver §Auditoría)
 **Coste de desarrollo:** 3.800 € + IVA (21%) = 4.598 €
 **Forma de pago:** 50% al inicio + 50% a la entrega
 
@@ -23,6 +23,153 @@
 | Fase 7 — Otras configuraciones | ⚪ No iniciada | Fase 4 |
 
 Leyenda: 🟢 hecho · 🟡 en curso · 🔴 bloqueado · ⚪ no iniciada
+
+---
+
+## Auditoría de completitud (2026-07-01)
+
+> Auditoría exhaustiva del agente de voz frente al requisito real del cliente: **recibir llamadas y tomar pedidos completos** (con opciones de producto, ingredientes de pizzas/personalizables, cargo de bolsa, acento andaluz y control total del proceso). Realizada con análisis multi-agente por dimensiones + verificación adversarial sobre el código en producción (`Backend/API/api/*.php`), el prompt desplegado en Vapi y el esquema real de BD.
+
+### Veredicto
+
+**Completitud global: 48 %.** El agente **toma pedidos SIMPLES de forma robusta**, pero **hoy no puede tomar pedidos correctos**: no maneja opciones (pollo entero/medio/cuarto), no maneja ingredientes (pizza sin cebolla / doble queso) y no cobra la bolsa. En pedidos personalizados **cobra de menos** y **manda a cocina información no estructurada**. No es apto para producción profesional hasta cerrar esa brecha de personalización y precio.
+
+Lo que **sí** funciona y está verificado en producción: recepción de llamada (Twilio + Vapi gpt-4o), saludo y tono andaluz, búsqueda de menú fuzzy sobre productos reales, validación de zona, ETA determinista server-side según saturación, resumen con precio en palabras, creación transaccional del pedido (`qo_pedidos` + `qo_pedidos_detalle` + `qo_pedidos_estado`), código deletreado para TTS y push al staff. La base es sólida; la brecha es de **personalización y blindaje de precio**.
+
+### Estado por dimensión
+
+| # | Dimensión | Estado | % | Nota |
+|---|-----------|--------|---|------|
+| 1 | Control del flujo de pedido (end-to-end) | 🟡 parcial | 62 | Happy path completo; sin personalización ni validación de precio server-side en `crear_pedido` |
+| 2 | **Opciones de producto** (entero/medio/cuarto) | 🟡 parcial | 20 | BD las tiene (`qo_productos_opc`), pero ninguna tool las expone ni el precio las suma |
+| 3 | **Ingredientes** (añadir/quitar, pizzas) | 🔴 ausente | 3 | `qo_productos_ing`/`qo_ingredientes_producto` existen; el agente no tiene tool ni lógica |
+| 4 | **La bolsa** (cargo por embalaje) | 🔴 ausente | 0 | Sin config, sin línea, sin prompt. No se puede cobrar |
+| 5 | Reconocimiento de acento andaluz | 🟡 parcial | 28 | Solo heurística en el prompt + keywords Deepgram; sin normalización server-side ni métricas |
+| 6 | Resolución de producto y exactitud de precio | 🟡 parcial | 62 | `resumen_pedido` valida precio BASE contra BD; `crear_pedido` confía en el precio del LLM |
+| 7 | Robustez operativa y control | 🟡 parcial | 64 | Webhook/blacklist/rate-limit/RGPD/health OK; falta idempotencia real y transferencia en vivo |
+| 8 | Telefonía e infraestructura | 🟡 parcial | 52 | Número Twilio **+1 US** puede ser rechazado por operadores ES; falta número español |
+
+### Gaps críticos (bloquean tomar pedidos correctos hoy)
+
+1. **Opciones inexistentes de extremo a extremo (impacto máximo).** `qo_productos_opc` tiene entero/medio/cuarto con `valorIncremento`, pero no hay tool `get_opciones`, `get_menu` no las expone, el prompt no las pregunta, `resumen_pedido` no suma el incremento y `crear_pedido` no las persiste. El cliente pide "pollo entero" → se cobra el precio base y cocina recibe un producto genérico. Es el requisito #1 y está roto.
+2. **Persistencia imposible de opciones.** `qo_pedidos_detalle` **no tiene columna `opcion`/`idOpcion`** (solo `id, idPedido, idProducto, precio, estado, cantidad, tipo, concepto, comentario, tipoVenta, pagadoConPuntos`). Aunque el LLM capture la opción, no hay dónde guardarla estructurada. La app móvil (`CarritoModel.opcion`) sí la modela → brecha directa voz vs app.
+3. **Ingredientes add/quita inexistentes.** `qo_productos_ing` (incremento) y `qo_ingredientes_producto` (precio) existen, pero no hay tool ni lógica. "Pizza sin cebolla con doble queso" se pierde: sin validación (el LLM puede alucinar ingredientes), sin cobro del suplemento, sin estructura para cocina y **sin registro de alérgenos (riesgo legal)**. El prompt incluso fuerza "X CON Y = DOS PRODUCTOS", partiendo mal la pizza personalizada.
+4. **Exactitud de precio sin blindaje.** `resumen_pedido` hace lookup del precio BASE (bien contra alucinación de base) pero ignora opciones e ingredientes; `crear_pedido` usa el precio que llega en la línea sin recomputar. El total dicho al cliente y el guardado pueden divergir, sin reconciliación ni log. Erosión de margen en cada pedido personalizado.
+5. **Cargo de bolsa no modelado.** Cero rastro de `gastos_bolsa_eur` en config ni lógica de línea. Requisito del cliente → pérdida directa de ingresos por pedido.
+6. **ETA se rompe con personalización.** `tiempo_estimado_minutos` cuenta pollos por `strpos('pollo')` en el `concepto`. Con "pollo asado entero sin piel" el conteo puede fallar y la ETA queda mal calibrada.
+7. **Acento andaluz sin capa de normalización ni métricas.** Los mapeos (bollo→pollo) viven solo como heurística del prompt; `webhook-vapi` guarda la transcripción cruda sin normalizar, sin score de confianza, sin fallback por baja confianza y sin corpus de test. Riesgo de pedidos perdidos **no medible**.
+
+### Otros hallazgos (media/baja prioridad)
+
+- **Inconsistencia de gastos de envío entre endpoints:** `tool_crear_pedido` añade la línea de envío automáticamente; `crear-pedido.php` (app) no. Comportamiento distinto según el endpoint.
+- **`tool_get_slots_recogida` es código muerto:** el prompt nunca pregunta hora, nunca se invoca.
+- **Blacklist se comprueba después del importe** en `crear-pedido.php` (debería ir antes).
+- **Transferencia a humano sin transición en vivo:** el agente dice "llame al 626692828" y cuelga; Vapi no hace `<Dial>` real.
+- **Auto-blacklist mal calibrado** para producción (umbral 50 fallidas/7d, era para desarrollo).
+- **Prompt versionado en `/tmp`** en vez de en git.
+
+---
+
+## Bloque de cierre — Personalización y profesionalización (roadmap)
+
+> Seis fases (P1–P6) para pasar del 48 % a un sistema **completo y profesional**. P1–P4 son **bloqueantes** para tomar pedidos correctos; P5–P6 profesionalizan. Nomenclatura P# para no confundir con las Fases 0–7 originales.
+
+### Contrato de datos canónico (compartido voz ↔ app)
+
+Toda línea de pedido —la genere la app o el agente— debe poder representarse igual:
+
+```jsonc
+{
+  "idProducto": 123,
+  "cantidad": 1,
+  "idOpcion": 45,                 // null si el producto no tiene opciones
+  "ingredientes": [               // [] si no aplica
+    { "idIngrediente": 9,  "esAnadir": true,  "precio": 1.50 },   // doble queso
+    { "idIngrediente": 12, "esAnadir": false, "precio": 0.00 }    // sin cebolla
+  ],
+  "precio": 12.90,                // precio_final REcalculado server-side (no del LLM)
+  "concepto": "Pollo asado entero, sin piel",
+  "comentario": ""
+}
+```
+
+`precio_final = precio_base(qo_productos_est) + valorIncremento(qo_productos_opc) + Σ precio(ingredientes añadidos)`. **El servidor siempre recalcula**; el precio del LLM solo es fallback.
+
+### P1 — Cimientos de datos (BLOQUEANTE)
+
+**Objetivo:** que BD y escritura del pedido representen un pedido completo idéntico al de la app.
+
+```sql
+ALTER TABLE qo_pedidos_detalle
+  ADD COLUMN idOpcion INT NULL AFTER idProducto,          -- alinea con CarritoModel.opcion
+  ADD COLUMN ingredientes_json JSON NULL AFTER concepto;  -- detalle estructurado add/quita
+```
+
+- Definir el contrato canónico de línea (arriba) y documentarlo en `Backend/API/docs/`.
+- Unificar la escritura de líneas en un helper común usado por `crear-pedido.php` (app) y `tool_crear_pedido` (voz) para que **no divergan**.
+- Revisar triggers de `qo_pedidos_detalle` para que sigan reaccionando a `tipo=1` (envío) y no rompan con las columnas nuevas ni con la futura línea de bolsa.
+
+**Entregable:** migración aplicada + contrato documentado.
+
+### P2 — Tools de personalización y `get_menu` enriquecido
+
+**Objetivo:** dar al LLM herramientas para descubrir y validar opciones/ingredientes reales (adiós alucinación).
+
+- `tool_get_opciones(idProducto)` → `SELECT id, opcion, tipoIncremento, valorIncremento FROM qo_productos_opc WHERE idProducto=?` (devuelve `[]` si no hay). Registrar en el dispatcher (`agent-tools.php`) y en el assistant de Vapi.
+- `tool_get_ingredientes(idProducto)` → une `qo_productos_ing` + `qo_ingredientes_producto` → `[{id, nombre, precio_incremental, esConfigurable}]`. Registrar en dispatcher y Vapi.
+- Ampliar `tool_get_menu`: añadir por producto `tieneOpciones`/`tieneIngredientes` (vía `EXISTS(...)`) y `numeroIngredientes`, para que el agente sepa **cuándo preguntar** sin llamadas extra.
+- Keywords Deepgram para `entero/medio/cuarto/sin sal/sin cebolla/sin piel/doble`.
+
+**Entregable:** dos tools nuevas + `get_menu` enriquecido + tools registradas en Vapi.
+
+### P3 — Precio server-side blindado (opciones + ingredientes + bolsa)
+
+**Objetivo:** que el total dicho == total guardado, validado y anti-fraude, con bolsa.
+
+- Reescribir `tool_resumen_pedido` para recibir `idOpcion` e `ingredientes` por línea y calcular `precio_final` server-side (fórmula arriba). Ignorar el precio del LLM salvo fallback.
+- Reescribir `tool_crear_pedido` para **revalidar `idOpcion` e ingredientes contra BD ANTES del INSERT**; si no existen, devolver `error + hint` para forzar reintento del LLM; recomputar total y persistir `idOpcion` + `ingredientes_json`.
+- Añadir `gastos_bolsa_eur` a `qo_config_agente`; sumarla en `resumen_pedido` e insertarla en `crear_pedido` como línea `tipo=2` (idProducto=0), en paralelo a la de envío `tipo=1`. Documentar: `tipo=0` producto / `1` envío / `2` bolsa.
+- **Log de divergencia de precio:** tras el INSERT, si `|precio_esperado − precio_guardado| > 0.01` → WARN con `pedido_id`, `idProducto`, `concepto`, diferencia.
+- Corregir `tiempo_estimado_minutos`: detectar pollos por `idProducto`/categoría (no por `strpos` en `concepto`).
+
+**Entregable:** precios exactos server-side, bolsa cobrada, ETA robusta, auditoría de divergencias.
+
+### P4 — Prompt e interacción de personalización
+
+**Objetivo:** que el agente pregunte opciones/ingredientes con naturalidad y comunique precio y bolsa sin ambigüedad.
+
+- Sección **OPCIONES**: tras `get_menu`, si `tieneOpciones`, llamar `get_opciones` en silencio y preguntar "¿Entero, medio o cuarto?". Nunca asumir default ni inventar tamaños.
+- Sección **INGREDIENTES**: si `tieneIngredientes`, ofrecer add/quita; si el cliente pide un ingrediente que `get_ingredientes` no devuelve, decir que no está disponible en vez de improvisar.
+- **Retirar/matizar** la regla "X CON Y = DOS PRODUCTOS": la pizza personalizada es **UNA línea con ingredientes**, no varias.
+- `resumen_pedido` incluye opción e ingredientes en el texto literal ("Un pollo asado entero, sin piel. Total con envío y bolsa: …"). Añadir mensaje cordial para importe > umbral.
+- **Versionar el prompt en git** (`Backend/API/docs/vapi_prompt_vN.txt`) con procedimiento de despliegue a Vapi (no en `/tmp`).
+
+**Entregable:** prompt nuevo versionado y desplegado con árbol de decisión de opciones/ingredientes/bolsa.
+
+### P5 — Acento andaluz: normalización, métricas y test
+
+**Objetivo:** reducir pedidos perdidos por transcripción y hacerlo medible.
+
+- `normalize_transcript_andaluz()` en `_lib.php` (bollo/rollo→pollo, patada→patatas, choco→chocos, ganbarjillo→gambas al ajillo…) aplicada en `webhook-vapi` **antes de guardar**; columna `texto_normalizado` + auditoría original vs normalizado.
+- Validar keywords Deepgram (boost pollo/patatas, penalty bollo/patada) y ajustar endpointing/VAD para elisiones andaluzas.
+- Fuzzy match acento-aware en `tool_get_menu` (acepta término original y normalizado); re-pregunta si confianza baja o cero resultados.
+- Corpus de 50–100 muestras andaluzas + job mensual que mida precisión (%) con alerta si baja de 90 %; métrica en el dashboard.
+
+**Entregable:** capa de normalización + métricas de acento + corpus de regresión.
+
+### P6 — Robustez operativa e infraestructura profesional
+
+**Objetivo:** cerrar riesgos no funcionales antes de escalar volumen.
+
+- **Idempotencia real:** `webhook_request_id UNIQUE` en `qo_llamadas` + tabla `qo_webhook_events`; reprocesar un evento no duplica datos.
+- **Número Twilio español +34** con Regulatory Bundle (el +1 US actual puede ser rechazado por operadores ES); documentar el switchover de `phoneNumberId`.
+- **Transferencia a humano real:** Twilio `<Dial timeout>` al 626692828 con fallback a buzón en la misma llamada; corregir URL de grabación en `voicemail.php`.
+- Ajustar auto-blacklist (de 50/7d a ~15/24h), timeout global en `dispatch_tool`, reset diario documentado de `qo_contador_pollos`, whitelist VIP para bypass de importe.
+- **Test E2E integral:** "pollo medio sin cebolla + pizza sin cebolla con doble queso, envío con bolsa" validando `get_opciones`, `get_ingredientes`, `resumen` (precio y texto), `crear_pedido` (`idOpcion` + `ingredientes_json` + línea bolsa) y coherencia con lo que ve cocina y la app.
+
+**Entregable:** sistema idempotente, telefonía española, transferencia con fallback, controles calibrados y suite E2E del pedido personalizado. **Apto para producción profesional.**
+
+---
 
 ## Decisiones operativas confirmadas por el cliente (2026-05-13)
 
