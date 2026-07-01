@@ -130,15 +130,31 @@ try {
             $llamadaId = $stmt->fetchColumn();
 
             if ($llamadaId !== false && $texto !== '') {
-                $turno = [['rol' => $role, 'texto' => $texto, 'timestamp' => date('c')]];
-                $ins = $dbConn->prepare("
-                    INSERT INTO qo_transcripciones (llamada_id, texto, texto_estructurado, fecha)
-                    VALUES (:llid, :txt, :json, NOW())
+                // Idempotencia: Vapi reintenta webhooks con el payload idéntico.
+                // Evitamos duplicar si la ÚLTIMA transcripción de esta llamada ya es
+                // exactamente este turno (mismo texto y rol).
+                $dup = $dbConn->prepare("
+                    SELECT texto, texto_estructurado FROM qo_transcripciones
+                    WHERE llamada_id = :llid ORDER BY id DESC LIMIT 1
                 ");
-                $ins->bindValue(':llid', $llamadaId, PDO::PARAM_INT);
-                $ins->bindValue(':txt',  $texto);
-                $ins->bindValue(':json', json_encode($turno));
-                $ins->execute();
+                $dup->bindValue(':llid', $llamadaId, PDO::PARAM_INT);
+                $dup->execute();
+                $last = $dup->fetch(PDO::FETCH_ASSOC);
+                $esDuplicado = $last
+                    && trim((string)$last['texto']) === trim($texto)
+                    && strpos((string)$last['texto_estructurado'], '"rol":"' . $role . '"') !== false;
+
+                if (!$esDuplicado) {
+                    $turno = [['rol' => $role, 'texto' => $texto, 'timestamp' => date('c')]];
+                    $ins = $dbConn->prepare("
+                        INSERT INTO qo_transcripciones (llamada_id, texto, texto_estructurado, fecha)
+                        VALUES (:llid, :txt, :json, NOW())
+                    ");
+                    $ins->bindValue(':llid', $llamadaId, PDO::PARAM_INT);
+                    $ins->bindValue(':txt',  $texto);
+                    $ins->bindValue(':json', json_encode($turno));
+                    $ins->execute();
+                }
             }
             break;
 
@@ -201,37 +217,49 @@ try {
             $rowLlamada = $stmt2->fetch(PDO::FETCH_ASSOC) ?: [];
             if (!empty($rowLlamada['pedido_id'])) $estado = 'completada';
 
-            // ─── Auto-blacklist anti-trolleo ─────────────────────────────
-            // Si este teléfono ha tenido >= 5 llamadas no_pedido/fallida en los últimos 7 días
-            // sin un solo pedido completado, lo añadimos a la blacklist automáticamente.
+            // ─── Auto-blacklist anti-trolleo (configurable) ──────────────
+            // Umbrales en qo_config_agente (tuneables por el cliente sin tocar código):
+            //   autoblacklist_fallidas   (nº de llamadas sin pedido para bloquear; def. 12)
+            //   autoblacklist_ventana_h  (ventana en horas; def. 24)
+            // Solo bloquea si NO hay ni un pedido completado en la ventana (cliente real → nunca se bloquea).
             if (in_array($estado, ['no_pedido', 'fallida']) && !empty($rowLlamada['telefono_origen'])) {
                 $tel = $rowLlamada['telefono_origen'];
+
+                $cfgBl = [];
+                foreach ($dbConn->query("SELECT clave, valor FROM qo_config_agente WHERE clave IN ('autoblacklist_fallidas','autoblacklist_ventana_h')")->fetchAll(PDO::FETCH_ASSOC) as $r) {
+                    $cfgBl[$r['clave']] = json_decode($r['valor'], true);
+                }
+                $umbralFallidas = (int)($cfgBl['autoblacklist_fallidas'] ?? 12);
+                $ventanaHoras   = (int)($cfgBl['autoblacklist_ventana_h'] ?? 24);
+
                 $countCheck = $dbConn->prepare("
                     SELECT
                         SUM(CASE WHEN estado IN ('no_pedido','fallida') THEN 1 ELSE 0 END) AS fallidas,
                         SUM(CASE WHEN pedido_id IS NOT NULL THEN 1 ELSE 0 END)              AS exitosas
                     FROM qo_llamadas
                     WHERE telefono_origen = :tel
-                      AND fecha_inicio >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                      AND fecha_inicio >= DATE_SUB(NOW(), INTERVAL :h HOUR)
                 ");
                 $countCheck->bindValue(':tel', $tel);
+                $countCheck->bindValue(':h', $ventanaHoras, PDO::PARAM_INT);
                 $countCheck->execute();
                 $stats = $countCheck->fetch(PDO::FETCH_ASSOC);
                 $fallidas = (int)($stats['fallidas'] ?? 0);
                 $exitosas = (int)($stats['exitosas'] ?? 0);
 
-                if ($fallidas >= 50 && $exitosas === 0) {
+                if ($fallidas >= $umbralFallidas && $exitosas === 0) {
                     $ins = $dbConn->prepare("
                         INSERT INTO qo_blacklist_telefonos (telefono, motivo, bloqueado_por, fecha)
                         VALUES (:tel, :mot, 'auto', NOW())
                         ON DUPLICATE KEY UPDATE motivo = VALUES(motivo), fecha = NOW()
                     ");
                     $ins->bindValue(':tel', $tel);
-                    $ins->bindValue(':mot', "Auto: {$fallidas} llamadas sin pedido en 7 días");
+                    $ins->bindValue(':mot', "Auto: {$fallidas} llamadas sin pedido en {$ventanaHoras}h");
                     $ins->execute();
                     agente_log('warn', 'autoblacklist_aplicada', [
                         'telefono' => $tel,
-                        'fallidas_7d' => $fallidas
+                        'fallidas' => $fallidas,
+                        'ventana_h' => $ventanaHoras
                     ]);
                 }
             }
