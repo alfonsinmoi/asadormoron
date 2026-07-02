@@ -444,3 +444,39 @@ function asignar_repartidor(PDO $db, int $pedidoId, int $idEstablecimiento, int 
         return ['asignado' => false, 'motivo' => 'error'];
     }
 }
+
+// ─────────────────────────────────────────────────────────────────────
+// Geocoding (Nominatim/OSM, sin API key) + distancia Haversine (Fase 3).
+// Best-effort y CACHEADO: si falla, devuelve null y el flujo sigue aceptando
+// la dirección (no perder pedidos por un geocoder caído).
+// ─────────────────────────────────────────────────────────────────────
+function geocodificar_direccion(string $direccion, string $ciudad = 'Morón de la Frontera', string $provincia = 'Sevilla'): ?array {
+    $direccion = trim($direccion);
+    if ($direccion === '') return null;
+    $q = $direccion . ', ' . $ciudad . ', ' . $provincia . ', Spain';
+    $cacheKey = 'geo:' . md5(mb_strtolower($q, 'UTF-8'));
+
+    return agente_cache($cacheKey, 60 * 60 * 24 * 30, function () use ($q) {
+        $url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=es&q=' . rawurlencode($q);
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 6,
+            CURLOPT_HTTPHEADER     => ['User-Agent: AsadorMoron-Agent/1.0 (pedidos voz)'],
+        ]);
+        $resp = curl_exec($ch);
+        curl_close($ch);
+        $data = json_decode((string)$resp, true);
+        if (!is_array($data) || count($data) === 0) return null;   // cacheable "no encontrado"
+        return ['lat' => (float)$data[0]['lat'], 'lon' => (float)$data[0]['lon']];
+    });
+}
+
+/** Distancia en km entre dos coordenadas (Haversine). */
+function distancia_km(float $lat1, float $lon1, float $lat2, float $lon2): float {
+    $r = 6371.0;
+    $dLat = deg2rad($lat2 - $lat1);
+    $dLon = deg2rad($lon2 - $lon1);
+    $a = sin($dLat / 2) ** 2 + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
+    return round($r * 2 * atan2(sqrt($a), sqrt(1 - $a)), 2);
+}

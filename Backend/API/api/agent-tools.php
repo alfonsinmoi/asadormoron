@@ -451,28 +451,42 @@ function tool_validar_zona(PDO $db, string $direccion): array {
 
     if (count($zonas) === 0) return ['valida' => false, 'motivo' => 'sin_zonas'];
 
-    $dirLower = mb_strtolower($direccion, 'UTF-8');
-    foreach ($zonas as $z) {
-        $n = mb_strtolower($z['nombre'], 'UTF-8');
-        if ($n !== '' && mb_strpos($dirLower, $n) !== false) {
-            return [
-                'valida'      => true,
-                'idZona'      => (int)$z['id'],
-                'nombre'      => $z['nombre'],
-                'gastos'      => (float)$z['gastos'],
-                'pedidoMinimo'=> (float)$z['pedidoMinimo']
-            ];
+    // Distancia por geocoding (best-effort). Solo RECHAZA si geolocaliza y está
+    // claramente fuera del radio (radio+margen). Si el geocoder falla → acepta.
+    $distancia   = null;
+    $fueraRadio  = false;
+    $lat = agente_config_num($db, 'local_lat', 0.0);
+    $lon = agente_config_num($db, 'local_lon', 0.0);
+    if ($lat != 0.0 && $lon != 0.0) {
+        $geo = geocodificar_direccion($direccion);
+        if ($geo) {
+            $distancia = distancia_km($lat, $lon, $geo['lat'], $geo['lon']);
+            $radio  = agente_config_num($db, 'radio_reparto_km', 10);
+            $margen = agente_config_num($db, 'radio_margen_km', 2);
+            if ($distancia > $radio + $margen) $fueraRadio = true;
         }
     }
-    // Si no hay match por nombre, aceptamos la dirección con la primera zona activa
-    // (criterio del cliente: aceptar reparto a cualquier dirección).
+    if ($fueraRadio) {
+        return ['valida' => false, 'motivo' => 'fuera_de_radio', 'distancia_km' => $distancia];
+    }
+
+    // Zona por nombre; si no, primera activa (criterio: aceptar cualquier dirección en radio).
+    $dirLower = mb_strtolower($direccion, 'UTF-8');
+    $zonaSel  = null;
+    foreach ($zonas as $z) {
+        $n = mb_strtolower($z['nombre'], 'UTF-8');
+        if ($n !== '' && mb_strpos($dirLower, $n) !== false) { $zonaSel = $z; break; }
+    }
+    $metodo = $zonaSel ? 'nombre' : 'fallback';
+    $z = $zonaSel ?: $zonas[0];
     return [
-        'valida'      => true,
-        'idZona'      => (int)$zonas[0]['id'],
-        'nombre'      => $zonas[0]['nombre'],
-        'gastos'      => (float)$zonas[0]['gastos'],
-        'pedidoMinimo'=> (float)$zonas[0]['pedidoMinimo'],
-        'metodo'      => 'fallback'
+        'valida'       => true,
+        'idZona'       => (int)$z['id'],
+        'nombre'       => $z['nombre'],
+        'gastos'       => (float)$z['gastos'],
+        'pedidoMinimo' => (float)$z['pedidoMinimo'],
+        'distancia_km' => $distancia,
+        'metodo'       => $metodo
     ];
 }
 
